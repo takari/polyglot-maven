@@ -25,4 +25,13 @@
     <module>tesla-polyglot-common</module>
     <module>tesla-polyglot-atom</module>
   </modules>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-component-metadata</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
