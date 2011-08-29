@@ -80,8 +80,26 @@ public class AtomParser {
       return null;
     }
 
+    //
+    //jvz parent attempt
     Id projectId = id();
 
+    // parent
+    indent();
+    if (match(Token.Kind.PARENT) == null) {
+      log.severe("Expected 'parent' after id declaration");
+      return null;
+    }
+
+    // Now expect a colon.
+    if (match(Token.Kind.COLON) == null) {
+      log.severe("Expected ':' after 'parent'");
+      return null;
+    }
+
+    Id parent = id();
+    //
+    
     chewEols();
     Map<String, String> dirs = srcs();
 
@@ -91,7 +109,7 @@ public class AtomParser {
     chewEols();
     ScmElement scm = scm();
 
-    return new Project(projectId, repositories, projectDescription, projectUrl, deps, dirs, scm);
+    return new Project(projectId, parent, repositories, projectDescription, projectUrl, deps, dirs, scm);
   }
 
   private ScmElement scm() {

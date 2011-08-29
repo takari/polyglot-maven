@@ -66,6 +66,7 @@ public class Token {
     IF,
     DEPS,
     ID,
+    PARENT,
     UNLESS,
     WHERE,
 
@@ -102,6 +103,7 @@ public class Token {
 
       TOKEN_MAP.put("deps", DEPS);
       TOKEN_MAP.put("id", ID);
+      TOKEN_MAP.put("parent", PARENT);
       TOKEN_MAP.put("repositories", REPOSITORIES);
       TOKEN_MAP.put("project", PROJECT);
       TOKEN_MAP.put("srcs", SRCS);

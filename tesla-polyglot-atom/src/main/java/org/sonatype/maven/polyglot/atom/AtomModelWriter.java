@@ -74,7 +74,7 @@ public class AtomModelWriter extends ModelWriterSupport {
       pw.println();
     }
     // name
-    pw.println("project \"" + model.getName() + "\" @ " + model.getUrl() + "\"");
+    pw.println("project \"" + model.getName() + "\" @ \"" + model.getUrl() + "\"");
     // id
     pw.println(indent + "id: " + model.getGroupId() + ":" + model.getArtifactId() + ":" + model.getVersion());
     // id

@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public class Project extends Element {
   private final Id projectId;
+  private final Id parent;
   private final Repositories repositories;
   private final String description;
   private final String url;
@@ -18,9 +19,10 @@ public class Project extends Element {
   private static final String MAVEN_CENTRAL_URL = "http://repo1.maven.org/maven2";
   private final ScmElement scm;
 
-  public Project(Id projectId, Repositories repositories, String description, String url,
+  public Project(Id projectId, Id parent, Repositories repositories, String description, String url,
                  List<Id> deps, Map<String, String> dirs, ScmElement scm) {
     this.projectId = projectId;
+    this.parent = parent;
     this.repositories = repositories;
     this.description = description;
     this.url = url;
@@ -33,6 +35,10 @@ public class Project extends Element {
     return projectId;
   }
 
+  public Id getParent() {
+    return parent;
+  }
+  
   public Repositories getRepositories() {
     return repositories;
   }
@@ -81,15 +87,17 @@ public class Project extends Element {
     }
 
     // Add project dependencies.
-    for (Id dep : deps) {
-      Dependency dependency = new Dependency();
-      dependency.setGroupId(dep.getGroup());
-      dependency.setArtifactId(dep.getArtifact());
-      dependency.setVersion(dep.getVersion());
-      
-      if (null != dep.getClassifier())
-        dependency.setClassifier(dep.getClassifier());
-      model.addDependency(dependency);
+    if (deps != null) {
+      for (Id dep : deps) {
+        Dependency dependency = new Dependency();
+        dependency.setGroupId(dep.getGroup());
+        dependency.setArtifactId(dep.getArtifact());
+        dependency.setVersion(dep.getVersion());
+
+        if (null != dep.getClassifier())
+          dependency.setClassifier(dep.getClassifier());
+        model.addDependency(dependency);
+      }
     }
 
     // Optional source dirs customization.
