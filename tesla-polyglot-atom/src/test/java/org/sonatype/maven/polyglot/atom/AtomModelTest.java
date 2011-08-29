@@ -45,6 +45,7 @@ public class AtomModelTest extends InjectedTestCase {
     //
     ModelReader atomModelReader = new AtomModelReader();
     StringReader r = new StringReader(w.toString());
+    // Dhanji: uncomment these lines and make it all pass and we're good
     // Model atomModel = atomModelReader.read(r, new HashMap<String, Object>());
     //
     // Test for fidelity
