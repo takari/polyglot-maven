@@ -79,7 +79,7 @@ public class AtomModelWriter extends ModelWriterSupport {
     pw.println(indent + "id: " + model.getGroupId() + ":" + model.getArtifactId() + ":" + model.getVersion());
     // id
     if (model.getParent() != null) {
-      pw.println(indent + "parent: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
+      pw.println(indent + "inherit: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
     }
     // packaging
     pw.println(indent + "packaging: " + model.getPackaging());
@@ -165,10 +165,18 @@ public class AtomModelWriter extends ModelWriterSupport {
         pw.print(plugin.getGroupId() + ":" + plugin.getArtifactId() + ":" + plugin.getVersion());
         if (plugin.getConfiguration() != null) {
           pw.println();
-          pw.print("               configuration:[ ");
+          pw.print("               properties:[ ");
           Xpp3Dom configuration = (Xpp3Dom) plugin.getConfiguration();
-          for (Xpp3Dom c : configuration.getChildren()) {
+          int count = configuration.getChildCount();
+          for( int j = 0; j < count; j++) {
+            Xpp3Dom c = configuration.getChild(j);
+            if (j != 0) {
+              pw.print("                            ");
+            }
             pw.print(c.getName() + ": " + c.getValue() + " ");
+            if (j + 1 != count) {
+              pw.println();
+            }            
           }
           pw.print(" ]");
         }

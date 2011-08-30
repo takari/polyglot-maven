@@ -74,7 +74,15 @@ public class Token {
 
     // specials
     EOL,
-    INDENT;
+    INDENT, 
+    DASH, 
+    PACKAGING, 
+    OVERRIDES, 
+    PROPS,
+    MODULES, 
+    PLUGINS;
+    //DOLLAR, 
+    //PROJECT_DOT_VERSION;
 
     private static final Map<String, Kind> TOKEN_MAP = new HashMap<String, Kind>();
 
@@ -82,6 +90,7 @@ public class Token {
       // can we optimize with chars?
       TOKEN_MAP.put("@", AT);
       TOKEN_MAP.put(".", DOT);
+      TOKEN_MAP.put("-", DASH);
       TOKEN_MAP.put(":", COLON);
       TOKEN_MAP.put("*", STAR);
       TOKEN_MAP.put(",", COMMA);
@@ -95,19 +104,25 @@ public class Token {
 
       TOKEN_MAP.put("(", LPAREN);
       TOKEN_MAP.put(")", RPAREN);
-      TOKEN_MAP.put("{", LBRACE);
-      TOKEN_MAP.put("}", RBRACE);
+      //TOKEN_MAP.put("$", DOLLAR);      
+      //TOKEN_MAP.put("{", LBRACE);
+      //TOKEN_MAP.put("}", RBRACE);
       TOKEN_MAP.put("[", LBRACKET);
       TOKEN_MAP.put("]", RBRACKET);
       TOKEN_MAP.put("\n", EOL);
 
-      TOKEN_MAP.put("deps", DEPS);
       TOKEN_MAP.put("id", ID);
-      TOKEN_MAP.put("parent", PARENT);
+      TOKEN_MAP.put("inherit", PARENT);
+      TOKEN_MAP.put("packaging", PACKAGING);
+      TOKEN_MAP.put("properties", PROPS);
+      TOKEN_MAP.put("deps", DEPS);
+      TOKEN_MAP.put("overrides", OVERRIDES);
       TOKEN_MAP.put("repositories", REPOSITORIES);
       TOKEN_MAP.put("project", PROJECT);
       TOKEN_MAP.put("srcs", SRCS);
-      TOKEN_MAP.put("scm", SCM);
+      TOKEN_MAP.put("scm", SCM);      
+      TOKEN_MAP.put("modules", MODULES);      
+      TOKEN_MAP.put("plugins", PLUGINS );      
 
       TOKEN_MAP.put("require", REQUIRE);
 

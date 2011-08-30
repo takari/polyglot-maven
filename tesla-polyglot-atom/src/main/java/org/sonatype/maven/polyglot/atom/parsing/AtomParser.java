@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
+
+import org.apache.maven.model.Plugin;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
  * Parses the atom token stream into an internal model, which can be emitted
@@ -48,68 +52,106 @@ public class AtomParser {
     if (match(Token.Kind.PROJECT) == null) {
       return null;
     }
-
+  
     List<Token> signature = match(Token.Kind.STRING);
     if (null == signature) {
       log.severe("Expected string describing project after 'project'.");
     }
-
+  
     String projectDescription = signature.get(0).value;
     String projectUrl = null;
-
+  
     signature = match(Token.Kind.AT, Token.Kind.STRING);
     if (null != signature) {
       projectUrl = signature.get(1).value;
     }
-
+  
     if (match(Token.Kind.EOL) == null) {
       log.severe("Expected end of line after project declaration");
       return null;
     }
-
+  
     // id definition
     indent();
     if (match(Token.Kind.ID) == null) {
       log.severe("Expected 'id' after project declaration");
       return null;
     }
-
+  
     // Now expect a colon.
     if (match(Token.Kind.COLON) == null) {
       log.severe("Expected ':' after 'id'");
       return null;
     }
-
-    //
-    //jvz parent attempt
+  
     Id projectId = id();
-
+  
     // parent
-    indent();
+    chewEols();
+    chewIndents();
     if (match(Token.Kind.PARENT) == null) {
-      log.severe("Expected 'parent' after id declaration");
+      log.severe("Expected 'inherit' after id declaration");
       return null;
     }
-
+  
     // Now expect a colon.
     if (match(Token.Kind.COLON) == null) {
-      log.severe("Expected ':' after 'parent'");
+      log.severe("Expected ':' after 'inherit'");
       return null;
     }
+  
+    Id parent = id();        
 
-    Id parent = id();
-    //
+    // packaging
+    chewEols();
+    chewIndents();
+    if (match(Token.Kind.PACKAGING) == null) {
+      log.severe("Expected 'packaging' after inherit declaration");
+      return null;
+    }    
+
+    if (match(Token.Kind.COLON) == null) {
+      log.severe("Expected ':' after 'packaging'");
+      return null;
+    }
     
+    // packaging
+    String packaging = idFragment();
+    
+    // srcs
     chewEols();
     Map<String, String> dirs = srcs();
 
+    // properties
     chewEols();
-    List<Id> deps = dependencies();
+    chewIndents();    
+    List<Property> properties = properties(Token.Kind.PROPS);
+    
+    // dependencies
+    chewEols();
+    chewIndents();    
+    List<Id> overrides = dependencies(Token.Kind.OVERRIDES);    
+    
+    // dependencies
+    chewEols();
+    chewIndents();    
+    List<Id> deps = dependencies(Token.Kind.DEPS);
 
+    // modules
+    chewEols();
+    chewIndents();    
+    List<String> modules = modules();
+
+    // modules
+    chewEols();
+    chewIndents();    
+    List<Plugin> plugins = plugins();
+
+    
     chewEols();
     ScmElement scm = scm();
-
-    return new Project(projectId, parent, repositories, projectDescription, projectUrl, deps, dirs, scm);
+  
+    return new Project(projectId, parent, packaging, properties, repositories, projectDescription, projectUrl, overrides, deps, modules, plugins, dirs, scm);
   }
 
   private ScmElement scm() {
@@ -218,9 +260,9 @@ public class AtomParser {
   /**
    * Dependencies of a project. The real meat of it.
    */
-  private List<Id> dependencies() {
+  private List<Id> dependencies(Token.Kind kind) {
     indent();
-    if (match(Token.Kind.DEPS, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
+    if (match(kind, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
       return null; // no deps.
     }
     List<Id> deps = new ArrayList<Id>();
@@ -250,6 +292,101 @@ public class AtomParser {
   }
 
   /**
+   * Dependencies of a project. The real meat of it.
+   */
+  private List<Plugin> plugins() {
+    indent();
+    if (match(Token.Kind.PLUGINS, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
+      return null; // no deps.
+    }
+    List<Plugin> plugins = new ArrayList<Plugin>();
+
+    chewEols();
+    chewIndents();
+
+    // Slurp up the dep ids.
+    Id id;
+    while ((id = id()) != null) {      
+      chewEols();
+      chewIndents();
+      List<Property> properties = properties(Token.Kind.PROPS);
+      Plugin plugin = new Plugin();
+      plugin.setGroupId(id.getGroup());
+      plugin.setArtifactId(id.getArtifact());
+      plugin.setVersion(id.getVersion());
+      if (properties != null) {
+        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
+        for( Property p : properties ) {
+          Xpp3Dom child = new Xpp3Dom(p.getKey());
+          child.setValue(p.getValue());
+          pluginConfiguration.addChild(child);
+        }
+        plugin.setConfiguration(pluginConfiguration);
+      }
+      plugins.add(plugin);      
+    }
+
+    if (match(Token.Kind.RBRACKET) == null) {
+      // ERROR!
+      throw new RuntimeException("Expected ]");
+    }
+
+    return plugins;
+  }  
+  
+  private List<Property> properties(Token.Kind kind) {
+    
+    indent();
+    if (match(kind, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
+      return null; // no properties.
+    }
+    List<Property> properties = new ArrayList<Property>();
+
+    chewEols();
+    chewIndents();
+    
+    Property p;
+    while ((p = property()) != null) {      
+      chewEols();
+      chewIndents();
+      properties.add(p);
+    }
+    
+    if (match(Token.Kind.RBRACKET) == null) {
+      // ERROR!
+      throw new RuntimeException("Expected ]");
+    }
+
+    return properties;
+  }
+  
+  private List<String> modules() {
+    
+    indent();
+    if (match(Token.Kind.MODULES, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
+      return null; // no properties.
+    }
+    List<String> modules = new ArrayList<String>();
+
+    chewEols();
+    chewIndents();
+    
+    String module;
+    while ((module = idFragment()).isEmpty() == false) {      
+      chewEols();
+      chewIndents();
+      modules.add(module);
+    }
+    
+    if (match(Token.Kind.RBRACKET) == null) {
+      // ERROR!
+      throw new RuntimeException("Expected ]");
+    }
+
+    return modules;
+  }  
+  
+  /**
    * classifier := LPAREN IDENT RPAREN
    */
   private String classifier() {
@@ -271,6 +408,27 @@ public class AtomParser {
     return classifier.get(0).value;
   }
 
+  private Property property() {
+
+    String key = idFragment();
+    if (key == null) {
+      return null;
+    }
+
+    // Now expect a colon.
+    if (match(Token.Kind.COLON) == null) {
+      return null;
+    }
+
+    String value = idFragment();
+    if (value == null) {
+      return null;
+    }
+
+    return new Property(key,value);
+  }
+  
+  
   /**
    * Id of a project definition.
    *
@@ -303,23 +461,71 @@ public class AtomParser {
       return null;
     }
 
+//    int currentIdx = i;
+//    String version = variable();
+//    if (version == null) {
+//      i = currentIdx;
+//      version = idFragment();
+//      if (version == null) {
+//        return null;
+//      }
+//    }
+
     return new Id(groupId, artifactId, version);
   }
-
 
   private String idFragment() {
     StringBuilder fragment = new StringBuilder();
     List<Token> idFragment;
     while ((idFragment = match(Token.Kind.IDENT)) != null) {
       fragment.append(idFragment.get(0).value);
+      if (match(Token.Kind.PROJECT) != null) {
+        fragment.append("project");
+      }
       if (match(Token.Kind.DOT) != null) {
         fragment.append('.');
+      } 
+      if (match(Token.Kind.PLUGINS) != null) {
+        fragment.append("plugins");
+      }
+      if(match(Token.Kind.DASH) != null) {
+        fragment.append('-');
       }
     }
 
     return fragment.toString();
   }
 
+//  private String variable() {
+    
+//    if (match(Token.Kind.PROJECT_DOT_VERSION) != null) {
+//      return "${project.version}";
+//    } 
+//    
+//    StringBuilder fragment = new StringBuilder();
+//    List<Token> idFragment;
+//    while ((idFragment = match(Token.Kind.DOLLAR, Token.Kind.LBRACE)) != null) {
+//      fragment.append(idFragment.get(0).value);
+//      while ((idFragment = match(Token.Kind.IDENT)) != null) {
+//        fragment.append(idFragment.get(0).value);
+//        if (match(Token.Kind.DOT) != null) {
+//          fragment.append('.');
+//        } else if (match(Token.Kind.DASH) != null) {
+//          fragment.append('-');
+//        }
+//      }
+//    }
+//
+//    if(match(Token.Kind.RBRACE) != null) {
+//      fragment.append('}');
+//    } else {
+//      return null;
+//    }
+//    
+//    return fragment.toString();
+//  }
+  
+  
   /**
    * Optional repositories declaration at the top of the file.
    *
