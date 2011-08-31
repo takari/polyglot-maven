@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.apache.maven.model.Plugin;
@@ -372,7 +371,7 @@ public class AtomParser {
     chewIndents();
     
     String module;
-    while ((module = idFragment()).isEmpty() == false) {      
+    while ((module = idFragment()).length() != 0) {      
       chewEols();
       chewIndents();
       modules.add(module);

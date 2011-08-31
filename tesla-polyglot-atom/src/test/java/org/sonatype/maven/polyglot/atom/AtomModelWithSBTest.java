@@ -18,7 +18,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 
-public class AtomModelTest extends InjectedTestCase {
+public class AtomModelWithSBTest extends InjectedTestCase {
 
   @Inject
   @Named("${basedir}/src/test/poms")

@@ -16,36 +16,23 @@
 
 package org.sonatype.maven.polyglot.atom;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Repository;
-import org.apache.maven.model.io.DefaultModelWriter;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
 
 @Component(role = ModelWriter.class, hint = "atom")
 public class AtomModelWriter extends ModelWriterSupport {
@@ -60,7 +47,23 @@ public class AtomModelWriter extends ModelWriterSupport {
 
     PrintWriter pw = new PrintWriter(output);
 
-    // repos
+    repositories(pw, model);
+    project(pw, model);
+    id(pw, model);
+    parent(pw, model);
+    packaging(pw, model);
+    properties(pw, model);
+    dependencyManagement(pw, model);
+    dependencies(pw, model);
+    modules(pw, model);
+    pluginManagement(pw, model);
+    plugins(pw, model);
+
+    pw.flush();
+    pw.close();
+  }
+
+  private void repositories(PrintWriter pw, Model model) {
     List<Repository> repositories = model.getRepositories();
     if (!repositories.isEmpty()) {
       pw.print("repositories << \"");
@@ -73,18 +76,28 @@ public class AtomModelWriter extends ModelWriterSupport {
       pw.println("\"");
       pw.println();
     }
-    // name
+  }
+
+  private void project(PrintWriter pw, Model model) {
     pw.println("project \"" + model.getName() + "\" @ \"" + model.getUrl() + "\"");
-    // id
+  }
+
+  private void id(PrintWriter pw, Model model) {
     pw.println(indent + "id: " + model.getGroupId() + ":" + model.getArtifactId() + ":" + model.getVersion());
-    // id
+  }
+
+  private void parent(PrintWriter pw, Model model) {
     if (model.getParent() != null) {
       pw.println(indent + "inherit: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
     }
-    // packaging
+  }
+
+  private void packaging(PrintWriter pw, Model model) {
     pw.println(indent + "packaging: " + model.getPackaging());
     pw.println();
-    // properties
+  }
+
+  private void properties(PrintWriter pw, Model model) {
     if (!model.getProperties().isEmpty()) {
       List<Object> keys = new ArrayList<Object>(model.getProperties().keySet());
       pw.print(indent + "properties: [ ");
@@ -93,19 +106,20 @@ public class AtomModelWriter extends ModelWriterSupport {
         if (i != 0) {
           pw.print("                ");
         }
-        pw.print(key + ": " + model.getProperties().get(key));
-        if (i + 1 != keys.size()) {
-          pw.println();
+        Object value = model.getProperties().get(key);
+        if (value != null) {
+          pw.print(key + ": " + value);
+          if (i + 1 != keys.size()) {
+            pw.println();
+          }
         }
       }
       pw.println(" ]");
       pw.println();
     }
-    // depMan
-    deps(pw, "overrides", model.getDependencyManagement().getDependencies());
-    // deps
-    deps(pw, "deps", model.getDependencies());
-    // modules
+  }
+
+  private void modules(PrintWriter pw, Model model) {
     List<String> modules = model.getModules();
     if (!modules.isEmpty()) {
       pw.print(indent + "modules: [ ");
@@ -122,18 +136,14 @@ public class AtomModelWriter extends ModelWriterSupport {
       pw.println(" ]");
       pw.println();
     }
-    // pluginManagenent
-    if (model.getBuild().getPluginManagement() != null) {
-      plugins(pw, "plugins", model.getBuild().getPluginManagement().getPlugins());
-    }
-    // plugins
-    if (!model.getBuild().getPlugins().isEmpty()) {
-      plugins(pw, "plugins", model.getBuild().getPlugins());
-    }
-    // dependencyManagement
-    if (model.getDistributionManagement() != null) {
+  }
 
-    }
+  private void dependencyManagement(PrintWriter pw, Model model) {
+    deps(pw, "overrides", model.getDependencyManagement().getDependencies());
+  }
+
+  private void dependencies(PrintWriter pw, Model model) {
+    deps(pw, "deps", model.getDependencies());
   }
 
   private void deps(PrintWriter pw, String elementName, List<Dependency> deps) {
@@ -154,31 +164,48 @@ public class AtomModelWriter extends ModelWriterSupport {
     }
   }
 
+  private void pluginManagement(PrintWriter pw, Model model) {
+    if (model.getBuild().getPluginManagement() != null) {
+      plugins(pw, "pluginOverrides", model.getBuild().getPluginManagement().getPlugins());
+    }
+  }
+
+  private void plugins(PrintWriter pw, Model model) {
+    if (!model.getBuild().getPlugins().isEmpty()) {
+      plugins(pw, "plugins", model.getBuild().getPlugins());
+    }
+  }
+
+  // need to write nested objects
   private void plugins(PrintWriter pw, String elementName, List<Plugin> plugins) {
     if (!plugins.isEmpty()) {
       pw.print(indent + elementName + ": [ ");
       for (int i = 0; i < plugins.size(); i++) {
         Plugin plugin = plugins.get(i);
         if (i != 0) {
-          pw.print("            ");
+          pw.print("             ");
         }
         pw.print(plugin.getGroupId() + ":" + plugin.getArtifactId() + ":" + plugin.getVersion());
         if (plugin.getConfiguration() != null) {
           pw.println();
-          pw.print("               properties:[ ");
           Xpp3Dom configuration = (Xpp3Dom) plugin.getConfiguration();
-          int count = configuration.getChildCount();
-          for( int j = 0; j < count; j++) {
-            Xpp3Dom c = configuration.getChild(j);
-            if (j != 0) {
-              pw.print("                            ");
+          if (configuration.getChildCount() != 0) {
+            pw.print("               properties:[ ");
+            int count = configuration.getChildCount();
+            for (int j = 0; j < count; j++) {
+              Xpp3Dom c = configuration.getChild(j);
+              if (c.getValue() != null) {
+                if (j != 0) {
+                  pw.print("                            ");
+                }
+                pw.print(c.getName() + ": " + c.getValue());
+                if (j + 1 != count) {
+                  pw.println();
+                }
+              }
             }
-            pw.print(c.getName() + ": " + c.getValue() + " ");
-            if (j + 1 != count) {
-              pw.println();
-            }            
+            pw.print(" ]");
           }
-          pw.print(" ]");
         }
         if (i + 1 != plugins.size()) {
           pw.println();

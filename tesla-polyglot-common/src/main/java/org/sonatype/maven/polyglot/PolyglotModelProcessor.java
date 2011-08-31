@@ -20,10 +20,12 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
+import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.IOUtil;
+import org.sonatype.maven.polyglot.mapping.Mapping;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,53 +34,85 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Polyglot model processor.
- *
+ * 
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- *
+ * 
  * @since 0.7
  */
-@Component(role=ModelProcessor.class, hint="polyglot")
-public class PolyglotModelProcessor
-    implements ModelProcessor
-{
-    @Requirement
-    protected Logger log;
-    
-    @Requirement
-    private PolyglotModelManager manager;
+@Component(role = ModelProcessor.class, hint = "polyglot")
+public class PolyglotModelProcessor implements ModelProcessor {
 
-    public File locatePom(final File dir) {
-        assert manager != null;
-        File pomFile = manager.locatePom(dir);
-        // behave like proper maven in case there is no pom from manager
-        return pomFile == null? new File( dir, "pom.xml" ) : pomFile;
+  @Requirement
+  protected Logger log;
+  
+  @Requirement(role=Mapping.class)
+  private List<Mapping> mappings;
+
+  public Model read(final File input, final Map<String, ?> options) throws IOException, ModelParseException {
+    Model model;
+
+    Reader reader = new BufferedReader(new FileReader(input));
+    try {
+      model = read(reader, options);
+      model.setPomFile(input);
+    } finally {
+      IOUtil.close(reader);
+    }
+    return model;
+  }
+
+  public Model read(final InputStream input, final Map<String, ?> options) throws IOException, ModelParseException {
+    return read(new InputStreamReader(input), options);
+  }
+
+  public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
+    ModelReader reader = getReaderFor(options);
+    return reader.read(input, options);
+  }
+
+  public void addMapping(final Mapping mapping) {
+    assert mapping != null;
+    mappings.add(mapping);
+  }
+
+  public ModelReader getReaderFor(final Map<String, ?> options) {
+    for (Mapping mapping : mappings) {
+      if (mapping.accept(options)) {
+        return mapping.getReader();
+      }
     }
 
-    public Model read(final File input, final  Map<String,?> options) throws IOException, ModelParseException {
-        Model model;
+    throw new RuntimeException("Unable determine model input format; options=" + options);
+  }
 
-        Reader reader = new BufferedReader(new FileReader(input));
-        try {
-            model = read(reader, options);
-            model.setPomFile(input);
-        }
-        finally {
-            IOUtil.close(reader);
-        }
-        return model;
+  public ModelWriter getWriterFor(final Map<String, ?> options) {
+    for (Mapping mapping : mappings) {
+      if (mapping.accept(options)) {
+        return mapping.getWriter();
+      }
     }
 
-    public Model read(final InputStream input, final Map<String,?> options) throws IOException, ModelParseException {
-        return read(new InputStreamReader(input), options);
+    throw new RuntimeException("Unable determine model output format; options=" + options);
+  }
+
+  public File locatePom(final File dir) {
+    assert dir != null;
+
+    File pomFile = null;
+    float mappingPriority = Float.MIN_VALUE;
+    for (Mapping mapping : mappings) {
+      File file = mapping.locatePom(dir);
+      if (file != null && (pomFile == null || mappingPriority < mapping.getPriority())) {
+        pomFile = file;
+        mappingPriority = mapping.getPriority();
+      }
     }
 
-    public Model read(final Reader input, final Map<String,?> options) throws IOException, ModelParseException {
-        assert manager != null;
-        ModelReader reader = manager.getReaderFor(options);
-        return reader.read(input, options);
-    }
+    return pomFile == null ? new File(dir, "pom.xml") : pomFile;
+  }
 }
