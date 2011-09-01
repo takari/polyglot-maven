@@ -21,6 +21,8 @@ import java.io.Reader;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.model.building.ModelProcessor;
+import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.IOUtil;
@@ -41,7 +43,7 @@ public class AtomModelReader extends ModelReaderSupport {
     assert input != null;
 
     // Parse the token stream from our pom.atom configuration file.
-    Project project = new AtomParser(new Tokenizer(IOUtil.toString(input)).tokenize()).parse();
+    Project project = new AtomParser((ModelSource)options.get(ModelProcessor.SOURCE), new Tokenizer(IOUtil.toString(input)).tokenize()).parse();
     return project.toMavenModel();
   }
 }

@@ -44,8 +44,8 @@ import java.util.Map;
  * 
  * @since 0.7
  */
-@Component(role = ModelProcessor.class, hint = "polyglot")
-public class PolyglotModelProcessor implements ModelProcessor {
+@Component(role = ModelProcessor.class, hint = "tesla")
+public class TeslaModelProcessor implements ModelProcessor {
 
   @Requirement
   protected Logger log;
@@ -83,7 +83,8 @@ public class PolyglotModelProcessor implements ModelProcessor {
   public ModelReader getReaderFor(final Map<String, ?> options) {
     for (Mapping mapping : mappings) {
       if (mapping.accept(options)) {
-        return mapping.getReader();
+        ModelReader reader = mapping.getReader();
+        return reader;
       }
     }
 
@@ -113,6 +114,10 @@ public class PolyglotModelProcessor implements ModelProcessor {
       }
     }
 
-    return pomFile == null ? new File(dir, "pom.xml") : pomFile;
+    if  (pomFile == null) {
+      pomFile = new File(dir, "pom.xml");
+    }
+    
+    return pomFile;
   }
 }

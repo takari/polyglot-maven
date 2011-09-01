@@ -11,7 +11,7 @@ import java.util.Properties;
  */
 public class Project extends Element {
   private final Id projectId;
-  private final Id parent;
+  private final Parent parent;
   private String packaging = "jar";
   private List<Property> properties;
   private final Repositories repositories;
@@ -25,8 +25,8 @@ public class Project extends Element {
   private static final String MAVEN_CENTRAL_URL = "http://repo1.maven.org/maven2";
   private final ScmElement scm;
 
-  public Project(Id projectId, Id parent, String packaging, List<Property> properties, Repositories repositories, String description, String url,
-                 List<Id> overrides, List<Id> deps, List<String> modules, List<Plugin> plugins, Map<String, String> dirs, ScmElement scm) {
+  public Project(Id projectId, Parent parent, String packaging, List<Property> properties, Repositories repositories, String description, String url, List<Id> overrides, List<Id> deps,
+      List<String> modules, List<Plugin> plugins, Map<String, String> dirs, ScmElement scm) {
     this.projectId = projectId;
     this.parent = parent;
     this.packaging = packaging;
@@ -46,14 +46,14 @@ public class Project extends Element {
     return projectId;
   }
 
-  public Id getParent() {
+  public Parent getParent() {
     return parent;
   }
-  
+
   public String getPackaging() {
     return packaging;
   }
-  
+
   public Repositories getRepositories() {
     return repositories;
   }
@@ -84,18 +84,14 @@ public class Project extends Element {
     model.setVersion(projectId.getVersion());
     model.setArtifactId(projectId.getArtifact());
     model.setModelVersion("4.0.0");
-    
+
     // parent
     if (parent != null) {
-      Parent p = new Parent();
-      p.setGroupId(parent.getGroup());
-      p.setArtifactId(parent.getArtifact());
-      p.setVersion(parent.getVersion());
-      model.setParent(p);
+      model.setParent(parent);
     }
-        
+
     model.setPackaging(packaging);
-    
+
     if (properties != null) {
       Properties modelProperties = new Properties();
       for (Property p : properties) {
@@ -103,7 +99,7 @@ public class Project extends Element {
       }
       model.setProperties(modelProperties);
     }
-    
+
     // Add jar repository urls.
     if (null == repositories) {
       // Add maven central if no repos exist.
@@ -129,6 +125,8 @@ public class Project extends Element {
         dependency.setGroupId(dep.getGroup());
         dependency.setArtifactId(dep.getArtifact());
         dependency.setVersion(dep.getVersion());
+        //JVZ: We need to parse these
+        dependency.setType("jar");
 
         if (null != dep.getClassifier()) {
           dependency.setClassifier(dep.getClassifier());
@@ -137,8 +135,7 @@ public class Project extends Element {
       }
       model.setDependencyManagement(depMan);
     }
-    
-    
+
     // Add project dependencies.
     if (deps != null) {
       for (Id dep : deps) {
@@ -146,9 +143,12 @@ public class Project extends Element {
         dependency.setGroupId(dep.getGroup());
         dependency.setArtifactId(dep.getArtifact());
         dependency.setVersion(dep.getVersion());
+        //JVZ: We need to parse these
+        dependency.setType("jar");
 
-        if (null != dep.getClassifier())
+        if (null != dep.getClassifier()) {
           dependency.setClassifier(dep.getClassifier());
+        }
         model.addDependency(dependency);
       }
     }
@@ -156,11 +156,11 @@ public class Project extends Element {
     if (modules != null) {
       model.setModules(modules);
     }
-    
+
     if (plugins != null) {
       model.getBuild().setPlugins(plugins);
     }
-    
+
     // Optional source dirs customization.
     if (dirs != null) {
       Build build = new Build();
@@ -184,6 +184,7 @@ public class Project extends Element {
 
       model.setScm(scm);
     }
+
     return model;
   }
 

@@ -8,32 +8,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.building.ModelSource;
+import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
- * Parses the atom token stream into an internal model, which can be emitted
- * as a Maven model.
- *
+ * Parses the atom token stream into an internal model, which can be emitted as a Maven model.
+ * 
  * @author dhanji@gmail.com (Dhanji R. Prasanna)
  */
 public class AtomParser {
   // TODO(dhanji): Replace with proper logging/console out
   private final Logger log = Logger.getLogger(AtomParser.class.getName());
   private final List<Token> tokens;
+  // This is the ultimate source where the model came from. We can use this to help the user understand problems in the parsing of the
+  // model and help them make corrections.
+  private final ModelSource modelSource;
 
   // Parser state. (current index)
   private int i = 0;
 
-  public AtomParser(List<Token> tokens) {
+  public AtomParser(ModelSource modelSource, List<Token> tokens) {
     this.tokens = tokens;
+    this.modelSource = modelSource;
+  }
+
+  private void parseException(String message, Throwable t) {
+    throw new RuntimeException("Error parsing " + modelSource.getLocation() + ": " + message, t);
+  }
+
+  private void parseException(String message) {
+    throw new RuntimeException("Error parsing " + modelSource.getLocation() + ": " + message);
   }
 
   public Project parse() {
     chewEols();
     Repositories repositories = repositories();
     if (null == repositories) {
-      log.warning("No repositories specified in atom file, defaulting to Maven Central.");
+      // don't really need to log this. jvz.
+      // log.warning("No repositories specified in atom file, defaulting to Maven Central.");
     }
 
     chewEols();
@@ -44,47 +59,47 @@ public class AtomParser {
 
   /**
    * Parsing rule for a single project build definition.
-   *
+   * 
    * project := 'project' STRING AT URL EOL
    */
   private Project project(Repositories repositories) {
     if (match(Token.Kind.PROJECT) == null) {
       return null;
     }
-  
+
     List<Token> signature = match(Token.Kind.STRING);
     if (null == signature) {
       log.severe("Expected string describing project after 'project'.");
     }
-  
+
     String projectDescription = signature.get(0).value;
     String projectUrl = null;
-  
+
     signature = match(Token.Kind.AT, Token.Kind.STRING);
     if (null != signature) {
       projectUrl = signature.get(1).value;
     }
-  
+
     if (match(Token.Kind.EOL) == null) {
       log.severe("Expected end of line after project declaration");
       return null;
     }
-  
+
     // id definition
     indent();
     if (match(Token.Kind.ID) == null) {
       log.severe("Expected 'id' after project declaration");
       return null;
     }
-  
+
     // Now expect a colon.
     if (match(Token.Kind.COLON) == null) {
       log.severe("Expected ':' after 'id'");
       return null;
     }
-  
+
     Id projectId = id();
-  
+
     // parent
     chewEols();
     chewIndents();
@@ -92,14 +107,14 @@ public class AtomParser {
       log.severe("Expected 'inherit' after id declaration");
       return null;
     }
-  
+
     // Now expect a colon.
     if (match(Token.Kind.COLON) == null) {
       log.severe("Expected ':' after 'inherit'");
       return null;
     }
-  
-    Id parent = id();        
+
+    Parent parent = parent();
 
     // packaging
     chewEols();
@@ -107,49 +122,48 @@ public class AtomParser {
     if (match(Token.Kind.PACKAGING) == null) {
       log.severe("Expected 'packaging' after inherit declaration");
       return null;
-    }    
+    }
 
     if (match(Token.Kind.COLON) == null) {
       log.severe("Expected ':' after 'packaging'");
       return null;
     }
-    
+
     // packaging
     String packaging = idFragment();
-    
+
     // srcs
     chewEols();
     Map<String, String> dirs = srcs();
 
     // properties
     chewEols();
-    chewIndents();    
+    chewIndents();
     List<Property> properties = properties(Token.Kind.PROPS);
-    
+
     // dependencies
     chewEols();
-    chewIndents();    
-    List<Id> overrides = dependencies(Token.Kind.OVERRIDES);    
-    
+    chewIndents();
+    List<Id> overrides = dependencies(Token.Kind.OVERRIDES, false);
+
     // dependencies
     chewEols();
-    chewIndents();    
-    List<Id> deps = dependencies(Token.Kind.DEPS);
+    chewIndents();
+    List<Id> deps = dependencies(Token.Kind.DEPS, true);
 
     // modules
     chewEols();
-    chewIndents();    
+    chewIndents();
     List<String> modules = modules();
 
     // modules
     chewEols();
-    chewIndents();    
+    chewIndents();
     List<Plugin> plugins = plugins();
 
-    
     chewEols();
     ScmElement scm = scm();
-  
+
     return new Project(projectId, parent, packaging, properties, repositories, projectDescription, projectUrl, overrides, deps, modules, plugins, dirs, scm);
   }
 
@@ -168,12 +182,12 @@ public class AtomParser {
       String label = ident.get(0).value;
 
       if (match(Token.Kind.COLON) == null) {
-        throw new RuntimeException("Expected : after label");
+        parseException("Expected : after label");
       }
 
       List<Token> valueToken = match(Token.Kind.STRING);
       if (null == valueToken) {
-        throw new RuntimeException("Expected String after :");
+        parseException("Expected String after :");
       }
       String value = valueToken.get(0).value;
 
@@ -189,7 +203,7 @@ public class AtomParser {
     }
 
     if (match(Token.Kind.RBRACKET) == null) {
-      throw new RuntimeException("Expected ] after srcs list");
+      parseException("Expected ] after srcs list");
     }
 
     return new ScmElement(connection, developerConnection, url);
@@ -209,18 +223,18 @@ public class AtomParser {
     chewIndents();
     List<Token> aMatch = match(Token.Kind.IDENT);
     if (aMatch == null) {
-      throw new RuntimeException("Expected 'src' or 'test'");
+      parseException("Expected 'src' or 'test'");
     }
 
     String srcDir = null;
     if ("src".equals(aMatch.get(0).value)) {
       if (null == match(Token.Kind.COLON)) {
-        throw new RuntimeException("Expected : after src");
+        parseException("Expected : after src");
       }
 
       List<Token> srcDirToken = match(Token.Kind.STRING);
       if (null == srcDirToken) {
-        throw new RuntimeException("Expected string after src:");
+        parseException("Expected string after src:");
       }
 
       srcDir = srcDirToken.get(0).value;
@@ -231,12 +245,12 @@ public class AtomParser {
     String testDir = null;
     if (null != aMatch && "test".equals(aMatch.get(0).value)) {
       if (null == match(Token.Kind.COLON)) {
-        throw new RuntimeException("Expected : after test");
+        parseException("Expected : after test");
       }
 
       List<Token> testDirToken = match(Token.Kind.STRING);
       if (null == testDirToken) {
-        throw new RuntimeException("Expected string after test:");
+        parseException("Expected string after test:");
       }
 
       testDir = testDirToken.get(0).value;
@@ -247,10 +261,10 @@ public class AtomParser {
     if (null != srcDir)
       dirs.put("src", srcDir.substring(1, srcDir.length() - 1));
     if (null != testDir)
-    dirs.put("test", testDir.substring(1, testDir.length() - 1));
+      dirs.put("test", testDir.substring(1, testDir.length() - 1));
 
     if (match(Token.Kind.RBRACKET) == null) {
-      throw new RuntimeException("Expected ] after srcs list");
+      parseException("Expected ] after srcs list");
     }
 
     return dirs;
@@ -259,7 +273,7 @@ public class AtomParser {
   /**
    * Dependencies of a project. The real meat of it.
    */
-  private List<Id> dependencies(Token.Kind kind) {
+  private List<Id> dependencies(Token.Kind kind, boolean allowNullVersion) {
     indent();
     if (match(kind, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
       return null; // no deps.
@@ -271,11 +285,12 @@ public class AtomParser {
 
     // Slurp up the dep ids.
     Id id;
-    while ((id = id()) != null) {
+    while ((id = id(allowNullVersion)) != null) {
       // Optional additional params at the end.
       String classifier = classifier();
-      if (null != classifier)
+      if (null != classifier) {
         id.setClassifier(classifier);
+      }
 
       chewEols();
       chewIndents();
@@ -284,7 +299,7 @@ public class AtomParser {
 
     if (match(Token.Kind.RBRACKET) == null) {
       // ERROR!
-      throw new RuntimeException("Expected ]");
+      parseException("Expected ]");
     }
 
     return deps;
@@ -305,7 +320,7 @@ public class AtomParser {
 
     // Slurp up the dep ids.
     Id id;
-    while ((id = id()) != null) {      
+    while ((id = id()) != null) {
       chewEols();
       chewIndents();
       List<Property> properties = properties(Token.Kind.PROPS);
@@ -315,26 +330,26 @@ public class AtomParser {
       plugin.setVersion(id.getVersion());
       if (properties != null) {
         Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
-        for( Property p : properties ) {
+        for (Property p : properties) {
           Xpp3Dom child = new Xpp3Dom(p.getKey());
           child.setValue(p.getValue());
           pluginConfiguration.addChild(child);
         }
         plugin.setConfiguration(pluginConfiguration);
       }
-      plugins.add(plugin);      
+      plugins.add(plugin);
     }
 
     if (match(Token.Kind.RBRACKET) == null) {
       // ERROR!
-      throw new RuntimeException("Expected ]");
+      parseException("Expected ]");
     }
 
     return plugins;
-  }  
-  
+  }
+
   private List<Property> properties(Token.Kind kind) {
-    
+
     indent();
     if (match(kind, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
       return null; // no properties.
@@ -343,24 +358,24 @@ public class AtomParser {
 
     chewEols();
     chewIndents();
-    
+
     Property p;
-    while ((p = property()) != null) {      
+    while ((p = property()) != null) {
       chewEols();
       chewIndents();
       properties.add(p);
     }
-    
+
     if (match(Token.Kind.RBRACKET) == null) {
       // ERROR!
-      throw new RuntimeException("Expected ]");
+      parseException("Expected ]");
     }
 
     return properties;
   }
-  
+
   private List<String> modules() {
-    
+
     indent();
     if (match(Token.Kind.MODULES, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
       return null; // no properties.
@@ -369,22 +384,22 @@ public class AtomParser {
 
     chewEols();
     chewIndents();
-    
+
     String module;
-    while ((module = idFragment()).length() != 0) {      
+    while ((module = idFragment()).length() != 0) {
       chewEols();
       chewIndents();
       modules.add(module);
     }
-    
+
     if (match(Token.Kind.RBRACKET) == null) {
       // ERROR!
-      throw new RuntimeException("Expected ]");
+      parseException("Expected ]");
     }
 
     return modules;
-  }  
-  
+  }
+
   /**
    * classifier := LPAREN IDENT RPAREN
    */
@@ -424,16 +439,19 @@ public class AtomParser {
       return null;
     }
 
-    return new Property(key,value);
+    return new Property(key, value);
   }
-  
-  
+
   /**
    * Id of a project definition.
-   *
+   * 
    * id := IDENT (DOT IDENT)* COLON IDENT COLON IDENT EOL
    */
   private Id id() {
+    return id(false);
+  }
+
+  private Id id(boolean allowNullVersion) {
 
     String groupId = idFragment();
     if (groupId == null) {
@@ -451,6 +469,35 @@ public class AtomParser {
     }
 
     // Now expect a colon.
+    String version = null;
+    if (match(Token.Kind.COLON) == null && !allowNullVersion) {
+      return null;
+    } else {
+      version = idFragment();
+      if (version == null) {
+        return null;
+      }
+    }
+
+    return new Id(groupId, artifactId, StringUtils.isEmpty(version) ? null : version);
+  }
+
+  private Parent parent() {
+
+    String groupId = idFragment();
+    if (groupId == null) {
+      return null;
+    }
+
+    if (match(Token.Kind.COLON) == null) {
+      return null;
+    }
+
+    String artifactId = idFragment();
+    if (artifactId == null) {
+      return null;
+    }
+
     if (match(Token.Kind.COLON) == null) {
       return null;
     }
@@ -460,17 +507,44 @@ public class AtomParser {
       return null;
     }
 
-//    int currentIdx = i;
-//    String version = variable();
-//    if (version == null) {
-//      i = currentIdx;
-//      version = idFragment();
-//      if (version == null) {
-//        return null;
-//      }
-//    }
+    String relativePath = "../pom.atom";
+    if (match(Token.Kind.COLON) != null) {
+      relativePath = relativePath();
+      if (relativePath == null) {
+        return null;
+      }
+    }
 
-    return new Id(groupId, artifactId, version);
+    Parent parent = new Parent();
+    parent.setGroupId(groupId);
+    parent.setArtifactId(artifactId);
+    parent.setVersion(version);
+    parent.setRelativePath(relativePath);
+
+    return parent;
+  }
+
+  //
+  // ../atom.pom
+  //
+  private String relativePath() {
+    StringBuilder fragment = new StringBuilder();
+    if (match(Token.Kind.DOT) != null) {
+      fragment.append(".");
+    }
+    if (match(Token.Kind.DOT) != null) {
+      fragment.append(".");
+    }
+
+    List<Token> idFragment;
+    while ((idFragment = match(Token.Kind.IDENT)) != null) {
+      fragment.append(idFragment.get(0).value);
+      if (match(Token.Kind.DOT) != null) {
+        fragment.append('.');
+      }
+    }
+
+    return fragment.toString();
   }
 
   private String idFragment() {
@@ -483,11 +557,11 @@ public class AtomParser {
       }
       if (match(Token.Kind.DOT) != null) {
         fragment.append('.');
-      } 
+      }
       if (match(Token.Kind.PLUGINS) != null) {
         fragment.append("plugins");
       }
-      if(match(Token.Kind.DASH) != null) {
+      if (match(Token.Kind.DASH) != null) {
         fragment.append('-');
       }
     }
@@ -495,39 +569,38 @@ public class AtomParser {
     return fragment.toString();
   }
 
-//  private String variable() {
-    
-//    if (match(Token.Kind.PROJECT_DOT_VERSION) != null) {
-//      return "${project.version}";
-//    } 
-//    
-//    StringBuilder fragment = new StringBuilder();
-//    List<Token> idFragment;
-//    while ((idFragment = match(Token.Kind.DOLLAR, Token.Kind.LBRACE)) != null) {
-//      fragment.append(idFragment.get(0).value);
-//      while ((idFragment = match(Token.Kind.IDENT)) != null) {
-//        fragment.append(idFragment.get(0).value);
-//        if (match(Token.Kind.DOT) != null) {
-//          fragment.append('.');
-//        } else if (match(Token.Kind.DASH) != null) {
-//          fragment.append('-');
-//        }
-//      }
-//    }
-//
-//    if(match(Token.Kind.RBRACE) != null) {
-//      fragment.append('}');
-//    } else {
-//      return null;
-//    }
-//    
-//    return fragment.toString();
-//  }
-  
-  
+  // private String variable() {
+
+  // if (match(Token.Kind.PROJECT_DOT_VERSION) != null) {
+  // return "${project.version}";
+  // }
+  //
+  // StringBuilder fragment = new StringBuilder();
+  // List<Token> idFragment;
+  // while ((idFragment = match(Token.Kind.DOLLAR, Token.Kind.LBRACE)) != null) {
+  // fragment.append(idFragment.get(0).value);
+  // while ((idFragment = match(Token.Kind.IDENT)) != null) {
+  // fragment.append(idFragment.get(0).value);
+  // if (match(Token.Kind.DOT) != null) {
+  // fragment.append('.');
+  // } else if (match(Token.Kind.DASH) != null) {
+  // fragment.append('-');
+  // }
+  // }
+  // }
+  //
+  // if(match(Token.Kind.RBRACE) != null) {
+  // fragment.append('}');
+  // } else {
+  // return null;
+  // }
+  //
+  // return fragment.toString();
+  // }
+
   /**
    * Optional repositories declaration at the top of the file.
-   *
+   * 
    * repositories := 'repositories' LEFT_WAVE STRING (COMMA STRING)*
    */
   private Repositories repositories() {
@@ -539,7 +612,7 @@ public class AtomParser {
     List<Token> repositories = match(Token.Kind.STRING);
     if (repositories == null) {
       // ERROR expected String.
-      throw new RuntimeException("Error: expected URL string after 'respositories");
+      parseException("Error: expected URL string after 'respositories");
     }
 
     // Validate first URL...
@@ -569,13 +642,12 @@ public class AtomParser {
     try {
       new URL(url);
     } catch (MalformedURLException e) {
-      throw new RuntimeException("Invalid URL: " + url, e);
+      parseException("Invalid URL: " + url, e);
     }
     return url;
   }
 
   // Production tools.
-
 
   private void indent() {
     if (match(Token.Kind.INDENT, Token.Kind.INDENT) != null) {
@@ -624,11 +696,13 @@ public class AtomParser {
 
   private void chewEols() {
     // Chew up end-of-lines.
-    while (match(Token.Kind.EOL) != null);
+    while (match(Token.Kind.EOL) != null)
+      ;
   }
 
   private void chewIndents() {
     // Chew up end-of-lines.
-    while (match(Token.Kind.INDENT) != null);
+    while (match(Token.Kind.INDENT) != null)
+      ;
   }
 }

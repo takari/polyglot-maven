@@ -79,16 +79,35 @@ public class AtomModelWriter extends ModelWriterSupport {
   }
 
   private void project(PrintWriter pw, Model model) {
-    pw.println("project \"" + model.getName() + "\" @ \"" + model.getUrl() + "\"");
+    String name = model.getName();
+    if (name == null) {
+      name = model.getArtifactId();
+    }
+    pw.println("project \"" + name + "\" @ \"" + model.getUrl() + "\"");
   }
 
   private void id(PrintWriter pw, Model model) {
-    pw.println(indent + "id: " + model.getGroupId() + ":" + model.getArtifactId() + ":" + model.getVersion());
+    String groupId = model.getGroupId();
+    if (groupId == null & model.getParent() != null) {
+      groupId = model.getParent().getGroupId();
+    }
+
+    String version = model.getVersion();
+    if (version == null && model.getParent() != null) {
+      version = model.getParent().getVersion();
+    }
+    pw.println(indent + "id: " + groupId + ":" + model.getArtifactId() + ":" + version);
   }
 
   private void parent(PrintWriter pw, Model model) {
     if (model.getParent() != null) {
-      pw.println(indent + "inherit: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
+      pw.print(indent + "inherit: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
+      if (model.getParent().getRelativePath() != null) {
+        //pw.println(":" + model.getParent().getRelativePath());
+        pw.println(":" + "../pom.atom");        
+      } else {
+        pw.println();
+      }
     }
   }
 
@@ -139,7 +158,9 @@ public class AtomModelWriter extends ModelWriterSupport {
   }
 
   private void dependencyManagement(PrintWriter pw, Model model) {
-    deps(pw, "overrides", model.getDependencyManagement().getDependencies());
+    if (model.getDependencyManagement() != null) {
+      deps(pw, "overrides", model.getDependencyManagement().getDependencies());
+    }
   }
 
   private void dependencies(PrintWriter pw, Model model) {
@@ -154,7 +175,18 @@ public class AtomModelWriter extends ModelWriterSupport {
         if (i != 0) {
           pw.print("               ");
         }
-        pw.print(d.getGroupId() + ":" + d.getArtifactId() + ":" + d.getVersion());
+        if (d.getVersion() != null) {
+          pw.print(d.getGroupId() + ":" + d.getArtifactId() + ":" + d.getVersion());
+        } else {
+          //
+          // We are assuming the model is well-formed and that the parent is providing a version
+          // for this particular dependency.
+          //
+          pw.print(d.getGroupId() + ":" + d.getArtifactId());          
+        }
+        if (d.getClassifier() != null) {
+          pw.print("(" + d.getClassifier() + ")");
+        }        
         if (i + 1 != deps.size()) {
           pw.println();
         }
@@ -165,13 +197,13 @@ public class AtomModelWriter extends ModelWriterSupport {
   }
 
   private void pluginManagement(PrintWriter pw, Model model) {
-    if (model.getBuild().getPluginManagement() != null) {
+    if (model.getBuild() != null && model.getBuild().getPluginManagement() != null) {
       plugins(pw, "pluginOverrides", model.getBuild().getPluginManagement().getPlugins());
     }
   }
 
   private void plugins(PrintWriter pw, Model model) {
-    if (!model.getBuild().getPlugins().isEmpty()) {
+    if (model.getBuild() != null && !model.getBuild().getPlugins().isEmpty()) {
       plugins(pw, "plugins", model.getBuild().getPlugins());
     }
   }

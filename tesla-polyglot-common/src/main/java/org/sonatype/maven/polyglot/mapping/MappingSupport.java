@@ -16,14 +16,16 @@
 
 package org.sonatype.maven.polyglot.mapping;
 
+import org.apache.maven.model.building.ModelProcessor;
+import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.sonatype.maven.polyglot.PolyglotModelUtil;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -130,7 +132,7 @@ public abstract class MappingSupport
                 }
             }
 
-            String location = PolyglotModelUtil.getLocation(options);
+            String location = getLocation(options);
             if (location != null) {
                 for (String ext : getAcceptLocationExtensions()) {
                     if (location.endsWith(ext)) {
@@ -153,4 +155,22 @@ public abstract class MappingSupport
         this.priority = priority;
     }
 
+    public String getLocation(final Map<?, ?> options) {
+      if (options != null) {
+          Object tmp = options.get(ModelProcessor.SOURCE);
+          if (tmp instanceof String) {
+              return (String)tmp;
+          }
+          else if (tmp instanceof URL) {
+              return ((URL)tmp).toExternalForm();
+          }
+          else if (tmp instanceof File) {
+              return ((File)tmp).getAbsolutePath();
+          }
+          else if (tmp instanceof ModelSource) {
+              return ((ModelSource)tmp).getLocation();
+          }
+      }
+      return null;
+  }    
 }

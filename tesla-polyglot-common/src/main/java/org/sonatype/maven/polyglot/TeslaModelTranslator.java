@@ -44,13 +44,13 @@ import java.util.Map;
  * 
  * @since 0.7
  */
-@Component(role = PolyglotModelTranslator.class)
-public class PolyglotModelTranslator {
+@Component(role = TeslaModelTranslator.class)
+public class TeslaModelTranslator {
   @Requirement
   protected Logger log;
 
-  @Requirement
-  private PolyglotModelProcessor manager;
+  @Requirement(hint="tesla")
+  private ModelProcessor modelProcessor;
 
   public void translate(final File input, final File output) throws IOException, ModelParseException {
     assert input != null;
@@ -70,11 +70,11 @@ public class PolyglotModelTranslator {
     assert input != null;
     assert output != null;
 
-    ModelReader reader = manager.getReaderFor(inputOptions);
+    ModelReader reader = ((TeslaModelProcessor)modelProcessor).getReaderFor(inputOptions);
     System.out.println(reader);
     Model model = reader.read(input, inputOptions);
 
-    ModelWriter writer = manager.getWriterFor(outputOptions);
+    ModelWriter writer =  ((TeslaModelProcessor)modelProcessor).getWriterFor(outputOptions);
     System.out.println(reader);
     writer.write(output, (Map<String, Object>) outputOptions, model);
   }
@@ -116,10 +116,10 @@ public class PolyglotModelTranslator {
     assert input != null;
     assert output != null;
 
-    ModelReader reader = manager.getReaderFor(inputOptions);
+    ModelReader reader =  ((TeslaModelProcessor)modelProcessor).getReaderFor(inputOptions);
     Model model = reader.read(input, inputOptions);
 
-    ModelWriter writer = manager.getWriterFor(outputOptions);
+    ModelWriter writer =  ((TeslaModelProcessor)modelProcessor).getWriterFor(outputOptions);
     writer.write(output, (Map<String, Object>) outputOptions, model);
   }
 
@@ -128,10 +128,10 @@ public class PolyglotModelTranslator {
     assert input != null;
     assert output != null;
 
-    ModelReader reader = manager.getReaderFor(inputOptions);
+    ModelReader reader =  ((TeslaModelProcessor)modelProcessor).getReaderFor(inputOptions);
     Model model = reader.read(input, inputOptions);
 
-    ModelWriter writer = manager.getWriterFor(outputOptions);
+    ModelWriter writer =  ((TeslaModelProcessor)modelProcessor).getWriterFor(outputOptions);
     writer.write(output, (Map<String, Object>) outputOptions, model);
   }
 }

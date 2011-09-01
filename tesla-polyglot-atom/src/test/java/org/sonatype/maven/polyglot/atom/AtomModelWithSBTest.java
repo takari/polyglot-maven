@@ -15,6 +15,7 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 
@@ -51,9 +52,42 @@ public class AtomModelWithSBTest extends InjectedTestCase {
     //
     assertNotNull(atomModel);
     testMavenModelForCompleteness(atomModel);
-
+     
+    w = new StringWriter();
+    MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
+    xmlWriter.write(w, xmlModel);
+    System.out.println(w.toString());
   }
 
+  public void testAtomModelWriterWhereModelHasDependenciesWithNoVersions() throws Exception {
+    File pom = new File(poms, "sitebricks-pom.xml");
+    MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
+    Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
+    
+    //
+    // Write out the Atom POM
+    //
+    ModelWriter writer = new AtomModelWriter();
+    StringWriter w = new StringWriter();
+    writer.write(w, new HashMap<String, Object>(), xmlModel);
+
+    // Let's take a look at see what's there
+    System.out.println(w.toString());
+
+    //
+    // Read in the Atom POM
+    //
+    ModelReader atomModelReader = new AtomModelReader();
+    StringReader r = new StringReader(w.toString());
+    Model atomModel = atomModelReader.read(r, new HashMap<String, Object>());
+    //
+    // Test for fidelity
+    //
+    //assertNotNull(atomModel);
+
+    
+  }
+  
   void testMavenModelForCompleteness(Model model) {
     //
     // repos
@@ -80,7 +114,9 @@ public class AtomModelWithSBTest extends InjectedTestCase {
     assertEquals("com.google.guava:guava:r09", gav(model.getDependencyManagement().getDependencies().get(5)));
     assertEquals("org.freemarker:freemarker:2.3.10", gav(model.getDependencyManagement().getDependencies().get(12)));
     assertEquals("saxpath:saxpath:1.0-FCS", gav(model.getDependencyManagement().getDependencies().get(22)));
-    assertEquals("org.testng:testng:${org.testng.version}", gav(model.getDependencyManagement().getDependencies().get(35)));
+    Dependency testNg = model.getDependencyManagement().getDependencies().get(35);
+    assertEquals("org.testng:testng:${org.testng.version}", gav(testNg));
+    assertEquals("jdk15", testNg.getClassifier());
     //
     // modules
     //
