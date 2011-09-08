@@ -12,7 +12,7 @@ public class Tokenizer {
   private final String input;
 
   public Tokenizer(String input) {
-    this.input = input;
+    this.input = input.replace("\r\n", "\n").replace('\r', '\n');
   }
 
   private static final int NON = 0; // MUST be zero
