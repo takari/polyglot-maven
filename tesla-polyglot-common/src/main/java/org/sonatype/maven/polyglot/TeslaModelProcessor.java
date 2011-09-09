@@ -25,14 +25,13 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.ReaderFactory;
 import org.sonatype.maven.polyglot.mapping.Mapping;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +55,7 @@ public class TeslaModelProcessor implements ModelProcessor {
   public Model read(final File input, final Map<String, ?> options) throws IOException, ModelParseException {
     Model model;
 
-    Reader reader = new BufferedReader(new FileReader(input));
+    Reader reader = new BufferedReader(ReaderFactory.newXmlReader(input));
     try {
       model = read(reader, options);
       model.setPomFile(input);
@@ -67,7 +66,7 @@ public class TeslaModelProcessor implements ModelProcessor {
   }
 
   public Model read(final InputStream input, final Map<String, ?> options) throws IOException, ModelParseException {
-    return read(new InputStreamReader(input), options);
+    return read(ReaderFactory.newXmlReader(input), options);
   }
 
   public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
