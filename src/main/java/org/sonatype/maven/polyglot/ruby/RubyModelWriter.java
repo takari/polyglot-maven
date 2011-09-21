@@ -30,6 +30,7 @@ import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
@@ -55,6 +56,8 @@ public class RubyModelWriter extends ModelWriterSupport {
 
     static class ModelPrinter {
 
+        private static final String HASH_INDENT = "                            ";
+        private static final String INDENT = "  ";
         private final RubyPrintWriter p;
 
         ModelPrinter(Writer output) {
@@ -241,17 +244,10 @@ public class RubyModelWriter extends ModelWriterSupport {
                     p.append(":" + d.getClassifier());
                 }
                 p.append("'");
-                boolean nested = false;
-                if (d.getScope() != null) {
-                    print(nested, "scope :" + d.getScope());
-                    nested = true;
-                }
-                if (d.isOptional()) {
-                    print(nested, "optional true");
-                    nested = true;
-                }
+                boolean nested = print(false, "scope",  d.getScope() == null ? null : ":" + d.getScope());
+                nested = print(nested, "optional", d.isOptional());
                 if (!d.getExclusions().isEmpty()) {
-                    print(nested, "exclusions [");
+                    nested = print(nested, "exclusions [");
                     boolean first = true;
                     for (Exclusion e : d.getExclusions()) {
                         if (first) {
@@ -263,22 +259,58 @@ public class RubyModelWriter extends ModelWriterSupport {
                                 + "'");
                     }
                     p.append("]");
-                    nested = true;
                 }
-                if (nested) {
-                    p.println();
-                    p.printEndBlock();
-                } else {
-                    p.println();
-                }
+                println(nested);
             }
         }
 
-        private void print(boolean nested, String prop) {
+        private void println(boolean nested) {
+            if (nested) {
+                p.println();
+                p.printEndBlock();
+            }
+            else {
+                p.println();
+            }
+        }
+        
+        private boolean print(boolean nested, String val) {
             if (!nested) {
                 p.printStartBlock();
             }
-            p.print(prop);
+            else {
+                p.println();
+            }
+            p.print(val);
+            return true;
+        }
+            
+        private boolean print(boolean nested, String prop, boolean val) {
+            if(val){
+                if (!nested) {
+                    p.printStartBlock();
+                }
+                else {
+                    p.println();
+                }
+                p.print(prop + " true");
+                return true;
+            }
+            return nested;
+        }
+
+        private boolean print(boolean nested, String key, String val) {
+            if (val != null){
+                if (!nested) {
+                    p.printStartBlock();
+                    nested = true;
+                }
+                else {
+                    p.println();
+                }
+                p.print(key, val);
+            }
+            return nested;
         }
 
         // need to write nested objects
@@ -295,25 +327,92 @@ public class RubyModelWriter extends ModelWriterSupport {
                     if (configuration.getChildCount() != 0) {
                         p.append(",");
                         p.println();
-                        int count = configuration.getChildCount();
-                        for (int j = 0; j < count; j++) {
-                            Xpp3Dom c = configuration.getChild(j);
-                            p.append("                            ");
-                            if (c.getChildCount() > 0) {
-                                p.append(":" + c.getName() + " => 'TODO'");
-                            } else if (c.getValue() == null) {
-                                p.append(":" + c.getName() + " => true");
-                            } else {
-                                p.append(":" + c.getName() + " => '"
-                                        + c.getValue() + "'");
-                            }
-                            if (j + 1 != count) {
-                                p.append(",").println();
-                            }
-                        }
+                        printHashConfig(INDENT, configuration);
                     }
                 }
+                boolean nested = print(false, "extensions", plugin.isExtensions());
+                //nested = print(nested, "inherited", plugin.isInherited());
+                if (!plugin.getExecutions().isEmpty()){
+                    for(PluginExecution exec : plugin.getExecutions()){
+                        boolean execNested = false;
+                        if(exec.getId().equals("default")){
+                            nested = print(nested, "execution");
+                            //print(false, "id", exec.getId().equals("default") ? null : exec.getId());
+                            execNested = print(execNested, "phase", exec.getPhase());
+                        }
+                        else {
+                            nested = print(nested, "execution('" + exec.getId() + 
+                                    (exec.getPhase() != null ? "', '" + exec.getPhase() : "") + "')");
+                        }
+                        //execNested = print(execNested, "inherited", exec.isInherited());
+                        if (!exec.getGoals().isEmpty()) {
+//                            if(execNested){
+//                                execNested = print(execNested, "goals [");
+//                            }
+//                            else {
+//                                p.append(".goals= [");
+//                            }
+                            execNested = print(execNested, "goals [");
+                            boolean first = true;
+                            for (String goal : exec.getGoals()) {
+                                if (first) {
+                                    first = false;
+                                } else {
+                                    p.append(", ");
+                                }
+                                p.append("'" + goal + "'");
+                            }
+                            p.append("]");
+                        }
+                        println(execNested);
+                    }
+                }
+                println(nested);
+            }
+        }
+        
+        private void printListConfig(String indent, Xpp3Dom base) {
+            int count = base.getChildCount();
+            for (int j = 0; j < count; j++) {
+                Xpp3Dom c = base.getChild(j);
+                if(j > 0){
+                    p.append(",");
+                }
                 p.println();
+                p.append(HASH_INDENT + indent);
+                p.append("'" + c.getValue() + "'");
+            }
+        }
+        
+        private void printHashConfig(String indent, Xpp3Dom base) {
+            int count = base.getChildCount();
+            for (int j = 0; j < count; j++) {
+                Xpp3Dom c = base.getChild(j);
+                p.append(HASH_INDENT + indent);
+                if (c.getChildCount() > 0) {
+                    if (c.getChildCount() > 1 && c.getChild(0).getName().equals(c.getChild(1).getName())) {
+                        p.append(":" + c.getName() + " => {").println();
+                        p.append(HASH_INDENT + indent);
+                        p.append(INDENT + ":" + c.getChild(0).getName() + " => [");
+                        printListConfig(indent + INDENT + INDENT, c);
+                        p.println();
+                        p.append(HASH_INDENT + indent + INDENT + "]");
+                    }
+                    else {
+                      p.append(":" + c.getName() + " => {").println();
+                      printHashConfig(indent + INDENT, c);
+                    }
+                    p.println();
+                    p.append(HASH_INDENT + indent + "}");
+                } else if (c.getValue() == null) {
+                    p.append(":" + c.getName() + " => true");
+                } else {
+                    p.append(":" + c.getName() + " => '"
+                            + c.getValue() + "'");
+                }
+                if (j + 1 != count) {
+                    p.append(",").println();
+                }
             }
         }
     }

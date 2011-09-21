@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -13,6 +14,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -52,7 +54,6 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         //
         assertNotNull(rubyModel);
         testMavenModelForCompleteness(rubyModel);
-
     }
 
     void testMavenModelForCompleteness(Model model) {
@@ -213,11 +214,32 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         assertEquals("org.codehaus.mojo:animal-sniffer-maven-plugin:1.6",
                 gav(p));
         assertNotNull(p.getConfiguration());
-        assertEquals("TODO", ((Xpp3Dom) p.getConfiguration()).getChild(
-                "signature").getValue());
+        Xpp3Dom config = ((Xpp3Dom) p.getConfiguration()).getChild(
+        "signature");
+        assertNull(config.getValue());
+        assertEquals("org.codehaus.mojo.signature", config.getChild("groupId").getValue());
+        assertEquals("java15", config.getChild("artifactId").getValue());
+        assertEquals("1.0", config.getChild("version").getValue());  
+        assertEquals(3, config.getChildCount());
+        assertEquals(1, p.getExecutions().size());
+        PluginExecution e = p.getExecutions().get(0);
+        assertEquals("check-java-1.5-compat", e.getId());    
+        assertEquals("process-classes", e.getPhase());
+        List<String> goals = e.getGoals();
+        assertEquals(1, goals.size());    
+        assertEquals("check", goals.get(0));    
+        
         p = model.getBuild().getPlugins().get(1);
         assertEquals("org.sonatype.plugins:sisu-maven-plugin:null", gav(p));
         assertNull(p.getConfiguration());
+        assertEquals(1, p.getExecutions().size());
+        e = p.getExecutions().get(0);
+        assertEquals("default", e.getId());    
+        goals = e.getGoals();
+        assertEquals(2, goals.size());    
+        assertEquals("main-index", goals.get(0));    
+        assertEquals("test-index", goals.get(1));    
+
         p = model.getBuild().getPlugins().get(2);
         assertEquals(
                 "com.mycila.maven-license-plugin:maven-license-plugin:1.9.0",
@@ -231,12 +253,27 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
                 "useDefaultExcludes").getValue());
         assertEquals("${project.basedir}/header.txt", ((Xpp3Dom) p
                 .getConfiguration()).getChild("header").getValue());
-        assertEquals("TODO", ((Xpp3Dom) p.getConfiguration()).getChild(
-                "excludes").getValue());
-        assertEquals("TODO", ((Xpp3Dom) p.getConfiguration()).getChild(
-                "includes").getValue());
-        assertEquals("TODO", ((Xpp3Dom) p.getConfiguration()).getChild(
-                "mapping").getValue());
+        
+        config = ((Xpp3Dom) p.getConfiguration()).getChild("excludes");
+        assertNull(config.getValue());
+        assertEquals(1, config.getChildCount());
+        config = config.getChild("exclude");
+        assertNotNull(config);
+        assertEquals("**/target/**", config.getValue());
+
+        config = ((Xpp3Dom) p.getConfiguration()).getChild("includes");
+        assertNull(config.getValue());
+        Xpp3Dom child = config.getChild(0);
+        assertEquals("include", child.getName());
+        assertEquals("**/pom.xml", child.getValue());
+        child = config.getChild(11);
+        assertEquals("include", child.getName());
+        assertEquals("**/*.css", child.getValue());
+        assertEquals(12, config.getChildCount());
+        
+        config = ((Xpp3Dom) p.getConfiguration()).getChild("mapping");
+        assertNull(config.getValue());
+        assertEquals(3, config.getChildCount());
     }
 
     String gav(Dependency d) {
