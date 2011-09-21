@@ -2,7 +2,6 @@ package org.sonatype.maven.polyglot.ruby;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -12,10 +11,8 @@ import javax.inject.Named;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
-import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 
