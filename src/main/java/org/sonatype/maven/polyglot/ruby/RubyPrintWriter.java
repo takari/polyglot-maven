@@ -41,7 +41,12 @@ class RubyPrintWriter extends PrintWriter {
                 } else {
                     append(", ");
                 }
-                append("'").append(value).append("'");
+                if(value.startsWith(":")){
+                    append(value);
+                }
+                else {
+                    append("'").append(value).append("'");
+                }
             }
         }
     }
