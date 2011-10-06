@@ -26,7 +26,10 @@ import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
+import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
+import org.sonatype.maven.polyglot.execute.ExecuteManager;
+import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 
 /**
@@ -37,6 +40,9 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 @Component(role = ModelReader.class,hint="ruby")
 public class RubyModelReader extends ModelReaderSupport {
 
+    @Requirement
+    ExecuteManager executeManager = new ExecuteManagerImpl();
+    
   public Model read(final Reader input, final Map<String, ?> options) throws IOException {
     assert input != null;
 
@@ -44,6 +50,6 @@ public class RubyModelReader extends ModelReaderSupport {
     StringWriter ruby = new StringWriter();
     IOUtil.copy(input, ruby);
     // parse the String and create a POM model
-    return new RubyParser((ModelSource)options.get(ModelProcessor.SOURCE)).parse(ruby.toString());
+    return new RubyParser((ModelSource)options.get(ModelProcessor.SOURCE), executeManager).parse(ruby.toString());
   }
 }

@@ -15,11 +15,12 @@ import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
-import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
+import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 
 public class RubyModelWithMavenTest extends InjectedTestCase {
 
@@ -45,7 +46,12 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         //
         // Read in the Ruby POM
         //
-        ModelReader rubyModelReader = new RubyModelReader();
+        RubyModelReader rubyModelReader = new RubyModelReader();
+        rubyModelReader.executeManager = new ExecuteManagerImpl() {
+            {
+                log = new ConsoleLogger();
+            }
+        };
         StringReader r = new StringReader(w.toString());
         Model rubyModel = rubyModelReader
                 .read(r, new HashMap<String, Object>());

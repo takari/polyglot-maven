@@ -16,39 +16,37 @@
 
 package org.sonatype.maven.polyglot.ruby.execute;
 
+import org.jruby.embed.ScriptingContainer;
 import org.sonatype.maven.polyglot.execute.ExecuteContext;
 import org.sonatype.maven.polyglot.execute.ExecuteTask;
 import org.sonatype.maven.polyglot.execute.ExecuteTaskSupport;
 
-import java.util.Map;
-
 /**
- * Encapsulates a Groovy {@link ExecuteTask}.
+ * Encapsulates a Ruby script {@link ExecuteTask}.
  *
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  *
  * @since 0.7
  */
 public class RubyExecuteTask extends ExecuteTaskSupport {
-    private final Object value;
-    private final Map attrs;
+   
+    private ScriptingContainer jruby;
+    private Object script;
 
-    public RubyExecuteTask(final Object value, final Map attrs) {
-        this.value = value;
-        this.attrs = attrs;
+    public RubyExecuteTask(ScriptingContainer jruby) {
+        this.jruby = jruby;
     }
 
-    public Object getValue() {
-        return value;
+    public Object getScript() {
+        return script;
     }
 
-    public Map getAttributes() {
-        return attrs;
+    public void setScript(Object script) {
+        this.script = script;
     }
-
 
     public void execute(final ExecuteContext context) throws Exception {
-      System.out.println("Executing ruby code...");
+        jruby.callMethod(script, "call", context);
     }
 
     @Override
@@ -56,8 +54,6 @@ public class RubyExecuteTask extends ExecuteTaskSupport {
         return getClass().getSimpleName() + "{" +
             "id='" + getId() + '\'' +
             ", phase='" + getPhase() + '\'' +
-            ", value=" + value +
-            ", attrs=" + attrs +
-            '}';
+            "," + script + "}";
     }
 }

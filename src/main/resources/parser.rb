@@ -16,25 +16,39 @@ org.codehaus.plexus.util.xml.Xpp3Dom
 module Tesla
   class Parser
 
-    def parse(pom)
-      eval(pom)
+    def parse(pom, factory)
+      @factory = factory
+      result = eval(pom)
+      # keep no state for the execute blocks
+      @factory = nil
+      result
     end
-    
     private
 
+    attr_reader :context
+    
+    def build(&block)
+      build = @current.build ||= Build.new
+      nested_block(:build, build, block) if block
+    end
+    
+	def execute(id, phase, &block)
+      @factory.add_execute_task(id.to_s, phase.to_s, block)
+    end
+	
     def project(name, url = nil, &block)
-      @model = Model.new
-      @model.name = name
-      @model.url = url if url
+      model = Model.new
+      model.name = name
+      model.url = url if url
 
-      nested_block(:project, @model, block)
+      nested_block(:project, model, block)
       
-      @model
+      model
     end
 
     def id(value)
       if @context == :project
-	      fill_gav(@model, value)
+	      fill_gav(@current, value)
 	  else
 	     @current.id = value
 	  end
@@ -63,7 +77,7 @@ module Tesla
     end
 
     def inherit(value)
-      @model.parent = fill_gav(Parent, value)
+      @current.parent = fill_gav(Parent, value)
     end
     
     def properties(props)
