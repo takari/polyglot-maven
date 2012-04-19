@@ -1,11 +1,14 @@
 package org.sonatype.maven.polyglot.atom.parsing;
 
 import junit.framework.TestCase;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.building.StringModelSource;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 /**
  * @author dhanji@gmail.com (Dhanji R. Prasanna)
@@ -45,6 +48,7 @@ public class AtomParserTest extends TestCase {
 
     assertEquals("\"Google Guice\"", project.getDescription());
     assertEquals("\"http://code.google.com/p/google-guice\"", project.getUrl());
+    assertEquals("jar", project.getPackaging());
 
     assertEquals("com.google.inject", project.getProjectId().getGroup());
     assertEquals("guice", project.getProjectId().getArtifact());
@@ -69,9 +73,30 @@ public class AtomParserTest extends TestCase {
     assertEquals("\"con:git:git@github.com:mikebrock/mvel.git\"", project.getScm().getConnection());
     assertEquals("\"dev:git:git@github.com:mikebrock/mvel.git\"",
         project.getScm().getDeveloperConnection());
+
+
+    List<Plugin> plugins = project.getPlugins();
+    assertNotNull(plugins);
+    assertEquals(2, plugins.size());
+
+    Plugin compiler = plugins.get(0);
+    Plugin surefire = plugins.get(1);
+
+    assertEquals("org.apache.maven.plugins:maven-compiler-plugin:2.0.1", compiler.getId());
+    assertEquals("org.apache.maven.plugins:maven-surefire-plugin:2.0.1", surefire.getId());
+
+    Xpp3Dom config = (Xpp3Dom) compiler.getConfiguration();
+    assertTrue(containsChild(config, "source", "1.5"));
+    assertTrue(containsChild(config, "target", "1.5"));
   }
 
-  public final void testScmParsing() {
+  private static boolean containsChild(Xpp3Dom node, String key, String value) {
+    for (Xpp3Dom child : node.getChildren()) {
+      if (key.equals(child.getName()) && value.equals(child.getValue()))
+        return true;
+    }
 
+    System.out.println("No such node - " + key + ": " + value);
+    return false;
   }
 }

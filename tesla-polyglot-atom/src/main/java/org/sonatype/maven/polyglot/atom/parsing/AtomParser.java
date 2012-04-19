@@ -11,8 +11,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 /**
@@ -59,8 +61,9 @@ public class AtomParser {
 
   /**
    * Parsing rule for a single project build definition.
-   * <p/>
-   * project := 'project' STRING AT URL EOL
+   *
+   * project := 'project' STRING (AT URL)? ('as' PACKAGING)? EOL
+   *            (idFragment COLON list EOL)+
    */
   private Project project(Repositories repositories) {
     if (match(Token.Kind.PROJECT) == null) {
@@ -140,13 +143,12 @@ public class AtomParser {
     chewIndents();
     List<String> modules = modules();
 
+    ScmElement scm = scm();
+
     // modules
     chewEols();
     chewIndents();
     List<Plugin> plugins = plugins();
-
-    chewEols();
-    ScmElement scm = scm();
 
     return new Project(projectId,
         parent,
@@ -301,46 +303,120 @@ public class AtomParser {
   }
 
   /**
-   * Dependencies of a project. The real meat of it.
+   * Additional plugins and their configuration.
    */
   private List<Plugin> plugins() {
-    indent();
-    if (match(Token.Kind.PLUGINS, Token.Kind.COLON, Token.Kind.LBRACKET) == null) {
-      return null; // no deps.
-    }
     List<Plugin> plugins = new ArrayList<Plugin>();
 
     chewEols();
-    chewIndents();
-
-    // Slurp up the dep ids.
-    Id id;
-    while ((id = id()) != null) {
-      chewEols();
-      chewIndents();
-      List<Property> properties = properties(Token.Kind.PROPS);
-      Plugin plugin = new Plugin();
-      plugin.setGroupId(id.getGroup());
-      plugin.setArtifactId(id.getArtifact());
-      plugin.setVersion(id.getVersion());
-      if (properties != null) {
-        Xpp3Dom pluginConfiguration = new Xpp3Dom("configuration");
-        for (Property p : properties) {
-          Xpp3Dom child = new Xpp3Dom(p.getKey());
-          child.setValue(p.getValue());
-          pluginConfiguration.addChild(child);
-        }
-        plugin.setConfiguration(pluginConfiguration);
-      }
+    Plugin plugin;
+    while ((plugin = plugin()) != null) {
       plugins.add(plugin);
-    }
 
-    if (match(Token.Kind.RBRACKET) == null) {
-      // ERROR!
-      parseException("Expected ]");
+      chewEols();
     }
 
     return plugins;
+  }
+
+  private Plugin plugin() {
+    if (match(Kind.PLUGIN) == null)
+      return null;
+
+    if (match(Kind.EOL) == null) {
+      parseException("Expected newline after 'plugin' keyword");
+    }
+
+    Plugin plugin = new Plugin();
+    List<Token> propKey;
+
+    chewIndents();
+    if (match(Kind.ID, Kind.COLON) == null) {
+      log.severe("Plugin declaration is missing an 'id' tag");
+      return null;
+    }
+
+    Id pluginId = id();
+    if (pluginId == null) {
+      log.severe("Plugin id declaration malformed");
+      return null;
+    }
+
+    if (match(Kind.EOL) == null) {
+      log.severe("Expected newline after plugin id declaration");
+      return null;
+    }
+
+    // Dont forget to set the id properties.
+    plugin.setGroupId(pluginId.getGroup());
+    plugin.setArtifactId(pluginId.getArtifact());
+    plugin.setVersion(pluginId.getVersion());
+
+    Map<String, Object> config;
+    if ((config = configurationMap()) == null)
+      return plugin;
+
+    // Transform the parsed config map into maven's XPP3 Dom thing.
+    Xpp3Dom xConfig = new Xpp3Dom("configuration");
+    for (Entry<String, Object> entry : config.entrySet()) {
+      if (entry.getValue() instanceof String) {
+        Xpp3Dom node = new Xpp3Dom(entry.getKey());
+        node.setValue(entry.getValue().toString());
+
+        xConfig.addChild(node);
+      }
+    }
+
+    plugin.setConfiguration(xConfig);
+
+    return plugin;
+  }
+
+  private Map<String, Object> configurationMap() {
+    Map<String, Object> config = new LinkedHashMap<String, Object>();
+    List<Token> propKey;
+
+    chewIndents();
+    while ((propKey = match(Kind.IDENT, Kind.COLON)) != null) {
+      // Match the rest of the line as either an atom or as another set of properties.
+      String atom = idFragment();
+
+      if (atom == null || StringUtils.isEmpty(atom)) {
+        List<Token> tokens = match(Kind.STRING);
+        if (tokens != null)
+          atom = tokens.get(0).value;
+      }
+
+      if (atom != null) {
+        atom = atom.trim();
+        // Strip quotes.
+        if (atom.startsWith("\"") && atom.endsWith("\""))
+          atom = atom.substring(1, atom.length() - 1);
+
+        config.put(propKey.get(0).value, atom);
+        if (match(Kind.EOL) == null)
+          log.severe("Expected end of line in plugin config");
+      } else {
+        // This is a multilevel thing, recurse!
+        if (match(Kind.LBRACKET) != null) {
+          Map<String, Object> childProps = configurationMap();
+          if (match(Kind.RBRACKET) == null)
+            parseException("Expected ']' after configuration properties");
+
+          // stash into parent map.
+          config.put(propKey.get(0).value, childProps);
+
+        } else {
+          // ignore. Later we can force-parse this as a string.
+          log.warning("Unknown element type in plugin declaration");
+          return null;
+        }
+      }
+
+      chewIndents();
+    }
+
+    return config;
   }
 
   private List<Property> properties(Token.Kind kind) {
@@ -535,17 +611,25 @@ public class AtomParser {
 
   private String idFragment() {
     StringBuilder fragment = new StringBuilder();
-    List<Token> idFragment;
-    while ((idFragment = match(Token.Kind.IDENT)) != null) {
-      fragment.append(idFragment.get(0).value);
-      if (match(Token.Kind.PROJECT) != null) {
-        fragment.append("project");
-      }
+    Token idFragment;
+    while ((idFragment = anyOf(
+        Token.Kind.IDENT,
+        Kind.PLUGIN,
+        Kind.PROJECT,
+        Kind.DEPS,
+        Kind.SCM,
+        Kind.SRCS,
+        Kind.MODULES,
+        Kind.ID,
+        Kind.PACKAGING,
+        Kind.PARENT,
+        Kind.OVERRIDES,
+        Kind.REPOSITORIES,
+        Kind.PROPS
+    )) != null) {
+      fragment.append(idFragment.value);
       if (match(Token.Kind.DOT) != null) {
         fragment.append('.');
-      }
-      if (match(Token.Kind.PLUGINS) != null) {
-        fragment.append("plugins");
       }
       if (match(Token.Kind.DASH) != null) {
         fragment.append('-');

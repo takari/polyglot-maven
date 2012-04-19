@@ -5,7 +5,7 @@
 repositories << "http://repository.codehaus.org", "http://maven.org/central",
                 "http://repo1.maven.org/maven2"
 
-project "Google Guice" @ "http://code.google.com/p/google-guice"
+project "Google Guice" @ "http://code.google.com/p/google-guice" as jar
   id: com.google.inject:guice:2.0-SNAPSHOT
   srcs: [ src: "src" test: "test" ]
   deps: [ junit:junit:3.8.1
@@ -16,15 +16,13 @@ project "Google Guice" @ "http://code.google.com/p/google-guice"
           developerConnection: "dev:git:git@github.com:mikebrock/mvel.git" ]
 
 
-plugin org.apache.maven.plugins:maven-compiler-plugin:2.0.1
-  source: 1.5
-  target: 1.5
-  encoding: UTF-8
+plugin
+  id: org.apache.maven.plugins:maven-compiler-plugin:2.0.1
+  source: "1.5"
+  target: "1.5"
+  encoding: "UTF-8"
 
-plugin org.apache.maven.plugins:maven-surefire-plugin:2.0.1
-  childDelegation: true
-  properties: [ mvel.disable.jit: "true"
-                file.encoding: "UTF-8" ]
-  includes:   [ "**/*Test.java"
-                "**/*Tests.java" ]
+plugin
+  id: org.apache.maven.plugins:maven-surefire-plugin:2.0.1
+  childDelegation: "true"
 

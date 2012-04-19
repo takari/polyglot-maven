@@ -19,10 +19,7 @@ public class Token {
 
   public static enum Kind {
     IDENT,
-    TYPE_IDENT,
-    INTEGER,
     STRING,
-    REGEX,
     DOT,
 
     COLON,
@@ -38,7 +35,6 @@ public class Token {
     HASHROCKET,
 
     // Comparison operators
-    EQUALS,
     LEFT_WAVE,
     GREATER,
     LEQ,
@@ -61,16 +57,9 @@ public class Token {
     OR,
     AND,
     NOT,
-    FOR,
-    IN,
-    IF,
     DEPS,
     ID,
     PARENT,
-    UNLESS,
-    WHERE,
-
-    WHEN,
 
     // specials
     EOL,
@@ -80,7 +69,7 @@ public class Token {
     OVERRIDES,
     PROPS,
     MODULES,
-    PLUGINS;
+    PLUGIN;
     //DOLLAR,
     //PROJECT_DOT_VERSION;
 
@@ -104,15 +93,12 @@ public class Token {
 
       TOKEN_MAP.put("(", LPAREN);
       TOKEN_MAP.put(")", RPAREN);
-      //TOKEN_MAP.put("$", DOLLAR);
-      //TOKEN_MAP.put("{", LBRACE);
-      //TOKEN_MAP.put("}", RBRACE);
       TOKEN_MAP.put("[", LBRACKET);
       TOKEN_MAP.put("]", RBRACKET);
       TOKEN_MAP.put("\n", EOL);
 
       TOKEN_MAP.put("id", ID);
-      TOKEN_MAP.put("inherit", PARENT);
+      TOKEN_MAP.put("inherits", PARENT);
       TOKEN_MAP.put("as", PACKAGING);
       TOKEN_MAP.put("properties", PROPS);
       TOKEN_MAP.put("deps", DEPS);
@@ -122,17 +108,12 @@ public class Token {
       TOKEN_MAP.put("srcs", SRCS);
       TOKEN_MAP.put("scm", SCM);
       TOKEN_MAP.put("modules", MODULES);
-      TOKEN_MAP.put("plugins", PLUGINS );
-
-      TOKEN_MAP.put("require", REQUIRE);
+      TOKEN_MAP.put("plugin", PLUGIN);
 
 
       TOKEN_MAP.put("||", OR);
-      TOKEN_MAP.put("or", OR);
       TOKEN_MAP.put("&&", AND);
-      TOKEN_MAP.put("and", AND);
       TOKEN_MAP.put("!", NOT);
-      TOKEN_MAP.put("not", NOT);
     }
 
     /**

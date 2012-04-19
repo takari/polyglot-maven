@@ -54,6 +54,22 @@ public class Project extends Element {
     return packaging;
   }
 
+  public List<Plugin> getPlugins() {
+    return plugins;
+  }
+
+  public List<String> getModules() {
+    return modules;
+  }
+
+  public List<Id> getOverrides() {
+    return overrides;
+  }
+
+  public List<Property> getProperties() {
+    return properties;
+  }
+
   public Repositories getRepositories() {
     return repositories;
   }
