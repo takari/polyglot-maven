@@ -1,5 +1,12 @@
 package org.sonatype.maven.polyglot.atom.parsing;
 
+import org.apache.maven.model.Parent;
+import org.apache.maven.model.Plugin;
+import org.apache.maven.model.building.ModelSource;
+import org.codehaus.plexus.util.StringUtils;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.sonatype.maven.polyglot.atom.parsing.Token.Kind;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,15 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.apache.maven.model.Parent;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.building.ModelSource;
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
-
 /**
  * Parses the atom token stream into an internal model, which can be emitted as a Maven model.
- * 
+ *
  * @author dhanji@gmail.com (Dhanji R. Prasanna)
  */
 public class AtomParser {
@@ -52,14 +53,13 @@ public class AtomParser {
     }
 
     chewEols();
-    Project project = project(repositories);
 
-    return project;
+    return project(repositories);
   }
 
   /**
    * Parsing rule for a single project build definition.
-   * 
+   * <p/>
    * project := 'project' STRING AT URL EOL
    */
   private Project project(Repositories repositories) {
@@ -78,6 +78,12 @@ public class AtomParser {
     signature = match(Token.Kind.AT, Token.Kind.STRING);
     if (null != signature) {
       projectUrl = signature.get(1).value;
+    }
+
+    List<Token> packagingTokens = match(Kind.PACKAGING, Kind.IDENT);
+    String packaging = null;
+    if (null != packagingTokens) {
+      packaging = packagingTokens.get(1).value;
     }
 
     if (match(Token.Kind.EOL) == null) {
@@ -103,34 +109,12 @@ public class AtomParser {
     // parent
     chewEols();
     chewIndents();
-    if (match(Token.Kind.PARENT) == null) {
-      log.severe("Expected 'inherit' after id declaration");
-      return null;
-    }
-
-    // Now expect a colon.
-    if (match(Token.Kind.COLON) == null) {
-      log.severe("Expected ':' after 'inherit'");
-      return null;
-    }
 
     Parent parent = parent();
 
     // packaging
     chewEols();
     chewIndents();
-    if (match(Token.Kind.PACKAGING) == null) {
-      log.severe("Expected 'packaging' after inherit declaration");
-      return null;
-    }
-
-    if (match(Token.Kind.COLON) == null) {
-      log.severe("Expected ':' after 'packaging'");
-      return null;
-    }
-
-    // packaging
-    String packaging = idFragment();
 
     // srcs
     chewEols();
@@ -164,7 +148,19 @@ public class AtomParser {
     chewEols();
     ScmElement scm = scm();
 
-    return new Project(projectId, parent, packaging, properties, repositories, projectDescription, projectUrl, overrides, deps, modules, plugins, dirs, scm);
+    return new Project(projectId,
+        parent,
+        packaging,
+        properties,
+        repositories,
+        projectDescription,
+        projectUrl,
+        overrides,
+        deps,
+        modules,
+        plugins,
+        dirs,
+        scm);
   }
 
   private ScmElement scm() {
@@ -211,7 +207,6 @@ public class AtomParser {
 
   /**
    * Custom directory structure for maven builds.
-   * 
    */
   private Map<String, String> srcs() {
     indent();
@@ -444,8 +439,8 @@ public class AtomParser {
 
   /**
    * Id of a project definition.
-   * 
-   * id := IDENT (DOT IDENT)* COLON IDENT COLON IDENT EOL
+   * <p/>
+   * id := IDENT (DOT IDENT)* COLON IDENT (COLON IDENT)? EOL
    */
   private Id id() {
     return id(false);
@@ -469,7 +464,7 @@ public class AtomParser {
     }
 
     // Now expect a colon.
-    String version = null;
+    String version;
     if (match(Token.Kind.COLON) == null && !allowNullVersion) {
       return null;
     } else {
@@ -483,27 +478,18 @@ public class AtomParser {
   }
 
   private Parent parent() {
+    if (match(Kind.PARENT) == null)
+      return null;
 
-    String groupId = idFragment();
-    if (groupId == null) {
+    if (match(Kind.COLON) == null) {
+      log.severe("Expected ':' after 'inherits'");
       return null;
     }
 
-    if (match(Token.Kind.COLON) == null) {
-      return null;
-    }
+    Id parentId = id(true);
 
-    String artifactId = idFragment();
-    if (artifactId == null) {
-      return null;
-    }
-
-    if (match(Token.Kind.COLON) == null) {
-      return null;
-    }
-
-    String version = idFragment();
-    if (version == null) {
+    if (parentId == null) {
+      log.severe("Expected complete artifact identifier in 'parent' clause");
       return null;
     }
 
@@ -516,9 +502,9 @@ public class AtomParser {
     }
 
     Parent parent = new Parent();
-    parent.setGroupId(groupId);
-    parent.setArtifactId(artifactId);
-    parent.setVersion(version);
+    parent.setGroupId(parentId.getGroup());
+    parent.setArtifactId(parentId.getArtifact());
+    parent.setVersion(parentId.getVersion());
     parent.setRelativePath(relativePath);
 
     return parent;
@@ -569,38 +555,9 @@ public class AtomParser {
     return fragment.toString();
   }
 
-  // private String variable() {
-
-  // if (match(Token.Kind.PROJECT_DOT_VERSION) != null) {
-  // return "${project.version}";
-  // }
-  //
-  // StringBuilder fragment = new StringBuilder();
-  // List<Token> idFragment;
-  // while ((idFragment = match(Token.Kind.DOLLAR, Token.Kind.LBRACE)) != null) {
-  // fragment.append(idFragment.get(0).value);
-  // while ((idFragment = match(Token.Kind.IDENT)) != null) {
-  // fragment.append(idFragment.get(0).value);
-  // if (match(Token.Kind.DOT) != null) {
-  // fragment.append('.');
-  // } else if (match(Token.Kind.DASH) != null) {
-  // fragment.append('-');
-  // }
-  // }
-  // }
-  //
-  // if(match(Token.Kind.RBRACE) != null) {
-  // fragment.append('}');
-  // } else {
-  // return null;
-  // }
-  //
-  // return fragment.toString();
-  // }
-
   /**
    * Optional repositories declaration at the top of the file.
-   * 
+   * <p/>
    * repositories := 'repositories' LEFT_WAVE STRING (COMMA STRING)*
    */
   private Repositories repositories() {
@@ -616,6 +573,7 @@ public class AtomParser {
     }
 
     // Validate first URL...
+    //noinspection ConstantConditions
     String url = repositories.get(0).value; // Strip ""
     repoUrls.add(validateUrl(url));
 

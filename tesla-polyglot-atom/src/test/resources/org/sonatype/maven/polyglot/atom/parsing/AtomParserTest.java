@@ -1,6 +1,8 @@
 package org.sonatype.maven.polyglot.atom.parsing;
 
 import junit.framework.TestCase;
+import org.apache.maven.model.building.ModelSource;
+import org.apache.maven.model.building.StringModelSource;
 import org.codehaus.plexus.util.IOUtil;
 
 import java.net.MalformedURLException;
@@ -13,16 +15,18 @@ public class AtomParserTest extends TestCase {
       " http://maven.org/central, http://repo1.maven.org/maven2";
 
   private String pom;
+  private ModelSource modelSource;
 
   @Override
   protected void setUp() throws Exception {
     this.pom = IOUtil.toString(AtomParserTest.class.getResourceAsStream("example_pom.atom"));
+    this.modelSource = new StringModelSource(pom);
   }
 
   public final void testRepositoryLineMalformedUrls() {
     Exception thrown = null;
     try {
-      new AtomParser(new Tokenizer("repositories << \"...\"\n").tokenize()).parse();
+      new AtomParser(modelSource, new Tokenizer("repositories << \"...\"\n").tokenize()).parse();
       fail("Expected exception for Malformed URL");
     } catch (RuntimeException e) {
       thrown = e;
@@ -31,13 +35,13 @@ public class AtomParserTest extends TestCase {
   }
 
   public final void testRepositoryLineParsing() {
-    Project element = new AtomParser(new Tokenizer(pom).tokenize()).parse();
+    Project element = new AtomParser(modelSource, new Tokenizer(pom).tokenize()).parse();
 
     assertEquals(String.format("[%s]", REPO_URLS), element.getRepositories().toString());
   }
 
   public final void testProjectParsing() {
-    Project project = new AtomParser(new Tokenizer(pom).tokenize()).parse();
+    Project project = new AtomParser(modelSource, new Tokenizer(pom).tokenize()).parse();
 
     assertEquals("\"Google Guice\"", project.getDescription());
     assertEquals("\"http://code.google.com/p/google-guice\"", project.getUrl());
