@@ -88,6 +88,20 @@ public class AtomParserTest extends TestCase {
     Xpp3Dom config = (Xpp3Dom) compiler.getConfiguration();
     assertTrue(containsChild(config, "source", "1.5"));
     assertTrue(containsChild(config, "target", "1.5"));
+
+    config = (Xpp3Dom) surefire.getConfiguration();
+    assertTrue(containsChild(config, "childDelegation", "true"));
+
+    Xpp3Dom extra = config.getChild("extra");
+    assertNotNull(extra);
+    assertEquals(2, extra.getChildCount());
+
+    assertTrue(containsChild(extra, "useThings", "true"));
+
+    Xpp3Dom useOtherThings = extra.getChild("useOtherThings");
+    assertNotNull(useOtherThings);
+    assertEquals(1, useOtherThings.getChildCount());
+    assertTrue(containsChild(useOtherThings, "maybe", "false"));
   }
 
   private static boolean containsChild(Xpp3Dom node, String key, String value) {

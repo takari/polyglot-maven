@@ -25,4 +25,6 @@ plugin
 plugin
   id: org.apache.maven.plugins:maven-surefire-plugin:2.0.1
   childDelegation: "true"
+  extra: [ useThings: "true"
+           useOtherThings: { maybe: "false" } ]
 

@@ -357,19 +357,29 @@ public class AtomParser {
       return plugin;
 
     // Transform the parsed config map into maven's XPP3 Dom thing.
-    Xpp3Dom xConfig = new Xpp3Dom("configuration");
+    plugin.setConfiguration(toXpp3DomTree("configuration", config));
+
+    return plugin;
+  }
+
+  private Xpp3Dom toXpp3DomTree(String name, Map<String, Object> config) {
+    Xpp3Dom xConfig = new Xpp3Dom(name);
     for (Entry<String, Object> entry : config.entrySet()) {
       if (entry.getValue() instanceof String) {
         Xpp3Dom node = new Xpp3Dom(entry.getKey());
         node.setValue(entry.getValue().toString());
 
         xConfig.addChild(node);
+      } else {
+        @SuppressWarnings("unchecked")    // Guaranteed by #configurationMap()
+        Map<String, Object> childMap = (Map<String, Object>) entry.getValue();
+
+        // Recurse.
+        Xpp3Dom child = toXpp3DomTree(entry.getKey(), childMap);
+        xConfig.addChild(child);
       }
     }
-
-    plugin.setConfiguration(xConfig);
-
-    return plugin;
+    return xConfig;
   }
 
   private Map<String, Object> configurationMap() {
@@ -381,7 +391,7 @@ public class AtomParser {
       // Match the rest of the line as either an atom or as another set of properties.
       String atom = idFragment();
 
-      if (atom == null || StringUtils.isEmpty(atom)) {
+      if (atom == null) {
         List<Token> tokens = match(Kind.STRING);
         if (tokens != null)
           atom = tokens.get(0).value;
@@ -394,8 +404,9 @@ public class AtomParser {
           atom = atom.substring(1, atom.length() - 1);
 
         config.put(propKey.get(0).value, atom);
-        if (match(Kind.EOL) == null)
-          log.severe("Expected end of line in plugin config");
+
+        // eol here is optional.
+        match(Kind.EOL);
       } else {
         // This is a multilevel thing, recurse!
         if (match(Kind.LBRACKET) != null) {
@@ -635,6 +646,10 @@ public class AtomParser {
         fragment.append('-');
       }
     }
+
+    // Nothing matched.
+    if (fragment.length() == 0)
+      return null;
 
     return fragment.toString();
   }
