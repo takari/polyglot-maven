@@ -16,13 +16,6 @@
 
 package org.sonatype.maven.polyglot.atom;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
@@ -33,6 +26,13 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component(role = ModelWriter.class, hint = "atom")
 public class AtomModelWriter extends ModelWriterSupport {
@@ -51,7 +51,6 @@ public class AtomModelWriter extends ModelWriterSupport {
     project(pw, model);
     id(pw, model);
     parent(pw, model);
-    packaging(pw, model);
     properties(pw, model);
     dependencyManagement(pw, model);
     dependencies(pw, model);
@@ -83,7 +82,8 @@ public class AtomModelWriter extends ModelWriterSupport {
     if (name == null) {
       name = model.getArtifactId();
     }
-    pw.println("project \"" + name + "\" @ \"" + model.getUrl() + "\"");
+    pw.print("project \"" + name + "\" @ \"" + model.getUrl() + "\"");
+    packaging(pw, model);
   }
 
   private void id(PrintWriter pw, Model model) {
@@ -101,19 +101,17 @@ public class AtomModelWriter extends ModelWriterSupport {
 
   private void parent(PrintWriter pw, Model model) {
     if (model.getParent() != null) {
-      pw.print(indent + "inherit: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
+      pw.print(indent + "inherits: " + model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
       if (model.getParent().getRelativePath() != null) {
         //pw.println(":" + model.getParent().getRelativePath());
-        pw.println(":" + "../pom.atom");        
-      } else {
-        pw.println();
+//        pw.println(":" + "../pom.atom");
       }
+      pw.println();
     }
   }
 
   private void packaging(PrintWriter pw, Model model) {
-    pw.println(indent + "packaging: " + model.getPackaging());
-    pw.println();
+    pw.println(" as " + model.getPackaging());
   }
 
   private void properties(PrintWriter pw, Model model) {
@@ -182,11 +180,11 @@ public class AtomModelWriter extends ModelWriterSupport {
           // We are assuming the model is well-formed and that the parent is providing a version
           // for this particular dependency.
           //
-          pw.print(d.getGroupId() + ":" + d.getArtifactId());          
+          pw.print(d.getGroupId() + ":" + d.getArtifactId());
         }
         if (d.getClassifier() != null) {
           pw.print("(" + d.getClassifier() + ")");
-        }        
+        }
         if (i + 1 != deps.size()) {
           pw.println();
         }
@@ -222,7 +220,6 @@ public class AtomModelWriter extends ModelWriterSupport {
           pw.println();
           Xpp3Dom configuration = (Xpp3Dom) plugin.getConfiguration();
           if (configuration.getChildCount() != 0) {
-            pw.print("               properties:[ ");
             int count = configuration.getChildCount();
             for (int j = 0; j < count; j++) {
               Xpp3Dom c = configuration.getChild(j);
@@ -236,7 +233,6 @@ public class AtomModelWriter extends ModelWriterSupport {
                 }
               }
             }
-            pw.print(" ]");
           }
         }
         if (i + 1 != plugins.size()) {
