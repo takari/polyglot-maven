@@ -44,6 +44,8 @@ public class Token {
     RPAREN,
     LBRACKET,
     RBRACKET,
+    LBRACE,
+    RBRACE,
 
     // keywords
     REQUIRE,
@@ -93,8 +95,8 @@ public class Token {
       TOKEN_MAP.put(")", RPAREN);
       TOKEN_MAP.put("[", LBRACKET);
       TOKEN_MAP.put("]", RBRACKET);
-      TOKEN_MAP.put("{", LBRACKET);   // Alias braces as brackets.
-      TOKEN_MAP.put("}", RBRACKET);
+      TOKEN_MAP.put("{", LBRACE);   // Alias braces as brackets.
+      TOKEN_MAP.put("}", RBRACE);
       TOKEN_MAP.put("\n", EOL);
 
       TOKEN_MAP.put("id", ID);

@@ -82,7 +82,8 @@ public class AtomModelWriter extends ModelWriterSupport {
     if (name == null) {
       name = model.getArtifactId();
     }
-    pw.print("project \"" + name + "\" @ \"" + model.getUrl() + "\"");
+    String url = model.getUrl() == null ? "" : model.getUrl();
+    pw.print("project \"" + name + "\" @ \"" + url + "\"");
     packaging(pw, model);
   }
 
