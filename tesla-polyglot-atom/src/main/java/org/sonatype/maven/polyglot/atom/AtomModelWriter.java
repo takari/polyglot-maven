@@ -55,6 +55,7 @@ public class AtomModelWriter extends ModelWriterSupport {
     dependencyManagement(pw, model);
     dependencies(pw, model);
     modules(pw, model);
+    pw.println();
     pluginManagement(pw, model);
     plugins(pw, model);
 
@@ -133,7 +134,6 @@ public class AtomModelWriter extends ModelWriterSupport {
         }
       }
       pw.println(" ]");
-      pw.println();
     }
   }
 
@@ -144,7 +144,7 @@ public class AtomModelWriter extends ModelWriterSupport {
       for (int i = 0; i < modules.size(); i++) {
         String module = modules.get(i);
         if (i != 0) {
-          pw.print("             ");
+          pw.print(indent + "           ");
         }
         pw.print(module);
         if (i + 1 != modules.size()) {
@@ -152,7 +152,6 @@ public class AtomModelWriter extends ModelWriterSupport {
         }
       }
       pw.println(" ]");
-      pw.println();
     }
   }
 
@@ -191,7 +190,6 @@ public class AtomModelWriter extends ModelWriterSupport {
         }
       }
       pw.println(" ]");
-      pw.println();
     }
   }
 
@@ -210,38 +208,57 @@ public class AtomModelWriter extends ModelWriterSupport {
   // need to write nested objects
   private void plugins(PrintWriter pw, String elementName, List<Plugin> plugins) {
     if (!plugins.isEmpty()) {
-      pw.print(indent + elementName + ": [ ");
       for (int i = 0; i < plugins.size(); i++) {
         Plugin plugin = plugins.get(i);
-        if (i != 0) {
-          pw.print("             ");
-        }
-        pw.print(plugin.getGroupId() + ":" + plugin.getArtifactId() + ":" + plugin.getVersion());
+        pw.println("plugin");
+
+        pw.print(indent + "id: " + plugin.getGroupId() + ":" + plugin.getArtifactId());
+        if (plugin.getVersion() != null)
+          pw.print(":" + plugin.getVersion());
         if (plugin.getConfiguration() != null) {
           pw.println();
           Xpp3Dom configuration = (Xpp3Dom) plugin.getConfiguration();
-          if (configuration.getChildCount() != 0) {
-            int count = configuration.getChildCount();
-            for (int j = 0; j < count; j++) {
-              Xpp3Dom c = configuration.getChild(j);
-              if (c.getValue() != null) {
-                if (j != 0) {
-                  pw.print("                            ");
-                }
-                pw.print(c.getName() + ": " + c.getValue());
-                if (j + 1 != count) {
-                  pw.println();
-                }
-              }
-            }
-          }
+          printChildren(pw, configuration);
         }
         if (i + 1 != plugins.size()) {
           pw.println();
         }
       }
-      pw.println(" ]");
       pw.println();
     }
+  }
+
+  private boolean flipBrackets = false;
+
+  private void printChildren(PrintWriter pw, Xpp3Dom configuration) {
+    if (configuration.getChildCount() > 0) {
+      int count = configuration.getChildCount();
+      for (int j = 0; j < count; j++) {
+        Xpp3Dom c = configuration.getChild(j);
+        if (c.getValue() != null) {
+          pw.print(indent + c.getName() + ": " + c.getValue());
+          if (j + 1 != count) {
+            pw.println();
+          }
+        } else {
+          pw.println(indent + c.getName() + ": " + lbraceket());
+          String oldIndent = indent;
+          indent += "  ";
+          flipBrackets = !flipBrackets;
+          printChildren(pw, c);
+          flipBrackets = !flipBrackets;
+          indent = oldIndent;
+          pw.print("\n" + indent + rbraceket());
+        }
+      }
+    }
+  }
+
+  private char lbraceket() {
+    return (flipBrackets ? '{' : '[');
+  }
+
+  private char rbraceket() {
+    return (flipBrackets ? '}' : ']');
   }
 }

@@ -24,7 +24,7 @@ public class AtomModelWithSBTest extends InjectedTestCase {
   @Named("${basedir}/src/test/poms")
   private File poms;
 
-  public void _testAtomModelWriter() throws Exception {
+  public void testAtomModelWriter() throws Exception {
     File pom = new File(poms, "sitebricks-parent-pom.xml");
     MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
     Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
@@ -56,6 +56,9 @@ public class AtomModelWithSBTest extends InjectedTestCase {
     MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
     xmlWriter.write(w, xmlModel);
     System.out.println(w.toString());
+
+    assertEquals(xmlModel.getModules(), atomModel.getModules());
+    assertEquals(xmlModel.getRepositories().size(), atomModel.getRepositories().size());
   }
 
   public void testAtomModelWriterWhereModelHasDependenciesWithNoVersions() throws Exception {
@@ -82,9 +85,7 @@ public class AtomModelWithSBTest extends InjectedTestCase {
     //
     // Test for fidelity
     //
-    //assertNotNull(atomModel);
-
-
+    assertNotNull(atomModel);
   }
 
   void testMavenModelForCompleteness(Model model) {
@@ -138,5 +139,4 @@ public class AtomModelWithSBTest extends InjectedTestCase {
   String gav(Plugin p) {
     return p.getGroupId() + ":" + p.getArtifactId() + ":" + p.getVersion();
   }
-
 }

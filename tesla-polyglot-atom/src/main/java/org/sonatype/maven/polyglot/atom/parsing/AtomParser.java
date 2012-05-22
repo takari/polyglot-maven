@@ -338,7 +338,7 @@ public class AtomParser {
       return null;
     }
 
-    Id pluginId = id();
+    Id pluginId = id(true);
     if (pluginId == null) {
       log.severe("Plugin id declaration malformed");
       return null;
@@ -409,11 +409,17 @@ public class AtomParser {
 
         // eol here is optional.
         match(Kind.EOL);
+
+        if (match(Kind.RBRACE) != null || match(Kind.RBRACKET) != null)
+          break;
       } else {
         // This is a multilevel thing, recurse!
         if (anyOf(Kind.LBRACKET, Kind.LBRACE) != null) {
-
+          chewEols();
+          chewIndents();
           Map<String, Object> childProps = configurationMap();
+          chewEols();
+          chewIndents();
           if (match(Kind.RBRACKET) == null && match(Kind.RBRACE) == null)
             parseException("Expected ']' after configuration properties");
 
@@ -471,7 +477,7 @@ public class AtomParser {
     chewIndents();
 
     String module;
-    while ((module = idFragment()).length() != 0) {
+    while ((module = idFragment()) != null) {
       chewEols();
       chewIndents();
       modules.add(module);

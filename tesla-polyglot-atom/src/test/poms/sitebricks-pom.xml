@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.google.sitebricks</groupId>
@@ -7,6 +9,7 @@
   </parent>
   <artifactId>sitebricks</artifactId>
   <name>Sitebricks :: Core</name>
+  <url>http://sitebricks.org</url>
 
   <dependencies>
     <dependency>
@@ -21,8 +24,8 @@
       <artifactId>sitebricks-converter</artifactId>
     </dependency>
     <dependency>
-     <groupId>com.google.sitebricks</groupId>
-     <artifactId>sitebricks-client</artifactId>
+      <groupId>com.google.sitebricks</groupId>
+      <artifactId>sitebricks-client</artifactId>
     </dependency>
     <dependency>
       <groupId>org.mvel</groupId>
@@ -136,5 +139,31 @@
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
     </repository>
   </distributionManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>source-release-assembly</id>
+            <configuration>
+              <!-- we have a dedicated distribution module -->
+              <skipAssembly>true</skipAssembly>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <someCompoundKey>
+            <someKey>someValue</someKey>
+            <someKey2>someValue</someKey2>
+            <someCompoundKeyInner>
+              <someKey>someValue</someKey>
+            </someCompoundKeyInner>
+          </someCompoundKey>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
