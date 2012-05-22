@@ -409,9 +409,6 @@ public class AtomParser {
 
         // eol here is optional.
         match(Kind.EOL);
-
-        if (match(Kind.RBRACE) != null || match(Kind.RBRACKET) != null)
-          break;
       } else {
         // This is a multilevel thing, recurse!
         if (anyOf(Kind.LBRACKET, Kind.LBRACE) != null) {
