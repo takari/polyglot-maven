@@ -33,9 +33,11 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Component(role = ModelWriter.class, hint = "atom")
 public class AtomModelWriter extends ModelWriterSupport {
+  private static final Pattern ATOM_REGEX = Pattern.compile("\\d+|true|false");
 
   @Requirement
   protected Logger log;
@@ -127,7 +129,7 @@ public class AtomModelWriter extends ModelWriterSupport {
         }
         Object value = model.getProperties().get(key);
         if (value != null) {
-          pw.print(key + ": " + value);
+          pw.print(key + ": " + toAtom(value.toString()));
           if (i + 1 != keys.size()) {
             pw.println();
           }
@@ -195,22 +197,22 @@ public class AtomModelWriter extends ModelWriterSupport {
 
   private void pluginManagement(PrintWriter pw, Model model) {
     if (model.getBuild() != null && model.getBuild().getPluginManagement() != null) {
-      plugins(pw, "pluginOverrides", model.getBuild().getPluginManagement().getPlugins());
+      plugins(pw, model.getBuild().getPluginManagement().getPlugins());
     }
   }
 
   private void plugins(PrintWriter pw, Model model) {
     if (model.getBuild() != null && !model.getBuild().getPlugins().isEmpty()) {
-      plugins(pw, "plugins", model.getBuild().getPlugins());
+      plugins(pw, model.getBuild().getPlugins());
     }
   }
 
   // need to write nested objects
-  private void plugins(PrintWriter pw, String elementName, List<Plugin> plugins) {
+  private void plugins(PrintWriter pw, List<Plugin> plugins) {
     if (!plugins.isEmpty()) {
       for (int i = 0; i < plugins.size(); i++) {
         Plugin plugin = plugins.get(i);
-        pw.println("plugin");
+        pw.println("\nplugin");
 
         pw.print(indent + "id: " + plugin.getGroupId() + ":" + plugin.getArtifactId());
         if (plugin.getVersion() != null)
@@ -236,22 +238,38 @@ public class AtomModelWriter extends ModelWriterSupport {
       for (int j = 0; j < count; j++) {
         Xpp3Dom c = configuration.getChild(j);
         if (c.getValue() != null) {
-          pw.print(indent + c.getName() + ": " + c.getValue());
+          pw.print(indent + c.getName() + ": " + toAtom(c.getValue()));
           if (j + 1 != count) {
             pw.println();
           }
         } else {
-          pw.println(indent + c.getName() + ": " + lbraceket());
+
+          String keyString = indent + c.getName() + ": " + lbraceket();
+
+          if (c.getChildCount() == 0)
+            pw.print(keyString);
+          else
+            pw.println(keyString);
           String oldIndent = indent;
           indent += "  ";
           flipBrackets = !flipBrackets;
           printChildren(pw, c);
           flipBrackets = !flipBrackets;
           indent = oldIndent;
-          pw.print("\n" + indent + rbraceket());
+          if (c.getChildCount() == 0)
+            pw.print(rbraceket());
+          else
+            pw.print("\n" + indent + rbraceket());
         }
       }
     }
+  }
+
+  /**
+   * Quotes the dom element as a string, but only if necessary.
+   */
+  private String toAtom(String value) {
+    return '"' + value + '"';
   }
 
   private char lbraceket() {

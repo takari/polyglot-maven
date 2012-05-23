@@ -258,9 +258,9 @@ public class AtomParser {
     Map<String, String> dirs = new HashMap<String, String>();
     // Strip quotes and store.
     if (null != srcDir)
-      dirs.put("src", srcDir.substring(1, srcDir.length() - 1));
+      dirs.put("src", stripQuotes(srcDir));
     if (null != testDir)
-      dirs.put("test", testDir.substring(1, testDir.length() - 1));
+      dirs.put("test", stripQuotes(testDir));
 
     if (match(Token.Kind.RBRACKET) == null) {
       parseException("Expected ] after srcs list");
@@ -402,8 +402,7 @@ public class AtomParser {
       if (atom != null) {
         atom = atom.trim();
         // Strip quotes.
-        if (atom.startsWith("\"") && atom.endsWith("\""))
-          atom = atom.substring(1, atom.length() - 1);
+        atom = stripQuotes(atom);
 
         config.put(propKey.get(0).value, atom);
 
@@ -434,6 +433,12 @@ public class AtomParser {
     }
 
     return config;
+  }
+
+  static String stripQuotes(String atom) {
+    if (atom.startsWith("\"") && atom.endsWith("\""))
+      atom = atom.substring(1, atom.length() - 1);
+    return atom;
   }
 
   private List<Property> properties(Token.Kind kind) {
@@ -522,12 +527,14 @@ public class AtomParser {
       return null;
     }
 
-    String value = idFragment();
+    List<Token> value = match(Kind.STRING);
     if (value == null) {
       return null;
     }
 
-    return new Property(key, value);
+    String actual = stripQuotes(value.get(0).value);
+
+    return new Property(key, actual);
   }
 
   /**
@@ -696,7 +703,7 @@ public class AtomParser {
 
     // Validate first URL...
     //noinspection ConstantConditions
-    String url = repositories.get(0).value; // Strip ""
+    String url = repositories.get(0).value;
     repoUrls.add(validateUrl(url));
 
     while ((repositories = match(Token.Kind.COMMA)) != null) {
@@ -716,7 +723,7 @@ public class AtomParser {
   }
 
   private String validateUrl(String url) {
-    url = url.substring(1, url.length() - 1);
+    url = stripQuotes(url);
 
     // Validate URL...
     try {

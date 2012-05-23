@@ -3,6 +3,7 @@ package org.sonatype.maven.polyglot.atom;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 
@@ -40,14 +42,14 @@ public class AtomModelWithMavenTest extends InjectedTestCase {
     //
     // Read in the Atom POM
     //
-    //ModelReader atomModelReader = new AtomModelReader();
-    //StringReader r = new StringReader(w.toString());
-    //Model atomModel = atomModelReader.read(r, new HashMap<String, Object>());
+    ModelReader atomModelReader = new AtomModelReader();
+    StringReader r = new StringReader(w.toString());
+    Model atomModel = atomModelReader.read(r, new HashMap<String, Object>());
     //
     // Test for fidelity
     //
-    //assertNotNull(atomModel);
-    //testMavenModelForCompleteness(atomModel);
+    assertNotNull(atomModel);
+    testMavenModelForCompleteness(atomModel);
 
   }
 
@@ -55,42 +57,52 @@ public class AtomModelWithMavenTest extends InjectedTestCase {
     //
     // repos
     //
-    assertEquals("http://scala-tools.org/repo-releases/", model.getRepositories().get(0).getUrl());
+    assertEquals("http://repo1.maven.org/maven2", model.getRepositories().get(0).getUrl());
     //
     // parent
     //
-    assertEquals("com.google.sitebricks:sitebricks-parent:0.8.6-SNAPSHOT", model.getGroupId() + ":" + model.getArtifactId() + ":" + model.getVersion());
+    assertEquals("org.apache.maven:maven:3.0.4-SNAPSHOT", model.getGroupId() + ":" + model.getArtifactId() + ":" + model.getVersion());
     //
     // id
     //
-    assertEquals("org.sonatype.oss:oss-parent:6", model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
+    assertEquals("org.eclipse.tesla:tesla:3", model.getParent().getGroupId() + ":" + model.getParent().getArtifactId() + ":" + model.getParent().getVersion());
     //
     // properties
     //
     assertEquals("pom", model.getPackaging());
-    assertEquals("5.8", model.getProperties().getProperty("org.testng.version"));
-    assertEquals("6.1.9", model.getProperties().getProperty("org.mortbay.jetty.version"));
+    assertNull(model.getProperties().getProperty("org.testng.version"));
+    assertNull(model.getProperties().getProperty("org.mortbay.jetty.version"));
+    assertEquals("1.7", model.getProperties().getProperty("gossipVersion"));
+    assertEquals("1.12", model.getProperties().getProperty("aetherVersion"));
+    assertEquals("4.8.2", model.getProperties().getProperty("junitVersion"));
+    assertEquals("Eclipse Tesla", model.getProperties().getProperty("distributionName"));
+    assertEquals("eclipse-tesla", model.getProperties().getProperty("distributionId"));
     //
-    // depMan
+    // depMan (overrides)
     //
-    assertEquals("com.google.sitebricks:sitebricks-converter:${project.version}", gav(model.getDependencyManagement().getDependencies().get(0)));
-    assertEquals("com.google.guava:guava:r09", gav(model.getDependencyManagement().getDependencies().get(5)));
-    assertEquals("org.freemarker:freemarker:2.3.10", gav(model.getDependencyManagement().getDependencies().get(12)));
-    assertEquals("saxpath:saxpath:1.0-FCS", gav(model.getDependencyManagement().getDependencies().get(22)));
-    assertEquals("org.testng:testng:${org.testng.version}", gav(model.getDependencyManagement().getDependencies().get(35)));
+    assertEquals("org.apache.maven:maven-model:${project.version}", gav(model.getDependencyManagement().getDependencies().get(0)));
+    assertEquals("org.apache.maven:maven-core:${project.version}", gav(model.getDependencyManagement().getDependencies().get(5)));
+    assertEquals("org.sonatype.sisu:sisu-inject-plexus:${sisuInjectVersion}", gav(model.getDependencyManagement().getDependencies().get(12)));
+    assertEquals("org.apache.maven.wagon:wagon-http-shared:${wagonVersion}", gav(model.getDependencyManagement().getDependencies().get(22)));
+    assertEquals("org.sonatype.gossip:gossip-core:${gossipVersion}", gav(model.getDependencyManagement().getDependencies().get(35)));
     //
     // modules
     //
-    assertEquals("sitebricks", model.getModules().get(0));
-    assertEquals("sitebricks-acceptance-tests", model.getModules().get(4));
-    assertEquals("slf4j", model.getModules().get(9));
+    assertEquals("maven-core", model.getModules().get(0));
+    assertEquals("maven-settings-builder", model.getModules().get(4));
+    assertEquals("maven-aether-provider", model.getModules().get(6));
     //
     // plugins
     //
     Plugin p0 = model.getBuild().getPlugins().get(0);
+    assertEquals("org.codehaus.plexus:plexus-component-metadata:${plexusVersion}", gav(p0));
+    assertEquals(0, ((Xpp3Dom)p0.getConfiguration()).getChildCount());
+
+
+    p0 = model.getBuild().getPlugins().get(1);
     assertEquals("org.apache.maven.plugins:maven-compiler-plugin:2.3.2", gav(p0));
-    assertEquals("1.6", ((Xpp3Dom)p0.getConfiguration()).getChild("source").getValue());
-    assertEquals("1.6", ((Xpp3Dom)p0.getConfiguration()).getChild("target").getValue());
+    assertEquals("1.5", ((Xpp3Dom)p0.getConfiguration()).getChild("source").getValue());
+    assertEquals("1.5", ((Xpp3Dom)p0.getConfiguration()).getChild("target").getValue());
   }
 
   String gav(Dependency d) {
