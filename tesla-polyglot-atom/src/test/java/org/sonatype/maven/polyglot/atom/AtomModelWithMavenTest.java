@@ -57,7 +57,7 @@ public class AtomModelWithMavenTest extends InjectedTestCase {
     //
     // repos
     //
-    assertEquals("http://repo1.maven.org/maven2", model.getRepositories().get(0).getUrl());
+    assertEquals(0, model.getRepositories().size());
     //
     // parent
     //
@@ -94,12 +94,12 @@ public class AtomModelWithMavenTest extends InjectedTestCase {
     //
     // plugins
     //
-    Plugin p0 = model.getBuild().getPlugins().get(0);
+    Plugin p0 = model.getBuild().getPluginManagement().getPlugins().get(0);
     assertEquals("org.codehaus.plexus:plexus-component-metadata:${plexusVersion}", gav(p0));
-    assertEquals(0, ((Xpp3Dom)p0.getConfiguration()).getChildCount());
+    assertNull(p0.getConfiguration());
 
 
-    p0 = model.getBuild().getPlugins().get(1);
+    p0 = model.getBuild().getPluginManagement().getPlugins().get(1);
     assertEquals("org.apache.maven.plugins:maven-compiler-plugin:2.3.2", gav(p0));
     assertEquals("1.5", ((Xpp3Dom)p0.getConfiguration()).getChild("source").getValue());
     assertEquals("1.5", ((Xpp3Dom)p0.getConfiguration()).getChild("target").getValue());

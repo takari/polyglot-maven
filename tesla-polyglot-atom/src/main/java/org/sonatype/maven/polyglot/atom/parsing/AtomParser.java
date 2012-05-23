@@ -150,7 +150,8 @@ public class AtomParser {
     // modules
     chewEols();
     chewIndents();
-    List<Plugin> plugins = plugins();
+    List<Plugin> pluginOverrides = plugins(Kind.PLUGIN_OVERRIDE);
+    List<Plugin> plugins = plugins(Kind.PLUGIN);
 
     return new Project(projectId,
         parent,
@@ -162,6 +163,7 @@ public class AtomParser {
         overrides,
         deps,
         modules,
+        pluginOverrides,
         plugins,
         dirs,
         scm);
@@ -307,12 +309,12 @@ public class AtomParser {
   /**
    * Additional plugins and their configuration.
    */
-  private List<Plugin> plugins() {
+  private List<Plugin> plugins(Kind keyword) {
     List<Plugin> plugins = new ArrayList<Plugin>();
 
     chewEols();
     Plugin plugin;
-    while ((plugin = plugin()) != null) {
+    while ((plugin = plugin(keyword)) != null) {
       plugins.add(plugin);
 
       chewEols();
@@ -321,8 +323,8 @@ public class AtomParser {
     return plugins;
   }
 
-  private Plugin plugin() {
-    if (match(Kind.PLUGIN) == null)
+  private Plugin plugin(Kind keyword) {
+    if (match(keyword) == null)
       return null;
 
     if (match(Kind.EOL) == null) {
@@ -330,7 +332,6 @@ public class AtomParser {
     }
 
     Plugin plugin = new Plugin();
-    List<Token> propKey;
 
     chewIndents();
     if (match(Kind.ID, Kind.COLON) == null) {
@@ -355,7 +356,7 @@ public class AtomParser {
     plugin.setVersion(pluginId.getVersion());
 
     Map<String, Object> config;
-    if ((config = configurationMap()) == null)
+    if ((config = configurationMap()) == null || config.isEmpty())
       return plugin;
 
     // Transform the parsed config map into maven's XPP3 Dom thing.

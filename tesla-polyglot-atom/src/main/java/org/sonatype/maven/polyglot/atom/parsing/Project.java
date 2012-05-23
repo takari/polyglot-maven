@@ -20,13 +20,26 @@ public class Project extends Element {
   private List<Id> deps;
   private List<Id> overrides;
   private List<String> modules;
+  private List<Plugin> pluginOverrides;
   private List<Plugin> plugins;
   private Map<String, String> dirs;
   private static final String MAVEN_CENTRAL_URL = "http://repo1.maven.org/maven2";
   private final ScmElement scm;
 
-  public Project(Id projectId, Parent parent, String packaging, List<Property> properties, Repositories repositories, String description, String url, List<Id> overrides, List<Id> deps,
-      List<String> modules, List<Plugin> plugins, Map<String, String> dirs, ScmElement scm) {
+  public Project(Id projectId,
+                 Parent parent,
+                 String packaging,
+                 List<Property> properties,
+                 Repositories repositories,
+                 String description,
+                 String url,
+                 List<Id> overrides,
+                 List<Id> deps,
+                 List<String> modules,
+                 List<Plugin> pluginOverrides,
+                 List<Plugin> plugins,
+                 Map<String, String> dirs,
+                 ScmElement scm) {
     this.projectId = projectId;
     this.parent = parent;
     this.packaging = packaging;
@@ -37,6 +50,7 @@ public class Project extends Element {
     this.overrides = overrides;
     this.deps = deps;
     this.modules = modules;
+    this.pluginOverrides = pluginOverrides;
     this.plugins = plugins;
     this.dirs = dirs;
     this.scm = scm;
@@ -56,6 +70,10 @@ public class Project extends Element {
 
   public List<Plugin> getPlugins() {
     return plugins;
+  }
+
+  public List<Plugin> getPluginOverrides() {
+    return pluginOverrides;
   }
 
   public List<String> getModules() {
@@ -117,14 +135,7 @@ public class Project extends Element {
     }
 
     // Add jar repository urls.
-    if (null == repositories) {
-      // Add maven central if no repos exist.
-      Repository repository = new Repository();
-      repository.setId("Maven Central");
-      repository.setUrl(MAVEN_CENTRAL_URL);
-      model.addRepository(repository);
-
-    } else {
+    if (null != repositories) {
       for (String repoUrl : repositories.getRepositories()) {
         Repository repository = new Repository();
         repository.setId(Integer.toString(repoUrl.hashCode()));
@@ -171,6 +182,12 @@ public class Project extends Element {
 
     if (modules != null) {
       model.setModules(modules);
+    }
+
+    if (pluginOverrides != null) {
+      PluginManagement management = new PluginManagement();
+      management.setPlugins(pluginOverrides);
+      model.getBuild().setPluginManagement(management);
     }
 
     if (plugins != null) {

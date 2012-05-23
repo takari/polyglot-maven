@@ -24,7 +24,6 @@ public class Tokenizer {
 
   static {
 
-    DELIMITERS['-'] = SEQUENCE_TOKEN;
     DELIMITERS['+'] = SEQUENCE_TOKEN;
     DELIMITERS['/'] = SEQUENCE_TOKEN;
     DELIMITERS['*'] = SEQUENCE_TOKEN;

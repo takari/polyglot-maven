@@ -9,6 +9,7 @@ import java.util.Map;
  * @author dhanji@gmail.com (Dhanji R. Prasanna)
  */
 public class Token {
+  public static final String PLUGIN_OVERRIDE_KEYWORD = "plugin-override";
   public final String value;
   public final Kind kind;
 
@@ -69,9 +70,8 @@ public class Token {
     OVERRIDES,
     PROPS,
     MODULES,
-    PLUGIN;
-    //DOLLAR,
-    //PROJECT_DOT_VERSION;
+    PLUGIN,
+    PLUGIN_OVERRIDE;
 
     private static final Map<String, Kind> TOKEN_MAP = new HashMap<String, Kind>();
 
@@ -111,6 +111,7 @@ public class Token {
       TOKEN_MAP.put("scm", SCM);
       TOKEN_MAP.put("modules", MODULES);
       TOKEN_MAP.put("plugin", PLUGIN);
+      TOKEN_MAP.put(PLUGIN_OVERRIDE_KEYWORD, PLUGIN_OVERRIDE);
 
 
       TOKEN_MAP.put("||", OR);
