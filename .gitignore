@@ -1,7 +1,0 @@
-target/
-.project
-.classpath
-.settings/
-bin/
-pmaven-*-SNAPSHOT
-*.iml
