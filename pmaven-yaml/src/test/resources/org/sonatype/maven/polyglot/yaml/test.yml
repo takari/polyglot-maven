@@ -1,0 +1,67 @@
+parent:
+  groupId: org.sonatype.maven
+  artifactId: maven-parent
+  version: 1.0 
+
+groupId: org.sonatype.raven
+artifactId: raven
+version: 1.0-SNAPSHOT
+packaging: jar
+name: Raven
+description: Hybrid Maven 3.x & JRuby Build System
+
+properties:
+  mavenVersion: 3.0    
+    
+developers:
+ - { id: jvanzyl, name: Jason van Zyl }
+
+contributors:
+ - { name: Will Price }
+
+dependencyManagement:
+  dependencies:
+    - { groupId: org.apache.maven, artifactId: maven-model-builder, version: 3.0 }
+    - { groupId: org.yaml, artifactId: snakeyaml, version: 1.4 }
+
+dependencies:
+  - { groupId: org.apache.maven, artifactId: maven-core, version: 3.0 }
+  - { groupId: org.yaml, artifactId: snakeyaml, version: 1.4 }
+  - artifactId: groovy
+    groupId: org.codehaus.groovy
+    version: 1.6.5
+    exclusions:
+    - {artifactId: jline, groupId: jline}
+    - {artifactId: junit, groupId: junit}
+    - {artifactId: ant, groupId: org.apache.ant}
+    - {artifactId: ant-launcher, groupId: org.apache.ant} 
+
+build:
+  plugins:
+    - groupId: org.apache.maven.plugins   
+      artifactId: maven-compiler-plugin
+      version: 2.0.2
+      executions:
+      - goals: [generateStubs, compile, generateTestStubs, testCompile]      
+      configuration:
+        source: 1.6
+        target: 1.5
+
+modules:
+ - reader
+ - writer
+ - shell-integration
+
+scm: { connection: connection, developerConnection: developerConnection, url: "http://maven.sonatype.org/scm" }
+issueManagement: { system: jira, url: "http://jira.codehaus.org/browse/MNG" }
+ciManagement: { system: hudson, url: "http://grid.sonatype.org/ci" } 
+
+distributionManagement:
+  site: { id: site, url: "http://www.apache.org" }
+  repository: { id: releases, name: releases, url: "http://maven.sonatype.org/releases" }
+  snapshotRepository: { id: snapshots, name: snapshots, url: "http://maven.sonatype.org/snapshots" }
+
+repositories:
+  - id: sonatype
+    name: Sonatype Central
+    url: http://repository.sonatype.org

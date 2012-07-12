@@ -1,0 +1,118 @@
+<!--
+
+    Copyright (c) 2012 to original author or authors
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.twdata.maven</groupId>
+    <artifactId>maven-yamlpom-plugin</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>maven-plugin</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <tasks>
+                        <tstamp>
+                            <format property="TODAY" pattern="yyyyMMdd" locale="en"/>
+                            <format property="TODAY_STRING" pattern="MMM dd, yyyy"/>
+                        </tstamp>
+                        <mkdir dir="target/classes"/>
+
+                        <javadoc packagenames="com.atlassian.crowd.integration.*" defaultexcludes="yes" destdir="${project.build.directory}/javadoc" author="true" version="true" use="true"
+                                 windowtitle="Atlassian Software Systems - Crowd - ${project.version}">
+                            <fileset dir="${basedir}">
+                                <include name="components/crowd-integration/crowd-integration-api/src/main/java/com/atlassian/crowd/integration/**/*.java"/>
+                                <include name="components/crowd-integration/crowd-integration-jive/src/main/java/com/atlassian/crowd/integration/**/*.java"/>
+                            </fileset>
+                            <doctitle>
+                                <![CDATA[<h1><a href='http://www.atlassian.com/'>Atlassian Software Systems - Crowd - ${project.version}</a></h1>]]>
+                            </doctitle>
+                            <bottom>
+                                <![CDATA[<i>Copyright &#169; 2007 <a href='http://www.atlassian.com/'>Atlassian Software Systems</a>. All Rights Reserved.</i>]]>
+                            </bottom>
+
+                            <link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+                            <link href="http://java.sun.com/j2ee/sdk_1.3/techdocs/api/"/>
+
+                        </javadoc>
+
+                    </tasks>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.2</version>
+                <configuration>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <artifactSet>
+                      <includes>
+                        <include>SnakeYAML:SnakeYAML</include>
+                      </includes>
+                    </artifactSet>
+                    <transformers>
+                      <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
+                    </transformers>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+                        </configuration>
+                        <goals>
+                            <goal>go</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+                            <artifactSet>
+                              <includes>
+                                <include>SnakeYAML:SnakeYAML</include>
+                              </includes>
+                            </artifactSet>
+                            <transformers>
+                              <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
+                            </transformers>
+                        </configuration>
+                        <goals>
+                            <goal>go</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,246 @@
+artifactId: maven
+build:
+  pluginManagement:
+    plugins:
+    - artifactId: plexus-component-metadata
+      executions:
+      - goals: [generate-metadata, generate-test-metadata]
+        id: default
+        inherited: true
+        priority: 0
+      extensions: false
+      groupId: org.codehaus.plexus
+      inherited: true
+      version: ${plexusVersion}
+    - artifactId: maven-compiler-plugin
+      configuration: {source: '1.5', target: '1.5'}
+      extensions: false
+      groupId: org.apache.maven.plugins
+      inherited: true
+      version: 2.0.2
+    - artifactId: maven-release-plugin
+      configuration: {tagBase: 'https://svn.apache.org/repos/asf/maven/maven-3/tags'}
+      extensions: false
+      groupId: org.apache.maven.plugins
+      inherited: true
+    - artifactId: maven-surefire-plugin
+      configuration: {argLine: -Xmx256m}
+      extensions: false
+      groupId: org.apache.maven.plugins
+      inherited: true
+    - artifactId: modello-maven-plugin
+      configuration: {useJava5: 'true'}
+      executions:
+      - goals: [java, xpp3-reader, xpp3-writer]
+        id: standard
+        inherited: true
+        priority: 0
+      extensions: false
+      groupId: org.codehaus.modello
+      inherited: true
+      version: ${modelloVersion}
+    - {artifactId: maven-bundle-plugin, extensions: false, groupId: org.apache.felix,
+      inherited: true, version: 1.0.0}
+    - {artifactId: maven-assembly-plugin, extensions: false, groupId: org.apache.maven.plugins,
+      inherited: true, version: 2.2-beta-4}
+    - {artifactId: maven-javadoc-plugin, extensions: false, groupId: org.apache.maven.plugins,
+      inherited: true, version: '2.5'}
+    - {artifactId: maven-resources-plugin, extensions: false, groupId: org.apache.maven.plugins,
+      inherited: true, version: '2.4'}
+    - {artifactId: maven-remote-resources-plugin, extensions: false, groupId: org.apache.maven.plugins,
+      inherited: true, version: '1.1'}
+dependencies:
+- {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: '${junitVersion}'}
+dependencyManagement:
+  dependencies:
+  - {artifactId: maven-lifecycle, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-reporting-api, groupId: org.apache.maven, optional: false,
+    type: jar, version: '${project.version}'}
+  - {artifactId: maven-profile, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-model, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-settings, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-plugin-api, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-embedder, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-core, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-model-builder, groupId: org.apache.maven, optional: false,
+    type: jar, version: '${project.version}'}
+  - {artifactId: maven-repository, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-compat, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: maven-artifact, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${project.version}'}
+  - {artifactId: plexus-utils, groupId: org.codehaus.plexus, optional: false, type: jar,
+    version: '${plexusUtilsVersion}'}
+  - artifactId: plexus-container-default
+    exclusions:
+    - {artifactId: junit, groupId: junit}
+    groupId: org.codehaus.plexus
+    optional: false
+    type: jar
+    version: ${plexusVersion}
+  - artifactId: plexus-component-annotations
+    exclusions:
+    - {artifactId: junit, groupId: junit}
+    groupId: org.codehaus.plexus
+    optional: false
+    type: jar
+    version: ${plexusVersion}
+  - {artifactId: plexus-classworlds, groupId: org.codehaus.plexus, optional: false,
+    type: jar, version: '${classWorldsVersion}'}
+  - {artifactId: plexus-interpolation, groupId: org.codehaus.plexus, optional: false,
+    type: jar, version: '${plexusInterpolationVersion}'}
+  - {artifactId: wagon-provider-api, groupId: org.apache.maven.wagon, optional: false,
+    type: jar, version: '${wagonVersion}'}
+  - {artifactId: wagon-file, groupId: org.apache.maven.wagon, optional: false, type: jar,
+    version: '${wagonVersion}'}
+  - {artifactId: wagon-http-lightweight, groupId: org.apache.maven.wagon, optional: false,
+    type: jar, version: '${wagonVersion}'}
+  - artifactId: commons-cli
+    exclusions:
+    - {artifactId: commons-lang, groupId: commons-lang}
+    - {artifactId: commons-logging, groupId: commons-logging}
+    groupId: commons-cli
+    optional: false
+    type: jar
+    version: '${commonsCliVersion}'
+  - {artifactId: commons-jxpath, groupId: commons-jxpath, optional: false, type: jar,
+    version: '${jxpathVersion}'}
+  - {artifactId: plexus-sec-dispatcher, groupId: org.sonatype.plexus, optional: false,
+    type: jar, version: '${securityDispatcherVersion}'}
+  - {artifactId: plexus-cipher, groupId: org.sonatype.plexus, optional: false, type: jar,
+    version: '${cipherVersion}'}
+  - {artifactId: plexus-plugin-manager, groupId: org.sonatype.plexus, optional: false,
+    type: jar, version: '${plexusPluginManagerVersion}'}
+  - {artifactId: easymock, groupId: easymock, optional: false, scope: test, type: jar,
+    version: '${easyMockVersion}'}
+description: "Maven is a project development management and\n    comprehension tool.\
+  \ Based on the concept of a project object model:\n    builds, dependency management,\
+  \ documentation creation, site\n    publication, and distribution publication are\
+  \ all controlled from\n    the declarative file. Maven can be extended by plugins\
+  \ to utilise a\n    number of other development tools for reporting or the build\n\
+  \    process."
+distributionManagement:
+  site: {id: apache.website, url: 'scp://people.apache.org/www/maven.apache.org/ref/${project.version}/'}
+inceptionYear: '2001'
+issueManagement: {system: jira, url: 'http://jira.codehaus.org/browse/MNG'}
+mailingLists:
+- archive: http://mail-archives.apache.org/mod_mbox/maven-dev
+  name: Maven Developer List
+  otherArchives: ['http://www.mail-archive.com/dev@maven.apache.org/', 'http://www.nabble.com/Maven-Developers-f179.html',
+    'http://maven.dev.markmail.org/']
+  post: dev@maven.apache.org
+  subscribe: dev-subscribe@maven.apache.org
+  unsubscribe: dev-unsubscribe@maven.apache.org
+- archive: http://mail-archives.apache.org/mod_mbox/maven-users
+  name: Maven User List
+  otherArchives: ['http://www.mail-archive.com/users@maven.apache.org/', 'http://www.nabble.com/Maven---Users-f178.html',
+    'http://maven.users.markmail.org/']
+  post: users@maven.apache.org
+  subscribe: users-subscribe@maven.apache.org
+  unsubscribe: users-unsubscribe@maven.apache.org
+- archive: http://mail-archives.apache.org/mod_mbox/maven-issues/
+  name: Maven Issues List
+  otherArchives: ['http://www.mail-archive.com/issues@maven.apache.org', 'http://www.nabble.com/Maven---Issues-f15573.html',
+    'http://maven.issues.markmail.org/']
+  subscribe: issues-subscribe@maven.apache.org
+  unsubscribe: issues-unsubscribe@maven.apache.org
+- archive: http://mail-archives.apache.org/mod_mbox/maven-commits
+  name: Maven Commits List
+  otherArchives: ['http://www.mail-archive.com/commits@maven.apache.org', 'http://www.nabble.com/Maven---Commits-f15575.html',
+    'http://maven.commits.markmail.org/']
+  subscribe: commits-subscribe@maven.apache.org
+  unsubscribe: commits-unsubscribe@maven.apache.org
+- archive: http://mail-archives.apache.org/mod_mbox/maven-announce/
+  name: Maven Announcements List
+  otherArchives: ['http://www.mail-archive.com/announce@maven.apache.org', 'http://www.nabble.com/Maven-Announcements-f15617.html',
+    'http://maven.announce.markmail.org/']
+  post: announce@maven.apache.org
+  subscribe: announce-subscribe@maven.apache.org
+  unsubscribe: announce-unsubscribe@maven.apache.org
+- archive: http://mail-archives.apache.org/mod_mbox/maven-notifications/
+  name: Maven Notifications List
+  otherArchives: ['http://www.mail-archive.com/notifications@maven.apache.org', 'http://www.nabble.com/Maven---Notifications-f15574.html',
+    'http://maven.notifications.markmail.org/']
+  subscribe: notifications-subscribe@maven.apache.org
+  unsubscribe: notifications-unsubscribe@maven.apache.org
+modelVersion: 4.0.0
+modules: [maven-core, apache-maven, maven-model, maven-settings, maven-artifact, maven-plugin-api,
+  maven-model-builder, maven-embedder, maven-compat]
+name: Apache Maven 3.x
+packaging: pom
+parent: {artifactId: maven-parent, groupId: org.apache.maven, relativePath: ../pom/maven/pom.xml,
+  version: '15'}
+profiles:
+- build:
+    plugins:
+    - artifactId: maven-assembly-plugin
+      executions:
+      - configuration: {skipAssembly: 'true'}
+        id: source-release-assembly
+        inherited: true
+        priority: 0
+      extensions: false
+      groupId: org.apache.maven.plugins
+      inherited: true
+  id: apache-release
+  source: pom
+- id: reporting
+  reporting:
+    excludeDefaults: false
+    plugins:
+    - {artifactId: maven-javadoc-plugin, groupId: org.apache.maven.plugins, inherited: true,
+      version: '2.5'}
+    - artifactId: maven-pmd-plugin
+      configuration: {targetJdk: '1.5'}
+      groupId: org.apache.maven.plugins
+      inherited: true
+  source: pom
+- activation:
+    activeByDefault: false
+    property: {name: maven.repo.local}
+  build:
+    plugins:
+    - artifactId: maven-surefire-plugin
+      configuration:
+        systemProperties:
+          property: {name: maven.repo.local, value: '${maven.repo.local}'}
+      extensions: false
+      groupId: org.apache.maven.plugins
+      inherited: true
+  id: maven-repo-local
+  source: pom
+- activation:
+    activeByDefault: false
+    property: {name: m2e.version}
+  build:
+    directory: '${m2BuildDirectory}'
+    plugins:
+    - artifactId: lifecycle-mapping
+      configuration:
+        mappingId: customizable
+        configurators: {}
+        mojoExecutions: {mojoExecution: 'org.apache.maven.plugins:maven-resources-plugin::'}
+      extensions: false
+      groupId: org.maven.ide.eclipse
+      inherited: true
+      version: 0.9.9-SNAPSHOT
+  id: m2e
+  properties: {m2BuildDirectory: target}
+  source: pom
+properties: {maven.test.redirectTestOutputToFile: 'true', modelloVersion: '1.1', plexusUtilsVersion: 2.0.1,
+  commonsCliVersion: '1.2', plexusVersion: 1.5.1, jxpathVersion: '1.3', junitVersion: 3.8.2,
+  easyMockVersion: 1.2_Java1.3, cipherVersion: '1.4', plexusInterpolationVersion: '1.11',
+  wagonVersion: 1.0-beta-6, classWorldsVersion: 2.2.2, plexusPluginManagerVersion: 1.0-alpha-1,
+  securityDispatcherVersion: '1.3'}
+scm: {connection: 'scm:svn:http://svn.apache.org/repos/asf/maven/maven-3/trunk', developerConnection: 'scm:svn:https://svn.apache.org/repos/asf/maven/maven-3/trunk',
+  tag: HEAD, url: 'http://svn.apache.org/viewvc/maven/maven-3/trunk'}
+url: http://maven.apache.org/
+version: 3.0-SNAPSHOT

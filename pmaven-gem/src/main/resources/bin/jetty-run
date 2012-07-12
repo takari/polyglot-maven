@@ -1,0 +1,22 @@
+#!/usr/bin/env jruby
+if ARGV.size > 4 || ARGV[0] == "--help" || ARGV[0] == "-h"
+  puts "usage: #{File.basename($0)} [-e <environment>] [--war [warfile]]"
+  puts "\tdefault environment: development"
+  exit 1
+end
+
+args = ["jetty:run"]
+if ARGV.size == 2 && ARGV[0] == "-e"
+  args << "-Drails.env=#{ARGV[1]}"
+  args << "-Prun"
+elsif ARGV.size == 1 && ARGV[0] == "--war"
+  args = ["jetty:run-war", "-Pwar"]
+elsif ARGV.size == 2 && ARGV[0] == "--war"
+  args = ["jetty:deploy-war", "-DwebApp=#{ARGV[1]}", "-Pwar"]
+elsif ARGV.size == 3 && ARGV[0] == "-e" && ARGV[2] == "--war"
+   args = ["jetty:run-war", "-Pwar", "-Drails.env=#{ARGV[1]}"]
+elsif ARGV.size == 4 && ARGV[0] == "-e" && ARGV[2] == "--war"
+   args = ["jetty:deploy-war", "-Pwar",  "-DwebApp=#{ARGV[3]}", "-Drails.env=#{ARGV[1]}"]
+end
+ARGV.replace(args)
+load File.join(File.dirname(__FILE__), "rmvn")
