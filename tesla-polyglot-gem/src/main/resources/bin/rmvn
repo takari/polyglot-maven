@@ -1,0 +1,97 @@
+#!/usr/bin/env jruby
+begin
+  require 'java'
+rescue LoadError => e
+  raise "this executable need jruby. quit."
+end
+
+bin = File.dirname(__FILE__)
+boot = File.join(bin, "..", "boot")
+ext = File.join(bin, "..", "ext")
+
+classpath = (Dir.glob(boot + "/*jar") + Dir.glob(ext + "/ruby-tools*jar")).join(":")
+
+java.lang.System.setProperty("classworlds.conf", File.join(bin, "m2.conf"))
+
+java.lang.System.setProperty("maven.home", File.join(bin, ".."))
+
+classpath.split(":").each do |path|
+  require path
+end
+
+# make the command line for the goals of the jruby-maven-plugins nicer
+plugins = {
+  :rake => [:rake],
+  :ruby => [:jruby, :compile],
+  :gem => [:package, :install, :push, :exec, :pom, :initialize, :irb],
+  :gemify => [:gemify, :versions],
+  :rails2 => [:new, :generate, :rake, :server, :console],
+  :rails3 => [:new, :generate, :rake, :server, :console, :dbconsole, :pom],
+  :cucumber => [:test],
+  :rspec => [:test],
+  :runit => [:test],
+  :bundler => [:install]
+}
+aliases = {:jruby => :ruby, :spec => :rspec, :rails => :rails3, :bundle => :bundler}
+
+if ARGV.size > 0 
+  name = ARGV[0].to_sym
+  name = aliases[name] || name
+  if plugins.member?(name)
+    start = 1
+    if ARGV.size > 1
+      if plugins[name].member? ARGV[1].to_sym
+        goal = ARGV[1].to_sym
+        start = 2
+      else
+        goal = plugins[name][0]
+      end
+    else
+      goal = plugins[name][0]
+    end
+    args = if index = ARGV.index("--")
+             ARGV[index + 1, 1000]
+           else
+             []
+           end
+    ruby_args = (ARGV[start, (index || 1000) - start] || []).join(' ')
+
+    # determine the version and delete from ARGV if given
+    version = ARGV.detect do |a|
+      a =~ /^-Dplugin.version=/
+    end
+    if version
+      args.delete(version)
+      version.sub!(/^-Dplugin.version=/, ':')
+    end
+    args << "de.saumya.mojo:#{name}-maven-plugin#{version}:#{goal}"
+    args << "-Dargs=#{ruby_args}" if ruby_args.size > 0
+    ARGV.replace(args)
+  else
+    ARGV.delete("--")
+  end
+end
+if ARGV.size == 0 || ARGV[0] == "--help"
+  puts "usage: rmvn [<plugin name>|<plugin alias> [<args>] [-- <maven options>] | [<maven goal>|<maven phase> <maven options>] | --help"
+  ARGV.replace(["--help"])
+  plugins.each do |name, goals|
+    puts
+    print "plugin #{name}"
+    print " - alias: #{aliases[name]}" if aliases[name]
+    puts
+    if goals.size > 1
+      print "\tgoals       : #{goals.join(',')}"
+      puts
+    end
+    print "\tdefault goal: #{goals[0]}"
+    puts
+  end
+  puts
+end
+
+print "maven commandline: "
+args = ARGV.dup
+ARGV.clear # clean up in case another script gets executed with clean ARGV
+puts args.join ' '
+
+org.codehaus.plexus.classworlds.launcher.Launcher.main(args)

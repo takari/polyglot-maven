@@ -1,0 +1,142 @@
+artifactId: pmaven
+build:
+  defaultGoal: install
+  pluginManagement:
+    plugins:
+    - {artifactId: maven-site-plugin, extensions: false, groupId: org.apache.maven.plugins,
+      inherited: true, version: '2.1'}
+  plugins:
+  - artifactId: maven-surefire-plugin
+    configuration:
+      redirectTestOutputToFile: 'true'
+      forkMode: once
+      argLine: -ea
+      failIfNoTests: 'false'
+      workingDirectory: ${project.build.directory}
+      excludes: {exclude: '**/Test*.java'}
+      includes: {include: '**/*Test.java'}
+    extensions: false
+    groupId: org.apache.maven.plugins
+    inherited: true
+    version: '2.5'
+  - artifactId: maven-compiler-plugin
+    configuration: {source: '1.5', target: '1.5'}
+    extensions: false
+    groupId: org.apache.maven.plugins
+    inherited: true
+    version: 2.0.2
+  - artifactId: gmaven-plugin
+    configuration: {providerSelection: '1.7'}
+    executions:
+    - goals: [generateStubs, compile, generateTestStubs, testCompile]
+      id: default
+      inherited: true
+      priority: 0
+    extensions: false
+    groupId: org.codehaus.gmaven
+    inherited: true
+    version: '1.2'
+  - artifactId: plexus-component-metadata
+    executions:
+    - goals: [generate-metadata, generate-test-metadata]
+      id: default
+      inherited: true
+      priority: 0
+    extensions: false
+    groupId: org.codehaus.plexus
+    inherited: true
+    version: 1.5.1
+  - artifactId: maven-release-plugin
+    configuration: {useReleaseProfile: 'false', goals: deploy, arguments: -B -Prelease,
+      autoVersionSubmodules: 'true'}
+    extensions: false
+    groupId: org.apache.maven.plugins
+    inherited: true
+    version: 2.0-beta-9
+  - {artifactId: maven-scm-plugin, extensions: false, groupId: org.apache.maven.plugins,
+    inherited: true, version: '1.2'}
+ciManagement: {system: Hudson, url: 'https://grid.sonatype.org/ci/job/Polyglot-Maven'}
+dependencies:
+- {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: '4.7'}
+- {artifactId: groovy, groupId: org.codehaus.groovy, optional: false, scope: test,
+  type: jar}
+dependencyManagement:
+  dependencies:
+  - {artifactId: apache-maven, classifier: bin, groupId: org.apache.maven, optional: false,
+    type: zip, version: '${mavenVersion}'}
+  - {artifactId: maven-model-builder, groupId: org.apache.maven, optional: false,
+    type: jar, version: '${mavenVersion}'}
+  - {artifactId: maven-embedder, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${mavenVersion}'}
+  - {artifactId: maven-plugin-api, groupId: org.apache.maven, optional: false, type: jar,
+    version: '${mavenVersion}'}
+  - artifactId: groovy
+    exclusions:
+    - {artifactId: jline, groupId: jline}
+    - {artifactId: junit, groupId: junit}
+    - {artifactId: ant, groupId: org.apache.ant}
+    - {artifactId: ant-launcher, groupId: org.apache.ant}
+    groupId: org.codehaus.groovy
+    optional: false
+    type: jar
+    version: 1.7.0
+  - {artifactId: guice, groupId: com.google.inject, optional: false, type: jar, version: '2.0'}
+  - {artifactId: mvnsh-maven, groupId: org.sonatype.maven.shell, optional: false,
+    type: jar, version: '0.10'}
+  - {artifactId: gshell-core, classifier: tests, groupId: org.sonatype.gshell, optional: false,
+    type: jar, version: '2.5'}
+  - {artifactId: pmaven-common, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-cli, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-maven-plugin, groupId: org.sonatype.pmaven, optional: false,
+    type: jar, version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-groovy, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-yaml, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-jruby, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-commands, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-clojure, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+  - {artifactId: pmaven-scala, groupId: org.sonatype.pmaven, optional: false, type: jar,
+    version: 0.8-SNAPSHOT}
+developers:
+- email: jason@planet57.com
+  id: jdillon
+  name: Jason Dillon
+  roles: [Build Master, Developer]
+distributionManagement:
+  site: {id: '${forgeSiteId}', url: '${forgeSiteUrl}'}
+groupId: org.sonatype.pmaven
+issueManagement: {system: JIRA, url: 'https://issues.sonatype.org/browse/PMAVEN'}
+licenses:
+- {distribution: repo, name: 'The Apache Software License, Version 2.0', url: 'http://www.apache.org/licenses/LICENSE-2.0.txt'}
+mailingLists:
+- {name: Development, post: polyglot@maven.org, subscribe: polyglot-subscribe@maven.org}
+modelVersion: 4.0.0
+modules: [pmaven-common, pmaven-maven-plugin, pmaven-groovy, pmaven-yaml, pmaven-clojure,
+  pmaven-jruby, pmaven-scala, pmaven-cli, pmaven-commands]
+name: Polyglot Maven
+packaging: pom
+parent: {artifactId: forge-parent, groupId: org.sonatype.forge, relativePath: ../pom.xml,
+  version: '5'}
+properties: {forgeSiteId: forge-sites, mavenVersion: 3.0-alpha-7, project.build.sourceEncoding: UTF-8,
+  forgeSiteUrl: 'dav:http://repository.sonatype.org/content/sites/forge-sites/${project.artifactId}/${project.version}'}
+reporting:
+  excludeDefaults: false
+  plugins:
+  - artifactId: maven-javadoc-plugin
+    configuration:
+      configuration: {source: '1.5', encoding: '${project.build.sourceEncoding}'}
+    groupId: org.apache.maven.plugins
+    inherited: true
+    version: 2.6.1
+  - {artifactId: cobertura-maven-plugin, groupId: org.codehaus.mojo, inherited: false,
+    version: '2.3'}
+scm: {connection: 'scm:git:git://github.com/sonatype/polyglot-maven.git', developerConnection: 'scm:git:ssh://git@github.com/sonatype/polyglot-maven.git',
+  tag: HEAD, url: 'http://github.com/sonatype/polyglot-maven'}
+url: http://polyglot.sonatype.org/
+version: 0.8-SNAPSHOT
