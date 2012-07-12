@@ -1,7 +1,0 @@
-*.versionsBackup
-*~
-target/
-.project
-.classpath
-.settings/
-pmaven-*-SNAPSHOT
