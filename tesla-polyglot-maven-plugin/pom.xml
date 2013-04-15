@@ -13,9 +13,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.sonatype.pmaven</groupId>
-        <artifactId>pmaven</artifactId>
-        <version>0.8-SNAPSHOT</version>
+  <groupId>io.tesla.polyglot</groupId>
+  <artifactId>tesla-polyglot</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>pmaven-maven-plugin</artifactId>

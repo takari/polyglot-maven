@@ -6,9 +6,16 @@
  * http://www.eclipse.org/legal/epl-v10.html
  */
 project {
-    parent {
-        groupId "a"
-        artifactId "b"
-        version("c")
+  
+  parent {
+    groupId "io.tesla"
+    artifactId "tesla-core"
+    version "1.0.0-SNAPSHOT"
+  }
+    
+  build {
+    $execute(id: 'test1', phase: 'compile') {
+      println 'hi'
     }
+  }
 }
