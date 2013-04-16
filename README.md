@@ -23,8 +23,8 @@ Building
 
 Check-out and build:
 
-    git clone git://github.com/sonatype/polyglot-maven.git
-    cd polyglot-maven
+    git clone git@github.com:tesla/tesla-polyglot.git
+    cd tesla-polyglot
     mvn install
 
 After this completes, you can unzip and play with polyglot for maven:

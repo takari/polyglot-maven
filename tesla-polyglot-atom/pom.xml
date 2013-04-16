@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <groupId>org.eclipse.tesla.polyglot</groupId>
-        <artifactId>tesla-polyglot</artifactId>
-        <version>3.0.4-SNAPSHOT</version>
-    </parent>
+  <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tesla-polyglot-atom</artifactId>
-    <name>Tesla Polyglot :: Atom</name>
+  <parent>
+    <groupId>io.tesla.polyglot</groupId>
+    <artifactId>tesla-polyglot</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.eclipse.tesla.polyglot</groupId>
-            <artifactId>tesla-polyglot-common</artifactId>
-        </dependency>
-    </dependencies>
+  <artifactId>tesla-polyglot-atom</artifactId>
+  <name>Tesla Polyglot :: Atom</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.tesla.polyglot</groupId>
+      <artifactId>tesla-polyglot-common</artifactId>
+      <version>${pom.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 </project>
