@@ -19,56 +19,48 @@ import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 
-public class RubyModelWithJRubyTest extends InjectedTestCase {
+public class AbstractInjectedTestCase extends InjectedTestCase {
 
-  @Inject
-  @Named("${basedir}/src/test/poms")
-  private File poms;
+	@Inject
+	@Named("${basedir}/src/test/poms")
+	protected File poms;
 
-  public void testCorePom() throws Exception {
-	 // assertRoundtrip( "jruby-core-pom.xml", true );
-  }
-
-  public void testParentPom() throws Exception {
-	  assertRoundtrip( "jruby-parent-pom.xml", true );
-  }
-  
-  private void assertRoundtrip( String pomName, boolean debug ) throws Exception {
-    File pom = new File( poms, pomName );
-    MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
-    Model xmlModel = xmlModelReader.read(new FileInputStream( pom ));
-    
-    //
-    // Write out the Ruby POM
-    //
-    ModelWriter writer = new RubyModelWriter();
-    StringWriter w = new StringWriter();
-    writer.write( w, new HashMap<String, Object>(), xmlModel );
-
-    if ( debug ){
-    	// Let's take a look at see what's there
-    	System.out.println(w.toString());
-    }
-    
-    //
-    // Read in the Ruby POM
-    //
-    RubyModelReader rubyModelReader = new RubyModelReader();
-	rubyModelReader.executeManager = new ExecuteManagerImpl() {
-		{
-			log = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
-		}
-	};
-    StringReader reader = new StringReader( w.toString() );
-    Model rubyModel = rubyModelReader.read( reader, new HashMap<String, Object>() );
-    
-    //
-    // Test for fidelity
-    //
-    assertNotNull( rubyModel );
-
-    assertRoundtrip( xmlModel, rubyModel, debug );
-  }
+	protected void assertRoundtrip( String pomName, boolean debug ) throws Exception {
+	    File pom = new File( poms, pomName );
+	    MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
+	    Model xmlModel = xmlModelReader.read(new FileInputStream( pom ));
+	    
+	    //
+	    // Write out the Ruby POM
+	    //
+	    ModelWriter writer = new RubyModelWriter();
+	    StringWriter w = new StringWriter();
+	    writer.write( w, new HashMap<String, Object>(), xmlModel );
+	
+	    if ( debug ){
+	    	// Let's take a look at see what's there
+	    	System.out.println(w.toString());
+	    }
+	    
+	    //
+	    // Read in the Ruby POM
+	    //
+	    RubyModelReader rubyModelReader = new RubyModelReader();
+		rubyModelReader.executeManager = new ExecuteManagerImpl() {
+			{
+				log = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
+			}
+		};
+	    StringReader reader = new StringReader( w.toString() );
+	    Model rubyModel = rubyModelReader.read( reader, new HashMap<String, Object>() );
+	    
+	    //
+	    // Test for fidelity
+	    //
+	    assertNotNull( rubyModel );
+	
+	    assertRoundtrip( xmlModel, rubyModel, debug );
+	}
 
 	private void assertRoundtrip( Model xmlModel, Model rubyModel, boolean debug )
 			throws IOException {

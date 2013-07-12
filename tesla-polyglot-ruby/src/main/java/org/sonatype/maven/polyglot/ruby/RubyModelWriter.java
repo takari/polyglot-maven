@@ -135,18 +135,14 @@ public class RubyModelWriter extends ModelWriterSupport {
 		}
 
 		void sourceCode( Scm scm ){
-//        	Map<String,String> options = new LinkedHashMap<String, String>();
-//        	options.put( "connection", scm.getConnection() );
-//        	options.put( "developer_connection", scm.getDeveloperConnection() );
-//        	if ( !scm.getTag().equals( "HEAD" ) ){
-//        		options.put( "tag", scm.getTag() );
-//        	}
-        	printWithOptions( "source_code", 
-        			          options( "connection", scm.getConnection(), 
-           			        		   "developer_connection", scm.getDeveloperConnection(),
-        			        		   "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
-        			          scm.getUrl() );
-        	p.println();
+			if ( scm != null ){
+				printWithOptions( "source_code", 
+        		     	          options( "connection", scm.getConnection(), 
+           			            		   "developer_connection", scm.getDeveloperConnection(),
+        			            		   "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
+        			              scm.getUrl() );
+				p.println();
+			}
         }
         
         private void printRepositories(String name,

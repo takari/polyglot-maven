@@ -36,23 +36,23 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         assertRubyModel( IOUtil.toString( new FileInputStream( pom ) ) );
     }
 
-    public void testRubyModelWriter() throws Exception {
-        File pom = new File(poms, "maven-parent-pom.xml");
-        MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
-        Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
-        
-        //
-        // Write out the Ruby POM
-        //
-        ModelWriter writer = new RubyModelWriter();
-        StringWriter w = new StringWriter();
-        writer.write(w, new HashMap<String, Object>(), xmlModel);
-
-        // Let's take a look at see what's there
-        System.out.println(w.toString());
-        
-        assertRubyModel( w.toString() );
-    }
+//    public void testRubyModelWriter() throws Exception {
+//        File pom = new File(poms, "maven-parent-pom.xml");
+//        MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
+//        Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
+//        
+//        //
+//        // Write out the Ruby POM
+//        //
+//        ModelWriter writer = new RubyModelWriter();
+//        StringWriter w = new StringWriter();
+//        writer.write(w, new HashMap<String, Object>(), xmlModel);
+//
+//        // Let's take a look at see what's there
+//        System.out.println(w.toString());
+//        
+//        assertRubyModel( w.toString() );
+//    }
     
     private void assertRubyModel( String rubyPom ) throws IOException {
 
