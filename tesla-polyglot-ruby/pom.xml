@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-  <groupId>io.tesla.polyglot</groupId>
-  <artifactId>tesla-polyglot</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-      </parent>
+      <groupId>io.tesla.polyglot</groupId>
+      <artifactId>tesla-polyglot</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
     <artifactId>tesla-polyglot-ruby</artifactId>
     <name>Tesla Polyglot :: Ruby</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.eclipse.tesla.polyglot</groupId>
+            <groupId>io.tesla.polyglot</groupId>
             <artifactId>tesla-polyglot-common</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.saumya.mojo</groupId>
@@ -25,8 +26,8 @@
         </dependency>
         <dependency>
             <groupId>org.jruby</groupId>
-            <artifactId>jruby-complete</artifactId>
-            <version>1.6.4</version>
+            <artifactId>jruby-core</artifactId>
+            <version>1.7.4</version>
         </dependency>
     </dependencies>
 

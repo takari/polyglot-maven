@@ -43,13 +43,14 @@ public class RubyModelReader extends ModelReaderSupport {
     @Requirement
     ExecuteManager executeManager = new ExecuteManagerImpl();
     
-  public Model read(final Reader input, final Map<String, ?> options) throws IOException {
+  public Model read( final Reader input, final Map<String, ?> options ) throws IOException {
     assert input != null;
 
     // read the stream from our pom.rb into a String
     StringWriter ruby = new StringWriter();
-    IOUtil.copy(input, ruby);
+    IOUtil.copy( input, ruby );
     // parse the String and create a POM model
-    return new RubyParser((ModelSource)options.get(ModelProcessor.SOURCE), executeManager).parse(ruby.toString());
+    return new RubyParser(( ModelSource)options.get( ModelProcessor.SOURCE ), executeManager )
+    	.parse( ruby.toString() );
   }
 }

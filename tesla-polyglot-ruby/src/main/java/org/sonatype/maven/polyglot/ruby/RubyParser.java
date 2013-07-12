@@ -38,6 +38,7 @@ public class RubyParser {
                     "parse", 
                     new Object[] {ruby, this.factory}, 
                     Model.class);
+        model.setModelVersion("4.0.0");
         executeManager.register(model, this.factory.getExecuteTasks());
         return model;
     }

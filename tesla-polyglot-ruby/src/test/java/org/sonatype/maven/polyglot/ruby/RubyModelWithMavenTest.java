@@ -2,6 +2,7 @@ package org.sonatype.maven.polyglot.ruby;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -17,7 +18,9 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
+import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
@@ -28,31 +31,42 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
     @Named("${basedir}/src/test/poms")
     private File poms;
 
-    public void testRubyModelWriter() throws Exception {
-        File pom = new File(poms, "maven-parent-pom.xml");
-        MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
-        Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
-        
-        //
-        // Write out the Ruby POM
-        //
-        ModelWriter writer = new RubyModelWriter();
-        StringWriter w = new StringWriter();
-        writer.write(w, new HashMap<String, Object>(), xmlModel);
+    public void testRubyModelReader() throws Exception {
+        File pom = new File(poms, "pom.rb");
+        assertRubyModel( IOUtil.toString( new FileInputStream( pom ) ) );
+    }
 
-        // Let's take a look at see what's there
-        System.out.println(w.toString());
+//    public void testRubyModelWriter() throws Exception {
+//        File pom = new File(poms, "maven-parent-pom.xml");
+//        MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
+//        Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
+//        
+//        //
+//        // Write out the Ruby POM
+//        //
+//        ModelWriter writer = new RubyModelWriter();
+//        StringWriter w = new StringWriter();
+//        writer.write(w, new HashMap<String, Object>(), xmlModel);
+//
+//        // Let's take a look at see what's there
+//        System.out.println(w.toString());
+//        
+//        assertRubyModel( w.toString() );
+//    }
+    
+    private void assertRubyModel( String rubyPom ) throws IOException {
 
-        //
-        // Read in the Ruby POM
-        //
-        RubyModelReader rubyModelReader = new RubyModelReader();
-        rubyModelReader.executeManager = new ExecuteManagerImpl() {
-            {
-                log = new ConsoleLogger();
-            }
-        };
-        StringReader r = new StringReader(w.toString());
+    	//
+    	// Read in the Ruby POM
+    	//
+    	RubyModelReader rubyModelReader = new RubyModelReader();
+    	rubyModelReader.executeManager = new ExecuteManagerImpl() {
+    		{
+    			log = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
+    		}
+    	};
+    	
+        StringReader r = new StringReader( rubyPom );
         Model rubyModel = rubyModelReader
                 .read(r, new HashMap<String, Object>());
         //
@@ -189,6 +203,18 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
                 "org.codehaus.plexus:plexus-component-metadata:${plexusVersion}",
                 gav(p));
         assertNull(p.getConfiguration());
+        p = model.getBuild().getPluginManagement().getPlugins().get(6);
+        assertEquals(
+                "org.apache.maven.plugins:maven-assembly-plugin:2.2-beta-5",
+                gav(p));
+        assertNull(p.getConfiguration());
+        p = model.getBuild().getPluginManagement().getPlugins().get(1);
+        assertEquals(
+                "org.apache.maven.plugins:maven-compiler-plugin:2.3.2",
+                gav(p));
+        assertNotNull(p.getConfiguration());
+        assertEquals("1.5", ((Xpp3Dom) p.getConfiguration()).getChild(
+                "source").getValue());
         p = model.getBuild().getPluginManagement().getPlugins().get(4);
         assertEquals(
                 "org.codehaus.modello:modello-maven-plugin:${modelloVersion}",
