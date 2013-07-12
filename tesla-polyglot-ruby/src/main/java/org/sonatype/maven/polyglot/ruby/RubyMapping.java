@@ -29,7 +29,7 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
 public class RubyMapping extends MappingSupport {
   public RubyMapping() {
     super("ruby");
-    setPomNames("pom.rb");
+    setPomNames("pom.rb", "Mavenfile");
     setAcceptLocationExtensions(".rb");
     setAcceptOptionKeys("ruby:4.0.0");
     setPriority(1);

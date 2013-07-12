@@ -7,14 +7,14 @@ project 'Execute Ruby Tasks' do
   
   build do
     execute("first", :initialize) do |context|
-      print context.project.name
+      java.lang.System.out.print context.project.name
     end
     execute(:second, :initialize) do |context|
       pt = context.project
-      print "#{pt.group_id}:#{pt.artifact_id}:#{pt.version}:#{pt.packaging}" 
+      java.lang.System.out.print "#{pt.group_id}:#{pt.artifact_id}:#{pt.version}:#{pt.packaging}" 
     end
     execute(:third, :initialize) do
-      print where 
+      java.lang.System.out.print where 
     end
   end
   

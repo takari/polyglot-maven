@@ -12,6 +12,7 @@ import javax.inject.Named;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 import org.sonatype.maven.polyglot.execute.ExecuteContext;
@@ -33,7 +34,7 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
         RubyModelReader rubyModelReader = new RubyModelReader();
         rubyModelReader.executeManager = new ExecuteManagerImpl() {
             {
-                log = new ConsoleLogger();
+                log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
             }
         };
         
@@ -60,11 +61,11 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
                     rubyModel);
 
             tasks.get(0).execute(context);
-            assertEquals("Execute Ruby Tasks", new String(bytes.toString()));
+            assertEquals( "Execute Ruby Tasks", bytes.toString() );
 
             bytes.reset();
             tasks.get(1).execute(context);
-            assertEquals("com.example:ruby-pom:1.0-SNAPSHOT:pom", new String(bytes.toString()));
+            assertEquals("com.example:ruby-pom:1.0-SNAPSHOT:pom", bytes.toString());
 
             bytes.reset();
             tasks.get(2).execute(context);
