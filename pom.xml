@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
 
-<!-- ~ Copyright (c) 2009-2011 Sonatype, Inc. ~ All rights reserved. This program and the accompanying materials ~ are made available under the 
-  terms of the Eclipse Public License v1.0 ~ and Apache License v2.0 which accompanies this distribution. ~ The Eclipse Public License is available 
-  at ~ http://www.eclipse.org/legal/epl-v10.html ~ The Apache License v2.0 is available at ~ http://www.apache.org/licenses/LICENSE-2.0.html ~ 
-  You may elect to redistribute this code under either of these licenses. -->
+    Copyright (c) 2012 to original author or authors
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
 
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -25,14 +28,28 @@
   <modules>
     <module>tesla-polyglot-common</module>
     <module>tesla-polyglot-atom</module>
+    <module>tesla-polyglot-ruby</module>
+    <module>tesla-polyglot-groovy</module>
+    <module>tesla-polyglot-yaml</module>
+    <module>tesla-polyglot-clojure</module>
+    <module>tesla-polyglot-scala</module>
   </modules>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-component-metadata</artifactId>
-      </plugin>
+            <plugin>
+                <groupId>org.codehaus.plexus</groupId>
+                <artifactId>plexus-component-metadata</artifactId>
+                <version>1.5.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-metadata</goal>
+                            <goal>generate-test-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
     </plugins>
   </build>
 

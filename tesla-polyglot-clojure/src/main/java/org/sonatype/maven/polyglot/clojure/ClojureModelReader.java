@@ -33,15 +33,6 @@ import java.util.Map;
 @Component(role = ModelReader.class, hint = "clojure")
 public class ClojureModelReader extends ModelReaderSupport {
 
-    //@Requirement
-    //protected Logger log;
-
-    //@Requirement
-    //private ModelBuilder builder;
-
-    //@Requirement
-    //private ExecuteManager executeManager;
-
     public Model read(final Reader input, final Map<String, ?> options) throws IOException {
         assert input != null;
 

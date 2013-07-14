@@ -18,20 +18,28 @@
   <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pmaven-yaml</artifactId>
-    <name>Polyglot Maven :: YAML</name>
+    <artifactId>tesla-polyglot-yaml</artifactId>
+    <name>Polyglot Tesla :: YAML</name>
 
     <dependencies>
-        <dependency>
-            <groupId>org.sonatype.pmaven</groupId>
-            <artifactId>pmaven-common</artifactId>
-        </dependency>
-
-        <dependency>
+    <dependency>
+      <groupId>io.tesla.polyglot</groupId>
+      <artifactId>tesla-polyglot-common</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+           
+           <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.4</version>
         </dependency>
+        
+   <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+            
     </dependencies>
 
 </project>
