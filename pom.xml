@@ -26,6 +26,7 @@
   <packaging>pom</packaging>
 
   <properties>
+    <teslaVersion>3.1.0</teslaVersion>
     <sisuInjectVersion>0.0.0.M2a</sisuInjectVersion>
   </properties>
 

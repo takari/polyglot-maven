@@ -29,59 +29,47 @@ import org.codehaus.plexus.component.repository.ComponentRequirement;
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  * @since 0.7
  */
-public class PolyglotMavenCli
-    extends MavenCli
-{
-    @Override
-    protected void customizeContainer( final PlexusContainer container )
-    {
-        assert container != null;
+public class PolyglotMavenCli extends MavenCli {
+  @Override
+  protected void customizeContainer(final PlexusContainer container) {
+    assert container != null;
 
-        // HACK: Wedge our processor in as the default
-        final ComponentDescriptor<?> source =
-            container.getComponentDescriptor( ModelProcessor.class.getName(), "polyglot" );
-        final ComponentDescriptor<?> target =
-            container.getComponentDescriptor( ModelProcessor.class.getName(), "default" );
-        target.setImplementation( source.getImplementation() );
-
-        // delete the old requirements and replace them with the new
-        // with size == 0 is getRequirements is an emptyList which is unmutable
-        if ( target.getRequirements().size() > 0 )
-        {
-            target.getRequirements().clear();
-        }
-        for ( final ComponentRequirement requirement : source.getRequirements() )
-        {
-            target.addRequirement( requirement );
-        }
-
-        // TODO this should not be needed
-        final ComponentRequirement manager = new ComponentRequirement();
-        manager.setFieldName( "manager" );
-        manager.setRole( "org.sonatype.maven.polyglot.TeslaModelManager" );
-        manager.setRoleHint( "default" );
-        target.addRequirement( manager );
-
-        try
-        {
-            container.addComponentDescriptor( target );
-        }
-        catch ( final CycleDetectedInComponentGraphException e )
-        {
-            throw new RuntimeException( e );
-        }
+    // HACK: Wedge our processor in as the default
+    final ComponentDescriptor<?> source = container.getComponentDescriptor(ModelProcessor.class.getName(), "tesla-polyglot");
+    final ComponentDescriptor<?> target = container.getComponentDescriptor(ModelProcessor.class.getName(), "default");
+    target.setImplementation(source.getImplementation());
+    
+    // delete the old requirements and replace them with the new
+    // with size == 0 is getRequirements is an emptyList which is unmutable
+    if (target.getRequirements().size() > 0) {
+      target.getRequirements().clear();
+    }
+    for (final ComponentRequirement requirement : source.getRequirements()) {
+      target.addRequirement(requirement);
     }
 
-    public static void main( final String[] args )
-    {
-        final int result = main( args, null );
-        System.exit( result );
-    }
+    // TODO this should not be needed
+    final ComponentRequirement manager = new ComponentRequirement();
+    manager.setFieldName("manager");
+    manager.setRole("org.sonatype.maven.polyglot.PolyglotModelManager");
+    manager.setRoleHint("default");
+    target.addRequirement(manager);
 
-    public static int main( final String[] args, final ClassWorld classWorld )
-    {
-        assert classWorld != null;
-        final PolyglotMavenCli cli = new PolyglotMavenCli();
-        return cli.doMain( new CliRequest( args, classWorld ) );
+    try {
+      container.addComponentDescriptor(target);
+    } catch (final CycleDetectedInComponentGraphException e) {
+      throw new RuntimeException(e);
     }
+  }
+
+  public static void main(final String[] args) {
+    final int result = main(args, null);
+    System.exit(result);
+  }
+
+  public static int main(final String[] args, final ClassWorld classWorld) {
+    assert classWorld != null;
+    final PolyglotMavenCli cli = new PolyglotMavenCli();
+    return cli.doMain(new CliRequest(args, classWorld));
+  }
 }

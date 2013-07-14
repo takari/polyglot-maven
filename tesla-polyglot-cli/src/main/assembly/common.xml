@@ -47,7 +47,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>target/dependency/apache-maven-${mavenVersion}</directory>
+            <directory>target/dependency/apache-maven-${teslaVersion}</directory>
             <outputDirectory>/</outputDirectory>
             <excludes>
                 <exclude>bin/m2.conf</exclude>
@@ -59,7 +59,7 @@
         </fileSet>
 
         <fileSet>
-            <directory>target/dependency/apache-maven-${mavenVersion}/bin</directory>
+            <directory>target/dependency/apache-maven-${teslaVersion}/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>m2</include>

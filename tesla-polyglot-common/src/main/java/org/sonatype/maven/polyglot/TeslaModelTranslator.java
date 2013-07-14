@@ -49,8 +49,8 @@ public class TeslaModelTranslator {
   @Requirement
   protected Logger log;
 
-  @Requirement(hint="tesla")
-  private ModelProcessor modelProcessor;
+  @Requirement
+  private PolyglotModelManager manager;
 
   public void translate(final File input, final File output) throws IOException, ModelParseException {
     assert input != null;
@@ -65,17 +65,17 @@ public class TeslaModelTranslator {
     translate(input, inputOptions, output, outputOptions);
   }
 
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings({
+    "unchecked"
+  })
   public void translate(final File input, final Map<String, ?> inputOptions, final File output, final Map<String, ?> outputOptions) throws IOException, ModelParseException {
     assert input != null;
     assert output != null;
 
-    ModelReader reader = ((TeslaModelProcessor)modelProcessor).getReaderFor(inputOptions);
-    System.out.println(reader);
+    ModelReader reader = manager.getReaderFor(inputOptions);
     Model model = reader.read(input, inputOptions);
 
-    ModelWriter writer =  ((TeslaModelProcessor)modelProcessor).getWriterFor(outputOptions);
-    System.out.println(reader);
+    ModelWriter writer = manager.getWriterFor(outputOptions);
     writer.write(output, (Map<String, Object>) outputOptions, model);
   }
 
@@ -111,27 +111,32 @@ public class TeslaModelTranslator {
     }
   }
 
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings({
+    "unchecked"
+  })
   public void translate(final InputStream input, final Map<String, ?> inputOptions, final OutputStream output, final Map<String, ?> outputOptions) throws IOException, ModelParseException {
     assert input != null;
     assert output != null;
 
-    ModelReader reader =  ((TeslaModelProcessor)modelProcessor).getReaderFor(inputOptions);
+    ModelReader reader = manager.getReaderFor(inputOptions);
     Model model = reader.read(input, inputOptions);
 
-    ModelWriter writer =  ((TeslaModelProcessor)modelProcessor).getWriterFor(outputOptions);
+    ModelWriter writer = manager.getWriterFor(outputOptions);
     writer.write(output, (Map<String, Object>) outputOptions, model);
   }
 
-  @SuppressWarnings({ "unchecked" })
+  @SuppressWarnings({
+    "unchecked"
+  })
   public void translate(final Reader input, final Map<String, ?> inputOptions, final Writer output, final Map<String, ?> outputOptions) throws IOException, ModelParseException {
     assert input != null;
     assert output != null;
 
-    ModelReader reader =  ((TeslaModelProcessor)modelProcessor).getReaderFor(inputOptions);
+    ModelReader reader = manager.getReaderFor(inputOptions);
     Model model = reader.read(input, inputOptions);
 
-    ModelWriter writer =  ((TeslaModelProcessor)modelProcessor).getWriterFor(outputOptions);
+    ModelWriter writer = manager.getWriterFor(outputOptions);
     writer.write(output, (Map<String, Object>) outputOptions, model);
   }
+
 }

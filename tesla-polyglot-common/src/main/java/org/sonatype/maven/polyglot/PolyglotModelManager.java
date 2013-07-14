@@ -35,56 +35,52 @@ import java.util.Map;
  *
  * @since 0.7
  */
-@Component(role=PolyglotModelManager.class)
-public class PolyglotModelManager
-    implements ModelLocator
-{
-    @Requirement
-    protected Logger log;
-    
-    @Requirement(role=Mapping.class)
-    private List<Mapping> mappings;
+@Component(role = PolyglotModelManager.class)
+public class PolyglotModelManager implements ModelLocator {
+  @Requirement
+  protected Logger log;
 
-    public void addMapping(final Mapping mapping) {
-        assert mapping != null;
-        mappings.add(mapping);
+  @Requirement(role = Mapping.class)
+  private List<Mapping> mappings;
+
+  public void addMapping(final Mapping mapping) {
+    assert mapping != null;
+    mappings.add(mapping);
+  }
+
+  public ModelReader getReaderFor(final Map<String, ?> options) {
+    for (Mapping mapping : mappings) {
+      if (mapping.accept(options)) {
+        return mapping.getReader();
+      }
     }
 
-    public ModelReader getReaderFor(final Map<String, ?> options) {
-        for (Mapping mapping : mappings) {
-            if (mapping.accept(options)) {
-                return mapping.getReader();
-            }
-        }
+    throw new RuntimeException("Unable determine model input format; options=" + options);
+  }
 
-        throw new RuntimeException("Unable determine model input format; options=" + options);
+  public ModelWriter getWriterFor(final Map<String, ?> options) {
+    for (Mapping mapping : mappings) {
+      if (mapping.accept(options)) {
+        return mapping.getWriter();
+      }
     }
 
-    public ModelWriter getWriterFor(final Map<String, ?> options) {
-        for (Mapping mapping : mappings) {
-            if (mapping.accept(options)) {
-                return mapping.getWriter();
-            }
-        }
+    throw new RuntimeException("Unable determine model output format; options=" + options);
+  }
 
-        throw new RuntimeException("Unable determine model output format; options=" + options);
+  public File locatePom(final File dir) {
+    assert dir != null;
+
+    File pomFile = null;
+    float mappingPriority = Float.MIN_VALUE;
+    for (Mapping mapping : mappings) {
+      File file = mapping.locatePom(dir);
+      if (file != null && (pomFile == null || mappingPriority < mapping.getPriority())) {
+        pomFile = file;
+        mappingPriority = mapping.getPriority();
+      }
     }
 
-    public File locatePom(final File dir) {
-        assert dir != null;
-
-        File pomFile = null;
-        float mappingPriority = Float.MIN_VALUE;
-        for ( Mapping mapping : mappings )
-        {
-            File file = mapping.locatePom( dir );
-            if ( file != null && ( pomFile == null || mappingPriority < mapping.getPriority() ) )
-            {
-                pomFile = file;
-                mappingPriority = mapping.getPriority();
-            }
-        }
-
-        return pomFile;
-    }
+    return pomFile;
+  }
 }
