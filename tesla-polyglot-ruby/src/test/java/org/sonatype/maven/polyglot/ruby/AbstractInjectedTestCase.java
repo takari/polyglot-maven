@@ -19,7 +19,7 @@ import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.sonatype.guice.bean.containers.InjectedTestCase;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 
-public class AbstractInjectedTestCase extends InjectedTestCase {
+public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 
 	@Inject
 	@Named("${basedir}/src/test/poms")

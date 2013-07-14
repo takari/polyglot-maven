@@ -1,0 +1,7 @@
+<project>
+  <parent>
+    <artifactId>b</artifactId>
+    <groupId>a</groupId>
+    <version>c</version>
+  </parent>
+</project>

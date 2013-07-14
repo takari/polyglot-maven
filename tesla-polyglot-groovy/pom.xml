@@ -20,7 +20,7 @@
   </parent>
 
   <artifactId>tesla-polyglot-groovy</artifactId>
-  <name>Polyglot Maven :: Groovy</name>
+  <name>Polyglot Tesla :: Groovy</name>
 
   <dependencies>
     <dependency>

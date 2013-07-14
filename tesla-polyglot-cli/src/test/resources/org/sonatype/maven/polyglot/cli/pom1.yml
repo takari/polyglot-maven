@@ -1,0 +1,2 @@
+packaging: jar
+parent: {artifactId: b, groupId: a, relativePath: ../pom.xml, version: c}

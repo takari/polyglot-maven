@@ -20,7 +20,7 @@
   </parent>
 
   <artifactId>tesla-polyglot-common</artifactId>
-  <name>Tesla Polyglot :: Common</name>
+  <name>Polyglot Tesla :: Common</name>
 
   <dependencies>
     <dependency>

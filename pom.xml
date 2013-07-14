@@ -22,17 +22,24 @@
   <groupId>io.tesla.polyglot</groupId>
   <artifactId>tesla-polyglot</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Tesla Polyglot :: Aggregator</name>
+  <name>Polyglot Tesla :: Aggregator</name>
   <packaging>pom</packaging>
+
+  <properties>
+    <sisuInjectVersion>0.0.0.M2a</sisuInjectVersion>
+  </properties>
 
   <modules>
     <module>tesla-polyglot-common</module>
     <module>tesla-polyglot-atom</module>
+    <!--
     <module>tesla-polyglot-ruby</module>
+    -->
     <module>tesla-polyglot-groovy</module>
     <module>tesla-polyglot-yaml</module>
     <module>tesla-polyglot-clojure</module>
     <module>tesla-polyglot-scala</module>
+    <module>tesla-polyglot-cli</module>
   </modules>
 
   <build>
@@ -56,20 +63,31 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.11</version>
-      </dependency>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>org.eclipse.sisu.inject</artifactId>
+        <version>${sisuInjectVersion}</version>
+      </dependency>      
+      <dependency>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>org.eclipse.sisu.plexus</artifactId>
+        <version>${sisuInjectVersion}</version>
+      </dependency>      
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-model-builder</artifactId>
-        <version>3.0</version>
+        <version>3.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-embedder</artifactId>
-        <version>3.0</version>
+        <version>3.1.0</version>
       </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>      
     </dependencies>
   </dependencyManagement>
 </project>
