@@ -40,13 +40,11 @@
       <artifactId>tesla-polyglot-yaml</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <!-- 
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-ruby</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    -->
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-scala</artifactId>
@@ -64,10 +62,12 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- 
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
     </dependency>
+    -->
   </dependencies>
 
   <build>
@@ -146,5 +146,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
 </project>

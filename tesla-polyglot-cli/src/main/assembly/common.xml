@@ -101,6 +101,36 @@
       </includes>
     </dependencySet>
 
+    <dependencySet>
+      <outputDirectory>ext/ruby</outputDirectory>
+      <useStrictFiltering>true</useStrictFiltering>
+      <includes>
+        <include>io.tesla.polyglot:tesla-polyglot-ruby</include>
+        <include>de.saumya.mojo:ruby-tools</include>
+        <include>com.github.jnr:jffi</include>
+        <include>com.github.jnr:jnr-constants</include>
+        <include>com.github.jnr:jnr-enxio</include>
+        <include>com.github.jnr:jnr-ffi</include>
+        <include>com.github.jnr:jnr-netdb</include>
+        <include>com.github.jnr:jnr-posix</include>
+        <include>com.github.jnr:jnr-unixsocket</include>
+        <include>com.github.jnr:jnr-x86asm</include>
+        <include>com.headius:invokebinder</include>
+        <include>com.jcraft:jzlib</include>
+        <include>jline:jline</include>
+        <include>joda-time:joda-time</include>
+        <include>org.jruby.extras:bytelist</include>
+        <include>org.jruby.jcodings:jcodings</include>
+        <include>org.jruby.joni:joni</include>
+        <include>org.jruby:jruby-core</include>
+        <include>org.jruby:jruby-stdlib</include>
+        <include>org.slf4j:slf4j-api</include>
+        <include>org.yaml:snakeyaml</include>
+        <include>oro:oro:jar</include>
+        <include>velocity:velocity</include>        
+      </includes>
+    </dependencySet>
+
     <!-- 
     <dependencySet>
       <outputDirectory>ext</outputDirectory>
@@ -118,16 +148,6 @@
         <include>org.sonatype.pmaven:pmaven-scala</include>
         <include>org.scala-lang:scala-library</include>
         <include>org.scala-lang:scala-compiler</include>
-      </includes>
-    </dependencySet>
-
-    <dependencySet>
-      <outputDirectory>ext</outputDirectory>
-      <useStrictFiltering>true</useStrictFiltering>
-      <includes>
-        <include>org.sonatype.pmaven:pmaven-jruby</include>
-        <include>org.jruby:jruby-complete</include>
-        <include>de.saumya.mojo:ruby-tools</include>
       </includes>
     </dependencySet>
     -->
