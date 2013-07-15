@@ -131,25 +131,22 @@
       </includes>
     </dependencySet>
 
-    <!-- 
     <dependencySet>
-      <outputDirectory>ext</outputDirectory>
-      <useStrictFiltering>true</useStrictFiltering>
+      <outputDirectory>ext/clojure</outputDirectory>
       <includes>
-        <include>org.sonatype.pmaven:pmaven-clojure</include>
+        <include>io.tesla.polyglot:tesla-polyglot-clojure</include>
         <include>org.clojure:clojure</include>
       </includes>
     </dependencySet>
 
     <dependencySet>
-      <outputDirectory>ext</outputDirectory>
-      <useStrictFiltering>true</useStrictFiltering>
+      <outputDirectory>ext/scala</outputDirectory>
       <includes>
-        <include>org.sonatype.pmaven:pmaven-scala</include>
+        <include>io.tesla.polyglot:tesla-polyglot-scala</include>
         <include>org.scala-lang:scala-library</include>
         <include>org.scala-lang:scala-compiler</include>
       </includes>
     </dependencySet>
-    -->
+    
   </dependencySets>
 </component>

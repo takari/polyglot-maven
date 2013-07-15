@@ -50,6 +50,11 @@
       <artifactId>tesla-polyglot-scala</artifactId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <groupId>io.tesla.polyglot</groupId>
+      <artifactId>tesla-polyglot-clojure</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
     <!-- Used for XML Canonicalization, to compare pom.xml files -->
     <dependency>
       <groupId>xml-security</groupId>
