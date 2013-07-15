@@ -38,7 +38,7 @@ import java.util.Map;
  *
  * @since 0.7
  */
-@Component(role=ExecuteManager.class, instantiationStrategy="singleton")
+@Component(role=ExecuteManager.class)
 public class ExecuteManagerImpl
     implements ExecuteManager
 {
@@ -56,15 +56,16 @@ public class ExecuteManagerImpl
         copy.addAll(tasks);
         modelTasks.put(model.getId(), Collections.unmodifiableList(copy));
 
-        //if (log.isDebugEnabled()) {
-            log.info("!!!!!! Registered tasks for: " + model.getId() + "=" + tasks);
-        //}
+        if (log.isDebugEnabled()) {
+          log.debug("!!!!!! Registered tasks for: " + model.getId() + "=" + tasks);
+        }
     }
 
     public List<ExecuteTask> getTasks(final Model model) {
         assert model != null;
 
         List<ExecuteTask> tasks = modelTasks.get(model.getId());
+        
         if (tasks == null) {
             return Collections.emptyList();
         }
@@ -79,7 +80,7 @@ public class ExecuteManagerImpl
         if (tasks.isEmpty()) {
             return;
         }
-
+        
         if (log.isDebugEnabled()) {
             log.debug("Registering tasks for: " + model.getId());
         }
