@@ -69,8 +69,8 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
 
             bytes.reset();
             tasks.get(2).execute(context);
-            assertEquals("#<Tesla::Parser @current=nil, @context=nil, @factory=nil>", 
-                    new String(bytes.toString()));
+            assertEquals("#<Tesla::Parser ", 
+                    bytes.toString().replaceFirst( "@.*$", "" ) );
             
         } finally {
             System.setOut(out);

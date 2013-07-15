@@ -29,7 +29,7 @@ import org.sonatype.maven.polyglot.execute.ExecuteTaskSupport;
  * @since 0.7
  */
 public class RubyExecuteTask extends ExecuteTaskSupport {
-   
+
     private ScriptingContainer jruby;
     private Object script;
 

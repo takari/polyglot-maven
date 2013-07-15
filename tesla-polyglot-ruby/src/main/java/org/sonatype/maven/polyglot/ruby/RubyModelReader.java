@@ -34,7 +34,7 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 
 /**
  * Reads a <tt>pom.rb</tt> and transforms into a Maven {@link Model}.
- * 
+ *
  * @author m.kristian
  */
 @Component(role = ModelReader.class,hint="ruby")
@@ -42,7 +42,7 @@ public class RubyModelReader extends ModelReaderSupport {
 
     @Requirement
     ExecuteManager executeManager = new ExecuteManagerImpl();
-    
+
   public Model read( final Reader input, final Map<String, ?> options ) throws IOException {
     assert input != null;
 
@@ -51,6 +51,6 @@ public class RubyModelReader extends ModelReaderSupport {
     IOUtil.copy( input, ruby );
     // parse the String and create a POM model
     return new RubyParser(( ModelSource)options.get( ModelProcessor.SOURCE ), executeManager )
-    	.parse( ruby.toString() );
+        .parse( ruby.toString() );
   }
 }

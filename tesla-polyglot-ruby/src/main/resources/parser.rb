@@ -1,12 +1,19 @@
 require 'java'
 
 %w(
+org.apache.maven.model.Activation
+org.apache.maven.model.ActivationFile
+org.apache.maven.model.ActivationOS
+org.apache.maven.model.ActivationProperty
 org.apache.maven.model.Build
 org.apache.maven.model.Dependency
 org.apache.maven.model.DependencyManagement
 org.apache.maven.model.DeploymentRepository
 org.apache.maven.model.DistributionManagement
+org.apache.maven.model.Developer
 org.apache.maven.model.Exclusion
+org.apache.maven.model.IssueManagement
+org.apache.maven.model.MailingList
 org.apache.maven.model.Model
 org.apache.maven.model.Parent
 org.apache.maven.model.Plugin
@@ -21,6 +28,7 @@ org.apache.maven.model.RepositoryPolicy
 org.apache.maven.model.Scm
 org.apache.maven.model.Site
 org.codehaus.plexus.util.xml.Xpp3Dom
+org.codehaus.plexus.util.xml.Xpp3DomBuilder
 ).each {|i| java_import i }
 
 module Tesla
@@ -60,6 +68,7 @@ module Tesla
       value = value.join( ':' )
       if @context == :project
         fill_gav(@current, value)
+        reduce_id
       else
         @current.id = value
       end
@@ -67,21 +76,64 @@ module Tesla
 
     def site( url, options = {} )
       site = Site.new
-      _fill_options( site, url, options )
+      fill_options( site, url, options )
       @current.site = site
     end
 
     def source_code( url, options = {} )
       scm = Scm.new
-      _fill_options( scm, url, options )
+      fill_options( scm, url, options )
       @current.scm = scm
     end
 
-    def _fill_options( receiver, url, options )
-      options.each do |k,v|
-        receiver.send "#{k}=".to_sym, v
-      end
-      receiver.url = url
+    def issue_management( url, system = nil )
+      issues = IssueManagement.new
+      issues.url = url
+      issues.system = system
+      @current.issue_management = issues
+    end
+
+    def mailing_list( name = nil, &block )
+      list = MailingList.new
+      list.name = name
+      nested_block( :mailing_list, list, block )
+      @current.mailing_lists <<  list
+    end
+
+    def archives( *archives )
+      @current.archive = archives.shift
+      @current.other_archives = archives
+    end
+
+    def developer( id = nil, &block )
+      dev = Developer.new
+      dev.id = id
+      nested_block( :developer, dev, block )
+      @current.developers <<  dev
+    end
+
+    def roles( *roles )
+      @current.roles = roles
+    end
+
+    def property( options )
+      prop = ActivationProperty.new
+      prop.name = options[ :name ] || options[ 'name' ]
+      prop.value = options[ :value ] || options[ 'value' ]
+      @current.property = prop
+    end
+
+    def file( options )
+      file = ActivationFile.new
+      file.missing = options[ :missing ] || options[ 'missing' ]
+      file.exists = options[ :exists ] || options[ 'exists' ]
+      @current.file = file
+    end
+
+    def activation( &block )
+      activation = Activation.new
+      nested_block( :activation, activation, block )
+      @current.activation = activation
     end
 
     def distribution( &block )
@@ -91,33 +143,11 @@ module Tesla
     end
 
     def repository( url, options = {} )
-      _repository( :repository=, url, options )
+      do_repository( :repository=, url, options )
     end
 
     def snapshot_repository( url, options = {} )
-      _repository( :snapshot_repository=, url, options )
-    end
-
-    def _repository( method, url, options = {} )
-      if @current.respond_to?( method )
-        r = DeploymentRepository.new
-      else
-        r = Repository.new
-      end
-      if config = ( options.delete( :snapshot ) ||
-                    options.delete( 'snapshot' ) )
-        r.snapshot( repository_policy( config ) )
-      end
-      if config = ( options.delete( :release ) ||
-                    options.delete( 'release' ) )
-        r.snapshot( repository_policy( config ) )
-      end
-      _fill_options( r, url, options )
-      if @current.respond_to?( method )
-        @current.send method, r
-      else
-        @current.repositories << r
-      end
+      do_repository( :snapshot_repository=, url, options )
     end
 
     def respository_policy( config )
@@ -138,6 +168,7 @@ module Tesla
 
     def inherit( *value )
       @current.parent = fill_gav( Parent, value.join( ':' ) )
+      reduce_id
     end
 
     def properties(props)
@@ -281,14 +312,6 @@ module Tesla
       @current.report_sets << set
     end
 
-    def set_config( receiver, options )
-      if options && options.size > 0
-        config = Xpp3Dom.new("configuration")
-        fill_dom( config, options )
-        receiver.configuration = config
-      end
-    end
-
     def reporting( &block )
       reporting = Reporting.new
       @current.reporting = reporting
@@ -319,7 +342,55 @@ module Tesla
       end
     end
 
+    def xml( xml )
+      Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
+    end
+
     private
+
+    def set_config( receiver, options )
+      if options && options.size > 0
+        config = Xpp3Dom.new("configuration")
+        fill_dom( config, options )
+        receiver.configuration = config
+      end
+    end
+
+    def do_repository( method, url, options = {} )
+      if @current.respond_to?( method )
+        r = DeploymentRepository.new
+      else
+        r = Repository.new
+      end
+      if config = ( options.delete( :snapshot ) ||
+                    options.delete( 'snapshot' ) )
+        r.snapshot( repository_policy( config ) )
+      end
+      if config = ( options.delete( :release ) ||
+                    options.delete( 'release' ) )
+        r.snapshot( repository_policy( config ) )
+      end
+      fill_options( r, url, options )
+      if @current.respond_to?( method )
+        @current.send method, r
+      else
+        @current.repositories << r
+      end
+    end
+
+    def fill_options( receiver, url, options )
+      options.each do |k,v|
+        receiver.send "#{k}=".to_sym, v
+      end
+      receiver.url = url
+    end
+
+    def reduce_id
+      if parent = @current.parent
+        @current.version = nil if parent.version == @current.version
+        @current.group_id = nil if parent.group_id == @current.group_id
+      end
+    end
 
     def nested_block(context, receiver, block)
       old_ctx = @context
@@ -370,16 +441,24 @@ module Tesla
             case val
             when Hash
               fill_dom( child, val )
+              node.addChild( child )
+            when Xpp3Dom
+              node.addChild( val )
             else
               child.setValue( val )
+              node.addChild( child )
             end
-            node.addChild( child )
           end
           parent.addChild( node )
           child = nil
         else
-          child = Xpp3Dom.new(k.to_s)
-          child.setValue(v.to_s)
+          case k.to_s
+          when /^@/
+            parent.setAttribute( k.to_s[ 1..-1 ], v.to_s )
+          else
+            child = Xpp3Dom.new(k.to_s)
+            child.setValue(v.to_s)
+          end
         end
         parent.addChild(child) if child
       end

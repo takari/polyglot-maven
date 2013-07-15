@@ -11,7 +11,7 @@ import de.saumya.mojo.ruby.GemScriptingContainer;
 
 /**
  * Parses the ruby into a Maven model.
- * 
+ *
  * @author kristian
  */
 public class RubyParser {
@@ -23,7 +23,7 @@ public class RubyParser {
     private final ExecuteManager executeManager;
 
     private final RubyExecuteTaskFactory factory;
-    
+
     public RubyParser(ModelSource modelSource, ExecuteManager executeManager) throws IOException {
         // TODO something with that modelSource, i.e. when errors occurs
         this.executeManager = executeManager;
@@ -34,11 +34,11 @@ public class RubyParser {
 
     // synchronize it since it is not clear how threadsafe all is
     public synchronized Model parse(String ruby) {
-        Model model = this.jruby.callMethod(this.parser, 
-                    "parse", 
-                    new Object[] {ruby, this.factory}, 
+        Model model = this.jruby.callMethod(this.parser,
+                    "parse",
+                    new Object[] {ruby, this.factory},
                     Model.class);
-        model.setModelVersion("4.0.0");
+//        model.setModelVersion("4.0.0");
         executeManager.register(model, this.factory.getExecuteTasks());
         return model;
     }
