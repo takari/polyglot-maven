@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2012 to original author or authors
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.tesla</groupId>
+    <artifactId>tesla</artifactId>
+    <version>4</version>
+  </parent>
+
+  <groupId>io.tesla.polyglot</groupId>
+  <artifactId>tesla-polyglot</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Polyglot Tesla :: Aggregator</name>
+  <packaging>pom</packaging>
+
+  <properties>
+    <teslaVersion>3.1.0</teslaVersion>
+    <sisuInjectVersion>0.0.0.M2a</sisuInjectVersion>
+  </properties>
+
+  <modules>
+    <module>tesla-polyglot-common</module>
+    <module>tesla-polyglot-atom</module>
+    <!--
+    <module>tesla-polyglot-ruby</module>
+    -->
+    <module>tesla-polyglot-groovy</module>
+    <module>tesla-polyglot-yaml</module>
+    <module>tesla-polyglot-clojure</module>
+    <module>tesla-polyglot-scala</module>
+    <module>tesla-polyglot-cli</module>
+    <module>tesla-polyglot-maven-plugin</module>
+  </modules>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-component-metadata</artifactId>
+        <version>1.5.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate-metadata</goal>
+              <goal>generate-test-metadata</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>org.eclipse.sisu.inject</artifactId>
+        <version>${sisuInjectVersion}</version>
+      </dependency>      
+      <dependency>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>org.eclipse.sisu.plexus</artifactId>
+        <version>${sisuInjectVersion}</version>
+      </dependency>      
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-model-builder</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven-embedder</artifactId>
+        <version>3.1.0</version>
+      </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>      
+    </dependencies>
+  </dependencyManagement>
+</project>

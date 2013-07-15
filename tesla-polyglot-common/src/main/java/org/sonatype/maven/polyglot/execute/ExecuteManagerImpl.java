@@ -56,9 +56,9 @@ public class ExecuteManagerImpl
         copy.addAll(tasks);
         modelTasks.put(model.getId(), Collections.unmodifiableList(copy));
 
-        if (log.isDebugEnabled()) {
-            log.debug("Registered tasks for: " + model.getId() + "=" + tasks);
-        }
+        //if (log.isDebugEnabled()) {
+            log.info("!!!!!! Registered tasks for: " + model.getId() + "=" + tasks);
+        //}
     }
 
     public List<ExecuteTask> getTasks(final Model model) {
@@ -90,9 +90,9 @@ public class ExecuteManagerImpl
 
         // FIMXE: Should not need to hard-code the version here
         Plugin plugin = new Plugin();
-        plugin.setGroupId("org.sonatype.pmaven");
-        plugin.setArtifactId("pmaven-maven-plugin");
-        plugin.setVersion("0.8-SNAPSHOT");
+        plugin.setGroupId("io.tesla.polyglot");
+        plugin.setArtifactId("tesla-polyglot-maven-plugin");
+        plugin.setVersion("0.0.1-SNAPSHOT");
         model.getBuild().addPlugin(plugin);
 
         List<String> goals = Collections.singletonList("execute");

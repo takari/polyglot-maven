@@ -54,7 +54,7 @@ public class GroovyModelWriter
         DefaultModelWriter writer = new DefaultModelWriter();
         writer.write(buff, options, model);
 
-        Dom2Groovy converter = new Dom2Groovy(new IndentPrinter(new PrintWriter(output), "    "));
+        Dom2Groovy converter = new Dom2Groovy(new IndentPrinter(new PrintWriter(output), "  "));
 
         try {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();

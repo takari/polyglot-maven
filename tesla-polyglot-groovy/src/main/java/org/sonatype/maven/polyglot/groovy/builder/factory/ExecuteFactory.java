@@ -46,6 +46,7 @@ public class ExecuteFactory
             GroovyExecuteTask task = (GroovyExecuteTask) child;
             List<ExecuteTask> tasks = ((ModelBuilder) builder).getTasks();
             tasks.add(task);
+            System.out.println("!!!!!!!!! adding the task: " + task);
         }
         else {
             throw new IllegalStateException("The " + getName() + " element must only be defined under 'build'");
@@ -54,9 +55,11 @@ public class ExecuteFactory
 
     @Override
     public boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure content) {
+        System.out.println("!!!!!! Trying to create closure! " + content);
         GroovyExecuteTask task = (GroovyExecuteTask) node;
+        System.out.println(task);
         task.setClosure(content);
-        return false;
+        return true;
     }
 
     @Override
