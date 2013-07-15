@@ -100,76 +100,76 @@ public class RubyModelWriter extends ModelWriterSupport {
             }
         }
 
-        void distribution( DistributionManagement distribution ){  
-        	if ( distribution != null ){
-	        	p.printStartBlock( "distribution" );
-	        	if ( distribution.getRepository() != null ){
-	        		printRepositories("repository", distribution.getRepository() );
-	        	}
-	        	if ( distribution.getSnapshotRepository() != null ){
-	        		printRepositories("snapshot_repository", distribution.getSnapshotRepository() );
-	        	}
-	        	if ( distribution.getSite() != null ){
-	        		Site site = distribution.getSite();
-	        		p.printWithOptions( "site", 
-	        					  	  options( "id", site.getId(),
-	        					  			   "name", site.getName() ),
-	        					      site.getUrl() );
-	        	}
-	        	p.printEndBlock();
-	        	p.println();
-        	}
+        void distribution( DistributionManagement distribution ){
+            if ( distribution != null ){
+                p.printStartBlock( "distribution" );
+                if ( distribution.getRepository() != null ){
+                    printRepositories("repository", distribution.getRepository() );
+                }
+                if ( distribution.getSnapshotRepository() != null ){
+                    printRepositories("snapshot_repository", distribution.getSnapshotRepository() );
+                }
+                if ( distribution.getSite() != null ){
+                    Site site = distribution.getSite();
+                    p.printWithOptions( "site",
+                                        options( "id", site.getId(),
+                                                 "name", site.getName() ),
+                                      site.getUrl() );
+                }
+                p.printEndBlock();
+                p.println();
+            }
         }
-        
-        private Map<String, Object> options(Object... args) {
-        	Map<String, Object> options = new LinkedHashMap<String, Object>();
-        	String key = null;
-        	for( Object arg : args ){
-        		if( key == null ){
-        			key = arg.toString();
-        			continue;
-        		}
-        		else {
-        			if (arg != null ){
-        				options.put( key, arg );
-        			}
-        			key = null;
-        		}
-        	}
-			return options;
-		}
 
-		void sourceCode( Scm scm ){
-			if ( scm != null ){
-				p.printWithOptions( "source_code", 
-				                    options( "connection", scm.getConnection(), 
-				                             "developer_connection", scm.getDeveloperConnection(),
-				                             "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
-				                    scm.getUrl() );
-				p.println();
-			}
+        private Map<String, Object> options(Object... args) {
+            Map<String, Object> options = new LinkedHashMap<String, Object>();
+            String key = null;
+            for( Object arg : args ){
+                if( key == null ){
+                    key = arg.toString();
+                    continue;
+                }
+                else {
+                    if (arg != null ){
+                        options.put( key, arg );
+                    }
+                    key = null;
+                }
+            }
+            return options;
         }
-        
+
+        void sourceCode( Scm scm ){
+            if ( scm != null ){
+                p.printWithOptions( "source_code",
+                                    options( "connection", scm.getConnection(),
+                                             "developer_connection", scm.getDeveloperConnection(),
+                                             "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
+                                    scm.getUrl() );
+                p.println();
+            }
+        }
+
         private void printRepositories(String name,
                 Repository... repositories) {
             for (Repository r: repositories) {
                 if ( r.getReleases() != null ){
-                	printRepositoryPolicy( r.getReleases() );
+                    printRepositoryPolicy( r.getReleases() );
                 }
                 if ( r.getSnapshots() != null ){
-                	printRepositoryPolicy( r.getSnapshots() );
+                    printRepositoryPolicy( r.getSnapshots() );
                 }
-                p.printWithOptions( name, 
+                p.printWithOptions( name,
                                     options( "id", r.getId(),
-                                             "name", r.getName() ), 
+                                             "name", r.getName() ),
                                     r.getUrl() );
             }
         }
-        
+
         private void printRepositoryPolicy( RepositoryPolicy policy ){
-        	//p.println( "TODO: " + policy );
+            //p.println( "TODO: " + policy );
         }
-        
+
         void project(Model model) {
             String name = model.getName();
             if (name == null) {
@@ -181,43 +181,43 @@ public class RubyModelWriter extends ModelWriterSupport {
 
             p.println( "model_version", model.getModelVersion() );
             p.println( "inception_year", model.getInceptionYear() );
-            
+
             id(model);
             parent(model.getParent());
-            
+
             p.println("packaging", model.getPackaging());
             p.println();
-            
+
             description(model.getDescription());
 
             developers( model.getDevelopers() );
 
             issueManagement( model.getIssueManagement() );
-            
+
             mailingLists( model.getMailingLists() );
-            
+
             repositories( toRepositoryArray( model.getRepositories() ) );
-            
+
             pluginRepositories( toRepositoryArray( model.getPluginRepositories() ) );
 
             sourceCode( model.getScm() );
-            
+
             distribution( model.getDistributionManagement() );
-            
+
             properties(model.getProperties());
-            
+
             dependencies(model.getDependencies());
-            
+
             modules(model.getModules());
-            
+
             managements(model.getDependencyManagement(), model.getBuild());
-            
+
             build(model.getBuild());
-            
+
             profiles( model.getProfiles() );
-            
+
             reporting( model.getReporting() );
-            
+
             p.printEndBlock();
         }
 
@@ -262,31 +262,31 @@ public class RubyModelWriter extends ModelWriterSupport {
         }
 
         void reporting(Reporting reporting) {
-        	if ( reporting != null ){
-        		p.printStartBlock( "reporting" );
-        		plugins( reporting.getPlugins() );
-        		p.printEndBlock();
-        		p.println();
-        	}
-		}
+            if ( reporting != null ){
+                p.printStartBlock( "reporting" );
+                plugins( reporting.getPlugins() );
+                p.printEndBlock();
+                p.println();
+            }
+        }
 
-		void profiles( List<Profile> profiles ) {
-    		if ( profiles != null ){
-    			for( Profile profile: profiles ){
-    				p.print( "profile" );
-    				if (profile.getId() != null ){
-    					p.append( " '" ).append( profile.getId() ).append( "'" );
-    					p.printStartBlock();
-    					p.println();
-    					
-    					if ( profile.getActivation() != null )
-    					{
+        void profiles( List<Profile> profiles ) {
+            if ( profiles != null ){
+                for( Profile profile: profiles ){
+                    p.print( "profile" );
+                    if (profile.getId() != null ){
+                        p.append( " '" ).append( profile.getId() ).append( "'" );
+                        p.printStartBlock();
+                        p.println();
+
+                        if ( profile.getActivation() != null )
+                        {
                             Activation activation = profile.getActivation();
-    					    p.printStartBlock( "activation" );
-    					    {
-    					        ActivationProperty prop = activation.getProperty();
-        					    if ( prop != null )
-        					    {
+                            p.printStartBlock( "activation" );
+                            {
+                                ActivationProperty prop = activation.getProperty();
+                                if ( prop != null )
+                                {
                                     Map<String, Object> options = new LinkedHashMap<String, Object>();
                                     options.put( "name", prop.getName() );
                                     if ( prop.getValue() != null )
@@ -294,10 +294,10 @@ public class RubyModelWriter extends ModelWriterSupport {
                                         options.put( "value", prop.getValue() );
                                     }
                                     p.printWithOptions( "property", options );
-        					    }
-    					    }
-    					    {
-        					    ActivationFile file = activation.getFile();
+                                }
+                            }
+                            {
+                                ActivationFile file = activation.getFile();
                                 if ( file != null )
                                 {
                                     Map<String, Object> options = new LinkedHashMap<String, Object>();
@@ -310,20 +310,20 @@ public class RubyModelWriter extends ModelWriterSupport {
                                         options.put( "missing", file.getMissing() );
                                     }
                                     p.printWithOptions( "file", options );
-                                }    			
-    					    }
+                                }
+                            }
                             {
                                 String jdk = activation.getJdk();
                                 if ( jdk != null )
                                 {
                                     p.print( "jdk", jdk );
-                                }               
+                                }
                             }
                             {
                                 if ( activation.isActiveByDefault() )
                                 {
                                     p.print( "active_by_default", "true" );
-                                }               
+                                }
                             }
                             {
                                 ActivationOS os = activation.getOs();
@@ -347,37 +347,37 @@ public class RubyModelWriter extends ModelWriterSupport {
                                         options.put( "version", os.getVersion() );
                                     }
                                     p.printWithOptions( "os", options );
-                                }               
+                                }
                             }
-    		                p.printEndBlock();
-    					    p.println();
-    					}
-    					
-    		            repositories( toRepositoryArray( profile.getRepositories() ) );
-    		            
-    		            pluginRepositories( toRepositoryArray( profile.getPluginRepositories() ) );
-    		            
-    		            distribution( profile.getDistributionManagement() );
-    		            
-    		            properties( profile.getProperties() );
-    		            
-    		            dependencies( profile.getDependencies() );
-    		            
-    		            modules( profile.getModules() );
-    		            
-    		            managements( profile.getDependencyManagement(), profile.getBuild() );
-    		            
-    		            build( profile.getBuild() );
+                            p.printEndBlock();
+                            p.println();
+                        }
 
-    		            reporting( profile.getReporting() );
-    		            
-    					p.printEndBlock();
-    					p.println();
-    				}
-    			}
-    		}
-    	}
-        
+                        repositories( toRepositoryArray( profile.getRepositories() ) );
+
+                        pluginRepositories( toRepositoryArray( profile.getPluginRepositories() ) );
+
+                        distribution( profile.getDistributionManagement() );
+
+                        properties( profile.getProperties() );
+
+                        dependencies( profile.getDependencies() );
+
+                        modules( profile.getModules() );
+
+                        managements( profile.getDependencyManagement(), profile.getBuild() );
+
+                        build( profile.getBuild() );
+
+                        reporting( profile.getReporting() );
+
+                        p.printEndBlock();
+                        p.println();
+                    }
+                }
+            }
+        }
+
         void description(String description) {
             if (description != null) {
                 p.println("description", description);
@@ -388,12 +388,12 @@ public class RubyModelWriter extends ModelWriterSupport {
         void build( BuildBase build ) {
             if ( build != null ) {
                 plugins( build.getPlugins() );
-                
+
                 if ( build.getDefaultGoal() != null ){
-                	p.printStartBlock( "build" );
-                	p.println( "default_goal", build.getDefaultGoal() );
-                	p.printEndBlock();
-                	p.println();
+                    p.printStartBlock( "build" );
+                    p.println( "default_goal", build.getDefaultGoal() );
+                    p.printEndBlock();
+                    p.println();
                 }
             }
         }
@@ -405,7 +405,7 @@ public class RubyModelWriter extends ModelWriterSupport {
                             .getPluginManagement().getPlugins().isEmpty())) {
                 p.printStartBlock("overrides");
                 if ( dependencyManagement != null ){
-                	dependencies(dependencyManagement.getDependencies());
+                    dependencies(dependencyManagement.getDependencies());
                 }
                 if (build != null && build.getPluginManagement() != null) {
                     plugins(build.getPluginManagement().getPlugins());
@@ -434,14 +434,14 @@ public class RubyModelWriter extends ModelWriterSupport {
                 p.print("inherit", parent.getGroupId() + ":"
                         + parent.getArtifactId() + ":" + parent.getVersion());
                 if (parent.getRelativePath() != null ) {
-                	if ( parent.getRelativePath().equals( "../pom.xml" ) ) {
-                		//p.append( ", '" ).append( "../pom.rb" ).append( "'" );
-                		p.println();
-                	}
+                    if ( parent.getRelativePath().equals( "../pom.xml" ) ) {
+                        //p.append( ", '" ).append( "../pom.rb" ).append( "'" );
+                        p.println();
+                    }
                     else {
                         p.append(", '" + parent.getRelativePath() + "'").println();
-                    }	
-                } 
+                    }
+                }
                 else {
                     p.println();
                 }
@@ -470,7 +470,7 @@ public class RubyModelWriter extends ModelWriterSupport {
                             p.append( "," );
                         }
                         else {
-                        	p.append( " )" );
+                            p.append( " )" );
                         }
                         p.println();
                     }
@@ -510,76 +510,76 @@ public class RubyModelWriter extends ModelWriterSupport {
                     // parent or dependencyManagement
                     // is providing a version for this particular dependency.
                     //
-                	gav = d.getGroupId() + ":" + d.getArtifactId();
+                    gav = d.getGroupId() + ":" + d.getArtifactId();
                 }
                 if (d.getClassifier() != null) {
-                	if (d.getVersion() == null ){
-                		options.put( "classifier", d.getClassifier() );
-                	}
-                	else {
-                		gav += ":" + d.getClassifier();
-                	}
+                    if (d.getVersion() == null ){
+                        options.put( "classifier", d.getClassifier() );
+                    }
+                    else {
+                        gav += ":" + d.getClassifier();
+                    }
                 }
                 if ( d.getScope() != null ){
-                	options.put( "scope", d.getScope() );
+                    options.put( "scope", d.getScope() );
                 }
                 if ( d.getOptional() != null ){
-                	options.put( "optional", d.isOptional() );
+                    options.put( "optional", d.isOptional() );
                 }
                 if ( d.getExclusions().size() == 1 ) {
-                	Exclusion e = d.getExclusions().get( 0 );
-                	String ga = e.getGroupId() + ":" + e.getArtifactId();
-                	options.put( "exclusions",  ga );
+                    Exclusion e = d.getExclusions().get( 0 );
+                    String ga = e.getGroupId() + ":" + e.getArtifactId();
+                    options.put( "exclusions",  ga );
                 }
                 else if ( d.getExclusions().size() > 1 ) {
-                	List<String> exclusions = new ArrayList<String>( d.getExclusions().size() );
+                    List<String> exclusions = new ArrayList<String>( d.getExclusions().size() );
                     for (Exclusion e : d.getExclusions()) {
-                    	String ga = e.getGroupId() + ":" + e.getArtifactId();
-                    	exclusions.add( ga );
+                        String ga = e.getGroupId() + ":" + e.getArtifactId();
+                        exclusions.add( ga );
                     }
-                	options.put( "exclusions",  exclusions );
+                    options.put( "exclusions",  exclusions );
                 }
                 final String prefix = options.size() == 0 ? "jar " : "jar( ";
                 final String indent = prefix.replaceAll( ".", " " );
-                
+
                 p.print( prefix );
                 p.append( "'" ).append( gav ).append( "'" );
                 if ( options.size() > 0 ) {
-                	for( Map.Entry<String, Object> item : options.entrySet() ){
-                		p.append( "," );
-                		p.println();
-                		p.print( indent );
-                		p.append( ":" );
-                		p.append( item.getKey() );
-                		p.append( " => ");
-                		if ( item.getValue() instanceof String ){
-                			p.append( "'" );
-                			p.append( item.getValue().toString() );
-                			p.append( "'" );
-                		}
-                		else {
-                			@SuppressWarnings("unchecked")
-							List<String> list = (List<String>) item.getValue();
+                    for( Map.Entry<String, Object> item : options.entrySet() ){
+                        p.append( "," );
+                        p.println();
+                        p.print( indent );
+                        p.append( ":" );
+                        p.append( item.getKey() );
+                        p.append( " => ");
+                        if ( item.getValue() instanceof String ){
+                            p.append( "'" );
+                            p.append( item.getValue().toString() );
+                            p.append( "'" );
+                        }
+                        else {
+                            @SuppressWarnings("unchecked")
+                            List<String> list = (List<String>) item.getValue();
                             boolean first = true;
-                    		p.append( "[ " );
+                            p.append( "[ " );
                             for( String ex: list ){
-                        		if ( first ) {
-                        			first = false;
-                        		}
-                        		else {
-                        			p.append( "," );
-                        			p.println();
-                            		p.print( indent );
-                            		p.append( "                 " );
-                        		}
-                        		p.append( "'" );
-                            	p.append( ex );
-                        		p.append( "'" );                            	
+                                if ( first ) {
+                                    first = false;
+                                }
+                                else {
+                                    p.append( "," );
+                                    p.println();
+                                    p.print( indent );
+                                    p.append( "                 " );
+                                }
+                                p.append( "'" );
+                                p.append( ex );
+                                p.append( "'" );
                             }
-                    		p.append( " ]" );
-                		}
-                	}
-                	p.append( " )");
+                            p.append( " ]" );
+                        }
+                    }
+                    p.append( " )");
                 }
                 p.println();
             }
@@ -587,79 +587,79 @@ public class RubyModelWriter extends ModelWriterSupport {
                 p.println();
             }
         }
-            
+
         <T extends ConfigurationContainer> void plugins(List<T> plugins) {
             for (int i = 0; i < plugins.size(); i++) {
-                T container = plugins.get(i); 
+                T container = plugins.get(i);
                 String prefix = container.getConfiguration() == null ? "plugin " : "plugin( ";
                 String indent = prefix.replaceAll( ".", " " );
                 p.print( prefix);
                 Plugin plugin = null;
                 ReportPlugin rplugin = null;
                 if ( container instanceof Plugin ){
-                	plugin = (Plugin) container;
-                	pluginProlog( plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion() );
+                    plugin = (Plugin) container;
+                    pluginProlog( plugin.getGroupId(), plugin.getArtifactId(), plugin.getVersion() );
                 }
                 else {
-                	rplugin = (ReportPlugin) container;
-                	pluginProlog( rplugin.getGroupId(), rplugin.getArtifactId(), rplugin.getVersion() );
+                    rplugin = (ReportPlugin) container;
+                    pluginProlog( rplugin.getGroupId(), rplugin.getArtifactId(), rplugin.getVersion() );
                 }
                 p.printConfiguration( indent, container.getConfiguration() );
                 if ( plugin != null && !plugin.getExecutions().isEmpty()){
                     p.printStartBlock();
                     for(PluginExecution exec : plugin.getExecutions()){
-                		p.printWithOptions( "execute_goals",
-                		                    options( "id", "default".equals( exec.getId() ) ? null : exec.getId(),
-                		                             "inherited", exec.isInherited() ? null : "false" ,
-                		                             "phase", exec.getPhase() ),
-                		                    exec.getConfiguration(),
-      				                        toArray( exec.getGoals() ) );
+                        p.printWithOptions( "execute_goals",
+                                            options( "id", "default".equals( exec.getId() ) ? null : exec.getId(),
+                                                     "inherited", exec.isInherited() ? null : "false" ,
+                                                     "phase", exec.getPhase() ),
+                                            exec.getConfiguration(),
+                                              toArray( exec.getGoals() ) );
                     }
                     p.printEndBlock();
                 }
                 if ( rplugin != null && !rplugin.getReportSets().isEmpty() ) {
-                	p.printStartBlock();
-                	for( ReportSet set : rplugin.getReportSets() ){
-                		p.printWithOptions( "report_set",
-                		                    options( "id", "default".equals( set.getId() ) ? null : set.getId(),
-                		                             "inherited", set.isInherited() ? null : "false" ),
-                				            set.getConfiguration(),
-                				            toArray( set.getReports() ) );
-                	}
-                	p.printEndBlock();
+                    p.printStartBlock();
+                    for( ReportSet set : rplugin.getReportSets() ){
+                        p.printWithOptions( "report_set",
+                                            options( "id", "default".equals( set.getId() ) ? null : set.getId(),
+                                                     "inherited", set.isInherited() ? null : "false" ),
+                                            set.getConfiguration(),
+                                            toArray( set.getReports() ) );
+                    }
+                    p.printEndBlock();
                 }
                 p.println();
             }
         }
 
-		private String[] toArray( List<String> list ) {
-			return list.toArray( new String[ list.size() ] );
-		}
+        private String[] toArray( List<String> list ) {
+            return list.toArray( new String[ list.size() ] );
+        }
 
-		private Repository[] toRepositoryArray( List<Repository> list ) {
-			return list.toArray( new Repository[ list.size() ] );
-		}
-		
-		private void pluginProlog( String groupId, String artifactId, String version ) {
-			if( "org.apache.maven.plugins".equals( groupId ) && artifactId.startsWith( "maven-") ) {
-				String name = artifactId.replaceAll( "maven-|-plugin", ""); 
-				if ( name.contains( "-" ) ){
-			    	p.append( ":'" ).append( name ).append( "'" );                		
-				}
-				else {
-			    	p.append( ":" ).append( name );                		                		
-				}
-			    if ( version != null ){
-			    	p.append( ", '").append( version ).append( "'" );
-			    }                	
-			}
-			else {
-				p.append( "'").append( groupId ).append( ":" ).append( artifactId );
-			    if ( version != null ){
-			    	p.append( ":" ).append( version );
-			    }
-			    p.append( "'" );
-			}
-		}
+        private Repository[] toRepositoryArray( List<Repository> list ) {
+            return list.toArray( new Repository[ list.size() ] );
+        }
+
+        private void pluginProlog( String groupId, String artifactId, String version ) {
+            if( "org.apache.maven.plugins".equals( groupId ) && artifactId.startsWith( "maven-") ) {
+                String name = artifactId.replaceAll( "maven-|-plugin", "");
+                if ( name.contains( "-" ) ){
+                    p.append( ":'" ).append( name ).append( "'" );
+                }
+                else {
+                    p.append( ":" ).append( name );
+                }
+                if ( version != null ){
+                    p.append( ", '").append( version ).append( "'" );
+                }
+            }
+            else {
+                p.append( "'").append( groupId ).append( ":" ).append( artifactId );
+                if ( version != null ){
+                    p.append( ":" ).append( version );
+                }
+                p.append( "'" );
+            }
+        }
     }
 }

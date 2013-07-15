@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.sonatype.maven.polyglot.ruby;
 
@@ -72,7 +72,7 @@ class RubyPrintWriter extends PrintWriter {
     void printWithOptions( String prefix, Map<String, Object> options, String... args){
         printWithOptions( prefix, options, null, args);
     }
-    
+
     void printWithOptions( String prefix, Map<String, Object> options, Object config, String... args){
         if ( !options.isEmpty() || config != null )
         {
@@ -127,11 +127,11 @@ class RubyPrintWriter extends PrintWriter {
             append( " )");
         }
     }
-    
+
     void printHashConfig(String indent, Xpp3Dom base) {
         printHashConfig( indent, base, false );
     }
-    
+
     RubyPrintWriter appendName( String name )
     {
         if ( name.matches( "^[a-zA-Z_]*$" ) )
@@ -144,7 +144,7 @@ class RubyPrintWriter extends PrintWriter {
         }
         return this;
     }
-    
+
     void printHashConfig(String indent, Xpp3Dom base, boolean skipFirst ) {
         int count = base.getChildCount();
         boolean first = true;
@@ -180,7 +180,7 @@ class RubyPrintWriter extends PrintWriter {
             }
             if ( c.getChildCount() > 0 || c.getAttributeNames().length > 0 )
             {
-                if ( ( c.getChildCount() > 1 && c.getChild(0).getName().equals( c.getChild(1).getName() ) ) 
+                if ( ( c.getChildCount() > 1 && c.getChild(0).getName().equals( c.getChild(1).getName() ) )
                     || ( c.getChildCount() == 1 &&  c.getName().equals( c.getChild(0).getName() + "s" ) ) )
                 {
                     appendName( c.getName() ).append( " => [" );
@@ -195,12 +195,12 @@ class RubyPrintWriter extends PrintWriter {
                   print( indent );
                   append( "}");
                 }
-            } 
+            }
             else if ( c.getValue() == null )
             {
                 // assume empty is a boolean like <ignore />
                 appendName( c.getName() ).append( " => true");
-            } 
+            }
             else
             {
                 appendName( c.getName() ).append( " => '" ).append( c.getValue() ).append(  "'" );
@@ -210,7 +210,7 @@ class RubyPrintWriter extends PrintWriter {
             }
         }
     }
-    
+
     void printListConfig( String indent, Xpp3Dom base ) {
         int count = base.getChildCount();
         for (int j = 0; j < count; ) {
@@ -223,7 +223,7 @@ class RubyPrintWriter extends PrintWriter {
             {
                 append( " xml( '" ).append( c.toString().replaceFirst( "<?.*?>\\s*", "" ) ).append( "' )" );
             }
-            else 
+            else
             {
                 append( " { ");
                 printHashConfig( "   " + indent + INDENT, c, true );
@@ -246,7 +246,7 @@ class RubyPrintWriter extends PrintWriter {
     void printStartBlock(String name, String... values) {
         printStartBlock( name, null, values );
     }
-    
+
     private void printStartBlock(String name, Map<String, Object> options, String... values) {
         if ( options != null )
         {
