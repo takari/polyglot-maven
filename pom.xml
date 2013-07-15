@@ -41,6 +41,7 @@
     <module>tesla-polyglot-clojure</module>
     <module>tesla-polyglot-scala</module>
     <module>tesla-polyglot-cli</module>
+    <module>tesla-polyglot-maven-plugin</module>
   </modules>
 
   <build>
