@@ -38,6 +38,17 @@
       <artifactId>jruby-core</artifactId>
       <version>1.7.4</version>
     </dependency>
+    <!-- Test -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.sisu</groupId>
+      <artifactId>org.eclipse.sisu.inject</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
