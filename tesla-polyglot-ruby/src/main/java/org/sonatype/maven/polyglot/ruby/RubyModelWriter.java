@@ -25,12 +25,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.maven.model.Activation;
+import org.apache.maven.model.ActivationFile;
+import org.apache.maven.model.ActivationOS;
+import org.apache.maven.model.ActivationProperty;
 import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.ConfigurationContainer;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
+import org.apache.maven.model.Developer;
 import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Exclusion;
+import org.apache.maven.model.IssueManagement;
+import org.apache.maven.model.MailingList;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
@@ -47,7 +54,6 @@ import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 
 @Component(role = ModelWriter.class, hint = "ruby")
@@ -66,7 +72,6 @@ public class RubyModelWriter extends ModelWriterSupport {
     }
 
     static class ModelPrinter {
-        private static final String INDENT = "  ";
         private final RubyPrintWriter p;
 
         ModelPrinter( Writer output ) {
@@ -106,7 +111,7 @@ public class RubyModelWriter extends ModelWriterSupport {
 	        	}
 	        	if ( distribution.getSite() != null ){
 	        		Site site = distribution.getSite();
-	        		printWithOptions( "site", 
+	        		p.printWithOptions( "site", 
 	        					  	  options( "id", site.getId(),
 	        					  			   "name", site.getName() ),
 	        					      site.getUrl() );
@@ -136,11 +141,11 @@ public class RubyModelWriter extends ModelWriterSupport {
 
 		void sourceCode( Scm scm ){
 			if ( scm != null ){
-				printWithOptions( "source_code", 
-        		     	          options( "connection", scm.getConnection(), 
-           			            		   "developer_connection", scm.getDeveloperConnection(),
-        			            		   "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
-        			              scm.getUrl() );
+				p.printWithOptions( "source_code", 
+				                    options( "connection", scm.getConnection(), 
+				                             "developer_connection", scm.getDeveloperConnection(),
+				                             "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
+				                    scm.getUrl() );
 				p.println();
 			}
         }
@@ -154,43 +159,10 @@ public class RubyModelWriter extends ModelWriterSupport {
                 if ( r.getSnapshots() != null ){
                 	printRepositoryPolicy( r.getSnapshots() );
                 }
-                printWithOptions( name, 
-                		          options( "id", r.getId(),
-                		        		   "name", r.getName() ), 
-                                  r.getUrl() );
-            }
-        }
-
-        private void printWithOptions( String prefix, Map<String, Object> options, String... args){
-            printWithOptions( prefix, options, null, args);
-        }
-        
-        private void printWithOptions( String prefix, Map<String, Object> options, Object config, String... args){
-            if (!options.isEmpty() || config != null ){
-            	prefix += "(";
-                p.print( prefix, args );
-            	String indent = prefix.replaceAll( ".", " " ) + ' ';
-            	for( Map.Entry<String, Object> item: options.entrySet() ){
-            		p.append(",").println();
-            		p.print( indent );
-            		p.append( ':' ).append( item.getKey() ).append( " => " );
-            		if ( item.getValue() instanceof String ) {
-            			p.append( "'" ).append( item.getValue().toString() ).append( "'" );
-            		}
-            		else {
-            			p.append( item.getValue().toString() );
-            		}
-            	}
-            	if ( config != null ){
-            		printConfiguration( indent, config );
-            		p.println();
-            	}
-            	else {
-            		p.append( " )" ).println();
-            	}
-            }
-            else {
-                p.println( prefix, args );
+                p.printWithOptions( name, 
+                                    options( "id", r.getId(),
+                                             "name", r.getName() ), 
+                                    r.getUrl() );
             }
         }
         
@@ -203,8 +175,12 @@ public class RubyModelWriter extends ModelWriterSupport {
             if (name == null) {
                 name = model.getArtifactId();
             }
-            p.printStartBlock("project", name, model.getUrl());
+
+            p.printStartBlock( "project", name, model.getUrl() );
             p.println();
+
+            p.println( "model_version", model.getModelVersion() );
+            p.println( "inception_year", model.getInceptionYear() );
             
             id(model);
             parent(model.getParent());
@@ -214,6 +190,12 @@ public class RubyModelWriter extends ModelWriterSupport {
             
             description(model.getDescription());
 
+            developers( model.getDevelopers() );
+
+            issueManagement( model.getIssueManagement() );
+            
+            mailingLists( model.getMailingLists() );
+            
             repositories( toRepositoryArray( model.getRepositories() ) );
             
             pluginRepositories( toRepositoryArray( model.getPluginRepositories() ) );
@@ -239,6 +221,46 @@ public class RubyModelWriter extends ModelWriterSupport {
             p.printEndBlock();
         }
 
+        private void mailingLists( List<MailingList> mailingLists )
+        {
+            for( MailingList list : mailingLists )
+            {
+                p.printStartBlock( "mailing_list", list.getName() );
+                p.println( "subscribe", list.getSubscribe() );
+                p.println( "unsubscribe", list.getUnsubscribe() );
+                p.println( "post", list.getPost() );
+                // not thread safe !!
+                list.getOtherArchives().add( 0, list.getArchive() );
+                p.println( "archives", toArray( list.getOtherArchives() ) );
+                // keep model as is - not thread safe !!
+                list.getOtherArchives().remove( 0 );
+                p.printEndBlock();
+                p.println();
+            }
+        }
+
+        private void issueManagement( IssueManagement issueManagement )
+        {
+            if( issueManagement != null )
+            {
+                p.println( "issue_management", issueManagement.getUrl(), issueManagement.getSystem() );
+                p.println();
+            }
+        }
+
+        private void developers( List<Developer> developers )
+        {
+            for( Developer dev : developers )
+            {
+                p.printStartBlock( "developer", dev.getId() );
+                p.println( "name", dev.getName() );
+                p.println( "email", dev.getEmail() );
+                p.println( "roles", toArray( dev.getRoles() ) );
+                p.printEndBlock();
+                p.println();
+            }
+        }
+
         void reporting(Reporting reporting) {
         	if ( reporting != null ){
         		p.printStartBlock( "reporting" );
@@ -257,22 +279,98 @@ public class RubyModelWriter extends ModelWriterSupport {
     					p.printStartBlock();
     					p.println();
     					
+    					if ( profile.getActivation() != null )
+    					{
+                            Activation activation = profile.getActivation();
+    					    p.printStartBlock( "activation" );
+    					    {
+    					        ActivationProperty prop = activation.getProperty();
+        					    if ( prop != null )
+        					    {
+                                    Map<String, Object> options = new LinkedHashMap<String, Object>();
+                                    options.put( "name", prop.getName() );
+                                    if ( prop.getValue() != null )
+                                    {
+                                        options.put( "value", prop.getValue() );
+                                    }
+                                    p.printWithOptions( "property", options );
+        					    }
+    					    }
+    					    {
+        					    ActivationFile file = activation.getFile();
+                                if ( file != null )
+                                {
+                                    Map<String, Object> options = new LinkedHashMap<String, Object>();
+                                    if ( file.getExists() != null )
+                                    {
+                                        options.put( "exists", file.getExists() );
+                                    }
+                                    if ( file.getMissing() != null )
+                                    {
+                                        options.put( "missing", file.getMissing() );
+                                    }
+                                    p.printWithOptions( "file", options );
+                                }    			
+    					    }
+                            {
+                                String jdk = activation.getJdk();
+                                if ( jdk != null )
+                                {
+                                    p.print( "jdk", jdk );
+                                }               
+                            }
+                            {
+                                if ( activation.isActiveByDefault() )
+                                {
+                                    p.print( "active_by_default", "true" );
+                                }               
+                            }
+                            {
+                                ActivationOS os = activation.getOs();
+                                if ( os != null )
+                                {
+                                    Map<String, Object> options = new LinkedHashMap<String, Object>();
+                                    if ( os.getArch() != null )
+                                    {
+                                        options.put( "arch", os.getArch() );
+                                    }
+                                    if ( os.getFamily() != null )
+                                    {
+                                        options.put( "family", os.getFamily() );
+                                    }
+                                    if ( os.getName() != null )
+                                    {
+                                        options.put( "name", os.getName() );
+                                    }
+                                    if ( os.getVersion() != null )
+                                    {
+                                        options.put( "version", os.getVersion() );
+                                    }
+                                    p.printWithOptions( "os", options );
+                                }               
+                            }
+    		                p.printEndBlock();
+    					    p.println();
+    					}
+    					
     		            repositories( toRepositoryArray( profile.getRepositories() ) );
     		            
     		            pluginRepositories( toRepositoryArray( profile.getPluginRepositories() ) );
     		            
     		            distribution( profile.getDistributionManagement() );
     		            
-    		            properties(profile.getProperties());
+    		            properties( profile.getProperties() );
     		            
-    		            dependencies(profile.getDependencies());
+    		            dependencies( profile.getDependencies() );
     		            
-    		            modules(profile.getModules());
+    		            modules( profile.getModules() );
     		            
-    		            managements(profile.getDependencyManagement(), profile.getBuild());
+    		            managements( profile.getDependencyManagement(), profile.getBuild() );
     		            
-    		            build(profile.getBuild());
+    		            build( profile.getBuild() );
 
+    		            reporting( profile.getReporting() );
+    		            
     					p.printEndBlock();
     					p.println();
     				}
@@ -506,58 +604,27 @@ public class RubyModelWriter extends ModelWriterSupport {
                 	rplugin = (ReportPlugin) container;
                 	pluginProlog( rplugin.getGroupId(), rplugin.getArtifactId(), rplugin.getVersion() );
                 }
-                printConfiguration( indent, container.getConfiguration() );
+                p.printConfiguration( indent, container.getConfiguration() );
                 if ( plugin != null && !plugin.getExecutions().isEmpty()){
                     p.printStartBlock();
                     for(PluginExecution exec : plugin.getExecutions()){
-                		printWithOptions( "execute_goals",
-      				          options( "id", "default".equals( exec.getId() ) ? null : exec.getId(),
-      				        		   "inherited", exec.isInherited() ? null : "false" ,
-      				        		   "phase", exec.getPhase() ),
-      				          exec.getConfiguration(),
-      				          toArray( exec.getGoals() ) );
-//                		
-//                    	boolean hasOptions = !exec.getId().equals( "default" ) || 
-//                    				exec.getPhase() != null;
-//                        String prefix2 = hasOptions ? "execute_goals( " : "execute_goals ";
-//                        p.print( prefix2 );
-//                        boolean first = true;
-//                        for (String goal : exec.getGoals()) {
-//                            if (first) {
-//                                first = false;
-//                            } else {
-//                                p.append( ", " );
-//                            }
-//                            p.append( "'" ).append( goal ).append( "'" );
-//                        }
-//                        if ( hasOptions ){
-//                            String indent2 = prefix2.replaceAll( ".", " " );
-//                        	if( !exec.getId().equals( "default" ) ){
-//                            	p.append( "," );
-//                        		p.println();
-//                        		p.print( indent2 );
-//                        		p.append( ":id => '" ).append( exec.getId() ).append( "'" );
-//                            }
-//                            if( exec.getPhase() != null ){
-//                            	p.append( "," );
-//                        		p.println();
-//                        		p.print( indent2 );
-//                        		p.append( ":phase => '" ).append( exec.getPhase() ).append( "'" );
-//                            }
-//                        	p.append( " )" );
-//                        }
-//                        p.println();
+                		p.printWithOptions( "execute_goals",
+                		                    options( "id", "default".equals( exec.getId() ) ? null : exec.getId(),
+                		                             "inherited", exec.isInherited() ? null : "false" ,
+                		                             "phase", exec.getPhase() ),
+                		                    exec.getConfiguration(),
+      				                        toArray( exec.getGoals() ) );
                     }
                     p.printEndBlock();
                 }
                 if ( rplugin != null && !rplugin.getReportSets().isEmpty() ) {
                 	p.printStartBlock();
                 	for( ReportSet set : rplugin.getReportSets() ){
-                		printWithOptions( "report_set",
-                				          options( "id", "default".equals( set.getId() ) ? null : set.getId(),
-                				        		   "inherited", set.isInherited() ? null : "false" ),
-                				          set.getConfiguration(),
-                				          toArray( set.getReports() ) );
+                		p.printWithOptions( "report_set",
+                		                    options( "id", "default".equals( set.getId() ) ? null : set.getId(),
+                		                             "inherited", set.isInherited() ? null : "false" ),
+                				            set.getConfiguration(),
+                				            toArray( set.getReports() ) );
                 	}
                 	p.printEndBlock();
                 }
@@ -571,18 +638,6 @@ public class RubyModelWriter extends ModelWriterSupport {
 
 		private Repository[] toRepositoryArray( List<Repository> list ) {
 			return list.toArray( new Repository[ list.size() ] );
-		}
-
-		private void printConfiguration( String indent,  Object config ) {
-			if (config != null ){
-				Xpp3Dom configuration = (Xpp3Dom) config;
-				if (configuration.getChildCount() != 0) {
-				    p.append(",");
-				    p.println();
-				    printHashConfig( indent, configuration );
-				}
-				p.append( " )");
-			}
 		}
 		
 		private void pluginProlog( String groupId, String artifactId, String version ) {
@@ -606,69 +661,5 @@ public class RubyModelWriter extends ModelWriterSupport {
 			    p.append( "'" );
 			}
 		}
-        
-        private void printListConfig(String indent, Xpp3Dom base) {
-            int count = base.getChildCount();
-            for (int j = 0; j < count; ) {
-                Xpp3Dom c = base.getChild(j);
-                if (c.getValue() != null ){
-                	p.append( " '" ).append( c.getValue() ).append( "'" );
-                	if( ++j < count ){
-                		p.append(",");
-                		p.println();
-                		p.print( indent );
-                		p.append( "  ");
-                	}
-                }
-                else {
-                	p.append( " { ");
-                	printHashConfig( "   " + indent + INDENT, c, true );
-                	p.append( " }");
-                	if( ++j < count ){
-                		p.append(",");
-                		p.println();
-                		p.print( indent );
-                		p.append( "  ");
-                	}
-                }
-            }
-        }
-
-        private void printHashConfig(String indent, Xpp3Dom base) {
-        	printHashConfig( indent, base, false );
-        }
-        
-        private void printHashConfig(String indent, Xpp3Dom base, boolean skipFirst ) {
-            int count = base.getChildCount();
-            for (int j = 0; j < count; j++) {
-                Xpp3Dom c = base.getChild(j);
-                if ( j != 0 || !skipFirst ) {
-                	p.print(indent);
-                }
-                if (c.getChildCount() > 0) {
-                    if ( ( c.getChildCount() > 1 && c.getChild(0).getName().equals( c.getChild(1).getName() ) ) 
-                    	|| ( c.getChildCount() == 1 &&  c.getName().equals( c.getChild(0).getName() + "s" ) ) ) {
-                        p.append( ":" ).append( c.getName() ).append( " => [" );
-                        printListConfig(indent + "    " + c.getName().replaceAll( ".", " " ), c);
-                        p.append( " ]");
-                    }
-                    else {
-                      p.append( ":" ).append( c.getName() ).append( " => {").println();
-                      printHashConfig(indent + INDENT, c);
-                      p.println();
-                      p.print( indent );
-                      p.append( "}");
-                    }
-                } else if (c.getValue() == null) {
-                    p.append(":" + c.getName() + " => true");
-                } else {
-                    p.append(":" + c.getName() + " => '"
-                            + c.getValue() + "'");
-                }
-                if (j + 1 != count) {
-                    p.append(",").println();
-                }
-            }
-        }
     }
 }

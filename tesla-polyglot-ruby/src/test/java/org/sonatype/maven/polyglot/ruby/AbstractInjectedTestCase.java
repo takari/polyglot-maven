@@ -48,7 +48,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	    RubyModelReader rubyModelReader = new RubyModelReader();
 		rubyModelReader.executeManager = new ExecuteManagerImpl() {
 			{
-				log = new ConsoleLogger( Logger.LEVEL_DEBUG, "test" );
+				log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
 			}
 		};
 	    StringReader reader = new StringReader( w.toString() );
