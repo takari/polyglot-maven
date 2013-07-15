@@ -56,7 +56,7 @@ project {
   }
   build {
     //
-    // Arbitrary Groovy code can be execute in any phase in the form of a dynamic plugin
+    // Arbitrary Groovy code can be executed in any phase in the form of a dynamic plugin
     //
     $execute(id: 'hello', phase: 'validate') {
       println ""
