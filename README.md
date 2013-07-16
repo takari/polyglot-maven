@@ -29,10 +29,10 @@ Check-out and build:
 
 After this completes, you can unzip and play with polyglot for maven:
 
-    unzip pmaven-cli/target/pmaven-*-bin.zip
-    ./pmaven-*/bin/mvn
+    tar -xzvf tesla-polyglot-cli/target/tesla-polyglot-*-bin.tar.gz
+    ./tesla-polyglot-*/bin/mvn
 
-Polyglot for Maven includes a copy of maven 3.0.3, which isn't 100% backwards compatible
+Polyglot for Maven includes a copy of maven 3.1.0, which isn't 100% backwards compatible
 with maven 2.0. Specifically, some maven plugins might not work. Virtually all do however, so
 it is feasible to move the unzipped directory and put that pmaven-*/bin on your path either
 inplace of or before your existing mvn binary.
