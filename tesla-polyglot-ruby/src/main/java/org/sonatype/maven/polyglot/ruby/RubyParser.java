@@ -34,12 +34,13 @@ public class RubyParser {
 
     // synchronize it since it is not clear how threadsafe all is
     public synchronized Model parse(String ruby) {
-        Model model = this.jruby.callMethod(this.parser,
+        Model model = this.jruby.callMethod( this.parser,
                     "parse",
-                    new Object[] {ruby, this.factory},
-                    Model.class);
+                    new Object[] { ruby, this.factory },
+                    Model.class );
 //        model.setModelVersion("4.0.0");
-        executeManager.register(model, this.factory.getExecuteTasks());
+        executeManager.register( model, this.factory.getExecuteTasks() );
+        executeManager.install( model );
         return model;
     }
 }
