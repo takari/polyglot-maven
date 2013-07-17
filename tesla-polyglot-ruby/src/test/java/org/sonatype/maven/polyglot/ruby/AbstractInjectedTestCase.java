@@ -72,15 +72,17 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	    
 	    if ( debug ) {
 	    	// Let's take a look at see what's there
-	    	System.out.println(ruby.toString());
 	    	System.out.println(xml.toString());
+            //System.out.println(ruby.toString());
 	    }
 	    
 	    assertEquals( simplify( xml ), simplify( ruby ) );
 	}
 	
 	private String simplify(StringWriter xml) {
-		String x = xml.toString().replaceAll( "\\s", "").replaceFirst("<properties>.*</properties>", "").replaceFirst("<\\?.*\\?>", "");
+		String x = xml.toString().replaceAll( "\\s", "").replaceFirst("<\\?.*\\?>", "").replaceAll("<properties>.*?</properties>", "");
+//		        .replaceAll( "<ignore></ignore>", "<ignore/>" );
+        System.out.println(x);
 		return x;
 	}	
 }

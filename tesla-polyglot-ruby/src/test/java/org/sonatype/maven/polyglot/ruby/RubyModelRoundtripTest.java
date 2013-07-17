@@ -10,8 +10,9 @@ public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
   public void testSitebricksParentPom() throws Exception {
 	  assertRoundtrip( "sitebricks-parent-pom.xml", false );
   }
+
   public void testJRubyCorePom() throws Exception {
-      assertRoundtrip( "jruby-core-pom.xml", true );
+      assertRoundtrip( "jruby-core-pom.xml", false );
   }
 
   public void testJRubyParentPom() throws Exception {
@@ -19,7 +20,7 @@ public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
   }
   
   public void testMavenParentPom() throws Exception {
-      assertRoundtrip( "maven-parent-pom.xml", false );
+      assertRoundtrip( "maven-parent-pom.xml", true );
   }
 
 }

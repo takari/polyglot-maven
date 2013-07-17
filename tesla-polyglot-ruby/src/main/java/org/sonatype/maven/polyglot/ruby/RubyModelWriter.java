@@ -48,6 +48,7 @@ import org.apache.maven.model.ReportSet;
 import org.apache.maven.model.Reporting;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.RepositoryPolicy;
+import org.apache.maven.model.Resource;
 import org.apache.maven.model.Scm;
 import org.apache.maven.model.Site;
 import org.apache.maven.model.io.ModelWriter;
@@ -153,21 +154,35 @@ public class RubyModelWriter extends ModelWriterSupport {
         private void printRepositories(String name,
                 Repository... repositories) {
             for (Repository r: repositories) {
-                if ( r.getReleases() != null ){
-                    printRepositoryPolicy( r.getReleases() );
+                if ( r.getReleases() == null && r.getSnapshots() == null )
+                {
+                    p.printWithOptions( name,
+                                        options( "id", r.getId(),
+                                                 "name", r.getName() ),
+                                        r.getUrl() );
                 }
-                if ( r.getSnapshots() != null ){
-                    printRepositoryPolicy( r.getSnapshots() );
+                else
+                {
+                    p.printStartBlock( name,
+                                       options( "id", r.getId(),
+                                                 "name", r.getName() ),
+                                       r.getUrl() );
+                    printRepositoryPolicy( "releases", r.getReleases() );
+                    printRepositoryPolicy( "snapshots", r.getSnapshots() );
+                    p.printEndBlock();
                 }
-                p.printWithOptions( name,
-                                    options( "id", r.getId(),
-                                             "name", r.getName() ),
-                                    r.getUrl() );
             }
         }
 
-        private void printRepositoryPolicy( RepositoryPolicy policy ){
-            //p.println( "TODO: " + policy );
+        private void printRepositoryPolicy( String name, RepositoryPolicy policy )
+        {
+            if ( policy.getChecksumPolicy() == null && policy.getUpdatePolicy() == null ){
+                    p.println( name, Boolean.toString( policy.isEnabled() ) );
+            }
+            else
+            {
+                p.println( "TODO: " + policy );
+            }
         }
 
         void project(Model model) {
@@ -204,15 +219,15 @@ public class RubyModelWriter extends ModelWriterSupport {
 
             distribution( model.getDistributionManagement() );
 
-            properties(model.getProperties());
+            properties( model.getProperties() );
 
-            dependencies(model.getDependencies());
+            dependencies( model.getDependencies() );
 
-            modules(model.getModules());
+            modules( model.getModules() );
 
-            managements(model.getDependencyManagement(), model.getBuild());
+            managements( model.getDependencyManagement(), model.getBuild() );
 
-            build(model.getBuild());
+            build( model.getBuild() );
 
             profiles( model.getProfiles() );
 
@@ -388,13 +403,48 @@ public class RubyModelWriter extends ModelWriterSupport {
         void build( BuildBase build ) {
             if ( build != null ) {
                 plugins( build.getPlugins() );
-
-                if ( build.getDefaultGoal() != null ){
+                if ( build.getDefaultGoal() != null ||
+                        build.getDirectory() != null ||
+                        build.getFinalName() != null ||
+                        build.getResources().size() > 0 ||
+                        build.getTestResources().size() > 0 ){
+                    p.println();
                     p.printStartBlock( "build" );
-                    p.println( "default_goal", build.getDefaultGoal() );
+                    if (build.getDefaultGoal() != null )
+                    {
+                        p.println( "default_goal", build.getDefaultGoal() );
+                    }
+                    if (build.getDirectory() != null )
+                    {
+                        p.println( "directory", build.getDirectory() );
+                    }
+                    if ( build.getFinalName() != null )
+                    {
+                        p.println( "final_name", build.getFinalName() );
+                    }
+
+                    resource( "resource", build.getResources() );
+                    resource( "test_resource", build.getTestResources() );
+
                     p.printEndBlock();
                     p.println();
                 }
+            }
+        }
+
+        private void resource( String name, List<Resource> resources )
+        {
+            for( Resource resource: resources )
+            {
+                p.println();
+                p.printStartBlock( name );
+                p.println( "directory", resource.getDirectory() );
+                p.println( "includes", toArray( resource.getIncludes() ) );
+                p.println( "excludes", toArray( resource.getExcludes() ) );
+                p.println( "target_path", resource.getTargetPath() );
+                // default is false, i.e. null indicates default
+                p.println( "filtering", resource.isFiltering() ? "true" : null );
+                p.printEndBlock();
             }
         }
 
@@ -605,8 +655,12 @@ public class RubyModelWriter extends ModelWriterSupport {
                     pluginProlog( rplugin.getGroupId(), rplugin.getArtifactId(), rplugin.getVersion() );
                 }
                 p.printConfiguration( indent, container.getConfiguration() );
-                if ( plugin != null && !plugin.getExecutions().isEmpty()){
+                if ( plugin != null &&
+                        ( !plugin.getExecutions().isEmpty() || !plugin.getDependencies().isEmpty() ) ){
                     p.printStartBlock();
+
+                    dependencies( plugin.getDependencies() );
+
                     for(PluginExecution exec : plugin.getExecutions()){
                         p.printWithOptions( "execute_goals",
                                             options( "id", "default".equals( exec.getId() ) ? null : exec.getId(),
@@ -615,6 +669,7 @@ public class RubyModelWriter extends ModelWriterSupport {
                                             exec.getConfiguration(),
                                               toArray( exec.getGoals() ) );
                     }
+
                     p.printEndBlock();
                 }
                 if ( rplugin != null && !rplugin.getReportSets().isEmpty() ) {

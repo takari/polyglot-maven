@@ -25,6 +25,7 @@ org.apache.maven.model.ReportPlugin
 org.apache.maven.model.ReportSet
 org.apache.maven.model.Repository
 org.apache.maven.model.RepositoryPolicy
+org.apache.maven.model.Resource
 org.apache.maven.model.Scm
 org.apache.maven.model.Site
 org.codehaus.plexus.util.xml.Xpp3Dom
@@ -142,28 +143,57 @@ module Tesla
       @current.distribution_management = dist
     end
 
-    def repository( url, options = {} )
-      do_repository( :repository=, url, options )
+    def includes( *items )
+      @current.includes = items
     end
 
-    def snapshot_repository( url, options = {} )
-      do_repository( :snapshot_repository=, url, options )
+    def excludes( *items )
+      @current.excludes = items
     end
 
-    def respository_policy( config )
-      rp = RespositoryPolicy.new
+    def test_resource( &block )
+      resource = Resource.new
+      nested_block( :resource, resource, block )
+      @current.test_resources << resource
+    end
+
+    def resource( &block )
+      resource = Resource.new
+      nested_block( :resource, resource, block )
+      @current.resources << resource
+    end
+
+    def repository( url, options = {}, &block )
+      do_repository( :repository=, url, options, block )
+    end
+
+    def snapshot_repository( url, options = {}, &block )
+      do_repository( :snapshot_repository=, url, options, block )
+    end
+
+    def releases( config )
+      respository_policy( :releases=, config )
+    end
+
+    def snapshots( config )
+      respository_policy( :snapshots=, config )
+    end
+
+    def respository_policy( method, config )
+      rp = RepositoryPolicy.new
       case config
       when Hash
         rp.enabled = snapshot[ :enabled ]
         rp.update_policy = snapshot[ :update ]
         rp.checksum_policy = snapshot[ :checksum ]
-        rp
       when TrueClass
         rp.enabled = true
-        rp
+      when FalseClass
+        rp.enabled = false
       else
-        nil
+        rp.enabled = 'true' == config
       end
+      @current.send( method, rp )
     end
 
     def inherit( *value )
@@ -356,20 +386,21 @@ module Tesla
       end
     end
 
-    def do_repository( method, url, options = {} )
+    def do_repository( method, url, options = {}, block )
       if @current.respond_to?( method )
         r = DeploymentRepository.new
       else
         r = Repository.new
       end
-      if config = ( options.delete( :snapshot ) ||
-                    options.delete( 'snapshot' ) )
-        r.snapshot( repository_policy( config ) )
-      end
-      if config = ( options.delete( :release ) ||
-                    options.delete( 'release' ) )
-        r.snapshot( repository_policy( config ) )
-      end
+      # if config = ( options.delete( :snapshot ) ||
+      #               options.delete( 'snapshot' ) )
+      #   r.snapshot( repository_policy( config ) )
+      # end
+      # if config = ( options.delete( :release ) ||
+      #               options.delete( 'release' ) )
+      #   r.snapshot( repository_policy( config ) )
+      # end
+      nested_block( :repository, r, block ) if block
       fill_options( r, url, options )
       if @current.respond_to?( method )
         @current.send method, r
@@ -434,8 +465,13 @@ module Tesla
           child = Xpp3Dom.new(k.to_s)
           fill_dom(child, v)
         when Array
-          node = Xpp3Dom.new( k.to_s )
-          name = k.to_s.sub( /s$/, '' )
+          if k.to_s.match( /s$/ )
+            node = Xpp3Dom.new( k.to_s )
+            name = k.to_s.sub( /s$/, '' )
+          else
+            node = parent
+            name = k.to_s
+          end
           v.each do |val|
             child = Xpp3Dom.new( name )
             case val
@@ -449,7 +485,7 @@ module Tesla
               node.addChild( child )
             end
           end
-          parent.addChild( node )
+          parent.addChild( node ) if node != parent
           child = nil
         else
           case k.to_s
@@ -457,7 +493,7 @@ module Tesla
             parent.setAttribute( k.to_s[ 1..-1 ], v.to_s )
           else
             child = Xpp3Dom.new(k.to_s)
-            child.setValue(v.to_s)
+            child.setValue(v.to_s) if v
           end
         end
         parent.addChild(child) if child

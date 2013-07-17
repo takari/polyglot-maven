@@ -8,8 +8,9 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
-import org.codehaus.plexus.util.xml.Xpp3DomUtils;
+import org.sonatype.maven.polyglot.ruby.Xpp3Visitor.Config;
+import org.sonatype.maven.polyglot.ruby.Xpp3Visitor.ListItem;
+import org.sonatype.maven.polyglot.ruby.Xpp3Visitor.Node;
 
 class RubyPrintWriter extends PrintWriter {
 
@@ -34,7 +35,7 @@ class RubyPrintWriter extends PrintWriter {
     }
 
     void print(String name, String... values) {
-        if (values.length == 1 && values[0] == null) {
+        if ( values.length == 1 && values[0] == null) {
             return;
         }
         append( current ).append( name ).append( " " );
@@ -62,18 +63,29 @@ class RubyPrintWriter extends PrintWriter {
     }
 
     void println(String name, String... values) {
-        if (values.length == 1 && values[0] == null) {
+        if ( values.length == 1 && values[0] == null )
+        {
             return;
         }
-        print(name, values);
+        print( name, values );
         println();
     }
 
-    void printWithOptions( String prefix, Map<String, Object> options, String... args){
-        printWithOptions( prefix, options, null, args);
+    void printWithOptions( String prefix, Map<String, Object> options, String... args ){
+        printWithOptions( prefix, options, null, args );
     }
 
-    void printWithOptions( String prefix, Map<String, Object> options, Object config, String... args){
+    void printWithOptions( String prefix, Map<String, Object> options, boolean newLine, String... args ){
+        printWithOptions( prefix, options, null, newLine, args );
+    }
+
+    void printWithOptions( String prefix, Map<String, Object> options, Object config, String... args)
+    {
+        printWithOptions( prefix, options, config, true, args );
+    }
+
+    void printWithOptions( String prefix, Map<String, Object> options, Object config, boolean newLine, String... args)
+        {
         if ( !options.isEmpty() || config != null )
         {
             prefix += "(";
@@ -103,11 +115,18 @@ class RubyPrintWriter extends PrintWriter {
             if ( config != null )
             {
                 printConfiguration( indent, config );
-                println();
+                if (newLine )
+                {
+                    println();
+                }
             }
             else
             {
-                append( " )" ).println();
+                append( " )" );
+                if (newLine )
+                {
+                    println();
+                }
             }
         }
         else
@@ -122,13 +141,15 @@ class RubyPrintWriter extends PrintWriter {
             if (configuration.getChildCount() != 0) {
                 append(",");
                 println();
-                printHashConfig( indent, configuration );
+                Xpp3Visitor visitor = new Xpp3Visitor();
+                visitor.visit( new Node( configuration ) );
+                printHashConfig( indent, visitor.children );
             }
             append( " )");
         }
     }
 
-    void printHashConfig(String indent, Xpp3Dom base) {
+    void printHashConfig(String indent, Map<String, Object> base) {
         printHashConfig( indent, base, false );
     }
 
@@ -145,10 +166,10 @@ class RubyPrintWriter extends PrintWriter {
         return this;
     }
 
-    void printHashConfig(String indent, Xpp3Dom base, boolean skipFirst ) {
-        int count = base.getChildCount();
+    @SuppressWarnings( "unchecked" )
+    void printHashConfig(String indent, Map<String, Object> base, boolean skipFirst ) {
         boolean first = true;
-        for( String name: base.getAttributeNames() )
+        for( Map.Entry<String, Object> entry: base.entrySet() )
         {
             if ( first )
             {
@@ -163,78 +184,100 @@ class RubyPrintWriter extends PrintWriter {
                 append( "," ).println();
                 print( indent );
             }
-            append( "'@" ).append( name ).append( "' => '" ).append( base.getAttribute( name ).replaceAll( "'", "\\\\'" ) ).append(  "'" );
-        }
-        if ( base.getAttributeNames().length > 0 && count > 0 )
-        {
-            append( "," ).println();
-            print( indent );
-            skipFirst = true;
-        }
-        for (int j = 0; j < count; j++)
-        {
-            Xpp3Dom c = base.getChild(j);
-            if ( j != 0 || !skipFirst )
+            if ( entry.getValue() instanceof Config )
             {
-                print(indent);
-            }
-            if ( c.getChildCount() > 0 || c.getAttributeNames().length > 0 )
-            {
-                if ( ( c.getChildCount() > 1 && c.getChild(0).getName().equals( c.getChild(1).getName() ) )
-                    || ( c.getChildCount() == 1 &&  c.getName().equals( c.getChild(0).getName() + "s" ) ) )
+                Config config = (Config) entry.getValue();
+                if ( config.hasValue() )
                 {
-                    appendName( c.getName() ).append( " => [" );
-                    printListConfig(indent + "    " + c.getName().replaceAll( ".", " " ), c);
-                    append( " ]");
+                    append( "'" ).append( entry.getKey() ).append( "' => " );
+                    if ( config.getValue() != null )
+                    {
+                        append( " '" ).append( config.getValue() ).append( "'" );
+                    }
+                    else
+                    {
+                        append( "nil" );
+                    }
                 }
-                else
+                else if (config.stringList != null )
                 {
-                  appendName( c.getName() ).append( " => {").println();
-                  printHashConfig( indent + INDENT, c );
-                  println();
-                  print( indent );
-                  append( "}");
+                    append( "'" ).append( entry.getKey() ).append( "' => [" );
+                    String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                    int count = config.stringList.size();
+                    for (int j = 0; j < count; )
+                    {
+                        String c = config.stringList.get(j);
+                        if ( c != null )
+                        {
+                            append( " '" ).append( c ).append( "'" );
+                        }
+                        else
+                        {
+                            append( "nil" );
+                        }
+                        if( ++j < count )
+                        {
+                            append( "," );
+                            println();
+                            print( ind );
+                        }
+                    }
+                    append( " ]" );
                 }
-            }
-            else if ( c.getValue() == null )
-            {
-                // assume empty is a boolean like <ignore />
-                appendName( c.getName() ).append( " => true");
+                else if (config.list != null )
+                {
+                    append( "'" ).append( entry.getKey() ).append( "' => [" );
+                    String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                    int count = config.list.size();
+                    for (int j = 0; j < count; )
+                    {
+                        ListItem c = config.list.get(j);
+                        if ( c.isXml() )
+                        {
+                            append( " xml( '" ).append( c.xml ).append( "' )" );
+                        }
+                        else
+                        {
+                            append( " '" ).append( c.value ).append( "'" );
+                        }
+                        if( ++j < count )
+                        {
+                            append( "," );
+                            println();
+                            print( ind );
+                        }
+                    }
+                    append( " ]" );
+                }
+                else if (config.mapList != null )
+                {
+                    append( "'" ).append( entry.getKey() ).append( "' => [" );
+                    String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                    int count = config.mapList.size();
+                    for (int j = 0; j < count; )
+                    {
+                        Map<String, Object> c = config.mapList.get(j);
+                        append( " { " );
+                        printHashConfig( " " + ind + INDENT, c, true );
+                        append( " }" );
+                        if( ++j < count )
+                        {
+                            append( "," );
+                            println();
+                            print( ind );
+                        }
+                    }
+                    append( " ]" );
+                }
             }
             else
             {
-                appendName( c.getName() ).append( " => '" ).append( c.getValue() ).append(  "'" );
-            }
-            if (j + 1 != count) {
-                append(",").println();
-            }
-        }
-    }
-
-    void printListConfig( String indent, Xpp3Dom base ) {
-        int count = base.getChildCount();
-        for (int j = 0; j < count; ) {
-            Xpp3Dom c = base.getChild(j);
-            if ( c.getValue() != null )
-            {
-                append( " '" ).append( c.getValue() ).append( "'" );
-            }
-            else if ( c.getChildCount() == 0 )
-            {
-                append( " xml( '" ).append( c.toString().replaceFirst( "<?.*?>\\s*", "" ) ).append( "' )" );
-            }
-            else
-            {
-                append( " { ");
-                printHashConfig( "   " + indent + INDENT, c, true );
-                append( " }");
-            }
-            if( ++j < count )
-            {
-                append(",");
+                append( "'" ).append( entry.getKey() ).append( "' => {" ).println();
+                printHashConfig( indent + INDENT,
+                                 (Map<String, Object>) entry.getValue(), false );
                 println();
                 print( indent );
-                append( "  ");
+                append( "}" );
             }
         }
     }
@@ -243,14 +286,15 @@ class RubyPrintWriter extends PrintWriter {
         print(name);
         printStartBlock();
     }
+
     void printStartBlock(String name, String... values) {
         printStartBlock( name, null, values );
     }
 
-    private void printStartBlock(String name, Map<String, Object> options, String... values) {
+    void printStartBlock(String name, Map<String, Object> options, String... values) {
         if ( options != null )
         {
-            printWithOptions( name, options, values );
+            printWithOptions( name, options, false, values );
         }
         else
         {
