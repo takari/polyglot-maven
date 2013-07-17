@@ -167,6 +167,10 @@ module Tesla
       do_repository( :repository=, url, options, block )
     end
 
+    def plugin_repository( url, options = {}, &block )
+      do_repository( :plugin, url, options, block )
+    end
+
     def snapshot_repository( url, options = {}, &block )
       do_repository( :snapshot_repository=, url, options, block )
     end
@@ -348,6 +352,10 @@ module Tesla
       nested_block( :reporting, reporting, block )
     end
 
+    def gem( *args )
+      dependency( :gem, *args )
+    end
+
     def method_missing(method, *args, &block)
       if @context
         m = "#{method}=".to_sym
@@ -361,7 +369,7 @@ module Tesla
           if args.size > 0 &&
               args[0].is_a?(String) &&
               args[0] =~ /\w+:\w+/
-            dependency(method, *args )
+            dependency( method, *args )
           else
             p @context
             p m
@@ -402,10 +410,15 @@ module Tesla
       # end
       nested_block( :repository, r, block ) if block
       fill_options( r, url, options )
-      if @current.respond_to?( method )
-        @current.send method, r
+      case method
+      when :plugin
+          @current.plugin_repositories << r
       else
-        @current.repositories << r
+        if @current.respond_to?( method )
+          @current.send method, r
+        else
+          @current.repositories << r
+        end
       end
     end
 

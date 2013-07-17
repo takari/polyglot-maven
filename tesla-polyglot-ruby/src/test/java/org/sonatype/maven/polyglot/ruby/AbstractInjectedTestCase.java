@@ -63,26 +63,31 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	}
 
 	private void assertRoundtrip( Model xmlModel, Model rubyModel, boolean debug )
-			throws IOException {
+			throws IOException
+	{
 		MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
 	    StringWriter ruby = new StringWriter();
 	    xmlWriter.write(ruby, rubyModel);
 	    StringWriter xml = new StringWriter();
 	    xmlWriter.write(xml, xmlModel);
 	    
-	    if ( debug ) {
+	    if ( debug )
+	    {
 	    	// Let's take a look at see what's there
 	    	System.out.println(xml.toString());
             //System.out.println(ruby.toString());
 	    }
 	    
-	    assertEquals( simplify( xml ), simplify( ruby ) );
+	    assertEquals( simplify( xml, debug ), simplify( ruby, debug ) );
 	}
 	
-	private String simplify(StringWriter xml) {
+	private String simplify( StringWriter xml, boolean debug )
+	{
 		String x = xml.toString().replaceAll( "\\s", "").replaceFirst("<\\?.*\\?>", "").replaceAll("<properties>.*?</properties>", "");
-//		        .replaceAll( "<ignore></ignore>", "<ignore/>" );
-        System.out.println(x);
+        if ( debug )
+        {
+            System.out.println(x);
+        }
 		return x;
 	}	
 }

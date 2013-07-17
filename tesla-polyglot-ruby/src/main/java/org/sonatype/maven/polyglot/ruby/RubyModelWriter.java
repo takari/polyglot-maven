@@ -29,6 +29,7 @@ import org.apache.maven.model.Activation;
 import org.apache.maven.model.ActivationFile;
 import org.apache.maven.model.ActivationOS;
 import org.apache.maven.model.ActivationProperty;
+import org.apache.maven.model.Build;
 import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.ConfigurationContainer;
 import org.apache.maven.model.Dependency;
@@ -227,7 +228,7 @@ public class RubyModelWriter extends ModelWriterSupport {
 
             managements( model.getDependencyManagement(), model.getBuild() );
 
-            build( model.getBuild() );
+            build( model.getBuild(), model.getBuild() );
 
             profiles( model.getProfiles() );
 
@@ -401,10 +402,19 @@ public class RubyModelWriter extends ModelWriterSupport {
         }
 
         void build( BuildBase build ) {
+            build( build, null );
+        }
+
+        void build( BuildBase build, Build b ) {
             if ( build != null ) {
                 plugins( build.getPlugins() );
                 if ( build.getDefaultGoal() != null ||
                         build.getDirectory() != null ||
+                        ( b != null && (
+                            b.getOutputDirectory() != null ||
+                            b.getTestOutputDirectory() != null ||
+                            b.getSourceDirectory() != null ||
+                            b.getTestSourceDirectory() != null ) ) ||
                         build.getFinalName() != null ||
                         build.getResources().size() > 0 ||
                         build.getTestResources().size() > 0 ){
@@ -417,6 +427,25 @@ public class RubyModelWriter extends ModelWriterSupport {
                     if (build.getDirectory() != null )
                     {
                         p.println( "directory", build.getDirectory() );
+                    }
+                    if ( b != null )
+                    {
+                        if (b.getOutputDirectory() != null )
+                        {
+                            p.println( "output_directory", b.getOutputDirectory() );
+                        }
+                        if (b.getTestOutputDirectory() != null )
+                        {
+                            p.println( "test_output_directory", b.getTestOutputDirectory() );
+                        }
+                        if (b.getSourceDirectory() != null )
+                        {
+                            p.println( "source", b.getSourceDirectory() );
+                        }
+                        if (b.getTestSourceDirectory() != null )
+                        {
+                            p.println( "test_source_directory", b.getTestSourceDirectory() );
+                        }
                     }
                     if ( build.getFinalName() != null )
                     {
@@ -589,7 +618,7 @@ public class RubyModelWriter extends ModelWriterSupport {
                     }
                     options.put( "exclusions",  exclusions );
                 }
-                final String prefix = options.size() == 0 ? "jar " : "jar( ";
+                final String prefix = options.size() == 0 ? d.getType() + " " : d.getType() + "( ";
                 final String indent = prefix.replaceAll( ".", " " );
 
                 p.print( prefix );

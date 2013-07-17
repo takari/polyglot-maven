@@ -16,11 +16,15 @@ public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
   }
 
   public void testJRubyParentPom() throws Exception {
-	  assertRoundtrip( "jruby-parent-pom.xml", false );
+      assertRoundtrip( "jruby-parent-pom.xml", false );
+  }
+  
+  public void testJRubyTestPom() throws Exception {
+      assertRoundtrip( "jruby-test-pom.xml", false );
   }
   
   public void testMavenParentPom() throws Exception {
-      assertRoundtrip( "maven-parent-pom.xml", true );
+      assertRoundtrip( "maven-parent-pom.xml", false );
   }
 
 }
