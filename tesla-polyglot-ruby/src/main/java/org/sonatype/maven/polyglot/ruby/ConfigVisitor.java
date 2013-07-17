@@ -7,21 +7,22 @@ import java.util.Map;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
-class Xpp3Visitor
+class ConfigVisitor
 {
-    Map<String, Object> children = new LinkedHashMap<String, Object>();
+    final Config config = new Config();
 
     static class Config
     {
         static enum Type {
-            SINGLE, MULTI, MIXED, MAPS
+            SINGLE, MULTI, MIXED, MAPS, MAP
         }
 
         Type type;
         String value;
         List<String> stringList;
         List<ListItem> list;
-        List<Map<String, Object>> mapList;
+        List<Map<String, Config>> mapList;
+        Map<String, Config> map;
 
         void add( String value )
         {
@@ -61,14 +62,43 @@ class Xpp3Visitor
             }
         }
 
-        void add( Map<String, Object> map )
+        void add( Map<String, Config> map )
         {
             if ( this.mapList == null )
             {
                 this.type = Type.MAPS;
-                this.mapList = new LinkedList<Map<String, Object>>();
+                this.mapList = new LinkedList<Map<String, Config>>();
             }
             this.mapList.add( map );
+        }
+
+        void put( String name, Config config )
+        {
+            if ( this.map == null )
+            {
+                this.type = Type.MAP;
+                this.map = new LinkedHashMap<String, Config>();
+            }
+            this.map.put(  name, config );
+        }
+
+        Config get( String name )
+        {
+            if ( this.map == null )
+            {
+                this.type = Type.MAP;
+                this.map = new LinkedHashMap<String, Config>();
+            }
+            if ( this.map.containsKey( name ) )
+            {
+                return (Config) this.map.get(  name );
+            }
+            else
+            {
+                Config config = new Config();
+                this.map.put( name, config );
+                return config;
+            }
         }
     }
     static class Leaf
@@ -81,19 +111,9 @@ class Xpp3Visitor
             this.value = value;
         }
 
-        void accept( Xpp3Visitor visitor )
+        void accept( ConfigVisitor visitor )
         {
-            final Config list ;
-            if ( !visitor.children.containsKey( name ) )
-            {
-                list = new Config();
-                visitor.children.put( name, list );
-            }
-            else
-            {
-                list = (Config) visitor.children.get( name );
-            }
-            list.add( value );
+            visitor.config.get( name ).add( value );
         }
     }
 
@@ -104,11 +124,11 @@ class Xpp3Visitor
         {
             this.base = base;
         }
-        void accept( Xpp3Visitor visitor )
+        void accept( ConfigVisitor visitor )
         {
-            Xpp3Visitor nextVisitor = new Xpp3Visitor();
+            ConfigVisitor nextVisitor = new ConfigVisitor();
             nextVisitor.visit( this );
-            visitor.children.put( base.getName(), nextVisitor.children );
+            visitor.config.put( base.getName(), nextVisitor.config );
         }
     }
 
@@ -147,7 +167,7 @@ class Xpp3Visitor
             super( base );
         }
 
-        void accept( Xpp3Visitor visitor )
+        void accept( ConfigVisitor visitor )
         {
             if ( base.getChild( 0 ).getChildCount() == 0 )
             {
@@ -156,18 +176,18 @@ class Xpp3Visitor
                 {
                     list.add( child );
                 }
-                visitor.children.put( base.getName(), list );
+                visitor.config.put( base.getName(), list );
             }
             else
             {
                 Config list = new Config();
                 for( Xpp3Dom child : base.getChildren() )
                 {
-                    Xpp3Visitor nextVisitor = new Xpp3Visitor();
+                    ConfigVisitor nextVisitor = new ConfigVisitor();
                     nextVisitor.visit( new Node( child ) );
-                    list.add(  nextVisitor.children );
+                    list.add(  nextVisitor.config.map );
                 }
-                visitor.children.put( base.getName(), list );
+                visitor.config.put( base.getName(), list );
             }
         }
     }

@@ -8,9 +8,9 @@ import java.io.Writer;
 import java.util.Map;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.sonatype.maven.polyglot.ruby.Xpp3Visitor.Config;
-import org.sonatype.maven.polyglot.ruby.Xpp3Visitor.ListItem;
-import org.sonatype.maven.polyglot.ruby.Xpp3Visitor.Node;
+import org.sonatype.maven.polyglot.ruby.ConfigVisitor.Config;
+import org.sonatype.maven.polyglot.ruby.ConfigVisitor.ListItem;
+import org.sonatype.maven.polyglot.ruby.ConfigVisitor.Node;
 
 class RubyPrintWriter extends PrintWriter {
 
@@ -141,15 +141,15 @@ class RubyPrintWriter extends PrintWriter {
             if (configuration.getChildCount() != 0) {
                 append(",");
                 println();
-                Xpp3Visitor visitor = new Xpp3Visitor();
+                ConfigVisitor visitor = new ConfigVisitor();
                 visitor.visit( new Node( configuration ) );
-                printHashConfig( indent, visitor.children );
+                printHashConfig( indent, visitor.config.map );
             }
             append( " )");
         }
     }
 
-    void printHashConfig(String indent, Map<String, Object> base) {
+    void printHashConfig(String indent, Map<String, Config> base) {
         printHashConfig( indent, base, false );
     }
 
@@ -166,10 +166,9 @@ class RubyPrintWriter extends PrintWriter {
         return this;
     }
 
-    @SuppressWarnings( "unchecked" )
-    void printHashConfig(String indent, Map<String, Object> base, boolean skipFirst ) {
+    void printHashConfig(String indent, Map<String, Config> base, boolean skipFirst ) {
         boolean first = true;
-        for( Map.Entry<String, Object> entry: base.entrySet() )
+        for( Map.Entry<String, Config> entry: base.entrySet() )
         {
             if ( first )
             {
@@ -184,99 +183,96 @@ class RubyPrintWriter extends PrintWriter {
                 append( "," ).println();
                 print( indent );
             }
-            if ( entry.getValue() instanceof Config )
+            Config config = entry.getValue();
+            switch ( config.type )
             {
-                Config config = (Config) entry.getValue();
-                switch ( config.type )
+            case SINGLE:
+                append( "'" ).append( entry.getKey() ).append( "' => " );
+                if ( config.value != null )
                 {
-                case SINGLE:
-                    append( "'" ).append( entry.getKey() ).append( "' => " );
-                    if ( config.value != null )
+                    append( " '" ).append( config.value ).append( "'" );
+                }
+                else
+                {
+                    append( "nil" );
+                }
+                break;
+            case MULTI:
+                append( "'" ).append( entry.getKey() ).append( "' => [" );
+                String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                int count = config.stringList.size();
+                for (int j = 0; j < count; )
+                {
+                    String c = config.stringList.get(j);
+                    if ( c != null )
                     {
-                        append( " '" ).append( config.value ).append( "'" );
+                        append( " '" ).append( c ).append( "'" );
                     }
                     else
                     {
                         append( "nil" );
                     }
-                    break;
-                case MULTI:
-                    append( "'" ).append( entry.getKey() ).append( "' => [" );
-                    String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
-                    int count = config.stringList.size();
-                    for (int j = 0; j < count; )
+                    if( ++j < count )
                     {
-                        String c = config.stringList.get(j);
-                        if ( c != null )
-                        {
-                            append( " '" ).append( c ).append( "'" );
-                        }
-                        else
-                        {
-                            append( "nil" );
-                        }
-                        if( ++j < count )
-                        {
-                            append( "," );
-                            println();
-                            print( ind );
-                        }
+                        append( "," );
+                        println();
+                        print( ind );
                     }
-                    append( " ]" );
-                    break;
-                case MIXED:
-                    append( "'" ).append( entry.getKey() ).append( "' => [" );
-                    ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
-                    count = config.list.size();
-                    for (int j = 0; j < count; )
-                    {
-                        ListItem c = config.list.get(j);
-                        if ( c.isXml() )
-                        {
-                            append( " xml( '" ).append( c.xml ).append( "' )" );
-                        }
-                        else
-                        {
-                            append( " '" ).append( c.value ).append( "'" );
-                        }
-                        if( ++j < count )
-                        {
-                            append( "," );
-                            println();
-                            print( ind );
-                        }
-                    }
-                    append( " ]" );
-                    break;
-                case MAPS:
-                    append( "'" ).append( entry.getKey() ).append( "' => [" );
-                    ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
-                    count = config.mapList.size();
-                    for (int j = 0; j < count; )
-                    {
-                        Map<String, Object> c = config.mapList.get(j);
-                        append( " { " );
-                        printHashConfig( " " + ind + INDENT, c, true );
-                        append( " }" );
-                        if( ++j < count )
-                        {
-                            append( "," );
-                            println();
-                            print( ind );
-                        }
-                    }
-                    append( " ]" );
-                default:
                 }
-            }
-            else
-            {
+                append( " ]" );
+                break;
+            case MIXED:
+                append( "'" ).append( entry.getKey() ).append( "' => [" );
+                ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                count = config.list.size();
+                for (int j = 0; j < count; )
+                {
+                    ListItem c = config.list.get(j);
+                    if ( c.isXml() )
+                    {
+                        append( " xml( '" ).append( c.xml ).append( "' )" );
+                    }
+                    else
+                    {
+                        append( " '" ).append( c.value ).append( "'" );
+                    }
+                    if( ++j < count )
+                    {
+                        append( "," );
+                        println();
+                        print( ind );
+                    }
+                }
+                append( " ]" );
+                break;
+            case MAPS:
+                append( "'" ).append( entry.getKey() ).append( "' => [" );
+                ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                count = config.mapList.size();
+                for (int j = 0; j < count; )
+                {
+                    Map<String, Config> c = config.mapList.get(j);
+                    append( " { " );
+                    printHashConfig( " " + ind + INDENT, c, true );
+                    append( " }" );
+                    if( ++j < count )
+                    {
+                        append( "," );
+                        println();
+                        print( ind );
+                    }
+                }
+                append( " ]" );
+                break;
+            case MAP:
                 append( "'" ).append( entry.getKey() ).append( "' => {" ).println();
                 printHashConfig( indent + INDENT,
-                                 (Map<String, Object>) entry.getValue(), false );
+                                 entry.getValue().map, false );
                 println();
                 print( indent );
                 append( "}" );
+                break;
+            default:
             }
         }
     }
