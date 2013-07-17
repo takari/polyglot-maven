@@ -187,20 +187,20 @@ class RubyPrintWriter extends PrintWriter {
             if ( entry.getValue() instanceof Config )
             {
                 Config config = (Config) entry.getValue();
-                if ( config.hasValue() )
+                switch ( config.type )
                 {
+                case SINGLE:
                     append( "'" ).append( entry.getKey() ).append( "' => " );
-                    if ( config.getValue() != null )
+                    if ( config.value != null )
                     {
-                        append( " '" ).append( config.getValue() ).append( "'" );
+                        append( " '" ).append( config.value ).append( "'" );
                     }
                     else
                     {
                         append( "nil" );
                     }
-                }
-                else if (config.stringList != null )
-                {
+                    break;
+                case MULTI:
                     append( "'" ).append( entry.getKey() ).append( "' => [" );
                     String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
                     int count = config.stringList.size();
@@ -223,12 +223,11 @@ class RubyPrintWriter extends PrintWriter {
                         }
                     }
                     append( " ]" );
-                }
-                else if (config.list != null )
-                {
+                    break;
+                case MIXED:
                     append( "'" ).append( entry.getKey() ).append( "' => [" );
-                    String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
-                    int count = config.list.size();
+                    ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                    count = config.list.size();
                     for (int j = 0; j < count; )
                     {
                         ListItem c = config.list.get(j);
@@ -248,12 +247,11 @@ class RubyPrintWriter extends PrintWriter {
                         }
                     }
                     append( " ]" );
-                }
-                else if (config.mapList != null )
-                {
+                    break;
+                case MAPS:
                     append( "'" ).append( entry.getKey() ).append( "' => [" );
-                    String ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
-                    int count = config.mapList.size();
+                    ind = indent + "       " + entry.getKey().replaceAll( ".", " " );
+                    count = config.mapList.size();
                     for (int j = 0; j < count; )
                     {
                         Map<String, Object> c = config.mapList.get(j);
@@ -268,6 +266,7 @@ class RubyPrintWriter extends PrintWriter {
                         }
                     }
                     append( " ]" );
+                default:
                 }
             }
             else

@@ -13,31 +13,34 @@ class Xpp3Visitor
 
     static class Config
     {
+        static enum Type {
+            SINGLE, MULTI, MIXED, MAPS
+        }
+
+        Type type;
+        String value;
         List<String> stringList;
         List<ListItem> list;
         List<Map<String, Object>> mapList;
 
         void add( String value )
         {
-            if ( this.stringList == null )
+            if ( stringList != null )
             {
-                this.stringList = new LinkedList<String>();
+                this.stringList.add( value );
             }
-            this.stringList.add( value );
-        }
-
-        boolean hasValue()
-        {
-            return stringList != null && stringList.size() < 2;
-        }
-
-        String getValue()
-        {
-            switch( this.stringList.size() )
+            else if ( this.value == null )
             {
-                case 0: return "";
-                case 1: return stringList.get(  0  );
-                default: return null;
+                this.type = Type.SINGLE;
+                this.value = value;
+            }
+            else
+            {
+                this.type = Type.MULTI;
+                this.stringList = new LinkedList<String>();
+                this.stringList.add( this.value );
+                this.stringList.add( value );
+                this.value = null;
             }
         }
 
@@ -45,6 +48,7 @@ class Xpp3Visitor
         {
             if ( this.list == null )
             {
+                this.type = Type.MIXED;
                 this.list = new LinkedList<ListItem>();
             }
             if ( item.getValue() == null )
@@ -61,6 +65,7 @@ class Xpp3Visitor
         {
             if ( this.mapList == null )
             {
+                this.type = Type.MAPS;
                 this.mapList = new LinkedList<Map<String, Object>>();
             }
             this.mapList.add( map );
