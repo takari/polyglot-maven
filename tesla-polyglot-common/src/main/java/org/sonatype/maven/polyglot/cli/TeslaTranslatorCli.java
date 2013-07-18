@@ -39,7 +39,7 @@ public class TeslaTranslatorCli {
     ContainerConfiguration cc = new DefaultContainerConfiguration()
       .setClassWorld(classWorld)
       .setName("translator");
-    
+
     container = new DefaultPlexusContainer(cc);
     translator = container.lookup(TeslaModelTranslator.class);
   }

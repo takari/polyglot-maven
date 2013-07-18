@@ -44,7 +44,7 @@ public class ExecuteManagerImpl
 {
     @Requirement
     protected Logger log;
-    
+
     private final Map<String,List<ExecuteTask>> modelTasks = new HashMap<String,List<ExecuteTask>>();
 
     public void register(final Model model, final List<ExecuteTask> tasks) {
@@ -65,7 +65,7 @@ public class ExecuteManagerImpl
         assert model != null;
 
         List<ExecuteTask> tasks = modelTasks.get(model.getId());
-        
+
         if (tasks == null) {
             return Collections.emptyList();
         }
@@ -80,7 +80,7 @@ public class ExecuteManagerImpl
         if (tasks.isEmpty()) {
             return;
         }
-        
+
         if (log.isDebugEnabled()) {
             log.debug("Registering tasks for: " + model.getId());
         }

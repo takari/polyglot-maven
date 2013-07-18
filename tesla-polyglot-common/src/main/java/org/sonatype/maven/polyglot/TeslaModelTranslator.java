@@ -39,9 +39,9 @@ import java.util.Map;
 
 /**
  * Translates between polyglot model formats.
- * 
+ *
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * 
+ *
  * @since 0.7
  */
 @Component(role = TeslaModelTranslator.class)

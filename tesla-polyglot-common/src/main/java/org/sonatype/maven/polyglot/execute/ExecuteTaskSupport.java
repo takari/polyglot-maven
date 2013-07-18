@@ -20,7 +20,7 @@ package org.sonatype.maven.polyglot.execute;
  * Support for {@link ExecuteTask} implementations.
  *
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- * 
+ *
  * @since 0.7
  */
 public abstract class ExecuteTaskSupport

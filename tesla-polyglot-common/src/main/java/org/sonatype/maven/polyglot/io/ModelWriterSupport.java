@@ -57,5 +57,5 @@ public abstract class ModelWriterSupport
         assert model != null;
 
         write(new OutputStreamWriter(output), options, model);
-    }    
+    }
 }
