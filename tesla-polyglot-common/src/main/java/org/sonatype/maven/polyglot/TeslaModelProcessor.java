@@ -95,7 +95,7 @@ public class TeslaModelProcessor implements ModelProcessor {
         System.out.println( source.getLocation() );
 
         File pom = new File( source.getLocation() );
-        source =  new FileModelSource( new File( pom.getPath().replaceFirst( ".tesla.", "" ) ) );
+        source =  new FileModelSource( new File( pom.getPath().replaceFirst( "[.]tesla[.]", "" ) ) );
 
         ((Map)options).put( ModelProcessor.SOURCE, source );
 
