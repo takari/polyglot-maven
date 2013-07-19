@@ -27,4 +27,8 @@ public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
       assertRoundtrip( "maven-parent-pom.xml", false );
   }
 
+  public void testJrubyOsgiTestPom() throws Exception {
+      assertRoundtrip( "jruby-osgi-test-pom.xml", true );
+  }
+
 }

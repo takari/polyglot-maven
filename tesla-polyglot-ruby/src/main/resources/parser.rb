@@ -368,11 +368,12 @@ module Tesla
         else
           if args.size > 0 &&
               args[0].is_a?(String) &&
-              args[0] =~ /\w+:\w+/
+              args[0] =~ /^[${}0-9a-zA-Z._-]+(:[${}0-9a-zA-Z._-]+)+$/
             dependency( method, *args )
           else
             p @context
             p m
+            p args
           end
         end
       else
