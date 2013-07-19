@@ -16,6 +16,10 @@
 
 package org.sonatype.maven.polyglot.mapping;
 
+import java.util.Map;
+
+import org.apache.maven.model.building.ModelProcessor;
+import org.apache.maven.model.building.StringModelSource;
 import org.codehaus.plexus.component.annotations.Component;
 
 /**
@@ -34,5 +38,15 @@ public class XmlMapping
         setPomNames("pom.xml");
         setAcceptLocationExtensions(".xml", ".pom");
         setAcceptOptionKeys("xml:4.0.0");
+    }
+
+    @Override
+    public boolean accept( Map<String, ?> options )
+    {
+        // assume StringModelSource is default maven, i.e. xml
+        if (options != null && options.get( ModelProcessor.SOURCE ) instanceof StringModelSource  ){
+            return true;
+        }
+        return super.accept( options );
     }
 }
