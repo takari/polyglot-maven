@@ -54,7 +54,7 @@ public class TeslaModelProcessor implements ModelProcessor {
   public File locatePom(final File dir) {
     assert manager != null;
     File pomFile = manager.locatePom(dir);
-    if ( pomFile != null ){
+    if ( pomFile != null && !"pom.xml".equals( pomFile.getName() ) && ! pomFile.getName().endsWith( ".pom" ) ) {
         pomFile = new File( pomFile.getParentFile(), ".tesla." + pomFile.getName() );
         try
         {
@@ -87,7 +87,7 @@ public class TeslaModelProcessor implements ModelProcessor {
     return read(new InputStreamReader(input), options);
   }
 
-  @SuppressWarnings( "unchecked" )
+  @SuppressWarnings( { "unchecked", "rawtypes" } )
   public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
     assert manager != null;
     ModelSource source = (ModelSource) options.get( ModelProcessor.SOURCE );
