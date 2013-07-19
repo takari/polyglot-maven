@@ -28,7 +28,7 @@ public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
   }
 
   public void testJrubyOsgiTestPom() throws Exception {
-      assertRoundtrip( "jruby-osgi-test-pom.xml", true );
+      assertRoundtrip( "jruby-osgi-test-pom.xml", false );
   }
 
 }
