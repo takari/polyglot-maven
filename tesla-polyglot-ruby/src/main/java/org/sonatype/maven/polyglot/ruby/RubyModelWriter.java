@@ -440,7 +440,7 @@ public class RubyModelWriter extends ModelWriterSupport {
                         }
                         if (b.getSourceDirectory() != null )
                         {
-                            p.println( "source", b.getSourceDirectory() );
+                            p.println( "source_directory", b.getSourceDirectory() );
                         }
                         if (b.getTestSourceDirectory() != null )
                         {
