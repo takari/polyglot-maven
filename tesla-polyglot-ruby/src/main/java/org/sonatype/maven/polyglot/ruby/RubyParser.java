@@ -1,6 +1,7 @@
 package org.sonatype.maven.polyglot.ruby;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelSource;
@@ -28,7 +29,13 @@ public class RubyParser {
         // TODO something with that modelSource, i.e. when errors occurs
         this.executeManager = executeManager;
         this.jruby = new GemScriptingContainer();
-        this.parser = this.jruby.runScriptletFromClassloader("parser.rb");
+        InputStream script = getClass().getClassLoader().getResourceAsStream("parser.rb");
+        if ( script != null ){
+            this.parser = this.jruby.runScriptlet( script, "parser.rb");
+        }
+        else {
+            this.parser = this.jruby.runScriptletFromClassloader("parser.rb");
+        }
         this.factory = new RubyExecuteTaskFactory(jruby);
     }
 
@@ -38,7 +45,6 @@ public class RubyParser {
                     "parse",
                     new Object[] { ruby, this.factory },
                     Model.class );
-//        model.setModelVersion("4.0.0");
         executeManager.register( model, this.factory.getExecuteTasks() );
         executeManager.install( model );
         return model;
