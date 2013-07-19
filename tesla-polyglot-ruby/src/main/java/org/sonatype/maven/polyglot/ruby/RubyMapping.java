@@ -30,7 +30,7 @@ public class RubyMapping extends MappingSupport {
   public RubyMapping() {
     super("ruby");
     setPomNames("pom.rb", "Mavenfile");
-    setAcceptLocationExtensions(".rb");
+    setAcceptLocationExtensions(".rb", "Mavenfile");
     setAcceptOptionKeys("ruby:4.0.0");
     setPriority(1);
   }
