@@ -101,6 +101,7 @@
             <exclude>**/conf/**</exclude>
             <exclude>**/.*</exclude>
             <exclude>**/.idea/**</exclude>
+            <exclude>**/src/test/resources/*.scala</exclude>
           </excludes>
           <mapping>
             <scala>JAVADOC_STYLE</scala>
