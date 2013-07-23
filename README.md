@@ -33,9 +33,8 @@ After this completes, you can unzip and play with polyglot for maven:
     ./tesla-polyglot-*/bin/mvn
 
 Polyglot for Maven includes a copy of maven 3.1.0, which isn't 100% backwards compatible
-with maven 2.0. Specifically, some maven plugins might not work. Virtually all do however, so
-it is feasible to move the unzipped directory and put that pmaven-*/bin on your path either
-inplace of or before your existing mvn binary.
+with maven 2.0. Specifically, some maven plugins might not work. The Tesla Polyglot distribution is just
+like a normal Maven distribution and can be used like one.
 
 There is a translate command that will translate between different language's versions of pom.*
 (and in the case of Clojure, read (not write) Leiningen's project.clj). It works by looking at
