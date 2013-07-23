@@ -1,25 +1,25 @@
 Description
 -----------
 
-Sonatype [Polyglot for Maven](http://polyglot.sonatype.org/).
+[Polyglot for Tesla](http://github.com/tesla-polyglot/) is an experimental distribution of Maven that allows the expression of a POM in something other than XML (oh nooooo!). A couple of the dialects also have the capability to write plugins inline: the Groovy and Ruby dialects allow this.
 
 License
 -------
 
-[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+[EPL 1.0](http://www.eclipse.org/legal/epl-v10.html)
 
 Support
 -------
 
-To submit an issue, please use the [Sonatype Issue Tracker](https://issues.sonatype.org/browse/PMAVEN).
+To submit an issue, please use [Github Issues](https://github.com/tesla/tesla-polyglot/issues).
 
 Building
 --------
 
 ### Requirements
 
-* [Maven](http://maven.apache.org) 2+
-* [Java](http://java.sun.com/) 5+
+* [Maven](http://maven.apache.org) 3.1.0+
+* [Java](http://java.sun.com/) 6+
 
 Check-out and build:
 
@@ -33,14 +33,19 @@ After this completes, you can unzip and play with polyglot for maven:
     ./tesla-polyglot-*/bin/mvn
 
 Polyglot for Maven includes a copy of maven 3.1.0, which isn't 100% backwards compatible
-with maven 2.0. Specifically, some maven plugins might not work. Virtually all do however, so
-it is feasible to move the unzipped directory and put that pmaven-*/bin on your path either
-inplace of or before your existing mvn binary.
+with maven 2.0. Specifically, some maven plugins might not work. The Tesla Polyglot distribution is just
+like a normal Maven distribution and can be used like one.
 
-There is a translate command that will translate between different language's versions of pom.*
-(and in the case of Clojure, read (not write) Leiningen's project.clj). It works by looking at
-file extensions, so just give it a source and a destination file as arguments and it will translate
-between them.
+There is a translate command that will translate between a `pom.xml` and the other supported dialects. For example:
 
-You don't normally have to use translate - the mvn command can read any format the translate command can,
-either by reading any pom.* it can find or using a command line option e.g. mvn -f project.clj.
+```
+translate pom.xml pom.rb
+```
+
+or
+
+```
+translate pom.xml pom.groovy
+```
+
+The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. Also note that the whole interoperability story has not been worked out. A pom.xml will currently not be installed or deployed so use this at your own risk. It's fully functional but interoperability is not a priority right now. Getting out a minimal viable product (MVP) is in order to get feedback is.
