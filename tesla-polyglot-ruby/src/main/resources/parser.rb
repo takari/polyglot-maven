@@ -1,4 +1,6 @@
 require 'java'
+require 'maven/tools/gemspec_dependencies'
+require 'maven/tools/artifact'
 
 %w(
 org.apache.maven.model.Activation
@@ -12,6 +14,7 @@ org.apache.maven.model.DeploymentRepository
 org.apache.maven.model.DistributionManagement
 org.apache.maven.model.Developer
 org.apache.maven.model.Exclusion
+org.apache.maven.model.Extension
 org.apache.maven.model.IssueManagement
 org.apache.maven.model.MailingList
 org.apache.maven.model.Model
@@ -35,34 +38,121 @@ org.codehaus.plexus.util.xml.Xpp3DomBuilder
 module Tesla
   class Parser
 
-    def parse(pom, factory)
+    def parse( pom, factory )
       @factory = factory
-      result = eval(pom)
+
+      eval("tesla do\n#{pom}\nend")
+
       # keep no state for the execute blocks
+      result = @model
       @factory = nil
+      @model = nil
       result
     end
     private
 
     attr_reader :context
 
-    def build(&block)
+    def tesla( &block )
+      @model = Model.new
+      @model.model_version = '4.0.0'
+      @model.name = File.basename( File.expand_path( '.' ) )
+      @context = :project
+      nested_block( :project, @model, block )
+    end
+
+    def gemspec( name = nil, options = {} )
+      if name.is_a? Hash
+        options = name
+        name = nil
+      end
+      unless name
+        gemspecs = Dir[ "*.gemspec" ]
+        raise "more then one gemspec file found" if gemspecs.size > 1
+        raise "no gemspec file found" if gemspecs.size == 0
+        name = gemspecs.first
+      end
+      spec = eval( File.read( File.expand_path( name ) ) )
+
+      id "rubygems:#{spec.name}:#{spec.version}"
+      name( spec.summary || spec.name )
+      description spec.description
+      packaging 'gem'
+      url spec.homepage
+
+      repository( 'http://rubygems-proxy.torquebox.org/releases',
+                  :id => 'rubygems-releases' )
+
+      properties( 'jruby.plugins.version' => '1.0.0-beta-1-SNAPSHOT' )
+
+      extension 'de.saumya.mojo:gem-extension:${jruby.plugins.version}'
+
+      config = { :gemspec => name }
+      if options[ :include_dependencies ] || options[ 'include_dependencies' ] 
+        config[ :includeDependencies ] = true
+      end
+      plugin( 'de.saumya.mojo:gem-maven-plugin:${jruby.plugins.version}',
+              config )
+
+      deps = Maven::Tools::GemspecDependencies.new( spec )
+      deps.runtime.each do |d|
+        gem d
+      end
+      unless deps.development.empty?
+        scope :test do
+          deps.development.each do |d|
+            gem d
+          end          
+        end
+      end
+      unless deps.java_runtime.empty?
+        deps.java_runtime.each do |d|
+          a = Maven::Tools::Artifact.new( *d )
+          self.send a[:type].to_sym, a
+        end
+      end
+
+      if options.key?( :jar ) || options.key?( 'jar' )
+        jarpath = options[ :jar ] || options[ 'jar' ]
+        if jarpath
+          jar = File.basename( jarpath ).sub( /.jar$/, '' )
+          output = File.dirname( jarpath )
+        end
+      else
+        jar = "#{spec.name}"
+        output = 'lib'
+      end
+      if options.key?( :source ) || options.key?( 'source' )
+        source = options[ :source ] || options[ 'source' ]
+        build do
+          source_directory source
+        end
+      end
+      if jar && ( source || 
+                  File.exists?( File.join( 'src', 'main', 'java' ) ) )
+        plugin( :jar,
+                :outputDirectory => output,
+                :finalName => jar ) do
+          execute_goals :jar, :phase => 'prepare-package'
+        end
+      end
+
+    end
+
+    def build( &block )
       build = @current.build ||= Build.new
-      nested_block(:build, build, block) if block
+      nested_block( :build, build, block ) if block
     end
 
-    def execute(id, phase, &block)
-      @factory.add_execute_task(id.to_s, phase.to_s, block)
+    def execute( id, phase, &block )
+      @factory.add_execute_task( id.to_s, phase.to_s, block )
     end
 
-    def project(name, url = nil, &block)
-      model = Model.new
-      model.name = name
-      model.url = url if url
+    def project( name, url = nil, &block )
+      @model.name = name
+      @model.url = url
 
-      nested_block(:project, model, block)
-
-      model
+      nested_block(:project, @model, block)
     end
 
     def id(*value)
@@ -144,23 +234,31 @@ module Tesla
     end
 
     def includes( *items )
-      @current.includes = items
+      @current.includes = items.flatten
     end
 
     def excludes( *items )
-      @current.excludes = items
+      @current.excludes = items.flatten
     end
 
     def test_resource( &block )
       resource = Resource.new
       nested_block( :resource, resource, block )
-      @current.test_resources << resource
+      if @context == :project
+        ( @current.build ||= Build.new ).test_resources << resource
+      else
+        @current.test_resources << resource
+      end
     end
 
     def resource( &block )
       resource = Resource.new
       nested_block( :resource, resource, block )
-      @current.resources << resource
+      if @context == :project
+        ( @current.build ||= Build.new ).resources << resource
+      else
+        @current.resources << resource
+      end
     end
 
     def repository( url, options = {}, &block )
@@ -210,6 +308,13 @@ module Tesla
         @current.properties[k.to_s] = v.to_s
       end
       @current.properties
+    end
+
+    def extension( *gav )
+      @current.build ||= Build.new
+      gav = gav.join( ':' )
+      ext = fill_gav( Extension, gav)
+      @current.build.extensions << ext
     end
 
     def plugin( *gav, &block )
@@ -264,7 +369,7 @@ module Tesla
       else
         exec.phase = options.delete( :phase ) || options.delete( 'phase' )
       end
-      exec.goals = goals
+      exec.goals = goals.collect { |g| g.to_s }
       set_config( exec, options )
       @current.executions << exec
       # nested_block(:execution, exec, block) if block
@@ -272,7 +377,7 @@ module Tesla
     end
 
     def dependency( type, *args )
-      if args.size > 1 and args.last.is_a? Hash
+      if args.size > 0 and args.last.is_a?( Hash )
         options = args.last
         args = args[ 0..-2 ]
       end
@@ -304,7 +409,7 @@ module Tesla
           d.exclusions << fill_gav( Exclusion, exclusions )
         end
         options.each do |k,v|
-          d.send "#{k}=".to_sym, v
+          d.send( "#{k}=".to_sym, v ) unless d.send( k.to_sym )
         end
       end
       d
@@ -353,7 +458,7 @@ module Tesla
     end
 
     def gem( *args )
-      dependency( :gem, *args )
+      dependency( :gem, *args, :group_id => 'rubygems', :version => "[0,)" )
     end
 
     def method_missing(method, *args, &block)
@@ -366,9 +471,10 @@ module Tesla
           @current.send(m, *args)
           @current
         else
-          if args.size > 0 &&
-              args[0].is_a?(String) &&
-              args[0] =~ /^[${}0-9a-zA-Z._-]+(:[${}0-9a-zA-Z._-]+)+$/
+          if ( args.size > 0 &&
+               args[0].is_a?( String ) &&
+               args[0] =~ /^[${}0-9a-zA-Z._-]+(:[${}0-9a-zA-Z._-]+)+$/ ) ||
+             ( args.size == 1 && args[0].is_a?( Hash ) )
             dependency( method, *args )
           else
             p @context
@@ -457,6 +563,8 @@ module Tesla
         end
         gav = gav.split(':')
         case gav.size
+        when 0
+          # do nothing - will be filled later
         when 1
           receiver.artifact_id = gav[0]
         when 2
@@ -507,7 +615,7 @@ module Tesla
             parent.setAttribute( k.to_s[ 1..-1 ], v.to_s )
           else
             child = Xpp3Dom.new(k.to_s)
-            child.setValue(v.to_s) if v
+            child.setValue(v.to_s) unless v.nil?
           end
         end
         parent.addChild(child) if child
