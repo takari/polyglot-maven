@@ -48,4 +48,4 @@ or
 translate pom.xml pom.groovy
 ```
 
-The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. Also note that the whole interoperability story has not been worked out. A pom.xml will currently not be installed or deployed so use this at your own risk. It's fully functional but interoperability is not a priority right now. Getting out a minimal viable product (MVP) is in order to get feedback.
+The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. Also note that the whole interoperability story has not been worked out. A pom.xml will currently not be installed or deployed so use this at your own risk. It's fully functional but interoperability is not a priority right now. Getting out a minimal viable product (MVP) is in order to get feedback is.
