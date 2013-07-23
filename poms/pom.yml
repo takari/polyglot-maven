@@ -1,0 +1,41 @@
+modelVersion: 4.0.0
+parent: {artifactId: tesla, groupId: io.tesla, relativePath: ../pom.xml, version: '4'}
+groupId: io.tesla.polyglot
+artifactId: tesla-polyglot
+version: 0.0.1-SNAPSHOT
+packaging: pom
+name: 'Polyglot Tesla :: Aggregator'
+
+properties: {sisuInjectVersion: 0.0.0.M2a, teslaVersion: 3.1.0}
+
+build:
+  plugins:
+  - artifactId: plexus-component-metadata
+    executions:
+    - goals: [generate-metadata, generate-test-metadata]
+      id: default
+      inherited: true
+      priority: 0
+    extensions: false
+    groupId: org.codehaus.plexus
+    inherited: true
+    version: 1.5.4
+
+modules: [
+  tesla-polyglot-common, 
+  tesla-polyglot-atom, 
+  tesla-polyglot-ruby, 
+  tesla-polyglot-groovy,
+  tesla-polyglot-yaml, 
+  tesla-polyglot-clojure, 
+  tesla-polyglot-scala, 
+  tesla-polyglot-cli,
+  tesla-polyglot-maven-plugin]
+
+dependencyManagement:
+  dependencies:
+  - {artifactId: org.eclipse.sisu.inject, groupId: org.eclipse.sisu, optional: false, type: jar, version: '${sisuInjectVersion}'}
+  - {artifactId: org.eclipse.sisu.plexus, groupId: org.eclipse.sisu, optional: false, type: jar, version: '${sisuInjectVersion}'}
+  - {artifactId: maven-model-builder, groupId: org.apache.maven, optional: false, type: jar, version: 3.1.0}
+  - {artifactId: maven-embedder, groupId: org.apache.maven, optional: false, type: jar, version: 3.1.0}
+  - {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: '4.11'}
