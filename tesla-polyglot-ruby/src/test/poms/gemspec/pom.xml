@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>rubygems</groupId>
+  <artifactId>bouncy-castle-java</artifactId>
+  <version>1.5.0149</version>
+  <packaging>gem</packaging>
+  <name>Gem redistribution of Bouncy Castle jars</name>
+  <description>Gem redistribution of "Legion of the Bouncy Castle Java cryptography APIs" jars at http://www.bouncycastle.org/java.html</description>
+  <url>http://github.com/jruby/jruby/tree/master/gems/bouncy-castle-java/</url>
+  <properties>
+    <jruby.plugins.version>1.0.0-beta-1-SNAPSHOT</jruby.plugins.version>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>1.49</version>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.49</version>
+    </dependency>
+  </dependencies>
+  <repositories>
+    <repository>
+      <id>rubygems-releases</id>
+      <url>http://rubygems-proxy.torquebox.org/releases</url>
+    </repository>
+  </repositories>
+  <build>
+    <extensions>
+      <extension>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-extension</artifactId>
+        <version>${jruby.plugins.version}</version>
+      </extension>
+    </extensions>
+    <plugins>
+      <plugin>
+        <groupId>de.saumya.mojo</groupId>
+        <artifactId>gem-maven-plugin</artifactId>
+        <version>${jruby.plugins.version}</version>
+        <configuration>
+          <gemspec>bouncy-castle-java.gemspec</gemspec>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

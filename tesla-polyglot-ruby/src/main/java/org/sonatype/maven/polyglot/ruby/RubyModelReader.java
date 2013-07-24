@@ -16,6 +16,7 @@
 
 package org.sonatype.maven.polyglot.ruby;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -25,7 +26,6 @@ import java.util.Map;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.ModelSource;
-import org.apache.maven.model.building.UrlModelSource;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
@@ -53,16 +53,21 @@ public class RubyModelReader extends ModelReaderSupport {
         IOUtil.copy( input, ruby );
         // parse the String and create a POM model
         Object src = options.get( ModelProcessor.SOURCE );
-        final ModelSource source;
+        final File source;
         if ( src instanceof URL )
         {
-            source = new UrlModelSource( (URL) src );
+            source = new File( ( (URL) src ).getFile() );
+        }
+        else if( src != null )
+        {
+            ModelSource sm = (ModelSource) src;
+            source = new File(  sm.getLocation() );
         }
         else
         {
-            source = (ModelSource) src;
+            source = null;
         }
 
-        return new RubyParser( source, executeManager ).parse( ruby.toString() );
+        return new RubyParser( executeManager ).parse( ruby.toString(), source );
     }
 }

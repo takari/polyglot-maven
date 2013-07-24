@@ -1,4 +1,5 @@
 require 'java'
+require 'fileutils'
 require 'maven/tools/gemspec_dependencies'
 require 'maven/tools/artifact'
 
@@ -38,8 +39,9 @@ org.codehaus.plexus.util.xml.Xpp3DomBuilder
 module Tesla
   class Parser
 
-    def parse( pom, factory )
+    def parse( pom, factory, source )
       @factory = factory
+      @source = source
 
       eval("tesla do\n#{pom}\nend")
 
@@ -47,11 +49,12 @@ module Tesla
       result = @model
       @factory = nil
       @model = nil
+      @source = nil
       result
     end
     private
 
-    attr_reader :context
+    attr_reader :model
 
     def tesla( &block )
       @model = Model.new
@@ -66,13 +69,18 @@ module Tesla
         options = name
         name = nil
       end
-      unless name
-        gemspecs = Dir[ "*.gemspec" ]
+      if name
+        name = File.join( File.dirname( @source ), name )
+      else name
+        gemspecs = Dir[ File.join( File.dirname( @source ), "*.gemspec" ) ]
         raise "more then one gemspec file found" if gemspecs.size > 1
         raise "no gemspec file found" if gemspecs.size == 0
         name = gemspecs.first
       end
-      spec = eval( File.read( File.expand_path( name ) ) )
+      spec = nil
+      FileUtils.cd( File.dirname( @source ) ) do
+        spec = eval( File.read( File.expand_path( name ) ) )
+      end
 
       id "rubygems:#{spec.name}:#{spec.version}"
       name( spec.summary || spec.name )
@@ -461,14 +469,20 @@ module Tesla
       dependency( :gem, *args, :group_id => 'rubygems', :version => "[0,)" )
     end
 
-    def method_missing(method, *args, &block)
+    def method_missing( method, *args, &block )
       if @context
         m = "#{method}=".to_sym
         if @current.respond_to? m
 #p @context
 #p m
 #p args
-          @current.send(m, *args)
+          begin
+            @current.send( m, *args ) 
+          rescue ArgumentError
+            if @current.respond_to? method
+              @current.send( method, *args )
+            end
+          end
           @current
         else
           if ( args.size > 0 &&
@@ -476,6 +490,9 @@ module Tesla
                args[0] =~ /^[${}0-9a-zA-Z._-]+(:[${}0-9a-zA-Z._-]+)+$/ ) ||
              ( args.size == 1 && args[0].is_a?( Hash ) )
             dependency( method, *args )
+         # elsif @current.respond_to? method
+         #   @current.send( method, *args )
+         #   @current
           else
             p @context
             p m

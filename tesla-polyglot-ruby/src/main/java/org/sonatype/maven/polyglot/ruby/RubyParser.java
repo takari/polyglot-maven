@@ -1,10 +1,10 @@
 package org.sonatype.maven.polyglot.ruby;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelSource;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.ruby.execute.RubyExecuteTaskFactory;
 
@@ -25,8 +25,7 @@ public class RubyParser {
 
     private final RubyExecuteTaskFactory factory;
 
-    public RubyParser(ModelSource modelSource, ExecuteManager executeManager) throws IOException {
-        // TODO something with that modelSource, i.e. when errors occurs
+    public RubyParser( ExecuteManager executeManager ) throws IOException {
         this.executeManager = executeManager;
         this.jruby = new GemScriptingContainer();
         InputStream script = getClass().getClassLoader().getResourceAsStream("parser.rb");
@@ -40,10 +39,12 @@ public class RubyParser {
     }
 
     // synchronize it since it is not clear how threadsafe all is
-    public synchronized Model parse(String ruby) {
+    public synchronized Model parse( String ruby, File source ) {
         Model model = this.jruby.callMethod( this.parser,
                     "parse",
-                    new Object[] { ruby, this.factory },
+                    new Object[] { ruby,
+                                   this.factory,
+                                   source != null ? source.getAbsolutePath() : null },
                     Model.class );
         executeManager.register( model, this.factory.getExecuteTasks() );
         executeManager.install( model );
