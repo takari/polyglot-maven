@@ -71,7 +71,76 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>io.tesla.maven.plugins</groupId>
+        <artifactId>tesla-license-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <strictCheck>true</strictCheck>
+          <header>license-header.txt</header>
+          <useDefaultExcludes>false</useDefaultExcludes>
+          <includes>
+            <include>**/pom.xml</include>
+            <include>**/*.xml</include>
+            <include>**/*.xsd</include>
+            <include>**/*.xjb</include>
+            <include>**/*.mdo</include>
+            <include>**/*.properties</include>
+            <include>**/*.java</include>
+            <include>**/*.groovy</include>
+            <include>**/*.scala</include>
+            <include>**/*.aj</include>
+            <include>**/*.js</include>
+            <include>**/*.css</include>
+          </includes>
+          <excludes>
+            <exclude>**/target/**</exclude>
+          </excludes>
+          <mapping>
+            <scala>JAVADOC_STYLE</scala>
+            <xjb>XML_STYLE</xjb>
+            <mdo>XML_STYLE</mdo>
+          </mapping>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>io.tesla.maven.plugins</groupId>
+                    <artifactId>tesla-license-plugin</artifactId>
+                    <versionRange>[0.0.1-SNAPSHOT,)</versionRange>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
 
   <dependencyManagement>
@@ -80,12 +149,12 @@
         <groupId>org.eclipse.sisu</groupId>
         <artifactId>org.eclipse.sisu.inject</artifactId>
         <version>${sisuInjectVersion}</version>
-      </dependency>      
+      </dependency>
       <dependency>
         <groupId>org.eclipse.sisu</groupId>
         <artifactId>org.eclipse.sisu.plexus</artifactId>
         <version>${sisuInjectVersion}</version>
-      </dependency>      
+      </dependency>
       <dependency>
         <groupId>org.apache.maven</groupId>
         <artifactId>maven-model-builder</artifactId>
@@ -101,18 +170,18 @@
         <artifactId>junit</artifactId>
         <version>4.11</version>
         <scope>test</scope>
-      </dependency>      
+      </dependency>
     </dependencies>
   </dependencyManagement>
-  
-  <repositories>  
-    <repository>  
-      <id>ossrh</id>  
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>  
-      <snapshots>  
-        <enabled>true</enabled>  
-      </snapshots>          
-    </repository>  
-  </repositories>    
-  
+
+  <repositories>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
 </project>
