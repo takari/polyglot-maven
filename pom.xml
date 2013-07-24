@@ -25,10 +25,24 @@
   <name>Polyglot Tesla :: Aggregator</name>
   <packaging>pom</packaging>
 
+  <licenses>
+    <license>
+      <name>The Eclipse Public License, Version 1.0</name>
+      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
   <properties>
     <teslaVersion>3.1.0</teslaVersion>
     <sisuInjectVersion>0.0.0.M2a</sisuInjectVersion>
   </properties>
+
+  <scm>
+    <connection>scm:git:git@github.com:tesla/tesla-polyglot.git</connection>
+    <developerConnection>scm:git:git@github.com:tesla/tesla-polyglot.git</developerConnection>
+    <url>https://github.com/tesla/tesla-polyglot</url>
+  </scm>
 
   <modules>
     <module>tesla-polyglot-common</module>
