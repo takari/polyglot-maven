@@ -65,20 +65,21 @@ module Tesla
     end
 
     def gemspec( name = nil, options = {} )
+      basedir = File.dirname( @source )
       if name.is_a? Hash
         options = name
         name = nil
       end
       if name
-        name = File.join( File.dirname( @source ), name )
+        name = File.join( basedir, name )
       else name
-        gemspecs = Dir[ File.join( File.dirname( @source ), "*.gemspec" ) ]
+        gemspecs = Dir[ File.join( basedir, "*.gemspec" ) ]
         raise "more then one gemspec file found" if gemspecs.size > 1
         raise "no gemspec file found" if gemspecs.size == 0
         name = gemspecs.first
       end
       spec = nil
-      FileUtils.cd( File.dirname( @source ) ) do
+      FileUtils.cd( basedir ) do
         spec = eval( File.read( File.expand_path( name ) ) )
       end
 
@@ -95,8 +96,8 @@ module Tesla
 
       extension 'de.saumya.mojo:gem-extension:${jruby.plugins.version}'
 
-      config = { :gemspec => name }
-      if options[ :include_dependencies ] || options[ 'include_dependencies' ] 
+      config = { :gemspec => name.sub( /^#{basedir}\/?/, '' ) }
+      if options[ :include_jars ] || options[ 'include_jars' ] 
         config[ :includeDependencies ] = true
       end
       plugin( 'de.saumya.mojo:gem-maven-plugin:${jruby.plugins.version}',
@@ -124,11 +125,11 @@ module Tesla
         jarpath = options[ :jar ] || options[ 'jar' ]
         if jarpath
           jar = File.basename( jarpath ).sub( /.jar$/, '' )
-          output = File.dirname( jarpath )
+          output = "#{spec.require_path}/#{jarpath.sub( /#{jar}/, '' )}".sub( /\/$/, '' )
         end
       else
         jar = "#{spec.name}"
-        output = 'lib'
+        output = "#{spec.require_path}"
       end
       if options.key?( :source ) || options.key?( 'source' )
         source = options[ :source ] || options[ 'source' ]
@@ -137,7 +138,7 @@ module Tesla
         end
       end
       if jar && ( source || 
-                  File.exists?( File.join( 'src', 'main', 'java' ) ) )
+                  File.exists?( File.join( basedir, 'src', 'main', 'java' ) ) )
         plugin( :jar,
                 :outputDirectory => output,
                 :finalName => jar ) do
