@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
   s.license = 'MIT' 
 
   s.files = Dir.glob("*.txt") +
-    Dir.glob("bin/mvn*") +
     Dir.glob("bin/tesla") +
     Dir.glob("bin/m2.conf") +
     Dir.glob("boot/*") +
@@ -20,7 +19,9 @@ Gem::Specification.new do |s|
     Dir.glob("ext/ruby/*") +
     Dir.glob("lib/*") +
     Dir.glob("lib/ext/*") +
-    Dir.glob("lib/ruby/**/*.rb")
+    Dir.glob("lib/ruby/ruby_maven.rb") +
+    Dir.glob("lib/ruby/ruby-maven.rb") +
+    Dir.glob("lib/ruby/maven/**/*")
   s.bindir = "bin"
   s.executables = ['tesla']
   s.homepage = %q{http://github.com/mkristian/ruby-maven}
@@ -29,12 +30,9 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{maven support for ruby projects with gemspec, Gemfile}
   s.add_dependency 'thor', '>= 0.14.6', '< 2.0' # mimic rails
-  # TODO come back to version semantic in maven-tools
-  s.add_dependency 'maven-tools', "~> 0.32.3" 
+  s.add_dependency 'maven-tools', "~> 0.33" 
   s.add_development_dependency 'minitest', '~> 5.0'  
   s.add_development_dependency 'rake', '~> 10.0'
-
-  File.chmod(0755, File.join("bin", "mvn")) rescue nil
 end
 
 # vim: syntax=Ruby

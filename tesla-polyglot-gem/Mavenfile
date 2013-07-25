@@ -1,12 +1,9 @@
 # -*- mode:ruby -*-
 require './lib/ruby/tesla/version'
 
-id 'rubygems:tesla'
-inherit "io.tesla.polyglot:tesla-polyglot:#{Tesla::VERSION}-SNAPSHOT"
-packaging 'gem'
+gemspec
 
-plugin_repository( 'http://rubygems-proxy.torquebox.org/releases',
-                   :id => 'rubygems-releases' )
+inherit "io.tesla.polyglot:tesla-polyglot:#{Tesla::VERSION}-SNAPSHOT"
 
 plugin( :dependency,
         :phase => 'process-sources' ) do
@@ -20,14 +17,6 @@ plugin( :dependency,
                                        :outputDirectory => '${project.build.directory}' } ] )
 end # maven-dependency-plugin
 
-plugin( 'de.saumya.mojo:gem-maven-plugin:1.0.0-beta-1-SNAPSHOT',
-        :gemspec => 'tesla.gemspec' ) do
-  extensions true
-
-  gem 'thor'#, '0.14.6'
-  gem 'maven-tools'#, '0.32.1'
-end
-
 plugin( :clean, '2.5',
         :filesets => [ { :directory => 'lib',
                          :includes => ['*jar', 'ext/**' ] },
@@ -38,21 +27,14 @@ plugin( :clean, '2.5',
                          :includes => ['*'],
                          :excludes => ['tesla'] },
                        { :directory => './',
-                         :includes => ['*.txt', 'Gemfile.lock'] } ] )
+                         :includes => ['*.txt'] } ] )
 
-build do
-  resource do
-    target_path "${project.basedir}"
-    directory "${project.build.directory}/tesla-polyglot-${project.parent.version}"
-  end
+resource do
+  target_path "${project.basedir}"
+  directory "${project.build.directory}/tesla-polyglot-${project.parent.version}"
 end
 
-properties(# just lock the versions
-           'jruby.plugins.version' => '1.0.0-beta-1-SNAPSHOT',
-           # overwrite via cli -Djruby.versions=1.6.7
-           'jruby.version'=> '1.7.4',
-           'jruby.versions' => ['1.5.6','1.6.8','1.7.2'].join(','),
-           # overwrite via cli -Djruby.use18and19=false
-           'jruby.18and19' => true )
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
 
 # vim: syntax=Ruby
