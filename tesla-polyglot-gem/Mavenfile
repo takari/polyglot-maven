@@ -1,9 +1,8 @@
 # -*- mode:ruby -*-
-require './lib/ruby/tesla/version'
 
 gemspec
 
-inherit "io.tesla.polyglot:tesla-polyglot:#{Tesla::VERSION}-SNAPSHOT"
+inherit "io.tesla.polyglot:tesla-polyglot:0.0.1-SNAPSHOT"
 
 plugin( :dependency,
         :phase => 'process-sources' ) do
@@ -19,19 +18,20 @@ end # maven-dependency-plugin
 
 plugin( :clean, '2.5',
         :filesets => [ { :directory => 'lib',
-                         :includes => ['*jar', 'ext/**' ] },
+                         :includes => ['*.jar', 'ext/**' ] },
                        { :directory => 'conf' },
                        { :directory => 'ext' },
                        { :directory => 'boot' },
                        { :directory => 'bin',
                          :includes => ['*'],
-                         :excludes => ['tesla'] },
+                         :excludes => ['rmvn'] },
                        { :directory => './',
                          :includes => ['*.txt'] } ] )
 
 resource do
   target_path "${project.basedir}"
   directory "${project.build.directory}/tesla-polyglot-${project.parent.version}"
+  includes [ 'lib/**/*', 'conf/**/*', 'ext/**', 'boot/*', 'bin/m2.conf', '*.txt' ]
 end
 
 properties( 'tesla.dump.pom' => 'pom.xml',
