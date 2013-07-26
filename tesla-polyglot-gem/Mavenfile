@@ -28,6 +28,10 @@ plugin( :clean, '2.5',
                        { :directory => './',
                          :includes => ['*.txt'] } ] )
 
+plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
+        :header => '../license-header.txt',
+        :excludes => [ 'pom.xml', '**/conf/**'] )
+
 resource do
   target_path "${project.basedir}"
   directory "${project.build.directory}/tesla-polyglot-${project.parent.version}"
