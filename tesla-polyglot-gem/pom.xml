@@ -75,7 +75,7 @@
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
         <configuration>
-          <gemspec>/home/christian/projects/active/maven/tesla-polyglot/tesla-polyglot-gem/ruby-maven.gemspec</gemspec>
+          <gemspec>ruby-maven.gemspec</gemspec>
         </configuration>
       </plugin>
       <plugin>
