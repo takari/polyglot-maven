@@ -22,16 +22,6 @@ require 'fileutils'
 require 'java' if defined? JRUBY_VERSION
 
 module Maven
- 
-  class RubyMaven
-
-    def self.new(*args)
-      warn "deprecated: use Maven::Ruby::Cli or Maven::Ruby::Maven instead"
-      require 'maven/ruby/cli'
-      ::Maven::Ruby::Cli.new(*args)
-    end
-  end
-
   module Ruby
     class Maven
 
@@ -98,7 +88,7 @@ module Maven
                                                    '..'))
       end
 
-      def self.instance
+      def self.instance( &block )
         @instance ||= self.new
       end
 

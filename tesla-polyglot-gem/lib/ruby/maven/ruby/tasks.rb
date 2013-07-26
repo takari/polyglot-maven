@@ -1,5 +1,6 @@
-
 require 'maven/ruby/maven'
+require 'maven/dsl'
+require 'maven/visitor'
 
 module Maven
   class Tasks
@@ -33,4 +34,18 @@ module Maven
     end
   end
   Tasks.new.install
+end
+
+include Maven::DSL
+
+def maven( &block )
+  instance = Maven::Ruby::Maven.instance
+  if block
+    f = File.join( 'target', "pom4rake.xml" )
+    v = Maven::Visitor.new( File.open( f, 'w' ) )
+    pom = tesla( &block )
+    v.accept_project( pom )
+    instance.options[ '-f' ] = f
+  end
+  instance
 end
