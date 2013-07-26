@@ -117,6 +117,7 @@
         <include>com.github.jnr:jnr-x86asm</include>
         <include>com.headius:invokebinder</include>
         <include>com.jcraft:jzlib</include>
+	<include>de.saumya.mojo:maven-tools</include>
         <include>jline:jline</include>
         <include>joda-time:joda-time</include>
         <include>org.jruby.extras:bytelist</include>
