@@ -17,20 +17,22 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <groupId>rubygems</groupId>
-  <artifactId>tesla</artifactId>
-  <version>0.0.1</version>
+  <artifactId>ruby-maven</artifactId>
+  <version>3.1.0.0</version>
   <packaging>gem</packaging>
-  <name>maven support for ruby projects with gemspec, Gemfile</name>
-  <description>maven support for rubygems based on maven 3.0. it allows to use xyz.gemspec file as pom file or the usual pom.xml files. with a rails3 application with a Gemfile (suitable for jruby). you need java installed or jruby but it will run with MRI (without installed jruby) since the maven will take care of the jruby to use.</description>
-  <url>http://github.com/mkristian/ruby-maven</url>
+  <name>maven support for ruby projects</name>
+  <description>maven support for ruby based on tesla maven. MRI needs java/javac command installed.</description>
+  <url>https://github.com/tesla/tesla-polyglot/tree/master/tesla-polyglot-gem</url>
   <properties>
+    <tesla.dump.readonly>true</tesla.dump.readonly>
     <jruby.plugins.version>1.0.0-beta-1-SNAPSHOT</jruby.plugins.version>
+    <tesla.dump.pom>pom.xml</tesla.dump.pom>
   </properties>
   <dependencies>
     <dependency>
       <groupId>rubygems</groupId>
-      <artifactId>thor</artifactId>
-      <version>[0.14.6,2.0)</version>
+      <artifactId>maven-tools</artifactId>
+      <version>[0.33,0.99999]</version>
       <type>gem</type>
     </dependency>
     <dependency>
@@ -66,6 +68,14 @@
       <resource>
         <targetPath>${project.basedir}</targetPath>
         <directory>${project.build.directory}/tesla-polyglot-${project.parent.version}</directory>
+        <includes>
+          <include>lib/**/*</include>
+          <include>conf/**/*</include>
+          <include>ext/**</include>
+          <include>boot/*</include>
+          <include>bin/m2.conf</include>
+          <include>*.txt</include>
+        </includes>
       </resource>
     </resources>
     <plugins>
@@ -74,22 +84,7 @@
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
         <configuration>
-          <gemspec>tesla.gemspec</gemspec>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>pre-package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <outputDirectory>lib</outputDirectory>
-          <finalName>tesla.jar</finalName>
+          <gemspec>/home/christian/projects/active/maven/tesla-polyglot/tesla-polyglot-gem/ruby-maven.gemspec</gemspec>
         </configuration>
       </plugin>
       <plugin>
@@ -100,7 +95,7 @@
               <goal>unpack</goal>
             </goals>
             <configuration>
-              <outputAbsoluteArtifactFilename />
+              <outputAbsoluteArtifactFilename>false</outputAbsoluteArtifactFilename>
               <artifactItems>
                 <artifactItem>
                   <groupId>${project.parent.groupId}</groupId>
@@ -126,7 +121,7 @@
             <fileset>
               <directory>lib</directory>
               <includes>
-                <include>*jar</include>
+                <include>*.jar</include>
                 <include>ext/**</include>
               </includes>
             </fileset>
@@ -145,7 +140,7 @@
                 <include>*</include>
               </includes>
               <excludes>
-                <exclude>tesla</exclude>
+                <exclude>rmvn</exclude>
               </excludes>
             </fileset>
             <fileset>
