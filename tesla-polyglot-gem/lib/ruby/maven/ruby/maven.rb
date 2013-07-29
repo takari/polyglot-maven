@@ -23,17 +23,77 @@ require 'java' if defined? JRUBY_VERSION
 
 module Maven
   module Ruby
+
+    unless defined? JRUBY_VERSION
+      require 'stringio'
+      require 'maven/tools/dsl'
+      require 'maven/tools/visitor'
+      class POM
+        include Maven::Tools::DSL
+
+        def initialize( file = nil )
+          unless file
+            file = pom_file( 'pom.rb' )
+            file ||= pom_file( 'Mavenfile' )
+            file ||= pom_file( '*.gemspec' )
+          end
+          @model = to_model( file ) if file
+        end
+
+        def pom_file( pom )
+          files = Dir[ pom ]
+          case files.size
+          when 0
+          when 1
+            files.first
+          else
+            warn 'more than one pom file found'
+          end
+        end
+
+        def to_s( file = nil )
+          if @model
+            if file
+              v = ::Maven::Tools::Visitor.new( File.open( file, 'w' ) )
+              v.accept_project( @model )
+              true
+            else
+              io = StringIO.new
+              v = ::Maven::Tools::Visitor.new( io )
+              v.accept_project( @model )
+              io.string
+            end
+          end
+        end
+
+        def to_model( file )
+          case file.to_s
+          when /pom.rb/
+            eval_pom( File.read( file ), file )
+          when /Mavenfile/
+            eval_pom( "tesla do\n#{ File.read( file ) }\nend", file )
+          when /.+\.gemspec/
+            eval_pom( "gemspec( #{ File.basename( file ) } )", file )
+          end
+        rescue ArgumentError
+          warn 'fallback to old maven model'
+
+          raise 'TODO old maven model'
+        end
+      end
+    end
     class Maven
 
       private
 
       def launch_jruby(args)
-        java.lang.System.setProperty("classworlds.conf", 
+        java.lang.System.setProperty("classworlds.conf",
                                      File.join(self.class.maven_home, 'bin', "m2.conf"))
 
         java.lang.System.setProperty("maven.home", self.class.maven_home)
-        cw = self.class.class_world
-        org.apache.maven.cli.MavenCli.doMain( args, cw ) == 0
+        self.class.classpath_array( 'boot' ).each{ |path| require path }
+        self.class.classpath_array( 'lib' ).each{ |path| require path }
+        org.codehaus.plexus.classworlds.launcher.Launcher.main( args ) == 0
       end
 
       def self.class_world
@@ -41,24 +101,40 @@ module Maven
       end
 
       def self.class_world!
-        (classpath_array + classpath_array('lib')).each do |path|
+        (classpath_array( 'boot' ) + classpath_array('lib')).each do |path|
           require path
         end
         org.codehaus.plexus.classworlds.ClassWorld.new("plexus.core", java.lang.Thread.currentThread().getContextClassLoader())
       end
-      
-      def self.classpath_array(dir = 'boot')
+
+      def self.classpath_array(dir)
         Dir.glob(File.join(maven_home, dir, "*jar"))
       end
-      
-      def launch_java(*args)
-        system "java -cp #{self.class.classpath_array.join(':')} -Dmaven.home=#{File.expand_path(self.class.maven_home)} -Dclassworlds.conf=#{File.expand_path(File.join(self.class.maven_home, 'bin', 'm2.conf'))} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
+
+      def adjust_args( args )
+        if ! defined?( JRUBY_VERSION ) &&
+           ( args.index( '-f' ) || args.index( '--file' ) ).nil?
+
+          pom = POM.new
+          pom_file = '.pom.xml'
+          if pom.to_s( pom_file )
+            args = args + [ '-f', pom_file ]
+          else
+            args
+          end
+        else
+          args
+        end
       end
-      
+
+      def launch_java(*args)
+        system "java -cp #{self.class.classpath_array('boot').join(':')} -Dmaven.home=#{File.expand_path(self.class.maven_home)} -Dclassworlds.conf=#{File.expand_path(File.join(self.class.maven_home, 'bin', 'm2xml_only.conf'))} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
+      end
+
       def options_string
         options_array.join ' '
       end
-      
+
       def options_array
         options.collect do |k,v|
           if k =~ /^-D/
@@ -106,7 +182,7 @@ module Maven
 
       def verbose
         if @verbose.nil?
-          @verbose = options.delete('-Dverbose').to_s == 'true'
+          @verbose = options.delete('-Dverbose').to_s != 'false'
         else
           @verbose
         end
@@ -114,8 +190,10 @@ module Maven
 
       def exec(*args)
         a = args.dup + options_array
-        a.flatten!
-        puts "mvn #{a.join(' ')}" if verbose
+        a = adjust_args( a.flatten )
+        if a.delete( '-Dverbose=true' ) || a.delete( '-Dverbose' ) || verbose
+          puts "mvn #{a.join(' ')}"
+        end
         if defined? JRUBY_VERSION
           puts "using jruby #{JRUBY_VERSION} invokation" if verbose
           launch_jruby(a)

@@ -1,6 +1,6 @@
 require 'maven/ruby/maven'
-require 'maven/dsl'
-require 'maven/visitor'
+require 'maven/tools/dsl'
+require 'maven/tools/visitor'
 
 module Maven
   class Tasks
@@ -11,7 +11,7 @@ module Maven
       desc "Setup Maven instance."
       task :maven do
       end
-        
+
       desc "Build gem into the pkg directory."
       task :build => :maven do
         Maven::Ruby::Maven.instance.package
@@ -30,19 +30,19 @@ module Maven
       desc "Push gem to rubygems.org"
       task :push => :maven do
         Maven::Ruby::Maven.instance.deploy
-      end       
+      end
     end
   end
   Tasks.new.install
 end
 
-include Maven::DSL
+include Maven::Tools::DSL
 
 def maven( &block )
   instance = Maven::Ruby::Maven.instance
   if block
     f = File.join( 'target', "pom4rake.xml" )
-    v = Maven::Visitor.new( File.open( f, 'w' ) )
+    v = Maven::Tools::Visitor.new( File.open( f, 'w' ) )
     pom = tesla( &block )
     v.accept_project( pom )
     instance.options[ '-f' ] = f
