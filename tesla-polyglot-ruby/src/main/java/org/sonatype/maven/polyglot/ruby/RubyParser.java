@@ -8,23 +8,23 @@
 package org.sonatype.maven.polyglot.ruby;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.maven.model.Model;
+import org.jruby.embed.ScriptingContainer;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.ruby.execute.RubyExecuteTaskFactory;
-
-import de.saumya.mojo.ruby.GemScriptingContainer;
 
 /**
  * Parses the ruby into a Maven model.
  *
- * @author kristian
+ * @author christian
  */
 public class RubyParser {
 
-    private final GemScriptingContainer jruby;
+    private final ScriptingContainer jruby;
 
     private final Object parser;
 
@@ -32,21 +32,34 @@ public class RubyParser {
 
     private final RubyExecuteTaskFactory factory;
 
-    public RubyParser( ExecuteManager executeManager ) throws IOException {
+    public RubyParser( ExecuteManager executeManager ) throws IOException
+    {
         this.executeManager = executeManager;
-        this.jruby = new GemScriptingContainer();
-        InputStream script = getClass().getClassLoader().getResourceAsStream("parser.rb");
-        if ( script != null ){
-            this.parser = this.jruby.runScriptlet( script, "parser.rb");
-        }
-        else {
-            this.parser = this.jruby.runScriptletFromClassloader("parser.rb");
-        }
-        this.factory = new RubyExecuteTaskFactory(jruby);
+        this.jruby = new ScriptingContainer();
+        this.parser = runScript( "parser.rb" );
+        this.factory = new RubyExecuteTaskFactory( jruby );
     }
 
-    // synchronize it since it is not clear how threadsafe all is
-    public synchronized Model parse( String ruby, File source ) {
+    private Object runScript( String script ) throws IOException
+    {
+        InputStream stream = getClass().getClassLoader()
+                .getResourceAsStream( script );
+        if ( stream != null )
+        {
+            stream = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream( script );
+            if ( stream == null )
+            {
+                throw new FileNotFoundException( "not found in classloader: "
+                                                 + script );
+            }
+        }
+        return this.jruby.runScriptlet( stream, script );
+    }
+
+    // synchronize it since it is not clear how threadsafe everything is
+    public synchronized Model parse( String ruby, File source )
+    {
         Model model = this.jruby.callMethod( this.parser,
                     "parse",
                     new Object[] { ruby,
