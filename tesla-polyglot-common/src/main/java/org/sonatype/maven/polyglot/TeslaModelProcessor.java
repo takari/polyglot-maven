@@ -45,7 +45,9 @@ public class TeslaModelProcessor implements ModelProcessor {
   public File locatePom(final File dir) {
     assert manager != null;
     File pomFile = manager.locatePom(dir);
-    if ( pomFile != null && !"pom.xml".equals( pomFile.getName() ) && ! pomFile.getName().endsWith( ".pom" ) ) {
+    if ( pomFile != null && 
+            ! pomFile.getName().endsWith( ".pom" ) && 
+            ! pomFile.getName().endsWith( ".xml" ) ) {
         pomFile = new File( pomFile.getParentFile(), ".tesla." + pomFile.getName() );
         try
         {
@@ -56,9 +58,17 @@ public class TeslaModelProcessor implements ModelProcessor {
             throw new RuntimeException( "error creating empty file", e );
         }
     }
+    else
+    {
+        // behave like proper maven in case there is no pom from manager
+        pomFile = new File(dir, "pom.xml");
+        if ( ! pomFile.exists() )
+        {
+            pomFile = null;
+        }
+    }
 
-    // behave like proper maven in case there is no pom from manager
-    return pomFile == null ? new File(dir, "pom.xml") : pomFile;
+    return pomFile;
   }
 
   public Model read(final File input, final Map<String, ?> options) throws IOException, ModelParseException {
