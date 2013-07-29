@@ -16,13 +16,15 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  *
  * @author m.kristian
  */
-@Component(role = Mapping.class, hint = "ruby")
-public class RubyMapping extends MappingSupport {
-  public RubyMapping() {
-    super("ruby");
-    setPomNames("pom.rb", "Mavenfile");
-    setAcceptLocationExtensions(".rb", "Mavenfile");
-    setAcceptOptionKeys("ruby:4.0.0");
+@Component( role = Mapping.class, hint = "ruby" )
+public class RubyMapping extends MappingSupport
+{
+  public RubyMapping()
+  {
+    super( "ruby" );
+    setPomNames( "pom.rb", "Mavenfile" );
+    setAcceptLocationExtensions( ".rb", "Mavenfile", ".gemspec" );
+    setAcceptOptionKeys( "ruby:4.0.0" );
     setPriority(1);
   }
 }
