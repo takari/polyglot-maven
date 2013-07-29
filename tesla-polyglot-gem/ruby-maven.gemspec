@@ -15,11 +15,11 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob("*.txt") +
     Dir.glob("bin/rmvn") +
-    Dir.glob("bin/m2.conf") +
+    Dir.glob("bin/m2*.conf") +
     Dir.glob("boot/*") +
     Dir.glob("conf/**/*") +
     Dir.glob("ext/*/.keep") +
-    Dir.glob("ext/ruby/*") +
+    Dir.glob("ext/ruby/maven-tools-*") +
     Dir.glob("lib/*") +
     Dir.glob("lib/ext/*") +
     Dir.glob("lib/ruby/**/*.rb")
