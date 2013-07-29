@@ -96,6 +96,8 @@
           </includes>
           <excludes>
             <exclude>**/target/**</exclude>
+            <exclude>**/conf/**</exclude>
+            <exclude>tesla-polyglot-gem/pom.xml</exclude>
             <exclude>**/.idea/**</exclude>
           </excludes>
           <mapping>
