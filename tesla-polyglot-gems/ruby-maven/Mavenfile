@@ -34,9 +34,7 @@ resource do
 end
 
 plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
-        :header => '${project.parent.parent.basedir}/license-header.txt' )
-
-properties( 'tesla.dump.pom' => 'pom.xml',
-            'tesla.dump.readonly' => true )
+        :header => '${project.parent.parent.basedir}/license-header.txt',
+        :excludes => [ '**/.*', '**/conf/**/*' ] )
 
 # vim: syntax=Ruby
