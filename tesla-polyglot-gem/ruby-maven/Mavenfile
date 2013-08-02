@@ -1,10 +1,13 @@
 # -*- mode:ruby -*-
 
+require File.join( basedir, 'ruby', 'tesla_maven' )
+
 gemspec
 
-inherit "io.tesla.polyglot:tesla-polyglot:0.0.1-SNAPSHOT"
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}-SNAPSHOT"
 
 plugin( :dependency,
+
         :phase => 'process-sources' ) do
   execute_goals( :unpack,
                  :outputAbsoluteArtifactFilename => false,
@@ -14,29 +17,24 @@ plugin( :dependency,
                                        :classifier => 'bin',
                                        :type => 'tar.gz',
                                        :outputDirectory => '${project.build.directory}' } ] )
+                 
 end # maven-dependency-plugin
 
 plugin( :clean, '2.5',
-        :filesets => [ { :directory => 'lib',
-                         :includes => ['*.jar', 'ext/**' ] },
-                       { :directory => 'conf' },
-                       { :directory => 'ext' },
-                       { :directory => 'boot' },
+        :filesets => [ { :directory => 'ext' },
+                       { :directory => 'lib' },
                        { :directory => 'bin',
-                         :includes => ['*'],
-                         :excludes => ['rmvn'] },
-                       { :directory => './',
-                         :includes => ['*.txt'] } ] )
-
-plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
-        :header => '../license-header.txt',
-        :excludes => [ 'pom.xml', '**/conf/**'] )
+                         :includes => [ '*' ],
+                         :excludes => [ 'rmvn', 'm2.conf' ] } ] )
 
 resource do
   target_path "${project.basedir}"
   directory "${project.build.directory}/tesla-polyglot-${project.parent.version}"
-  includes [ 'lib/**/*', 'conf/**/*', 'ext/**', 'boot/*', 'bin/m2.conf', '*.txt' ]
+  includes [ 'ext/ruby/**', 'bin/translate*', 'lib/tesla-*.jar' ]
 end
+
+plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
+        :header => '${project.parent.parent.basedir}/license-header.txt' )
 
 properties( 'tesla.dump.pom' => 'pom.xml',
             'tesla.dump.readonly' => true )

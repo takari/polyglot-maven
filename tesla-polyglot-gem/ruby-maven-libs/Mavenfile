@@ -1,0 +1,40 @@
+# -*- mode:ruby -*-
+
+gemspec
+
+#inherit "io.tesla.polyglot:tesla-polyglot:0.0.1-SNAPSHOT"
+
+plugin( :dependency,
+        :phase => 'process-sources' ) do
+  execute_goals( :unpack,
+                 :outputAbsoluteArtifactFilename => false,
+                 :artifactItems => [ { :groupId => 'org.apache.maven',
+                                       :artifactId => 'apache-maven',
+                                       :version => '${project.version}',
+                                       :classifier => 'bin',
+                                       :type => 'zip',
+                                       :outputDirectory => '${project.build.directory}' } ] )
+end
+
+plugin( :clean, '2.5',
+        :filesets => [ { :directory => 'lib' },
+                       { :directory => 'conf' },
+                       { :directory => 'boot' },
+                       { :directory => 'bin' },
+                       { :directory => './',
+                         :includes => ['*.txt'] } ] )
+
+#plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
+#        :header => '../license-header.txt',
+#        :excludes => [ 'pom.xml', '**/conf/**'] )
+
+resource do
+  target_path "${project.basedir}"
+  directory "${project.build.directory}/apache-maven-${project.version}"
+  includes [ 'lib/**/*', 'conf/**/*', 'boot/*', 'bin/*', '*.txt' ]
+end
+
+properties( 'tesla.dump.pom' => 'pom.xml',
+            'tesla.dump.readonly' => true )
+
+# vim: syntax=Ruby

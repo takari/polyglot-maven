@@ -20,6 +20,7 @@
 #
 require 'fileutils'
 require 'java' if defined? JRUBY_VERSION
+require 'tesla_maven'
 
 module Maven
   module Ruby
@@ -87,12 +88,17 @@ module Maven
       private
 
       def launch_jruby(args)
-        java.lang.System.setProperty("classworlds.conf",
-                                     File.join(self.class.maven_home, 'bin', "m2.conf"))
+        java.lang.System.setProperty( "classworlds.conf",
+                                      TeslaMaven.bin( "m2.conf" ) )
 
-        java.lang.System.setProperty("maven.home", self.class.maven_home)
-        self.class.classpath_array( 'boot' ).each{ |path| require path }
-        self.class.classpath_array( 'lib' ).each{ |path| require path }
+        java.lang.System.setProperty( 'maven.home', TeslaMaven.maven_home )
+        java.lang.System.setProperty( 'tesla.ext', TeslaMaven.ext )
+        java.lang.System.setProperty( 'tesla.lib', TeslaMaven.lib )
+        # loading here is needed to let tesla-ruby find jruby on
+        # classloader, though m2.conf does load those libs as well
+        self.class.require_classpath( TeslaMaven.maven_boot )
+        self.class.require_classpath( TeslaMaven.maven_lib )
+        self.class.require_classpath( TeslaMaven.lib )
         org.codehaus.plexus.classworlds.launcher.Launcher.main( args ) == 0
       end
 
@@ -101,14 +107,20 @@ module Maven
       end
 
       def self.class_world!
-        (classpath_array( 'boot' ) + classpath_array('lib')).each do |path|
-          require path
-        end
-        org.codehaus.plexus.classworlds.ClassWorld.new("plexus.core", java.lang.Thread.currentThread().getContextClassLoader())
+        require_classpath( TeslaMaven.boot )
+        require_classpath( TeslaMaven.lib )
+        org.codehaus.plexus.classworlds.ClassWorld.new( "plexus.core",
+                                                        java.lang.Thread.currentThread().getContextClassLoader())
       end
 
-      def self.classpath_array(dir)
-        Dir.glob(File.join(maven_home, dir, "*jar"))
+      def self.classpath_array( dir )
+        Dir.glob( File.join( dir, "*jar" ) )
+      end
+
+      def self.require_classpath( dir )
+        classpath_array( dir ).each do |jar|
+          require jar
+        end
       end
 
       def adjust_args( args )
@@ -128,11 +140,8 @@ module Maven
       end
 
       def launch_java(*args)
-        system "java -cp #{self.class.classpath_array('boot').join(':')} -Dmaven.home=#{File.expand_path(self.class.maven_home)} -Dclassworlds.conf=#{File.expand_path(File.join(self.class.maven_home, 'bin', 'm2xml_only.conf'))} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
-      end
-
-      def options_string
-        options_array.join ' '
+        # TODO works only on unix like OS
+        system "java -cp #{self.class.classpath_array( ::Maven.boot ).join(':')} -Dmaven.home=#{::Maven.home} -Dclassworlds.conf=#{::Maven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
       end
 
       def options_array
@@ -149,6 +158,7 @@ module Maven
           end
         end.flatten
       end
+      private :options_array
 
       public
 
@@ -157,11 +167,8 @@ module Maven
       end
 
       def self.maven_home
-        @maven_home ||= File.expand_path(File.join(File.dirname(__FILE__),
-                                                   '..',
-                                                   '..',
-                                                   '..',
-                                                   '..'))
+        warn 'DEPRECATED use TeslaMaven.maven_home or Maven.home directly'
+        TeslaMaven.maven_home
       end
 
       def self.instance( &block )
@@ -204,7 +211,7 @@ module Maven
       end
 
       def method_missing( method, *args )
-        exec( method )
+        exec( [ method ] + args )
       end
     end
   end

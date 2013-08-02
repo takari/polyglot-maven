@@ -43,8 +43,9 @@ def maven( &block )
   if block
     f = File.join( 'target', "pom4rake.xml" )
     v = Maven::Tools::Visitor.new( File.open( f, 'w' ) )
-    pom = tesla( &block )
-    v.accept_project( pom )
+    # parse block and write out pom4rake.xml file
+    v.accept_project( tesla( &block ) )
+    # tell maven to use the generated file
     instance.options[ '-f' ] = f
   end
   instance
