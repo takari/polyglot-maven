@@ -132,9 +132,9 @@ public class RubyModelWriter extends ModelWriterSupport {
             return options;
         }
 
-        void sourceCode( Scm scm ){
+        void sourceControl( Scm scm ){
             if ( scm != null ){
-                p.printWithOptions( "source_code",
+                p.printWithOptions( "source_control",
                                     options( "connection", scm.getConnection(),
                                              "developer_connection", scm.getDeveloperConnection(),
                                              "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
@@ -207,7 +207,7 @@ public class RubyModelWriter extends ModelWriterSupport {
 
             pluginRepositories( toRepositoryArray( model.getPluginRepositories() ) );
 
-            sourceCode( model.getScm() );
+            sourceControl( model.getScm() );
 
             distribution( model.getDistributionManagement() );
 
