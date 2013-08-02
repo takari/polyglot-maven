@@ -62,10 +62,6 @@ public class TeslaModelProcessor implements ModelProcessor {
     {
         // behave like proper maven in case there is no pom from manager
         pomFile = new File(dir, "pom.xml");
-        if ( ! pomFile.exists() )
-        {
-            pomFile = null;
-        }
     }
 
     return pomFile;
