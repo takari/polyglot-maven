@@ -97,6 +97,7 @@
           <excludes>
             <exclude>**/target/**</exclude>
             <exclude>**/conf/**</exclude>
+            <exclude>**/.*</exclude>
             <exclude>**/.idea/**</exclude>
           </excludes>
           <mapping>
