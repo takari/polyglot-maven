@@ -52,6 +52,7 @@ public class TeslaModelProcessor implements ModelProcessor {
         try
         {
             pomFile.createNewFile();
+            pomFile.deleteOnExit();
         }
         catch (IOException e)
         {
