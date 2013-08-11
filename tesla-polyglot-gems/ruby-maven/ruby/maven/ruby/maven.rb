@@ -70,7 +70,7 @@ module Maven
         def to_model( file )
           case file.to_s
           when /pom.rb/
-            eval_pom( File.read( file ), file )
+            eval_pom( "tesla do\n#{ File.read( file ) }\nend", file )
           when /Mavenfile/
             eval_pom( "tesla do\n#{ File.read( file ) }\nend", file )
           when /.+\.gemspec/
