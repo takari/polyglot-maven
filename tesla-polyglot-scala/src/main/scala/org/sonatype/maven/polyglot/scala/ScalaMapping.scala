@@ -12,12 +12,11 @@ import org.sonatype.maven.polyglot.mapping.{Mapping, MappingSupport}
 
 /**
  * Scala model mapping.
- * @since 0.7
  */
-@Component(role=classOf[Mapping], hint="scala")
+@Component(role = classOf[Mapping], hint = "scala")
 class ScalaMapping extends MappingSupport("scala") {
-  setPomNames("pom.scala");
-  setAcceptLocationExtensions(".scala");
-  setAcceptOptionKeys("scala:4.0.0");
-  setPriority(-3);
+  setPomNames("pom.scala")
+  setAcceptLocationExtensions(".scala")
+  setAcceptOptionKeys("scala:4.0.0")
+  setPriority(-1)
 }
