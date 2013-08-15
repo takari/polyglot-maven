@@ -5,6 +5,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-project { _ =>
-  ()
-}
+package org.sonatype.maven.polyglot.scala.model
+
+/**
+ * A type to represent Scala versions
+ */
+case class ScalaVersion(version: String)

@@ -143,8 +143,12 @@
       <outputDirectory>ext/scala</outputDirectory>
       <includes>
         <include>io.tesla.polyglot:tesla-polyglot-scala</include>
-        <include>org.scala-lang:scala-library</include>
+        <include>com.twitter:util-eval</include>
+        <include>jline:jline</include>
         <include>org.scala-lang:scala-compiler</include>
+        <include>com.twitter:util-core</include>
+        <include>com.googlecode.kiama:kiama_2.9.2</include>
+        <include>org.scala-lang:scala-library</include>
       </includes>
     </dependencySet>
     

@@ -9,7 +9,7 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.tesla.polyglot</groupId>
@@ -20,6 +20,14 @@
   <artifactId>tesla-polyglot-scala</artifactId>
   <name>Polyglot Tesla :: Scala</name>
 
+  <contributors>
+    <contributor>
+      <name>Christopher Hunt</name>
+      <organization>Typesafe</organization>
+      <organizationUrl>http://typesafe.com</organizationUrl>
+    </contributor>
+  </contributors>
+
   <dependencies>
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
@@ -28,15 +36,27 @@
     </dependency>
 
     <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-compiler</artifactId>
-      <version>2.8.0.Beta1-RC5</version>
+      <groupId>com.twitter</groupId>
+      <artifactId>util-eval</artifactId>
+      <version>6.3.7</version>
     </dependency>
 
     <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatest</artifactId>
-      <version>1.0.1-for-scala-2.8.0.Beta1-RC8-SONATYPE-1</version>
+      <groupId>com.googlecode.kiama</groupId>
+      <artifactId>kiama_2.9.2</artifactId>
+      <version>1.4.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.9.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.specs2</groupId>
+      <artifactId>specs2_2.9.3</artifactId>
+      <version>1.12.4.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -48,38 +68,49 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>src/main/scala</sourceDirectory>
+    <testSourceDirectory>src/test/scala</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <includes>
-            <include>**/*Spec.java</include>
-          </includes>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-        <version>2.13.1</version>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
         <executions>
           <execution>
-            <id>scala-compile-first</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>add-source</goal>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>scala-test-compile-first</id>
-            <phase>process-test-resources</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
+            <id>default-compile</id>
+            <phase>none</phase>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+        <version>3.1.5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <args>
+                <arg>-deprecation</arg>
+              </args>
+              <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
+              <recompileMode>incremental</recompileMode>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.15</version>
+        <configuration>
+          <includes>
+            <include>%regex[.*Spec.*]</include>
+          </includes>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>io.tesla.maven.plugins</groupId>
@@ -89,6 +120,7 @@
         </configuration>
       </plugin>
     </plugins>
+
     <pluginManagement>
       <plugins>
         <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -101,9 +133,9 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>org.scala-tools</groupId>
-                    <artifactId>maven-scala-plugin</artifactId>
-                    <versionRange>[2.13.1,)</versionRange>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <versionRange>[3.1.5,)</versionRange>
                     <goals>
                       <goal>add-source</goal>
                       <goal>compile</goal>
@@ -126,6 +158,13 @@
     <repository>
       <id>sonatype-public-grid</id>
       <url>http://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>twitter</id>
+      <url>http://maven.twttr.com/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
