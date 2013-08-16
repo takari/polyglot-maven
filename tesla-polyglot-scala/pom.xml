@@ -37,7 +37,7 @@
 
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-eval</artifactId>
+      <artifactId>util-eval_2.9.2</artifactId>
       <version>6.3.7</version>
     </dependency>
 
