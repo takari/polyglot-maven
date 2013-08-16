@@ -39,7 +39,7 @@ class ScalaModelReaderSpec extends Specification with AfterExample {
   }
 
   def after: Unit = {
-    FileUtils.deleteDirectory(evalFile.getParentFile())
+    evalFile.delete()
   }
 
   sequential
