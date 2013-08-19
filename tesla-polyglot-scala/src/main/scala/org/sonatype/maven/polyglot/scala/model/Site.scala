@@ -7,11 +7,11 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Site(
-                 id: Option[String],
-                 name: Option[String],
-                 url: Option[String]
-                 )
+class Site(
+            val id: Option[String],
+            val name: Option[String],
+            val url: Option[String]
+            )
 
 object Site {
   def apply(
@@ -45,9 +45,9 @@ import org.apache.maven.model.{Site => MavenSite}
 class ConvertibleMavenSite(ms: MavenSite) {
   def asScala: Site = {
     Site(
-      Option(ms.getId),
-      Option(ms.getName),
-      Option(ms.getUrl)
+      ms.getId,
+      ms.getName,
+      ms.getUrl
     )
   }
 }

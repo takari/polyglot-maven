@@ -7,26 +7,58 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Model(
-                  gav: Gav,
-                  build: Option[Build],
-                  ciManagement: Option[CiManagement],
-                  contributors: Seq[Contributor],
-                  dependencyManagement: Option[DependencyManagement],
-                  dependencies: Seq[Dependency],
-                  description: Option[String],
-                  developers: Seq[Developer],
-                  distributionManagement: Option[DistributionManagement],
-                  inceptionYear: Option[String],
-                  modelEncoding: String,
-                  modelVersion: Option[String],
-                  modules: Seq[String],
-                  name: Option[String],
-                  packaging: String,
-                  parent: Option[Parent],
-                  pomFile: Option[File],
-                  url: Option[String]
-                  )
+class Model(
+             val gav: Gav,
+             val build: Option[Build],
+             val ciManagement: Option[CiManagement],
+             val contributors: Seq[Contributor],
+             val dependencyManagement: Option[DependencyManagement],
+             val dependencies: Seq[Dependency],
+             val description: Option[String],
+             val developers: Seq[Developer],
+             val distributionManagement: Option[DistributionManagement],
+             val inceptionYear: Option[String],
+             val issueManagement: Option[IssueManagement],
+             val licenses: Seq[License],
+             val mailingLists: Seq[MailingList],
+             val modelEncoding: String,
+             val modelVersion: Option[String],
+             val modules: Seq[String],
+             val name: Option[String],
+             val organization: Option[Organization],
+             val packaging: String,
+             val parent: Option[Parent],
+             val pomFile: Option[File],
+             val prerequisites: Option[Prerequisites],
+             val url: Option[String]
+             ) {
+  def copy(pomFile: Option[File]): Model =
+    new Model(
+      gav,
+      build,
+      ciManagement,
+      contributors,
+      dependencyManagement,
+      dependencies,
+      description,
+      developers,
+      distributionManagement,
+      inceptionYear,
+      issueManagement,
+      licenses,
+      mailingLists,
+      modelEncoding,
+      modelVersion,
+      modules,
+      name,
+      organization,
+      packaging,
+      parent,
+      pomFile,
+      prerequisites,
+      url
+    )
+}
 
 object Model {
   def apply(
@@ -40,13 +72,18 @@ object Model {
              developers: Seq[Developer] = Nil,
              distributionManagement: DistributionManagement = null,
              inceptionYear: String = null,
+             issueManagement: IssueManagement = null,
+             licenses: Seq[License] = Nil,
+             mailingLists: Seq[MailingList] = Nil,
              modelEncoding: String = "UTF-8",
              modelVersion: String = null,
              modules: Seq[String] = Nil,
              name: String = null,
+             organization: Organization = null,
              packaging: String = "jar",
              parent: Parent = null,
              pomFile: File = null,
+             prerequisites: Prerequisites = null,
              url: String = null
              ) =
     new Model(
@@ -60,13 +97,18 @@ object Model {
       developers,
       Option(distributionManagement),
       Option(inceptionYear),
+      Option(issueManagement),
+      licenses,
+      mailingLists,
       modelEncoding,
       Option(modelVersion),
       modules,
       Option(name),
+      Option(organization),
       packaging,
       Option(parent),
       Option(pomFile),
+      Option(prerequisites),
       Option(url)
     )
 }
@@ -81,10 +123,15 @@ class PrettiedModel(m: Model) {
     m.name.foreach(args += assignString("name", _))
     m.description.foreach(args += assignString("description", _))
     m.url.foreach(args += assignString("url", _))
+    m.prerequisites.foreach(ps => args += assign("prerequisites", ps.asDoc))
+    m.issueManagement.foreach(im => args += assign("issueManagement", im.asDoc))
     m.ciManagement.foreach(ci => args += assign("ciManagement", ci.asDoc))
     m.inceptionYear.foreach(args += assignString("inceptionYear", _))
+    Some(m.mailingLists).filterNot(_.isEmpty).foreach(ds => args += assign("mailingLists", seq(ds.map(_.asDoc))))
     Some(m.developers).filterNot(_.isEmpty).foreach(ds => args += assign("developers", seq(ds.map(_.asDoc))))
     Some(m.contributors).filterNot(_.isEmpty).foreach(cs => args += assign("contributors", seq(cs.map(_.asDoc))))
+    Some(m.licenses).filterNot(_.isEmpty).foreach(ls => args += assign("licenses", seq(ls.map(_.asDoc))))
+    m.organization.foreach(o => args += assign("organization", o.asDoc))
     m.parent.foreach(p => args += assign("parent", p.asDoc))
     Some(m.modules).filterNot(_.isEmpty).foreach(m => args += assign("modules", seqString(m)))
     Some(m.dependencies).filterNot(_.isEmpty).foreach(es => args += assign("dependencies", seq(es.map(_.asDoc))))
@@ -115,13 +162,18 @@ class ConvertibleMavenModel(mm: MavenModel) {
       mm.getDevelopers.asScala.map(_.asScala),
       Option(mm.getDistributionManagement).map(_.asScala).orNull,
       mm.getInceptionYear,
+      Option(mm.getIssueManagement).map(_.asScala).orNull,
+      mm.getLicenses.asScala.map(_.asScala),
+      mm.getMailingLists.asScala.map(_.asScala),
       mm.getModelEncoding,
       mm.getModelVersion,
       mm.getModules.asScala,
       mm.getName,
+      Option(mm.getOrganization).map(_.asScala).orNull,
       mm.getPackaging,
       Option(mm.getParent).map(_.asScala).orNull,
       mm.getPomFile,
+      Option(mm.getPrerequisites).map(_.asScala).orNull,
       mm.getUrl
     )
   }
@@ -143,18 +195,18 @@ class ConvertibleScalaModel(m: Model) {
     mm.setDistributionManagement(m.distributionManagement.map(_.asJava).orNull)
     mm.setGroupId(m.gav.groupId.orNull)
     mm.setInceptionYear(m.inceptionYear.orNull)
-    //mm.setIssueManagement(m.issueManagement)
-    //mm.setLicenses(m.licences)
-    //mm.setMailingLists(m.mailingLists)
+    mm.setIssueManagement(m.issueManagement.map(_.asJava).orNull)
+    mm.setLicenses(m.licenses.map(_.asJava).asJava)
+    mm.setMailingLists(m.mailingLists.map(_.asJava).asJava)
     mm.setModules(m.modules.asJava)
     mm.setModelEncoding(m.modelEncoding)
     mm.setModelVersion(m.modelVersion.orNull)
     mm.setName(m.name.orNull)
-    //mm.setOrganization(m.organization)
+    mm.setOrganization(m.organization.map(_.asJava).orNull)
     mm.setPackaging(m.packaging)
     mm.setParent(m.parent.map(_.asJava).orNull)
     mm.setPomFile(m.pomFile.orNull)
-    //mm.setPrerequisites(m.prerequisites)
+    mm.setPrerequisites(m.prerequisites.map(_.asJava).orNull)
     //mm.setProfiles(m.profiles)
     //mm.setPluginRepositories(m.pluginRepositories)
     //mm.setProperties(m.properties)

@@ -6,6 +6,13 @@ Model(
   name = "somename",
   description = "somedesc",
   url = "someurl",
+  prerequisites = Prerequisites(
+    maven = "3.0"
+  ),
+  issueManagement = IssueManagement(
+    system = "someSystem",
+    url = "someUrl"
+  ),
   ciManagement = CiManagement(
     notifiers = Seq(
       Notifier(
@@ -24,6 +31,18 @@ Model(
     url = "someUrl"
   ),
   inceptionYear = "1988",
+  mailingLists = Seq(
+    MailingList(
+      name = "someName",
+      subscribe = "someSubscribe",
+      unsubscribe = "someUnsubscribe",
+      post = "somePost",
+      archive = "someArchive",
+      otherArchives = Seq(
+        "someOtherArchive"
+      )
+    )
+  ),
   developers = Seq(
     Developer(
       id = "someId",
@@ -50,6 +69,18 @@ Model(
       timezone = "someTimezone",
       url = "someUrl"
     )
+  ),
+  licenses = Seq(
+    License(
+      name = "someName",
+      url = "someUrl",
+      distribution = "someDistribution",
+      comments = "someComments"
+    )
+  ),
+  organization = Organization(
+    name = "someName",
+    url = "someUrl"
   ),
   parent = Parent(
     gav = "someGroupId" % "someArtifactId" % "someVersion",

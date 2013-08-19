@@ -7,8 +7,11 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class DependencyManagement(dependencies: Seq[Dependency] = Seq.empty)
+class DependencyManagement(val dependencies: Seq[Dependency])
 
+object DependencyManagement {
+  def apply(dependencies: Seq[Dependency] = Nil) = new DependencyManagement(dependencies)
+}
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 

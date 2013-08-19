@@ -9,13 +9,13 @@ package org.sonatype.maven.polyglot.scala.model
 
 import scala.xml.Elem
 
-case class Execution(
-                      id: String,
-                      phase: Option[String],
-                      goals: Seq[String],
-                      override val inherited: Boolean,
-                      override val configuration: Option[Elem]
-                      ) extends ConfigurationContainer(inherited, configuration)
+class Execution(
+                 val id: String,
+                 val phase: Option[String],
+                 val goals: Seq[String],
+                 override val inherited: Boolean,
+                 override val configuration: Option[Elem]
+                 ) extends ConfigurationContainer(inherited, configuration)
 
 object Execution {
   def apply(

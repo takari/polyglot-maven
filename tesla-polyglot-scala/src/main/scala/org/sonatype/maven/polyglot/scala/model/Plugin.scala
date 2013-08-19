@@ -9,14 +9,14 @@ package org.sonatype.maven.polyglot.scala.model
 
 import scala.xml.Elem
 
-case class Plugin(
-                   gav: Gav,
-                   extensions: Boolean,
-                   executions: Seq[Execution],
-                   dependencies: Seq[Dependency],
-                   override val inherited: Boolean,
-                   override val configuration: Option[Elem]
-                   ) extends ConfigurationContainer(inherited, configuration)
+class Plugin(
+              val gav: Gav,
+              val extensions: Boolean,
+              val executions: Seq[Execution],
+              val dependencies: Seq[Dependency],
+              override val inherited: Boolean,
+              override val configuration: Option[Elem]
+              ) extends ConfigurationContainer(inherited, configuration)
 
 object Plugin {
   def apply(

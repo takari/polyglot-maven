@@ -10,4 +10,8 @@ package org.sonatype.maven.polyglot.scala.model
 /**
  * A type to represent Scala versions
  */
-case class ScalaVersion(version: String)
+class ScalaVersion(val version: String)
+
+object ScalaVersion {
+  def apply(version: String) = new ScalaVersion(version)
+}

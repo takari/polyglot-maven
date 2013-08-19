@@ -7,14 +7,14 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Repository(
-                       releases: Option[RepositoryPolicy],
-                       snapshots: Option[RepositoryPolicy],
-                       id: Option[String],
-                       name: Option[String],
-                       url: Option[String],
-                       layout: String
-                       )
+class Repository(
+                  val releases: Option[RepositoryPolicy],
+                  val snapshots: Option[RepositoryPolicy],
+                  val id: Option[String],
+                  val name: Option[String],
+                  val url: Option[String],
+                  val layout: String
+                  )
 
 object Repository {
   def apply(
@@ -59,11 +59,11 @@ import org.apache.maven.model.{Repository => MavenRepository}
 class ConvertibleMavenRepository(mr: MavenRepository) {
   def asScala: Repository = {
     Repository(
-      Option(mr.getReleases).map(_.asScala),
-      Option(mr.getSnapshots).map(_.asScala),
-      Option(mr.getId),
-      Option(mr.getName),
-      Option(mr.getUrl),
+      Option(mr.getReleases).map(_.asScala).orNull,
+      Option(mr.getSnapshots).map(_.asScala).orNull,
+      mr.getId,
+      mr.getName,
+      mr.getUrl,
       mr.getLayout
     )
   }

@@ -13,7 +13,7 @@ import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.kiama.output.PrettyPrinter
 import org.apache.maven.model.io.ModelWriter
 import org.codehaus.plexus.component.annotations.Component
-import org.apache.maven.model.{Build => MavenBuild, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, Model => MavenModel, Notifier => MavenNotifier, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Site => MavenSite}
+import org.apache.maven.model.{Build => MavenBuild, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Site => MavenSite}
 import org.sonatype.maven.polyglot.scala.model._
 import java.util.Properties
 import scala.xml.Elem
@@ -76,9 +76,17 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   implicit def enrichPrettiedGroupArtifactId(v: GroupArtifactId) = new PrettiedGroupArtifactId(v)
 
+  implicit def enrichPrettiedIssueManagement(v: IssueManagement) = new PrettiedIssueManagement(v)
+
+  implicit def enrichPrettiedLicense(v: License) = new PrettiedLicense(v)
+
+  implicit def enrichPrettiedMailingList(v: MailingList) = new PrettiedMailingList(v)
+
   implicit def enrichPrettiedModel(v: Model) = new PrettiedModel(v)
 
   implicit def enrichPrettiedNotifier(v: Notifier) = new PrettiedNotifier(v)
+
+  implicit def enrichPrettiedOrganization(v: Organization) = new PrettiedOrganization(v)
 
   implicit def enrichPrettiedParent(v: Parent) = new PrettiedParent(v)
 
@@ -87,6 +95,8 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   implicit def enrichPrettiedPluginContainer(v: PluginContainer) = new PrettiedPluginContainer(v)
 
   implicit def enrichPrettiedPluginManagement(v: PluginManagement) = new PrettiedPluginManagement(v)
+
+  implicit def enrichPrettiedPrerequisites(v: Prerequisites) = new PrettiedPrerequisites(v)
 
   implicit def enrichPrettiedProperties(v: Map[String, String]) = new PrettiedProperties(v)
 
@@ -131,15 +141,25 @@ object MavenConverters {
 
   implicit def enrichConvertibleGroupArtifactId(v: (String, String)) = new ConvertibleMavenGroupArtifactId(v)
 
+  implicit def enrichConvertibleIssueManagement(v: MavenIssueManagement) = new ConvertibleMavenIssueManagement(v)
+
+  implicit def enrichConvertibleLicense(v: MavenLicense) = new ConvertibleMavenLicense(v)
+
+  implicit def enrichConvertibleMailingList(v: MavenMailingList) = new ConvertibleMavenMailingList(v)
+
   implicit def enrichConvertibleModel(v: MavenModel) = new ConvertibleMavenModel(v)
 
   implicit def enrichConvertibleNotifier(v: MavenNotifier) = new ConvertibleMavenNotifier(v)
+
+  implicit def enrichConvertibleOrganization(v: MavenOrganization) = new ConvertibleMavenOrganization(v)
 
   implicit def enrichConvertibleParent(v: MavenParent) = new ConvertibleMavenParent(v)
 
   implicit def enrichConvertiblePlugin(v: MavenPlugin) = new ConvertibleMavenPlugin(v)
 
   implicit def enrichConvertiblePluginManagement(v: MavenPluginManagement) = new ConvertibleMavenPluginManagement(v)
+
+  implicit def enrichConvertiblePrerequisites(v: MavenPrerequisites) = new ConvertibleMavenPrerequisites(v)
 
   implicit def enrichConvertibleProperties(v: Properties) = new ConvertibleMavenProperties(v)
 

@@ -7,15 +7,15 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Notifier(
-                     address: Option[String],
-                     configuration: Map[String, String],
-                     sendOnError: Boolean,
-                     sendOnFailure: Boolean,
-                     sendOnSuccess: Boolean,
-                     sendOnWarning: Boolean,
-                     `type`: String
-                     )
+class Notifier(
+                val address: Option[String],
+                val configuration: Map[String, String],
+                val sendOnError: Boolean,
+                val sendOnFailure: Boolean,
+                val sendOnSuccess: Boolean,
+                val sendOnWarning: Boolean,
+                val `type`: String
+                )
 
 object Notifier {
   def apply(

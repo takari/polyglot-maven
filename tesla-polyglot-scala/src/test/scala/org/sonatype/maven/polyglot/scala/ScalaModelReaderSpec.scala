@@ -243,18 +243,42 @@ class ScalaModelReaderSpec extends Specification with AfterExample {
       distManSnaps.getUrl must_== "someUrl"
       distMan.getStatus must_== "someStatus"
       m.getInceptionYear must_== "1988"
+      val im = m.getIssueManagement
+      im.getSystem must_== "someSystem"
+      im.getUrl must_== "someUrl"
+      val ls = m.getLicenses.asScala
+      ls.size must_== 1
+      ls(0).getComments must_== "someComments"
+      ls(0).getDistribution must_== "someDistribution"
+      ls(0).getName must_== "someName"
+      ls(0).getUrl must_== "someUrl"
+      val ml = m.getMailingLists.asScala
+      ml.size must_== 1
+      ml(0).getArchive must_== "someArchive"
+      ml(0).getName must_== "someName"
+      val mlOtherArchives = ml(0).getOtherArchives.asScala
+      mlOtherArchives.size must_== 1
+      mlOtherArchives(0) must_== "someOtherArchive"
+      ml(0).getPost must_== "somePost"
+      ml(0).getSubscribe must_== "someSubscribe"
+      ml(0).getUnsubscribe must_== "someUnsubscribe"
       m.getModelEncoding must_== "UTF-16"
       m.getModelVersion must_== "4.0.1"
       val ms = m.getModules.asScala
       ms.size must_== 1
       ms(0) must_== "someModule"
       m.getName must_== "somename"
+      val o = m.getOrganization
+      o.getName must_== "someName"
+      o.getUrl must_== "someUrl"
       m.getPackaging must_== "war"
       val parent = m.getParent
       parent.getArtifactId must_== "someArtifactId"
       parent.getGroupId must_== "someGroupId"
       parent.getVersion must_== "someVersion"
       parent.getRelativePath must_== "someRelativePath"
+      val ps = m.getPrerequisites
+      ps.getMaven must_== "3.0"
       m.getUrl must_== "someurl"
     }
   }

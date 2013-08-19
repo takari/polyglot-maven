@@ -7,15 +7,15 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Contributor(
-                        email: Option[String],
-                        name: Option[String],
-                        organization: Option[String],
-                        organizationUrl: Option[String],
-                        roles: Seq[String],
-                        timezone: Option[String],
-                        url: Option[String]
-                        )
+class Contributor(
+                   val email: Option[String],
+                   val name: Option[String],
+                   val organization: Option[String],
+                   val organizationUrl: Option[String],
+                   val roles: Seq[String],
+                   val timezone: Option[String],
+                   val url: Option[String]
+                   )
 
 object Contributor {
   def apply(

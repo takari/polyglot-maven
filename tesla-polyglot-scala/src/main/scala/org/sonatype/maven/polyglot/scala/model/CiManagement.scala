@@ -7,11 +7,11 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class CiManagement(
-                         notifiers: Seq[Notifier],
-                         system: Option[String],
-                         url: Option[String]
-                         )
+class CiManagement(
+                    val notifiers: Seq[Notifier],
+                    val system: Option[String],
+                    val url: Option[String]
+                    )
 
 object CiManagement {
   def apply(

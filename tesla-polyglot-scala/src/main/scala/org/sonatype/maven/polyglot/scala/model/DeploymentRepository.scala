@@ -28,25 +28,6 @@ class DeploymentRepository(
 
 object DeploymentRepository {
   def apply(
-             uniqueVersion: Boolean,
-             releases: Option[RepositoryPolicy],
-             snapshots: Option[RepositoryPolicy],
-             id: Option[String],
-             name: Option[String],
-             url: Option[String],
-             layout: String
-             ) =
-    new DeploymentRepository(
-      uniqueVersion,
-      releases,
-      snapshots,
-      id,
-      name,
-      url,
-      layout
-    )
-
-  def apply(
              uniqueVersion: Boolean = true,
              releases: RepositoryPolicy = null,
              snapshots: RepositoryPolicy = null,
@@ -86,11 +67,11 @@ class ConvertibleMavenDeploymentRepository(mdr: MavenDeploymentRepository) {
   def asScala: DeploymentRepository = {
     DeploymentRepository(
       mdr.isUniqueVersion,
-      Option(mdr.getReleases).map(_.asScala),
-      Option(mdr.getSnapshots).map(_.asScala),
-      Option(mdr.getId),
-      Option(mdr.getName),
-      Option(mdr.getUrl),
+      Option(mdr.getReleases).map(_.asScala).orNull,
+      Option(mdr.getSnapshots).map(_.asScala).orNull,
+      mdr.getId,
+      mdr.getName,
+      mdr.getUrl,
       mdr.getLayout
     )
   }

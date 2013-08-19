@@ -188,10 +188,32 @@ class ScalaModelWriterSpec extends Specification {
       dim.setStatus("someStatus")
       m.setDistributionManagement(dim)
       m.setInceptionYear("1988")
+      val im = new IssueManagement
+      im.setSystem("someSystem")
+      im.setUrl("someUrl")
+      m.setIssueManagement(im)
+      val l = new License
+      l.setComments("someComments")
+      l.setDistribution("someDistribution")
+      l.setName("someName")
+      l.setUrl("someUrl")
+      m.setLicenses(Seq(l).asJava)
+      val ml = new MailingList
+      ml.setArchive("someArchive")
+      ml.setName("someName")
+      ml.setOtherArchives(Seq("someOtherArchive").asJava)
+      ml.setPost("somePost")
+      ml.setSubscribe("someSubscribe")
+      ml.setUnsubscribe("someUnsubscribe")
+      m.setMailingLists(Seq(ml).asJava)
       m.setModelEncoding("UTF-16")
       m.setModelVersion("4.0.1")
       m.setModules(Seq("someModule").asJava)
       m.setName("somename")
+      val o = new Organization
+      o.setName("someName")
+      o.setUrl("someUrl")
+      m.setOrganization(o)
       m.setPackaging("war")
       val parent = new Parent
       parent.setArtifactId("someArtifactId")
@@ -199,6 +221,9 @@ class ScalaModelWriterSpec extends Specification {
       parent.setVersion("someVersion")
       parent.setRelativePath("someRelativePath")
       m.setParent(parent)
+      val ps = new Prerequisites
+      ps.setMaven("3.0")
+      m.setPrerequisites(ps)
       m.setPomFile(new File("/somefile"))
       m.setUrl("someurl")
       writer.write(sw, Collections.emptyMap[String, AnyRef](), m)

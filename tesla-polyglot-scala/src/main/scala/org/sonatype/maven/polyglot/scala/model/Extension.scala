@@ -7,7 +7,11 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Extension(gav: Gav)
+class Extension(val gav: Gav)
+
+object Extension {
+  def apply(gav: Gav) = new Extension(gav)
+}
 
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._

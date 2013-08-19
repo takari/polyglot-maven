@@ -7,15 +7,15 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Dependency(
-                       gav: Gav,
-                       `type`: String,
-                       classifier: Option[String],
-                       scope: Option[String],
-                       systemPath: Option[String],
-                       exclusions: Seq[GroupArtifactId],
-                       optional: Boolean
-                       )
+class Dependency(
+                  val gav: Gav,
+                  val `type`: String,
+                  val classifier: Option[String],
+                  val scope: Option[String],
+                  val systemPath: Option[String],
+                  val exclusions: Seq[GroupArtifactId],
+                  val optional: Boolean
+                  )
 
 object Dependency {
   def apply(

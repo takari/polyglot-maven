@@ -7,10 +7,10 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Parent(
-                   gav: Option[Gav],
-                   relativePath: String
-                   )
+class Parent(
+              val gav: Option[Gav],
+              val relativePath: String
+              )
 
 object Parent {
   def apply(
@@ -42,7 +42,7 @@ import org.apache.maven.model.{Parent => MavenParent}
 class ConvertibleMavenParent(mp: MavenParent) {
   def asScala: Parent = {
     Parent(
-      Option(mp.getArtifactId).map(artifactId => (mp.getGroupId, artifactId, mp.getVersion).asScala),
+      Option(mp.getArtifactId).map(artifactId => (mp.getGroupId, artifactId, mp.getVersion).asScala).orNull,
       mp.getRelativePath
     )
   }

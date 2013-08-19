@@ -7,12 +7,12 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Relocation(
-                       groupId: Option[String],
-                       artifactId: Option[String],
-                       version: Option[String],
-                       message: Option[String]
-                       )
+class Relocation(
+                  val groupId: Option[String],
+                  val artifactId: Option[String],
+                  val version: Option[String],
+                  val message: Option[String]
+                  )
 
 object Relocation {
   def apply(

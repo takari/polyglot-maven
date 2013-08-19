@@ -7,14 +7,14 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class DistributionManagement(
-                                   repository: Option[DeploymentRepository],
-                                   snapshotRepository: Option[DeploymentRepository],
-                                   site: Option[Site],
-                                   downloadUrl: Option[String],
-                                   relocation: Option[Relocation],
-                                   status: Option[String]
-                                   )
+class DistributionManagement(
+                              val repository: Option[DeploymentRepository],
+                              val snapshotRepository: Option[DeploymentRepository],
+                              val site: Option[Site],
+                              val downloadUrl: Option[String],
+                              val relocation: Option[Relocation],
+                              val status: Option[String]
+                              )
 
 object DistributionManagement {
   def apply(
@@ -58,12 +58,12 @@ import org.apache.maven.model.{DistributionManagement => MavenDistributionManage
 class ConvertibleMavenDistributionManagement(mdm: MavenDistributionManagement) {
   def asScala: DistributionManagement = {
     DistributionManagement(
-      Option(mdm.getRepository).map(_.asScala),
-      Option(mdm.getSnapshotRepository).map(_.asScala),
-      Option(mdm.getSite).map(_.asScala),
-      Option(mdm.getDownloadUrl),
-      Option(mdm.getRelocation).map(_.asScala),
-      Option(mdm.getStatus)
+      Option(mdm.getRepository).map(_.asScala).orNull,
+      Option(mdm.getSnapshotRepository).map(_.asScala).orNull,
+      Option(mdm.getSite).map(_.asScala).orNull,
+      mdm.getDownloadUrl,
+      Option(mdm.getRelocation).map(_.asScala).orNull,
+      mdm.getStatus
     )
   }
 }

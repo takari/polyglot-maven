@@ -7,13 +7,13 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Resource(
-                     targetPath: Option[String],
-                     filtering: Boolean,
-                     directory: Option[String],
-                     includes: Seq[String],
-                     excludes: Seq[String]
-                     )
+class Resource(
+                val targetPath: Option[String],
+                val filtering: Boolean,
+                val directory: Option[String],
+                val includes: Seq[String],
+                val excludes: Seq[String]
+                )
 
 object Resource {
   def apply(
@@ -35,7 +35,7 @@ object Resource {
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
-class PrettiedResource(r: Resource)  {
+class PrettiedResource(r: Resource) {
   def asDoc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     r.targetPath.foreach(args += assignString("targetPath", _))

@@ -7,12 +7,24 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class RepositoryPolicy(
-                             enabled: Boolean,
-                             updatePolicy: String = "daily",
-                             checksumPolicy: String = "warn"
-                             )
+class RepositoryPolicy(
+                        val enabled: Boolean,
+                        val updatePolicy: String,
+                        val checksumPolicy: String
+                        )
 
+object RepositoryPolicy {
+  def apply(
+             enabled: Boolean,
+             updatePolicy: String = "daily",
+             checksumPolicy: String = "warn"
+             ) =
+    new RepositoryPolicy(
+      enabled,
+      updatePolicy,
+      checksumPolicy
+    )
+}
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 

@@ -10,7 +10,7 @@ package org.sonatype.maven.polyglot.scala
 import java.util
 import org.apache.maven.model.io.ModelReader
 import com.twitter.util.Eval
-import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, CiManagement => ScalaCiManagement, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, Model => ScalaModel, Notifier => ScalaNotifier, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Site => ScalaSite, _}
+import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, CiManagement => ScalaCiManagement, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Site => ScalaSite, _}
 import org.codehaus.plexus.util.{FileUtils, IOUtil}
 import java.io._
 import org.codehaus.plexus.component.annotations.Component
@@ -47,15 +47,25 @@ object ScalaConverters {
 
   implicit def enrichScalaExtension(v: ScalaExtension) = new ConvertibleScalaExtension(v)
 
+  implicit def enrichScalaIssueManagement(v: ScalaIssueManagement) = new ConvertibleScalaIssueManagement(v)
+
+  implicit def enrichScalaLicense(v: ScalaLicense) = new ConvertibleScalaLicense(v)
+
+  implicit def enrichScalaMailingList(v: ScalaMailingList) = new ConvertibleScalaMailingList(v)
+
   implicit def enrichScalaModel(v: ScalaModel) = new ConvertibleScalaModel(v)
 
   implicit def enrichScalaNotifier(v: ScalaNotifier) = new ConvertibleScalaNotifier(v)
+
+  implicit def enrichScalaOrganization(v: ScalaOrganization) = new ConvertibleScalaOrganization(v)
 
   implicit def enrichScalaParent(v: ScalaParent) = new ConvertibleScalaParent(v)
 
   implicit def enrichScalaPlugin(v: ScalaPlugin) = new ConvertibleScalaPlugin(v)
 
   implicit def enrichScalaPluginManagement(v: ScalaPluginManagement) = new ConvertibleScalaPluginManagement(v)
+
+  implicit def enrichScalaPrerequisites(v: Prerequisites) = new ConvertibleScalaPrerequisites(v)
 
   implicit def enrichScalaProperties(v: Map[String, String]) = new ConvertibleScalaProperties(v)
 
