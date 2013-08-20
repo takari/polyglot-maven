@@ -56,14 +56,14 @@ class PrettiedNotifier(n: Notifier) {
 }
 
 
-import org.sonatype.maven.polyglot.scala.MavenConverters._
+import scala.collection.JavaConverters._
 import org.apache.maven.model.{Notifier => MavenNotifier}
 
 class ConvertibleMavenNotifier(mn: MavenNotifier) {
   def asScala: Notifier = {
     Notifier(
       mn.getAddress,
-      mn.getConfiguration.asScala,
+      mn.getConfiguration.asScala.toMap,
       mn.isSendOnError,
       mn.isSendOnFailure,
       mn.isSendOnSuccess,
@@ -73,13 +73,18 @@ class ConvertibleMavenNotifier(mn: MavenNotifier) {
   }
 }
 
-import org.sonatype.maven.polyglot.scala.ScalaConverters._
+import java.util.Properties
 
 class ConvertibleScalaNotifier(n: Notifier) {
   def asJava: MavenNotifier = {
     val mn = new MavenNotifier
     mn.setAddress(n.address.orNull)
-    mn.setConfiguration(Some(n.configuration).map(_.asJava).orNull)
+    mn.setConfiguration(Some(n.configuration).map({
+      c =>
+        val p = new Properties
+        p.putAll(c.asJava)
+        p
+    }).orNull[Properties])
     mn.setSendOnError(n.sendOnError)
     mn.setSendOnFailure(n.sendOnFailure)
     mn.setSendOnSuccess(n.sendOnSuccess)

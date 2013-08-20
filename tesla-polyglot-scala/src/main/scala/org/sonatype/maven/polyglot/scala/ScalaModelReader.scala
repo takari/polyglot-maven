@@ -10,7 +10,7 @@ package org.sonatype.maven.polyglot.scala
 import java.util
 import org.apache.maven.model.io.ModelReader
 import com.twitter.util.Eval
-import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, CiManagement => ScalaCiManagement, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Site => ScalaSite, _}
+import org.sonatype.maven.polyglot.scala.model.{Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Site => ScalaSite, _}
 import org.codehaus.plexus.util.{FileUtils, IOUtil}
 import java.io._
 import org.codehaus.plexus.component.annotations.Component
@@ -25,7 +25,17 @@ import org.sonatype.maven.polyglot.PolyglotModelUtil
  * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
  */
 object ScalaConverters {
+  implicit def enrichScalaActivation(v: ScalaActivation) = new ConvertibleScalaActivation(v)
+
+  implicit def enrichScalaActivationFile(v: ScalaActivationFile) = new ConvertibleScalaActivationFile(v)
+
+  implicit def enrichScalaActivationOS(v: ScalaActivationOS) = new ConvertibleScalaActivationOS(v)
+
+  implicit def enrichScalaActivationProperty(v: ScalaActivationProperty) = new ConvertibleScalaActivationProperty(v)
+
   implicit def enrichScalaBuild(v: ScalaBuild) = new ConvertibleScalaBuild(v)
+
+  implicit def enrichScalaBuildBase(v: ScalaBuildBase) = new ConvertibleScalaBuildBase(v)
 
   implicit def enrichScalaCiManagement(v: ScalaCiManagement) = new ConvertibleScalaCiManagement(v)
 
@@ -67,7 +77,7 @@ object ScalaConverters {
 
   implicit def enrichScalaPrerequisites(v: Prerequisites) = new ConvertibleScalaPrerequisites(v)
 
-  implicit def enrichScalaProperties(v: Map[String, String]) = new ConvertibleScalaProperties(v)
+  implicit def enrichScalaProfile(v: Profile) = new ConvertibleScalaProfile(v)
 
   implicit def enrichScalaReleasePolicy(v: ScalaRepositoryPolicy) = new ConvertibleScalaRepositoryPolicy(v)
 

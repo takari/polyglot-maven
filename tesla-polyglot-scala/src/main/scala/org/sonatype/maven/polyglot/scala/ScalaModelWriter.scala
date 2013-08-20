@@ -13,9 +13,8 @@ import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.kiama.output.PrettyPrinter
 import org.apache.maven.model.io.ModelWriter
 import org.codehaus.plexus.component.annotations.Component
-import org.apache.maven.model.{Build => MavenBuild, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Site => MavenSite}
+import org.apache.maven.model.{Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Site => MavenSite}
 import org.sonatype.maven.polyglot.scala.model._
-import java.util.Properties
 import scala.xml.Elem
 
 /**
@@ -48,7 +47,17 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   // Implicit conversions for prettifying
 
+  implicit def enrichPrettiedActivation(v: Activation) = new PrettiedActivation(v)
+
+  implicit def enrichPrettiedActivationFile(v: ActivationFile) = new PrettiedActivationFile(v)
+
+  implicit def enrichPrettiedActivationOS(v: ActivationOS) = new PrettiedActivationOS(v)
+
+  implicit def enrichPrettiedActivationProperty(v: ActivationProperty) = new PrettiedActivationProperty(v)
+
   implicit def enrichPrettiedBuild(v: Build) = new PrettiedBuild(v)
+
+  implicit def enrichPrettiedBuildBase(v: BuildBase) = new PrettiedBuildBase(v)
 
   implicit def enrichPrettiedCiManagement(v: CiManagement) = new PrettiedCiManagement(v)
 
@@ -84,6 +93,8 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   implicit def enrichPrettiedModel(v: Model) = new PrettiedModel(v)
 
+  implicit def enrichPrettiedModelBase(v: ModelBase) = new PrettiedModelBase(v)
+
   implicit def enrichPrettiedNotifier(v: Notifier) = new PrettiedNotifier(v)
 
   implicit def enrichPrettiedOrganization(v: Organization) = new PrettiedOrganization(v)
@@ -97,6 +108,8 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   implicit def enrichPrettiedPluginManagement(v: PluginManagement) = new PrettiedPluginManagement(v)
 
   implicit def enrichPrettiedPrerequisites(v: Prerequisites) = new PrettiedPrerequisites(v)
+
+  implicit def enrichPrettiedProfile(v: Profile) = new PrettiedProfile(v)
 
   implicit def enrichPrettiedProperties(v: Map[String, String]) = new PrettiedProperties(v)
 
@@ -115,7 +128,17 @@ object ScalaPrettyPrinter extends PrettyPrinter {
  * implicit conversions around the "pimp my library" approach for converting Maven models to their Scala types.
  */
 object MavenConverters {
+  implicit def enrichConvertibleActivation(v: MavenActivation) = new ConvertibleMavenActivation(v)
+
+  implicit def enrichConvertibleActivationFile(v: MavenActivationFile) = new ConvertibleMavenActivationFile(v)
+
+  implicit def enrichConvertibleActivationOS(v: MavenActivationOS) = new ConvertibleMavenActivationOS(v)
+
+  implicit def enrichConvertibleActivationProperty(v: MavenActivationProperty) = new ConvertibleMavenActivationProperty(v)
+
   implicit def enrichConvertibleBuild(v: MavenBuild) = new ConvertibleMavenBuild(v)
+
+  implicit def enrichConvertibleBuildBase(v: MavenBuildBase) = new ConvertibleMavenBuildBase(v)
 
   implicit def enrichConvertibleCiManagement(v: MavenCiManagement) = new ConvertibleMavenCiManagement(v)
 
@@ -161,7 +184,7 @@ object MavenConverters {
 
   implicit def enrichConvertiblePrerequisites(v: MavenPrerequisites) = new ConvertibleMavenPrerequisites(v)
 
-  implicit def enrichConvertibleProperties(v: Properties) = new ConvertibleMavenProperties(v)
+  implicit def enrichConvertibleProfile(v: MavenProfile) = new ConvertibleMavenProfile(v)
 
   implicit def enrichConvertibleRelocation(v: MavenRelocation) = new ConvertibleMavenRelocation(v)
 

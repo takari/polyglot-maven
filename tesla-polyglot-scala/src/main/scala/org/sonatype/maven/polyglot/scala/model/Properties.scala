@@ -12,21 +12,3 @@ import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 class PrettiedProperties(p: Map[String, String]) {
   def asDoc: Doc = mapStrings(p)
 }
-
-
-import scala.collection.JavaConverters._
-import java.util.{Properties => MavenProperties}
-
-class ConvertibleMavenProperties(mp: MavenProperties) {
-  def asScala: Map[String, String] = {
-    mp.stringPropertyNames().asScala.map(k => k -> mp.getProperty(k)).toMap
-  }
-}
-
-class ConvertibleScalaProperties(p: Map[String, String]) {
-  def asJava: MavenProperties = {
-    val mp = new MavenProperties()
-    p.foreach(kv => mp.setProperty(kv._1, kv._2))
-    mp
-  }
-}

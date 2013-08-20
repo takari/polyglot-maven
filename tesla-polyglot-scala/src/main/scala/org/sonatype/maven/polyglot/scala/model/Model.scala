@@ -12,26 +12,39 @@ class Model(
              val build: Option[Build],
              val ciManagement: Option[CiManagement],
              val contributors: Seq[Contributor],
-             val dependencyManagement: Option[DependencyManagement],
-             val dependencies: Seq[Dependency],
+             dependencyManagement: Option[DependencyManagement],
+             dependencies: Seq[Dependency],
              val description: Option[String],
              val developers: Seq[Developer],
-             val distributionManagement: Option[DistributionManagement],
+             distributionManagement: Option[DistributionManagement],
              val inceptionYear: Option[String],
              val issueManagement: Option[IssueManagement],
              val licenses: Seq[License],
              val mailingLists: Seq[MailingList],
              val modelEncoding: String,
              val modelVersion: Option[String],
-             val modules: Seq[String],
+             modules: Seq[String],
              val name: Option[String],
              val organization: Option[Organization],
              val packaging: String,
              val parent: Option[Parent],
+             pluginRepositories: Seq[Repository],
              val pomFile: Option[File],
              val prerequisites: Option[Prerequisites],
+             val profiles: Seq[Profile],
+             val properties: Map[String, String],
+             repositories: Seq[Repository],
              val url: Option[String]
-             ) {
+             )
+  extends
+  ModelBase(
+    dependencyManagement,
+    dependencies,
+    distributionManagement,
+    modules,
+    pluginRepositories,
+    repositories
+  ) {
   def copy(pomFile: Option[File]): Model =
     new Model(
       gav,
@@ -54,8 +67,12 @@ class Model(
       organization,
       packaging,
       parent,
+      pluginRepositories,
       pomFile,
       prerequisites,
+      profiles,
+      properties,
+      repositories,
       url
     )
 }
@@ -82,8 +99,12 @@ object Model {
              organization: Organization = null,
              packaging: String = "jar",
              parent: Parent = null,
+             pluginRepositories: Seq[Repository] = Nil,
              pomFile: File = null,
              prerequisites: Prerequisites = null,
+             profiles: Seq[Profile] = Nil,
+             properties: Map[String, String] = Map.empty,
+             repositories: Seq[Repository] = Nil,
              url: String = null
              ) =
     new Model(
@@ -107,8 +128,12 @@ object Model {
       Option(organization),
       packaging,
       Option(parent),
+      pluginRepositories,
       Option(pomFile),
       Option(prerequisites),
+      profiles,
+      properties,
+      repositories,
       Option(url)
     )
 }
@@ -133,11 +158,10 @@ class PrettiedModel(m: Model) {
     Some(m.licenses).filterNot(_.isEmpty).foreach(ls => args += assign("licenses", seq(ls.map(_.asDoc))))
     m.organization.foreach(o => args += assign("organization", o.asDoc))
     m.parent.foreach(p => args += assign("parent", p.asDoc))
-    Some(m.modules).filterNot(_.isEmpty).foreach(m => args += assign("modules", seqString(m)))
-    Some(m.dependencies).filterNot(_.isEmpty).foreach(es => args += assign("dependencies", seq(es.map(_.asDoc))))
-    m.dependencyManagement.foreach(dm => args += assign("dependencyManagement", dm.asDoc))
-    m.distributionManagement.foreach(dm => args += assign("distributionManagement", dm.asDoc))
+    args ++= m.asDocArgs
+    Some(m.properties).filterNot(_.isEmpty).foreach(ps => args += assign("properties", ps.asDoc))
     m.build.foreach(b => args += assign("build", b.asDoc))
+    Some(m.profiles).filterNot(_.isEmpty).foreach(ps => args += assign("profiles", seq(ps.map(_.asDoc))))
     Some(m.modelEncoding).filterNot(_ == "UTF-8").foreach(args += assignString("modelEncoding", _))
     m.modelVersion.foreach(args += assignString("modelVersion", _))
     `object`("Model", args)
@@ -172,14 +196,19 @@ class ConvertibleMavenModel(mm: MavenModel) {
       Option(mm.getOrganization).map(_.asScala).orNull,
       mm.getPackaging,
       Option(mm.getParent).map(_.asScala).orNull,
+      mm.getPluginRepositories.asScala.map(_.asScala),
       mm.getPomFile,
       Option(mm.getPrerequisites).map(_.asScala).orNull,
+      mm.getProfiles.asScala.map(_.asScala),
+      mm.getProperties.asScala.toMap,
+      mm.getRepositories.asScala.map(_.asScala),
       mm.getUrl
     )
   }
 }
 
 import org.sonatype.maven.polyglot.scala.ScalaConverters._
+import java.util.Properties
 
 class ConvertibleScalaModel(m: Model) {
   def asJava: MavenModel = {
@@ -205,14 +234,18 @@ class ConvertibleScalaModel(m: Model) {
     mm.setOrganization(m.organization.map(_.asJava).orNull)
     mm.setPackaging(m.packaging)
     mm.setParent(m.parent.map(_.asJava).orNull)
+    mm.setPluginRepositories(m.pluginRepositories.map(_.asJava).asJava)
     mm.setPomFile(m.pomFile.orNull)
     mm.setPrerequisites(m.prerequisites.map(_.asJava).orNull)
-    //mm.setProfiles(m.profiles)
-    //mm.setPluginRepositories(m.pluginRepositories)
-    //mm.setProperties(m.properties)
+    mm.setProfiles(m.profiles.map(_.asJava).asJava)
+    mm.setProperties(Some(m.properties).map({
+      m =>
+        val p = new Properties
+        p.putAll(m.asJava)
+        p
+    }).orNull)
     //mm.setReporting(m.reporting)
-    //mm.setReports(m.reports)
-    //mm.setRepositories(m.repositories)
+    mm.setRepositories(m.repositories.map(_.asJava).asJava)
     //mm.setScm(m.scm)
     mm.setUrl(m.url.orNull)
     mm.setVersion(m.gav.version.orNull)

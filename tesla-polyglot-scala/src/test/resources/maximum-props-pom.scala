@@ -89,6 +89,42 @@ Model(
   modules = Seq(
     "someModule"
   ),
+  repositories = Seq(
+    Repository(
+      releases = RepositoryPolicy(
+        enabled = false,
+        updatePolicy = "someUpdatePolicy",
+        checksumPolicy = "someChecksumPolicy"
+      ),
+      snapshots = RepositoryPolicy(
+        enabled = false,
+        updatePolicy = "someUpdatePolicy",
+        checksumPolicy = "someChecksumPolicy"
+      ),
+      id = "someId",
+      name = "someName",
+      url = "someUrl",
+      layout = "someLayout"
+    )
+  ),
+  pluginRepositories = Seq(
+    Repository(
+      releases = RepositoryPolicy(
+        enabled = false,
+        updatePolicy = "someUpdatePolicy",
+        checksumPolicy = "someChecksumPolicy"
+      ),
+      snapshots = RepositoryPolicy(
+        enabled = false,
+        updatePolicy = "someUpdatePolicy",
+        checksumPolicy = "someChecksumPolicy"
+      ),
+      id = "someId",
+      name = "someName",
+      url = "someUrl",
+      layout = "someLayout"
+    )
+  ),
   dependencies = Seq(
     Dependency(
       "someGroupId" % "someArtifactId" % "someVersion",
@@ -165,6 +201,9 @@ Model(
       message = "someMessage"
     ),
     status = "someStatus"
+  ),
+  properties = Map(
+    "someKey" -> "someValue"
   ),
   build = Build(
     sourceDirectory = "someSourceDirectory",
@@ -277,6 +316,49 @@ Model(
         inherited = false,
         configuration =
           <someconfiguration>value</someconfiguration>
+      )
+    )
+  ),
+  profiles = Seq(
+    Profile(
+      id = "someId",
+      activation = Activation(
+        activeByDefault = true,
+        jdk = "someJdk",
+        os = ActivationOS(
+          name = "someName",
+          family = "someFamily",
+          arch = "someArch",
+          version = "someVersion"
+        ),
+        property = ActivationProperty(
+          name = "someName",
+          value = "someValue"
+        ),
+        file = ActivationFile(
+          missing = "someMissing",
+          exists = "someExists"
+        )
+      ),
+      build = BuildBase(
+      ),
+      modules = Seq(
+        "someModule"
+      ),
+      repositories = Seq(
+        Repository(
+        )
+      ),
+      pluginRepositories = Seq(
+        Repository(
+        )
+      ),
+      dependencies = Seq(
+        "someGroupId" % "someArtifactId" % "someVersion"
+      ),
+      dependencyManagement = DependencyManagement(
+      ),
+      distributionManagement = DistributionManagement(
       )
     )
   ),

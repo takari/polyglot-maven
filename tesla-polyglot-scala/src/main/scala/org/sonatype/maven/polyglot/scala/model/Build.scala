@@ -7,22 +7,33 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class Build(
-                  sourceDirectory: Option[String],
-                  scriptSourceDirectory: Option[String],
-                  testSourceDirectory: Option[String],
-                  outputDirectory: Option[String],
-                  testOutputDirectory: Option[String],
-                  extensions: Seq[Extension],
-                  defaultGoal: Option[String],
-                  resources: Seq[Resource],
-                  testResources: Seq[Resource],
-                  directory: Option[String],
-                  finalName: Option[String],
-                  filters: Seq[String],
-                  pluginManagement: Option[PluginManagement],
-                  plugins: Seq[Plugin]
-                  )
+class Build(
+             val sourceDirectory: Option[String],
+             val scriptSourceDirectory: Option[String],
+             val testSourceDirectory: Option[String],
+             val outputDirectory: Option[String],
+             val testOutputDirectory: Option[String],
+             val extensions: Seq[Extension],
+             defaultGoal: Option[String],
+             resources: Seq[Resource],
+             testResources: Seq[Resource],
+             directory: Option[String],
+             finalName: Option[String],
+             filters: Seq[String],
+             pluginManagement: Option[PluginManagement],
+             plugins: Seq[Plugin]
+             )
+  extends
+  BuildBase(
+    defaultGoal,
+    resources,
+    testResources,
+    directory,
+    finalName,
+    filters,
+    pluginManagement,
+    plugins
+  )
 
 object Build {
   def apply(
@@ -62,7 +73,7 @@ object Build {
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
-class PrettiedBuild(b: Build)  {
+class PrettiedBuild(b: Build) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     b.sourceDirectory.foreach(args += assignString("sourceDirectory", _))
@@ -71,14 +82,7 @@ class PrettiedBuild(b: Build)  {
     b.outputDirectory.foreach(args += assignString("outputDirectory", _))
     b.testOutputDirectory.foreach(args += assignString("testOutputDirectory", _))
     Some(b.extensions).filterNot(_.isEmpty).foreach(es => args += assign("extensions", seq(es.map(_.asDoc))))
-    b.defaultGoal.foreach(args += assignString("defaultGoal", _))
-    Some(b.resources).filterNot(_.isEmpty).foreach(r => args += assign("resources", seq(r.map(_.asDoc))))
-    Some(b.testResources).filterNot(_.isEmpty).foreach(trs => args += assign("testResources", seq(trs.map(_.asDoc))))
-    b.directory.foreach(args += assignString("directory", _))
-    b.finalName.foreach(args += assignString("finalName", _))
-    Some(b.filters).filterNot(_.isEmpty).foreach(f => args += assign("filters", seqString(f)))
-    b.pluginManagement.foreach(pm => args += assign("pluginManagement", pm.asDoc))
-    Some(b.plugins).filterNot(_.isEmpty).foreach(ps => args += assign("plugins", seq(ps.map(_.asDoc))))
+    args ++= b.asDocArgs
     `object`("Build", args)
   }
 }
