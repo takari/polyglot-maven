@@ -78,6 +78,12 @@ Model(
       comments = "someComments"
     )
   ),
+  scm = Scm(
+    connection = "someConnection",
+    developerConnection = "someDeveloperConnection",
+    tag = "someTag",
+    url = "someUrl"
+  ),
   organization = Organization(
     name = "someName",
     url = "someUrl"

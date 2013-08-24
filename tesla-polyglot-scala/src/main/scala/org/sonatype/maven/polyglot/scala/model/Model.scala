@@ -34,6 +34,7 @@ class Model(
              val profiles: Seq[Profile],
              val properties: Map[String, String],
              repositories: Seq[Repository],
+             val scm: Option[Scm],
              val url: Option[String]
              )
   extends
@@ -73,6 +74,7 @@ class Model(
       profiles,
       properties,
       repositories,
+      scm,
       url
     )
 }
@@ -105,6 +107,7 @@ object Model {
              profiles: Seq[Profile] = Nil,
              properties: Map[String, String] = Map.empty,
              repositories: Seq[Repository] = Nil,
+             scm: Scm = null,
              url: String = null
              ) =
     new Model(
@@ -134,6 +137,7 @@ object Model {
       profiles,
       properties,
       repositories,
+      Option(scm),
       Option(url)
     )
 }
@@ -156,6 +160,7 @@ class PrettiedModel(m: Model) {
     Some(m.developers).filterNot(_.isEmpty).foreach(ds => args += assign("developers", seq(ds.map(_.asDoc))))
     Some(m.contributors).filterNot(_.isEmpty).foreach(cs => args += assign("contributors", seq(cs.map(_.asDoc))))
     Some(m.licenses).filterNot(_.isEmpty).foreach(ls => args += assign("licenses", seq(ls.map(_.asDoc))))
+    m.scm.foreach(ps => args += assign("scm", ps.asDoc))
     m.organization.foreach(o => args += assign("organization", o.asDoc))
     m.parent.foreach(p => args += assign("parent", p.asDoc))
     args ++= m.asDocArgs
@@ -202,6 +207,7 @@ class ConvertibleMavenModel(mm: MavenModel) {
       mm.getProfiles.asScala.map(_.asScala),
       mm.getProperties.asScala.toMap,
       mm.getRepositories.asScala.map(_.asScala),
+      Option(mm.getScm).map(_.asScala).orNull,
       mm.getUrl
     )
   }
@@ -244,9 +250,8 @@ class ConvertibleScalaModel(m: Model) {
         p.putAll(m.asJava)
         p
     }).orNull)
-    //mm.setReporting(m.reporting)
     mm.setRepositories(m.repositories.map(_.asJava).asJava)
-    //mm.setScm(m.scm)
+    mm.setScm(m.scm.map(_.asJava).orNull)
     mm.setUrl(m.url.orNull)
     mm.setVersion(m.gav.version.orNull)
     mm

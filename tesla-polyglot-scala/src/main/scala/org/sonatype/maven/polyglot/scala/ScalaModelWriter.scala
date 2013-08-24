@@ -13,7 +13,7 @@ import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.kiama.output.PrettyPrinter
 import org.apache.maven.model.io.ModelWriter
 import org.codehaus.plexus.component.annotations.Component
-import org.apache.maven.model.{Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Site => MavenSite}
+import org.apache.maven.model.{Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Scm => MavenScm, Site => MavenSite}
 import org.sonatype.maven.polyglot.scala.model._
 import scala.xml.Elem
 
@@ -121,6 +121,8 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   implicit def enrichPrettiedResource(v: Resource) = new PrettiedResource(v)
 
+  implicit def enrichPrettiedScm(v: Scm) = new PrettiedScm(v)
+
   implicit def enrichPrettiedSite(v: Site) = new PrettiedSite(v)
 }
 
@@ -193,6 +195,8 @@ object MavenConverters {
   implicit def enrichConvertibleRepository(v: MavenRepository) = new ConvertibleMavenRepository(v)
 
   implicit def enrichConvertibleResource(v: MavenResource) = new ConvertibleMavenResource(v)
+
+  implicit def enrichConvertibleScm(v: MavenScm) = new ConvertibleMavenScm(v)
 
   implicit def enrichConvertibleSite(v: MavenSite) = new ConvertibleMavenSite(v)
 }

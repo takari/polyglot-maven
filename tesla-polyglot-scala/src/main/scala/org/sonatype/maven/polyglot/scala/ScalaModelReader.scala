@@ -10,7 +10,7 @@ package org.sonatype.maven.polyglot.scala
 import java.util
 import org.apache.maven.model.io.ModelReader
 import com.twitter.util.Eval
-import org.sonatype.maven.polyglot.scala.model.{Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Site => ScalaSite, _}
+import org.sonatype.maven.polyglot.scala.model.{Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Scm => ScalaScm, Site => ScalaSite, _}
 import org.codehaus.plexus.util.{FileUtils, IOUtil}
 import java.io._
 import org.codehaus.plexus.component.annotations.Component
@@ -86,6 +86,8 @@ object ScalaConverters {
   implicit def enrichScalaRepository(v: ScalaRepository) = new ConvertibleScalaRepository(v)
 
   implicit def enrichScalaResource(v: ScalaResource) = new ConvertibleScalaResource(v)
+
+  implicit def enrichScalaScm(v: ScalaScm) = new ConvertibleScalaScm(v)
 
   implicit def enrichScalaSite(v: ScalaSite) = new ConvertibleScalaSite(v)
 }
