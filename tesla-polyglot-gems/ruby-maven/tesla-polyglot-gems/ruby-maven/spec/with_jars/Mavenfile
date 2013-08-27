@@ -1,0 +1,9 @@
+# -*- mode:ruby -*-
+
+gemspec
+jarfile
+scope :test do
+  jar 'junit:junit', '4.11'
+end
+
+# vim: syntax=Ruby
