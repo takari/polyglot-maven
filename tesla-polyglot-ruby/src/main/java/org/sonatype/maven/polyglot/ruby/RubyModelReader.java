@@ -21,6 +21,7 @@ import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
+import org.sonatype.maven.polyglot.PolyglotModelUtil;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
@@ -43,6 +44,9 @@ public class RubyModelReader extends ModelReaderSupport {
         StringWriter ruby = new StringWriter();
         IOUtil.copy( input, ruby );
         // parse the String and create a POM model
+
+        //String src = PolyglotModelUtil.getLocation( options );
+        //final File source = src == null ? null : new File( src );
         Object src = options.get( ModelProcessor.SOURCE );
         final File source;
         if ( src instanceof URL )

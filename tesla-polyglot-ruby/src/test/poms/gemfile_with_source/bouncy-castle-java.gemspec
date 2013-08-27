@@ -1,8 +1,10 @@
 #-*- mode: ruby -*-
 
+require './bouncy-castle-version.rb'
+
 Gem::Specification.new do |s|
   s.name = 'bouncy-castle-java'
-  s.version = "1.5.0"
+  s.version = "1.5.0#{BouncyCastle::VERSION}"
   s.author = 'Hiroshi Nakamura'
   s.email = [ 'nahi@ruby-lang.org' ]
   s.rubyforge_project = "jruby-extras"
@@ -12,6 +14,9 @@ Gem::Specification.new do |s|
   # TODO why ruby platform ???
   s.platform = Gem::Platform::RUBY
   s.files = ['README', 'LICENSE.html', 'lib/bouncy-castle-java.rb' ] + Dir['lib/bc*.jar' ]
+  s.requirements << "jar org.bouncycastle:bcpkix-jdk15on, #{BouncyCastle::MAVEN_VERSION}"
+  s.requirements << "jar org.bouncycastle:bcprov-jdk15on, #{BouncyCastle::MAVEN_VERSION}"
+  s.require_path = 'mylib'
 end
 
 # vim: syntax=Ruby

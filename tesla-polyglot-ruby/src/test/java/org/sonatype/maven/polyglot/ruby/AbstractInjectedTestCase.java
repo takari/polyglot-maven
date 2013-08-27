@@ -109,7 +109,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	    {
 	    	// Let's take a look at see what's there
 	    	System.out.println(xml.toString());
-            //System.out.println(ruby.toString());
+            System.out.println(ruby.toString());
 	    }
 	    
 	    assertEquals( simplify( xml, debug ), simplify( ruby, debug ) );

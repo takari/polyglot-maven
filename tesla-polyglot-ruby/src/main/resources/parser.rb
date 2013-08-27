@@ -42,7 +42,11 @@ module Tesla
     def parse( pom, factory, src )
       @factory = factory
 
-      eval_pom( "tesla do\n#{pom}\nend", src )
+      if src and ( src.match /[.]gemspec$/ )
+          eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src ) 
+      else
+	      eval_pom( "tesla do\n#{pom}\nend", src )
+	  end
 
     ensure
       # keep no state for the execute blocks
