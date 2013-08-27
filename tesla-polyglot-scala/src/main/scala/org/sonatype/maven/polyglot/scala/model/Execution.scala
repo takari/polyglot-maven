@@ -7,14 +7,12 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-import scala.xml.Elem
-
 class Execution(
                  val id: String,
                  val phase: Option[String],
                  val goals: Seq[String],
                  override val inherited: Boolean,
-                 override val configuration: Option[Elem]
+                 override val configuration: Option[Config]
                  ) extends ConfigurationContainer(inherited, configuration)
 
 object Execution {
@@ -23,7 +21,7 @@ object Execution {
              phase: String = null,
              goals: Seq[String] = Seq.empty,
              inherited: Boolean = true,
-             configuration: Elem = null
+             configuration: Config = null
              ) = {
     new Execution(
       id,

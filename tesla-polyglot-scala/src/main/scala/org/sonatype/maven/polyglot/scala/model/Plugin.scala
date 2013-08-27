@@ -7,15 +7,13 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-import scala.xml.Elem
-
 class Plugin(
               val gav: Gav,
               val extensions: Boolean,
               val executions: Seq[Execution],
               val dependencies: Seq[Dependency],
               override val inherited: Boolean,
-              override val configuration: Option[Elem]
+              override val configuration: Option[Config]
               ) extends ConfigurationContainer(inherited, configuration)
 
 object Plugin {
@@ -25,7 +23,7 @@ object Plugin {
              executions: Seq[Execution] = Seq.empty,
              dependencies: Seq[Dependency] = Seq.empty,
              inherited: Boolean = true,
-             configuration: Elem = null
+             configuration: Config = null
              ) =
     new Plugin(
       gav,

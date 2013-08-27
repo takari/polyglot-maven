@@ -15,7 +15,6 @@ import org.apache.maven.model.io.ModelWriter
 import org.codehaus.plexus.component.annotations.Component
 import org.apache.maven.model.{Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Scm => MavenScm, Site => MavenSite}
 import org.sonatype.maven.polyglot.scala.model._
-import scala.xml.Elem
 
 /**
  * Responsible for printing Scala source.
@@ -61,7 +60,7 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   implicit def enrichPrettiedCiManagement(v: CiManagement) = new PrettiedCiManagement(v)
 
-  implicit def enrichPrettiedConfig(v: Elem) = new PrettiedConfig(v)
+  implicit def enrichPrettiedConfig(v: Config) = new PrettiedConfig(v)
 
   implicit def enrichPrettiedConfigurationContainer(v: ConfigurationContainer) = new PrettiedConfigurationContainer(v)
 

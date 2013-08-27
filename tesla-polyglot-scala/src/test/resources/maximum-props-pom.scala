@@ -267,8 +267,9 @@ Model(
                 "someGoal"
               ),
               inherited = false,
-              configuration =
-                <someconfiguration>value</someconfiguration>
+              configuration = Config(
+                someconfiguration = "value"
+              )
             )
           ),
           dependencies = Seq(
@@ -285,8 +286,9 @@ Model(
             )
           ),
           inherited = false,
-          configuration =
-            <someconfiguration>value</someconfiguration>
+          configuration = Config(
+            someconfiguration = "value"
+          )
         )
       )
     ),
@@ -302,8 +304,9 @@ Model(
               "someGoal"
             ),
             inherited = false,
-            configuration =
-              <someconfiguration>value</someconfiguration>
+            configuration = Config(
+              someconfiguration = "value"
+            )
           )
         ),
         dependencies = Seq(
@@ -320,8 +323,9 @@ Model(
           )
         ),
         inherited = false,
-        configuration =
-          <someconfiguration>value</someconfiguration>
+        configuration = Config(
+          someconfiguration = "value"
+        )
       )
     )
   ),
