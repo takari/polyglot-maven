@@ -9,3 +9,4 @@ log/
 target/
 .tesla.pom.xml
 tesla-polyglot-*-SNAPSHOT/
+.cache

@@ -67,7 +67,7 @@ class ConfigSpec extends Specification {
       child3.getValue must beNull
     }
     "should permit elements to be assigned via dynamic apply" in {
-      val config = Config.apply(key1 = Config.apply(key2 = "value2", key3 = None))
+      val config = Config(key1 = Config(key2 = "value2", key3 = None))
 
       val es = config.elements
 
