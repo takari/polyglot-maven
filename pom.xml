@@ -100,6 +100,7 @@
             <exclude>**/target/**</exclude>
             <exclude>**/conf/**</exclude>
             <exclude>**/.*</exclude>
+            <exclude>**/pkg/**</exclude>
             <exclude>**/.idea/**</exclude>
             <exclude>**/src/test/resources/*.scala</exclude>
           </excludes>
