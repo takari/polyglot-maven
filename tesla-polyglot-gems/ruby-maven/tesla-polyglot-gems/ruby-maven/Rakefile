@@ -2,6 +2,8 @@
 
 require 'maven/ruby/tasks'
 
+task :default => :test
+
 task :test do
   begin
     require 'minitest'
