@@ -143,11 +143,14 @@
       <outputDirectory>ext/scala</outputDirectory>
       <includes>
         <include>io.tesla.polyglot:tesla-polyglot-scala</include>
-        <include>com.twitter:util-eval_2.9.2</include>
-        <include>jline:jline</include>
+        <include>com.twitter:util-eval_2.10</include>
+        <include>com.twitter:util-core_2.10</include>
         <include>org.scala-lang:scala-compiler</include>
-        <include>com.twitter:util-core_2.9.2</include>
-        <include>com.googlecode.kiama:kiama_2.9.2</include>
+        <include>org.scala-lang:scala-reflect</include>
+        <include>com.googlecode.kiama:kiama_2.10</include>
+        <include>org.bitbucket.inkytonik.dsinfo:dsinfo_2.10</include>
+        <include>org.bitbucket.inkytonik.dsprofile:dsprofile_2.10</include>
+        <include>jline:jline</include>
         <include>org.scala-lang:scala-library</include>
       </includes>
     </dependencySet>
