@@ -1,10 +1,15 @@
 require 'maven/ruby/maven'
 require 'maven/tools/dsl'
-require 'maven/tools/visitor'
+require 'rake'
 
 module Maven
   class Tasks
     include Rake::DSL
+
+    def self.instance( maven = nil )
+      @maven = maven if maven
+      @maven
+    end
 
     def install
 
@@ -12,41 +17,59 @@ module Maven
       task :maven do
       end
 
+      desc "Clean up the build directory."
+      task :clean => :maven do
+        maven.clean
+      end
+
+      desc "Run the java unit tests from src/test/java directory."
+      task :junit => :maven do
+        maven.exec( 'compile', 'resources:testResources', 'compiler:testCompile', 'surefire:test' )
+      end
+
       desc "Build gem into the pkg directory."
       task :build => :maven do
-        Maven::Ruby::Maven.instance.package
+        maven.package
       end
 
       desc "Compile any java source configured - default java files are in src/main/java."
       task :compile => :maven do
-        Maven::Ruby::Maven.instance.compile
+        maven.compile
       end
 
-      desc "Package Jarfile with the compiled classes - default jarfile lib/{name}.jar"
+      desc "Package jar-file with the compiled classes - default jar-file lib/{name}.jar"
       task :jar => :maven do
-        Maven::Ruby::Maven.instance.prepare_package
+        maven.prepare_package( '-Dmaven.test.skip' )
+      end
+
+      desc "Build the gem"
+      task :build => :maven do
+        maven.package( '-Dmaven.test.skip' )
       end
 
       desc "Push gem to rubygems.org"
       task :push => :maven do
-        Maven::Ruby::Maven.instance.deploy
+        maven.deploy( '-Dmaven.test.skip' )
       end
     end
   end
   Tasks.new.install
 end
 
-include Maven::Tools::DSL
+#include Maven::Tools::DSL
 
 def maven( &block )
-  instance = Maven::Ruby::Maven.instance
   if block
-    f = File.join( 'target', "pom4rake.xml" )
-    v = Maven::Tools::Visitor.new( File.open( f, 'w' ) )
-    # parse block and write out pom4rake.xml file
-    v.accept_project( tesla( &block ) )
-    # tell maven to use the generated file
-    instance.options[ '-f' ] = f
+    require 'maven/tools/model'
+    Maven::Tasks.instance( Maven::Ruby::Maven.new( tesla( &block ),
+                                                   '.rake.pom.xml' ) )
+  else
+    if Maven::Tasks.instance
+      Maven::Tasks.instance
+    else
+      m = Maven::Ruby::Maven.new
+      m.embedded = true
+      Maven::Tasks.instance( m )
+    end
   end
-  instance
 end

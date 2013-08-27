@@ -18,74 +18,36 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
+unless defined? JRUBY_VERSION
+#  require 'java'
+  require 'maven/tools/model'
+  require 'maven/tools/pom'
+end
+require 'maven/tools/visitor'
 require 'fileutils'
-require 'java' if defined? JRUBY_VERSION
 require 'tesla_maven'
 
 module Maven
   module Ruby
-
-    unless defined? JRUBY_VERSION
-      require 'stringio'
-      require 'maven/tools/dsl'
-      require 'maven/tools/visitor'
-      class POM
-        include Maven::Tools::DSL
-
-        def initialize( file = nil )
-          unless file
-            file = pom_file( 'pom.rb' )
-            file ||= pom_file( 'Mavenfile' )
-            file ||= pom_file( '*.gemspec' )
-          end
-          @model = to_model( file ) if file
-        end
-
-        def pom_file( pom )
-          files = Dir[ pom ]
-          case files.size
-          when 0
-          when 1
-            files.first
-          else
-            warn 'more than one pom file found'
-          end
-        end
-
-        def to_s( file = nil )
-          if @model
-            if file
-              v = ::Maven::Tools::Visitor.new( File.open( file, 'w' ) )
-              v.accept_project( @model )
-              true
-            else
-              io = StringIO.new
-              v = ::Maven::Tools::Visitor.new( io )
-              v.accept_project( @model )
-              io.string
-            end
-          end
-        end
-
-        def to_model( file )
-          case file.to_s
-          when /pom.rb/
-            eval_pom( "tesla do\n#{ File.read( file ) }\nend", file )
-          when /Mavenfile/
-            eval_pom( "tesla do\n#{ File.read( file ) }\nend", file )
-          when /.+\.gemspec/
-            eval_pom( "gemspec( #{ File.basename( file ) } )", file )
-          end
-        rescue ArgumentError
-          warn 'fallback to old maven model'
-
-          raise 'TODO old maven model'
-        end
-      end
-    end
     class Maven
 
+      attr_accessor :embedded
+
       private
+
+      def launch_jruby_embedded(args)
+        p File.expand_path '.'
+        p java.lang.System.getProperty( 'user.dir' )
+        classloader = self.class.class_world.get_realm( 'plexus.core' )
+        
+        cli = classloader.load_class( 'org.apache.maven.cli.PolyglotMavenCli' )
+
+        a = java.util.ArrayList.new
+        args.each { |arg| a << arg.to_s }
+        unless org.apache.maven.cli.PolyglotMavenCli.main( a, self.class.class_world )
+          raise 'error executing maven'
+        end
+      end
 
       def launch_jruby(args)
         java.lang.System.setProperty( "classworlds.conf",
@@ -99,7 +61,8 @@ module Maven
         self.class.require_classpath( TeslaMaven.maven_boot )
         self.class.require_classpath( TeslaMaven.maven_lib )
         self.class.require_classpath( TeslaMaven.lib )
-        org.codehaus.plexus.classworlds.launcher.Launcher.main( args ) == 0
+        # NOTE that execution will call System.exit on the java side
+        org.codehaus.plexus.classworlds.launcher.Launcher.main( args )
       end
 
       def self.class_world
@@ -107,8 +70,10 @@ module Maven
       end
 
       def self.class_world!
-        require_classpath( TeslaMaven.boot )
+        require_classpath( TeslaMaven.ext )
         require_classpath( TeslaMaven.lib )
+        require_classpath( TeslaMaven.maven_boot )
+        require_classpath( TeslaMaven.maven_lib )
         org.codehaus.plexus.classworlds.ClassWorld.new( "plexus.core",
                                                         java.lang.Thread.currentThread().getContextClassLoader())
       end
@@ -127,9 +92,9 @@ module Maven
         if ! defined?( JRUBY_VERSION ) &&
            ( args.index( '-f' ) || args.index( '--file' ) ).nil?
 
-          pom = POM.new
+          pom = ::Maven::Tools::POM.new
           pom_file = '.pom.xml'
-          if pom.to_s( pom_file )
+          if pom.to_file( pom_file )
             args = args + [ '-f', pom_file ]
           else
             args
@@ -141,7 +106,13 @@ module Maven
 
       def launch_java(*args)
         # TODO works only on unix like OS
-        system "java -cp #{self.class.classpath_array( ::Maven.boot ).join(':')} -Dmaven.home=#{::Maven.home} -Dclassworlds.conf=#{::Maven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
+        result = system "java -cp #{self.class.classpath_array( ::Maven.boot ).join(':')} -Dmaven.home=#{::Maven.home} -Dclassworlds.conf=#{::Maven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
+
+        if @embedded and not result
+          raise 'error in executing maven'
+        else
+          result
+        end
       end
 
       def options_array
@@ -166,13 +137,17 @@ module Maven
         @class_world ||= class_world!
       end
 
-      def self.maven_home
-        warn 'DEPRECATED use TeslaMaven.maven_home or Maven.home directly'
-        TeslaMaven.maven_home
-      end
-
-      def self.instance( &block )
-        @instance ||= self.new
+      def initialize( project = nil, temp_pom = nil )
+        super()
+        if project
+          f = File.expand_path( temp_pom || '.pom.xml' )
+          v = ::Maven::Tools::Visitor.new( File.open( f, 'w' ) )
+          # parse block and write out to temp_pom file
+          v.accept_project( project )
+          # tell maven to use the generated file
+          options[ '-f' ] = f
+          @embedded = true
+        end
       end
 
       def options
@@ -202,8 +177,13 @@ module Maven
           puts "mvn #{a.join(' ')}"
         end
         if defined? JRUBY_VERSION
-          puts "using jruby #{JRUBY_VERSION} invokation" if verbose
-          launch_jruby(a)
+          if @embedded
+            puts "using jruby #{JRUBY_VERSION} embedded invokation" if verbose
+            launch_jruby_embedded(a)            
+          else
+            puts "using jruby #{JRUBY_VERSION} invokation" if verbose
+            launch_jruby(a)
+          end
         else
           puts "using java invokation" if verbose
           launch_java(a)
@@ -211,6 +191,7 @@ module Maven
       end
 
       def method_missing( method, *args )
+        method = method.to_s.gsub( /_/, '-' ).to_sym
         exec( [ method ] + args )
       end
     end
