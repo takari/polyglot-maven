@@ -10,13 +10,12 @@ package org.sonatype.maven.polyglot.scala
 import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 import org.junit.runner.RunWith
-import java.io.{StringWriter, InputStream, StringReader, File}
+import java.io.{StringWriter, InputStream, File}
 import scala.collection.JavaConverters._
-import org.codehaus.plexus.util.xml.Xpp3DomBuilder
 import org.apache.maven.model.building.{ModelSource, ModelProcessor}
 import org.specs2.specification.AfterExample
 import org.apache.maven.model.Model
-import org.codehaus.plexus.util.{IOUtil, FileUtils}
+import org.codehaus.plexus.util.IOUtil
 import java.util.Collections
 
 @RunWith(classOf[JUnitRunner])
