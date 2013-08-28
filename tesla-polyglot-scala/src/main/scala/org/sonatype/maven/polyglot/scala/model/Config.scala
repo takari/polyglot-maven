@@ -22,21 +22,20 @@ import scala.language.dynamics
 class Config(val elements: Seq[(String, Option[Any])])
 
 object Config extends Dynamic {
-  def applyDynamicNamed(method: String)(params: (String, Any)*): Config = {
-    if (method == "apply") {
-      val elements = ListBuffer[(String, Option[Any])]()
-      params.foreach {
-        p =>
-          val value = p._2 match {
-            case value: Option[_] => value
-            case value: Any => Option(value)
-          }
-          elements += p._1 -> value
-      }
-      new Config(elements)
-    }
-    else throw new UnsupportedOperationException
+
+  object Optional {
+    def unapply(x: Any): Some[Option[Any]] = Some(x match {
+      case x: Option[_] => x
+      case _ => Option(x)
+    })
   }
+
+  def applyDynamicNamed(method: String)(params: (String, Any)*): Config =
+    if (method == "apply") new Config(params map {
+      case (k, Optional(v)) => k -> v
+    } toSeq)
+    else throw new UnsupportedOperationException
+
 }
 
 
