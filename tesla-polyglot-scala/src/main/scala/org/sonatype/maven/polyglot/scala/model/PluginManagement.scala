@@ -7,8 +7,11 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-case class PluginManagement(override val plugins: Seq[Plugin] = Seq.empty) extends PluginContainer(plugins)
+class PluginManagement(plugins: Seq[Plugin]) extends PluginContainer(plugins)
 
+object PluginManagement {
+  def apply(plugins: Seq[Plugin] = Seq.empty) = new PluginManagement(plugins)
+}
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
