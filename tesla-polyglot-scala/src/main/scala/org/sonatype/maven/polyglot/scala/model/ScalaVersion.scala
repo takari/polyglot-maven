@@ -10,7 +10,9 @@ package org.sonatype.maven.polyglot.scala.model
 /**
  * A type to represent Scala versions
  */
-class ScalaVersion(val version: String)
+class ScalaVersion(val version: String) {
+  val binaryVersion = version.split("\\.", 3).take(2).mkString(".")
+}
 
 object ScalaVersion {
   def apply(version: String) = new ScalaVersion(version)

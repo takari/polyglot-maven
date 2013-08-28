@@ -27,7 +27,7 @@ class GavSpec extends Specification {
       val ga = "somegroup" %% "someartifact"
       ga.getClass.getSimpleName must_== "GroupArtifactId"
       ga.groupId must_== Some("somegroup")
-      ga.artifactId must_== "someartifact_2.10.2"
+      ga.artifactId must_== "someartifact_2.10"
     }
     "be expressed in long form" in {
       val gav = "somegroup" % "someartifact" % "someversion"

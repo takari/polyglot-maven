@@ -11,7 +11,7 @@ case class GroupId(groupId: Option[String]) {
   def %(artifactId: String): GroupArtifactId = GroupArtifactId(this, artifactId)
 
   def %%(artifactId: String)(implicit scalaVersion: ScalaVersion): GroupArtifactId =
-    GroupArtifactId(this, artifactId + "_" + scalaVersion.version)
+    GroupArtifactId(this, artifactId + "_" + scalaVersion.binaryVersion)
 }
 
 object GroupId {
