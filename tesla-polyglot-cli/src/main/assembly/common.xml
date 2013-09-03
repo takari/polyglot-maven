@@ -100,8 +100,7 @@
         <include>io.tesla.polyglot:tesla-polyglot-atom</include>
       </includes>
     </dependencySet>
-    
-    <!--
+
     <dependencySet>
       <outputDirectory>ext/ruby</outputDirectory>
       <useStrictFiltering>true</useStrictFiltering>
@@ -129,7 +128,6 @@
         <include>org.yaml:snakeyaml</include>     
       </includes>
     </dependencySet>
-    -->
 
     <dependencySet>
       <outputDirectory>ext/clojure</outputDirectory>
