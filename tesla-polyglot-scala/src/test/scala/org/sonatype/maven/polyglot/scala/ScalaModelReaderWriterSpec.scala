@@ -17,6 +17,11 @@ import org.specs2.specification.AfterExample
 import org.apache.maven.model.Model
 import org.codehaus.plexus.util.IOUtil
 import java.util.Collections
+import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
+import java.util
+import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, Model => ScalaRawModel, Task => ScalaModelTask}
+import scala.collection.mutable
+import org.apache.maven.project.MavenProject
 
 @RunWith(classOf[JUnitRunner])
 class ScalaModelReaderWriterSpec extends Specification with AfterExample {
@@ -25,13 +30,32 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
   evalFile.createNewFile()
 
   val modelSource = new ModelSource {
-    def getInputStream(): InputStream = null
+    def getInputStream: InputStream = null
 
-    def getLocation(): String = evalFile.getCanonicalPath
+    def getLocation: String = evalFile.getCanonicalPath
   }
 
   val options = Map(ModelProcessor.SOURCE -> modelSource).asJava
-  val reader = new ScalaModelReader
+
+  object TestExecuteManager extends ExecuteManager {
+    private val modelTasks = mutable.Map[Model, (Boolean, util.List[ExecuteTask])]()
+
+    def register(model: Model, tasks: util.List[ExecuteTask]): Unit = modelTasks.put(model, (false, tasks))
+
+    def getTasks(model: Model): util.List[ExecuteTask] = {
+      val attributedTasks = modelTasks.get(model).get
+      if (attributedTasks._1) attributedTasks._2 else List[ExecuteTask]().asJava
+    }
+
+    def install(model: Model) {
+      val attributedTasks = modelTasks.get(model).get
+      modelTasks.put(model, (true, attributedTasks._2))
+    }
+
+    def reset(): Unit = modelTasks.clear()
+  }
+
+  val reader = new ScalaModelReader(TestExecuteManager)
   val writer = new ScalaModelWriter
 
   def readScalaModel(pomFile: String): Model = {
@@ -48,6 +72,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
 
   def after: Unit = {
     evalFile.delete()
+    TestExecuteManager.reset()
   }
 
   sequential
@@ -61,6 +86,47 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
     }
     "read, write and compare a typical pom" in {
       readWriteAndCompare("typical-pom.scala")
+    }
+    "prettyify a task properly" in {
+      import model._
+      import ScalaPrettyPrinter._
+
+      val m = ScalaRawModel(
+        "someGroupId" % "someArtifactId" % "someVersion",
+        ScalaBuild(
+          tasks = Seq(
+            ScalaModelTask(
+              "someId", "somePhase"
+            ) {
+              ec => println("here I am")
+            }
+          )
+        )
+      )
+
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+
+      pp must_== """Model(
+                   |  "someGroupId" % "someArtifactId" % "someVersion",
+                   |  build = Build(
+                   |    tasks = Seq(
+                   |      Task(id = "someId", phase = "somePhase") {compiled code}
+                   |    )
+                   |  )
+                   |)""".stripMargin
+    }
+    "register a task properly and prove that it executes" in {
+      val m = readScalaModel("tasks-pom.scala")
+      val tasks = TestExecuteManager.getTasks(m).asScala
+      tasks.size must_== 1
+      tasks(0).getId must_== "someId"
+      tasks(0).getPhase must_== "compile"
+      val project = new MavenProject
+      val ec = new ExecuteContext {
+        def getProject: MavenProject = project
+      }
+      tasks(0).execute(ec)
+      project.getArtifactId must_== "We executed!"
     }
   }
 }

@@ -11,10 +11,10 @@ import java.io.Writer
 import java.util
 import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.kiama.output.PrettyPrinter
-import org.apache.maven.model.io.ModelWriter
-import org.codehaus.plexus.component.annotations.Component
 import org.apache.maven.model.{Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Scm => MavenScm, Site => MavenSite}
 import org.sonatype.maven.polyglot.scala.model._
+import scala.language.implicitConversions
+import javax.inject.Named
 
 /**
  * Responsible for printing Scala source.
@@ -123,6 +123,8 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   implicit def enrichPrettiedScm(v: Scm) = new PrettiedScm(v)
 
   implicit def enrichPrettiedSite(v: Site) = new PrettiedSite(v)
+
+  implicit def enrichPrettiedTask(v: Task) = new PrettiedTask(v)
 }
 
 /**
@@ -203,7 +205,7 @@ object MavenConverters {
 /**
  * Convert a Maven Model to a Scala Model in source code form.
  */
-@Component(role = classOf[ModelWriter], hint = "scala")
+@Named("scala")
 class ScalaModelWriter extends ModelWriterSupport {
 
   def write(writer: Writer, options: util.Map[String, AnyRef], mm: MavenModel): Unit = {

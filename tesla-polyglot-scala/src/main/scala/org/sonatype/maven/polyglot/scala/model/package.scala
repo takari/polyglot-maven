@@ -7,6 +7,8 @@
  */
 package org.sonatype.maven.polyglot.scala
 
+import scala.language.implicitConversions
+
 /**
  * Conversion functions for use within pom declarations.
  */

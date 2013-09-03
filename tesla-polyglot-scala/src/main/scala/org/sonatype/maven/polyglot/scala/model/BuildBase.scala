@@ -15,19 +15,21 @@ class BuildBase(
                  val finalName: Option[String],
                  val filters: Seq[String],
                  val pluginManagement: Option[PluginManagement],
-                 val plugins: Seq[Plugin]
+                 val plugins: Seq[Plugin],
+                 val tasks: Seq[Task]
                  )
 
 object BuildBase {
   def apply(
              defaultGoal: String = null,
-             resources: Seq[Resource] = Seq.empty,
-             testResources: Seq[Resource] = Seq.empty,
+             resources: Seq[Resource] = Nil,
+             testResources: Seq[Resource] = Nil,
              directory: String = null,
              finalName: String = null,
-             filters: Seq[String] = Seq.empty,
+             filters: Seq[String] = Nil,
              pluginManagement: PluginManagement = null,
-             plugins: Seq[Plugin] = Seq.empty
+             plugins: Seq[Plugin] = Nil,
+             tasks: Seq[Task] = Nil
              ) =
     new BuildBase(
       Option(defaultGoal),
@@ -37,7 +39,8 @@ object BuildBase {
       Option(finalName),
       filters,
       Option(pluginManagement),
-      plugins
+      plugins,
+      tasks
     )
 }
 
@@ -59,6 +62,7 @@ class PrettiedBuildBase(b: BuildBase) {
     Some(b.filters).filterNot(_.isEmpty).foreach(f => args += assign("filters", seqString(f)))
     b.pluginManagement.foreach(pm => args += assign("pluginManagement", pm.asDoc))
     Some(b.plugins).filterNot(_.isEmpty).foreach(ps => args += assign("plugins", seq(ps.map(_.asDoc))))
+    Some(b.tasks).filterNot(_.isEmpty).foreach(ps => args += assign("tasks", seq(ps.map(_.asDoc))))
     args
   }
 }

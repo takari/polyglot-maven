@@ -21,7 +21,8 @@ class Build(
              finalName: Option[String],
              filters: Seq[String],
              pluginManagement: Option[PluginManagement],
-             plugins: Seq[Plugin]
+             plugins: Seq[Plugin],
+             tasks: Seq[Task]
              )
   extends
   BuildBase(
@@ -32,7 +33,8 @@ class Build(
     finalName,
     filters,
     pluginManagement,
-    plugins
+    plugins,
+    tasks
   )
 
 object Build {
@@ -42,15 +44,16 @@ object Build {
              testSourceDirectory: String = null,
              outputDirectory: String = null,
              testOutputDirectory: String = null,
-             extensions: Seq[Extension] = Seq.empty,
+             extensions: Seq[Extension] = Nil,
              defaultGoal: String = null,
-             resources: Seq[Resource] = Seq.empty,
-             testResources: Seq[Resource] = Seq.empty,
+             resources: Seq[Resource] = Nil,
+             testResources: Seq[Resource] = Nil,
              directory: String = null,
              finalName: String = null,
-             filters: Seq[String] = Seq.empty,
+             filters: Seq[String] = Nil,
              pluginManagement: PluginManagement = null,
-             plugins: Seq[Plugin] = Seq.empty
+             plugins: Seq[Plugin] = Nil,
+             tasks: Seq[Task] = Nil
              ) =
     new Build(
       Option(sourceDirectory),
@@ -66,7 +69,8 @@ object Build {
       Option(finalName),
       filters,
       Option(pluginManagement),
-      plugins
+      plugins,
+      tasks
     )
 }
 

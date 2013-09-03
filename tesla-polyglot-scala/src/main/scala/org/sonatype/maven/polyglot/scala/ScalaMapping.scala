@@ -7,13 +7,13 @@
  */
 package org.sonatype.maven.polyglot.scala
 
-import org.codehaus.plexus.component.annotations.Component
-import org.sonatype.maven.polyglot.mapping.{Mapping, MappingSupport}
+import org.sonatype.maven.polyglot.mapping.MappingSupport
+import javax.inject.Named
 
 /**
  * Scala model mapping.
  */
-@Component(role = classOf[Mapping], hint = "scala")
+@Named("scala")
 class ScalaMapping extends MappingSupport("scala") {
   setPomNames("pom.scala")
   setAcceptLocationExtensions(".scala")

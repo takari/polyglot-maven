@@ -179,7 +179,8 @@ object ScalaModel {
           b.finalName,
           b.filters,
           targetPluginManagement,
-          targetPlugins
+          targetPlugins,
+          b.tasks
         )
     }).getOrElse(
       Build(

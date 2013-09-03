@@ -10,6 +10,7 @@ package org.sonatype.maven.polyglot.scala.model
 import org.codehaus.plexus.util.xml.Xpp3Dom
 import scala.collection.mutable.ListBuffer
 import scala.language.dynamics
+import scala.language.postfixOps
 
 /**
  * A Config object lets us conveniently express objects that can have any property with any type. This generally

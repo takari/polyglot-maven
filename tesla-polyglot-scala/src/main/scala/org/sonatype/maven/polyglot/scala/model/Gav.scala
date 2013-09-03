@@ -7,6 +7,8 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.language.implicitConversions
+
 case class GroupId(groupId: Option[String]) {
   def %(artifactId: String): GroupArtifactId = GroupArtifactId(this, artifactId)
 
