@@ -50,7 +50,9 @@ public class ExecuteMojo
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
         Model model = project.getModel();
-        log.debug("Executing task '" + taskId + "' for model: " + model.getId());
+        if (log.isDebugEnabled()) {
+            log.debug("Executing task '" + taskId + "' for model: " + model.getId());
+        }
 
         assert manager != null;
         List<ExecuteTask> tasks = manager.getTasks(model);
@@ -64,7 +66,7 @@ public class ExecuteMojo
 
         for (ExecuteTask task : tasks) {
             if (taskId.equals(task.getId())) {
-                log.debug("Executing task: " + task);
+                log.debug("Executing task: " + task.getId());
 
                 try {
                     task.execute(ctx);

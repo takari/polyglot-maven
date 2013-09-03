@@ -57,6 +57,30 @@ public class ExecuteManagerImpl
 
         List<ExecuteTask> tasks = modelTasks.get(model.getId());
 
+        // If we cannot find the model then look for the model where it has been registered with less
+        // specificity.
+        if (tasks == null) {
+            Model inheritingModel = new Model();
+            inheritingModel.setArtifactId(model.getArtifactId());
+            inheritingModel.setPackaging(model.getPackaging());
+            inheritingModel.setVersion(model.getVersion());
+            tasks = modelTasks.get(inheritingModel.getId());
+        }
+        if (tasks == null) {
+            Model inheritingModel = new Model();
+            inheritingModel.setArtifactId(model.getArtifactId());
+            inheritingModel.setGroupId(model.getGroupId());
+            inheritingModel.setPackaging(model.getPackaging());
+            tasks = modelTasks.get(inheritingModel.getId());
+        }
+        if (tasks == null) {
+            Model inheritingModel = new Model();
+            inheritingModel.setArtifactId(model.getArtifactId());
+            inheritingModel.setPackaging(model.getPackaging());
+            tasks = modelTasks.get(inheritingModel.getId());
+        }
+
+        // Well, we've tried our hardest...
         if (tasks == null) {
             return Collections.emptyList();
         }
@@ -85,13 +109,17 @@ public class ExecuteManagerImpl
         plugin.setGroupId("io.tesla.polyglot");
         plugin.setArtifactId("tesla-polyglot-maven-plugin");
         plugin.setVersion("0.0.1-SNAPSHOT");
+        // Do not assume that the existing list is mutable.
+        List<Plugin> existingPlugins = model.getBuild().getPlugins();
+        List<Plugin> plugins = new ArrayList<Plugin>(existingPlugins);
+        model.getBuild().setPlugins(plugins);
         model.getBuild().addPlugin(plugin);
 
         List<String> goals = Collections.singletonList("execute");
 
         for (ExecuteTask task : tasks) {
             if (log.isDebugEnabled()) {
-                log.debug("Registering task: " + task);
+                log.debug("Registering task: " + task.getId());
             }
 
             String id = task.getId();
