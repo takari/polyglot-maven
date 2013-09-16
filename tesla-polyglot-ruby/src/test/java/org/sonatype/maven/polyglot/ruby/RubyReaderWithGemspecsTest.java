@@ -15,6 +15,11 @@ public class RubyReaderWithGemspecsTest extends AbstractInjectedTestCase {
 	                "gemspec/Mavenfile", false );
   }
 
+  public void testGemspecInProfile() throws Exception {
+      assertModels( "gemspec_in_profile/pom.xml",
+                    "gemspec_in_profile/Mavenfile", false );
+  }
+
   public void testGemspecWithAccessToModel() throws Exception {
       assertModels( "gemspec_with_access_to_model/pom.xml",
                     "gemspec_with_access_to_model/Mavenfile", false );
