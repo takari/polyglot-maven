@@ -29,7 +29,7 @@ module Maven
 
       desc "Build gem into the pkg directory."
       task :build => :maven do
-        maven.package
+        maven.package( '-Dmaven.test.skip' )
       end
 
       desc "Compile any java source configured - default java files are in src/main/java."
@@ -40,11 +40,6 @@ module Maven
       desc "Package jar-file with the compiled classes - default jar-file lib/{name}.jar"
       task :jar => :maven do
         maven.prepare_package( '-Dmaven.test.skip' )
-      end
-
-      desc "Build the gem"
-      task :build => :maven do
-        maven.package( '-Dmaven.test.skip' )
       end
 
       desc "Push gem to rubygems.org"
