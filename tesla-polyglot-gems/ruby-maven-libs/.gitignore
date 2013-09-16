@@ -6,3 +6,4 @@ ext
 conf
 *.txt
 lib/*jar
+pkg
