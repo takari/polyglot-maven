@@ -133,7 +133,7 @@ project 'Apache Maven', 'http://maven.apache.org/' do
     jar 'org.slf4j:jcl-over-slf4j', '${slf4jVersion}'
     jar 'ch.qos.logback:logback-classic', '0.9.29'
     jar 'org.sonatype.jline:jline', '${jlineVersion}'
-    jar 'org.sonatype.jline:jline', '${jlineVersion}', 'tests'
+    jar 'org.sonatype.jline:jline', '${jlineVersion}', :classifier => 'tests'
     jar( 'commons-jexl:commons-jexl', '1.1',
          :exclusions => ['commons-logging:commons-logging',
                         'junit:junit'] )
