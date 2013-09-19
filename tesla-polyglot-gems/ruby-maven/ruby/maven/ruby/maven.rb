@@ -36,8 +36,6 @@ module Maven
       private
 
       def launch_jruby_embedded(args)
-        p File.expand_path '.'
-        p java.lang.System.getProperty( 'user.dir' )
         classloader = self.class.class_world.get_realm( 'plexus.core' )
         
         cli = classloader.load_class( 'org.apache.maven.cli.PolyglotMavenCli' )
