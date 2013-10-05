@@ -29,7 +29,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.eclipse.sisu.containers.InjectedTestCase;
+import org.eclipse.sisu.launch.InjectedTestCase;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 
 public class RubyModelWithMavenTest extends InjectedTestCase {

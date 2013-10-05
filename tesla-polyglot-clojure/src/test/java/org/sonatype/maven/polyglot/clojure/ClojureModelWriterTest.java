@@ -7,16 +7,17 @@
  */
 package org.sonatype.maven.polyglot.clojure;
 
-import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelProcessor;
-import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.PlexusTestCase;
-import org.junit.Test;
-
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import junit.framework.TestCase;
+
+import org.apache.maven.model.Model;
+import org.apache.maven.model.building.ModelProcessor;
+import org.apache.maven.model.io.ModelReader;
+import org.junit.Test;
 
 /**
  * Tests for {@link ClojureModelWriter}.
@@ -24,7 +25,7 @@ import java.util.Map;
  * @author <a href="mailto:mark@derricutt.com">Mark Derricutt</a>
  */
 public class ClojureModelWriterTest
-    extends PlexusTestCase
+    extends TestCase
 {
     @Test
     public void testModelPrinting() throws Exception {
@@ -41,7 +42,7 @@ public class ClojureModelWriterTest
     }
 
     private Model readClojureModel(final String sourceFile) throws Exception {
-        ModelReader reader = lookup(ModelReader.class, "clojure");
+        ModelReader reader = new ClojureModelReader();
 
         URL input = getClass().getResource(sourceFile);
         assertNotNull(input);

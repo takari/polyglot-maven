@@ -27,7 +27,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
-import org.eclipse.sisu.containers.InjectedTestCase;
+import org.eclipse.sisu.launch.InjectedTestCase;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 
 public abstract class AbstractInjectedTestCase extends InjectedTestCase {

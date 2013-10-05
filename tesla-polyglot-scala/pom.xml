@@ -32,7 +32,6 @@
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
 
     <dependency>

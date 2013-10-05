@@ -7,25 +7,25 @@
  */
 package org.sonatype.maven.polyglot.clojure;
 
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
+import junit.framework.TestCase;
+
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.PlexusTestCase;
 import org.junit.Test;
-
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Tests for {@link ClojureModelReader}.
  *
  * @author <a href="mailto:mark@derricutt.com">Mark Derricutt</a>
  */
-public class ClojureModelReaderTest
-    extends PlexusTestCase
+public class ClojureModelReaderTest extends TestCase
 {
     @Test
     public void testReading() throws Exception {
@@ -91,7 +91,7 @@ public class ClojureModelReaderTest
     }
 
     private Model readClojureModel(final String sourceFile) throws Exception {
-        ModelReader reader = lookup(ModelReader.class, "clojure");
+        ModelReader reader = new ClojureModelReader();
 
         URL input = getClass().getResource(sourceFile);
         assertNotNull(input);

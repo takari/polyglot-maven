@@ -26,17 +26,14 @@
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.inject</artifactId>
-      <scope>test</scope>
+      <artifactId>org.eclipse.sisu.inject.tests</artifactId>
     </dependency>
   </dependencies>
 

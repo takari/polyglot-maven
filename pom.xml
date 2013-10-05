@@ -34,8 +34,8 @@
   </licenses>
 
   <properties>
-    <teslaVersion>3.1.0</teslaVersion>
-    <sisuInjectVersion>0.0.0.M2a</sisuInjectVersion>
+    <mavenVersion>3.1.1</mavenVersion>
+    <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
   </properties>
 
   <scm>
@@ -55,6 +55,38 @@
     <module>tesla-polyglot-cli</module>
     <module>tesla-polyglot-maven-plugin</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-common</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <!--  We inline Maven's dependency management section to align dependency versions from Maven's core -->
+      <dependency>
+        <groupId>org.apache.maven</groupId>
+        <artifactId>maven</artifactId>
+        <version>${mavenVersion}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- I'd like to remove these two and place them in Maven's depMan section. We want to be a complete
+           superset as much as possible -->
+      <dependency>
+        <groupId>org.eclipse.sisu</groupId>
+        <artifactId>org.eclipse.sisu.inject.tests</artifactId>
+        <version>0.0.0.M3</version>
+        <scope>test</scope>
+      </dependency>      
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.11</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <build>
     <plugins>
@@ -147,46 +179,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.eclipse.sisu</groupId>
-        <artifactId>org.eclipse.sisu.inject</artifactId>
-        <version>${sisuInjectVersion}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.eclipse.sisu</groupId>
-        <artifactId>org.eclipse.sisu.plexus</artifactId>
-        <version>${sisuInjectVersion}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-model-builder</artifactId>
-        <version>3.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-embedder</artifactId>
-        <version>3.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.11</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
-  <repositories>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
 </project>
