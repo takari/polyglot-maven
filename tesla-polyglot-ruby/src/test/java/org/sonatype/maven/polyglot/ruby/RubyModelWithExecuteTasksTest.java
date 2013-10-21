@@ -44,7 +44,8 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
                 log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
             }
         };
-        
+        rubyModelReader.setupManager = new SetupClassRealm();
+
         PrintStream out = System.out;
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         System.setOut(new PrintStream(bytes));

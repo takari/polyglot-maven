@@ -72,7 +72,8 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
     			log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
     		}
     	};
-    	
+        rubyModelReader.setupManager = new SetupClassRealm();
+
         StringReader r = new StringReader( rubyPom );
         Model rubyModel = rubyModelReader
                 .read(r, new HashMap<String, Object>());

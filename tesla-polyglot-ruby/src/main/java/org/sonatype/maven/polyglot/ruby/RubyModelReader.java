@@ -23,7 +23,6 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
 import org.sonatype.maven.polyglot.PolyglotModelUtil;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
-import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 
 /**
@@ -35,18 +34,22 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 public class RubyModelReader extends ModelReaderSupport {
 
     @Requirement
-    ExecuteManager executeManager = new ExecuteManagerImpl();
-
+    ExecuteManager executeManager;
+    
+    @Requirement
+    SetupClassRealm setupManager;
+    
     public Model read( final Reader input, final Map<String, ?> options ) throws IOException {
         assert input != null;
 
+        setupManager.setupClassRealm();
+            
+        
         // read the stream from our pom.rb into a String
         StringWriter ruby = new StringWriter();
         IOUtil.copy( input, ruby );
-        // parse the String and create a POM model
 
-        //String src = PolyglotModelUtil.getLocation( options );
-        //final File source = src == null ? null : new File( src );
+        // TODO String source = PolyglotModelUtil.getLocation( options );
         Object src = options.get( ModelProcessor.SOURCE );
         final File source;
         if ( src instanceof URL )
@@ -63,6 +66,7 @@ public class RubyModelReader extends ModelReaderSupport {
             source = null;
         }
 
+        // parse the String and create a POM model
         return new RubyParser( executeManager ).parse( ruby.toString(), source );
     }
 }
