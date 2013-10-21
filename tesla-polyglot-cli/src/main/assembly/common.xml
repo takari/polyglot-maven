@@ -106,26 +106,7 @@
       <useStrictFiltering>true</useStrictFiltering>
       <includes>
         <include>io.tesla.polyglot:tesla-polyglot-ruby</include>
-        <include>com.github.jnr:jffi</include>
-        <include>com.github.jnr:jnr-constants</include>
-        <include>com.github.jnr:jnr-enxio</include>
-        <include>com.github.jnr:jnr-ffi</include>
-        <include>com.github.jnr:jnr-netdb</include>
-        <include>com.github.jnr:jnr-posix</include>
-        <include>com.github.jnr:jnr-unixsocket</include>
-        <include>com.github.jnr:jnr-x86asm</include>
-        <include>com.headius:invokebinder</include>
-        <include>com.jcraft:jzlib</include>
 	<include>de.saumya.mojo:maven-tools</include>
-        <include>jline:jline</include>
-        <include>joda-time:joda-time</include>
-        <include>org.jruby.extras:bytelist</include>
-        <include>org.jruby.jcodings:jcodings</include>
-        <include>org.jruby.joni:joni</include>
-        <include>org.jruby:jruby-core</include>
-        <include>org.jruby:jruby-stdlib</include>
-        <include>org.slf4j:slf4j-api</include>
-        <include>org.yaml:snakeyaml</include>     
       </includes>
     </dependencySet>
 
