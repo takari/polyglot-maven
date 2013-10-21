@@ -7,17 +7,26 @@
  */
 package org.sonatype.maven.polyglot.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.model.Model;
+import org.apache.maven.model.building.FileModelSource;
+import org.apache.maven.model.building.ModelProcessor;
+import org.apache.maven.model.building.ModelSource;
+import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.sonatype.maven.polyglot.PolyglotModelManager;
 import org.sonatype.maven.polyglot.execute.ExecuteContext;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.execute.ExecuteTask;
-
-import java.util.List;
 
 /**
  * Executes registered {@link org.sonatype.maven.polyglot.execute.ExecuteTask}s.
@@ -47,13 +56,49 @@ public class ExecuteMojo
      */
     private String taskId;
 
+    /**
+     * @parameter
+     */
+    private File nativePom;
+
+    /**
+     * @component role="org.sonatype.maven.polyglot.PolyglotModelManager"
+     */
+    private PolyglotModelManager modelManager;
+
+    
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
-        Model model = project.getModel();
-        if (log.isDebugEnabled()) {
-            log.debug("Executing task '" + taskId + "' for model: " + model.getId());
+        Model model;
+        if( nativePom == null ) {
+            model = project.getModel();
+        }
+        else {
+            Map<String, ModelSource> options = new HashMap<String, ModelSource>();
+            options.put( ModelProcessor.SOURCE, new FileModelSource( nativePom ) );
+
+            assert modelManager != null;
+            try
+            {
+                ModelReader reader = modelManager.getReaderFor( options );
+                if( reader == null ){
+                    throw new MojoExecutionException( "no model reader found for " + nativePom );
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug( "Parsing native pom " + nativePom );
+                }
+                model = reader.read( nativePom, options );
+            }
+            catch (IOException e)
+            {
+                throw new MojoFailureException( "error parsing " + nativePom, e );
+            }
         }
 
+        if (log.isDebugEnabled()) {
+            log.debug( "Executing task '" + taskId + "' for model: " + model.getId() );
+        }
+        
         assert manager != null;
         List<ExecuteTask> tasks = manager.getTasks(model);
         
