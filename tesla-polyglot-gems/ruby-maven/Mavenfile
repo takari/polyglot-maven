@@ -1,8 +1,8 @@
 # -*- mode:ruby -*-
 
-require File.join( basedir, 'ruby', 'tesla_maven' )
-
 gemspec
+
+require File.join( basedir, 'ruby', 'tesla_maven' )
 
 inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}-SNAPSHOT"
 

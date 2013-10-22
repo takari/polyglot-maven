@@ -7,7 +7,9 @@ Gem::Specification.new do |s|
   s.authors = ["Christian Meier"]
   s.description = %q{maven distribution as gem - no ruby executables !} 
   s.email = ["m.kristian@web.de"]
-  s.extra_rdoc_files = ["NOTICE.txt", "LICENSE.txt", "README.txt"]
+  s.extra_rdoc_files = Dir.glob("*.txt") +
+    Dir.glob( "NOTICE*" ) + 
+    Dir.glob( "LICENSE*" )
 
   s.license = 'APL' 
 

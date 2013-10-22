@@ -59,6 +59,7 @@ module Maven
         self.class.require_classpath( TeslaMaven.maven_boot )
         self.class.require_classpath( TeslaMaven.maven_lib )
         self.class.require_classpath( TeslaMaven.lib )
+
         # NOTE that execution will call System.exit on the java side
         org.codehaus.plexus.classworlds.launcher.Launcher.main( args )
       end
