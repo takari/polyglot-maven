@@ -21,7 +21,6 @@ import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
-import org.sonatype.maven.polyglot.PolyglotModelUtil;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 
@@ -30,19 +29,20 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
  *
  * @author m.kristian
  */
-@Component(role = ModelReader.class,hint="ruby")
+@Component(role = ModelReader.class, hint="ruby")
 public class RubyModelReader extends ModelReaderSupport {
 
     @Requirement
     ExecuteManager executeManager;
     
-    @Requirement
+    @Requirement( hint = "ruby" )
     SetupClassRealm setupManager;
     
-    public Model read( final Reader input, final Map<String, ?> options ) throws IOException {
+    public Model read( final Reader input, final Map<String, ?> options )
+            throws IOException {
         assert input != null;
 
-        setupManager.setupClassRealm();
+        setupManager.setupArtifact( "io.tesla.polyglot:tesla-polyglot-ruby:0.0.1-SNAPSHOT" );
             
         
         // read the stream from our pom.rb into a String

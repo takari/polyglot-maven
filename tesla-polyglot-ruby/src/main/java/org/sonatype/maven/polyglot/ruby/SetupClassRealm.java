@@ -10,10 +10,14 @@ package org.sonatype.maven.polyglot.ruby;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.resolver.ArtifactResolutionRequest;
 import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
+import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.repository.RepositorySystem;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
@@ -23,59 +27,29 @@ import org.codehaus.plexus.component.annotations.Requirement;
 @Component(role = SetupClassRealm.class)
 public class SetupClassRealm {
 
-    private static final String JRUBY_HOME = "jruby.home";
-
     @Requirement
     RepositorySystem system;
 
     @Requirement
-    private LegacySupport legacySupport;
-    
-    protected void setupClassRealm() throws MalformedURLException
-    {        
-        try
-        {
-            // test if jruby classes are there
-            Thread.currentThread().getContextClassLoader().loadClass( "org.jruby.embed.ScriptingContainer" );
-        }
-        catch (ClassNotFoundException e)
-        {
-            // see if we have a jruby-home set somewhere
-            String jrubyHome = System.getenv( "JRUBY_HOME" );
-            if ( jrubyHome == null ){
-                jrubyHome = System.getProperty( JRUBY_HOME );
-            }
-            if ( jrubyHome == null ){
-                jrubyHome = legacySupport.getSession().getRequest().getUserProperties().getProperty( JRUBY_HOME );
-            }
-            if ( jrubyHome == null ){
-                jrubyHome = legacySupport.getSession().getRequest().getSystemProperties().getProperty( JRUBY_HOME );
-            }
-            if ( jrubyHome == null ){
-                jrubyHome = legacySupport.getSession().getCurrentProject().getProperties().getProperty( JRUBY_HOME );
-            }
+    protected LegacySupport legacySupport;
 
-            ClassRealm realm = (ClassRealm) Thread.currentThread().getContextClassLoader();
-            if (jrubyHome != null ){
-                setupFromJrubyHome( realm, jrubyHome );
-            }
-            else {
-                
-                // use jruby from an artifact
-                setupFromArtifact( realm );                
-            }
-        }
-    }
-
-
-    protected void setupFromArtifact( ClassRealm realm )
+    public void setupArtifact( String gav )
             throws MalformedURLException
     {
-        Artifact jruby = system.createArtifact( "org.jruby", "jruby", "1.7.5", "jar" );
+        String[] parts = gav.split( ":" );
+        Artifact root = system.createArtifact( parts[ 0 ], parts[ 1 ], parts[ 2 ], "jar" );
         ArtifactResolutionResult result;
         result = system.resolve( new ArtifactResolutionRequest()
-            .setArtifact( jruby )
-            .setResolveRoot( true )
+            .setArtifact( root )
+            .setCollectionFilter( new ArtifactFilter() {
+                
+                public boolean include( Artifact artifact )
+                {
+                    return !"tesla-polyglot-common".equals( artifact.getArtifactId() ) &&
+                           !"test".equals( artifact.getScope() );
+                }
+            } )
+            .setResolveRoot( false )
             .setOffline( legacySupport.getSession().getRequest().isOffline() )
             .setMirrors( legacySupport.getSession().getRequest().getMirrors() )
             .setProxies( legacySupport.getSession().getRequest().getProxies() )
@@ -83,28 +57,23 @@ public class SetupClassRealm {
             .setLocalRepository( legacySupport.getSession().getRequest().getLocalRepository() )
             .setRemoteRepositories( legacySupport.getSession().getRequest().getRemoteRepositories() )
             .setResolveTransitively( true ) );
-        
+
+        ClassRealm realm = (ClassRealm) Thread.currentThread().getContextClassLoader(); 
+
+        // get searchable list of existing urls
+        Set<String> urls = new TreeSet<String>();
+        for( URL url : realm.getURLs() ){
+            urls.add( url.toString() );
+        }
+
         for( Artifact a: result.getArtifacts() ){
             if ( "jar".equals( a.getType() ) ){
-                realm.addURL( a.getFile().toURI().toURL() );
+                URL url = a.getFile().toURI().toURL();
+                // add only if not already exist
+                if ( !urls.contains( url.toString() ) ){
+                    realm.addURL( a.getFile().toURI().toURL() );
+                }
             }
         }        
     }
-
-
-    protected void setupFromJrubyHome( ClassRealm realm, String jrubyHome )
-            throws MalformedURLException
-    {
-        System.setProperty( JRUBY_HOME, jrubyHome );
-        File[] jars = new File( jrubyHome, "lib" ).listFiles( new FileFilter() {
-
-            public boolean accept( File pathname )
-            {
-                return pathname.getName().endsWith( ".jar" );
-            }
-        } );
-        for( File jar : jars ){
-            realm.addURL( jar.toURI().toURL() );
-        }
-    }
-    }
+}
