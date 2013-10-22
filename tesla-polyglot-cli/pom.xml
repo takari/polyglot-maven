@@ -91,7 +91,7 @@
                 <artifactItem>
                   <groupId>org.apache.maven</groupId>
                   <artifactId>apache-maven</artifactId>
-                  <version>3.1.0</version>
+                  <version>${mavenVersion}</version>
                   <classifier>bin</classifier>
                   <type>zip</type>
                 </artifactItem>
