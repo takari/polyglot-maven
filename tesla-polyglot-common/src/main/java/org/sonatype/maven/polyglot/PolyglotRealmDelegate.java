@@ -28,6 +28,8 @@ public class PolyglotRealmDelegate
         if (!ClassRealmRequest.RealmType.Project.equals(request.getType())) {
             try {
                 realm.importFrom("plexus.core", "org.sonatype.maven.polyglot.execute");
+                // the plugin also need PolyglotModelManager
+                realm.importFrom("plexus.core", "org.sonatype.maven.polyglot");
             } catch (Exception e) {
                 throw new IllegalStateException("Could not import Polyglot extensions", e);
             }
