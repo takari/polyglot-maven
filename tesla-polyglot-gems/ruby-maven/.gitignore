@@ -1,10 +1,7 @@
-boot
 bin/mvn*
-bin/m2*
 bin/translate*
 ext
-conf
 *.txt
 lib/*jar
-.pom.xml
 pkg
+.pom.xml

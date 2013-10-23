@@ -49,19 +49,30 @@ module Maven
 
       def launch_jruby(args)
         java.lang.System.setProperty( "classworlds.conf",
-                                      TeslaMaven.bin( "m2.conf" ) )
+                                      TeslaMaven.bin( "m2jruby.conf" ) )
 
         java.lang.System.setProperty( 'maven.home', TeslaMaven.maven_home )
-        java.lang.System.setProperty( 'tesla.ext', TeslaMaven.ext )
-        java.lang.System.setProperty( 'tesla.lib', TeslaMaven.lib )
+        java.lang.System.setProperty( 'tesla.home', TeslaMaven.home )
+
         # loading here is needed to let tesla-ruby find jruby on
-        # classloader, though m2.conf does load those libs as well
+        # classloader
         self.class.require_classpath( TeslaMaven.maven_boot )
         self.class.require_classpath( TeslaMaven.maven_lib )
         self.class.require_classpath( TeslaMaven.lib )
 
         # NOTE that execution will call System.exit on the java side
         org.codehaus.plexus.classworlds.launcher.Launcher.main( args )
+      end
+
+      def launch_java(args)
+        # TODO works only on unix like OS
+        result = system "java -cp #{self.class.classpath( TeslaMaven.maven_boot )} -Dmaven.home=#{TeslaMaven.maven_home} -Dtesla.home=#{TeslaMaven.home} -Dclassworlds.conf=#{TeslaMaven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
+
+        if @embedded and not result
+          raise 'error in executing maven'
+        else
+          result
+        end
       end
 
       def self.class_world
@@ -81,36 +92,13 @@ module Maven
         Dir.glob( File.join( dir, "*jar" ) )
       end
 
+      def self.classpath( dir )
+        classpath_array( dir ).join( File::PATH_SEPARATOR )
+      end
+
       def self.require_classpath( dir )
         classpath_array( dir ).each do |jar|
           require jar
-        end
-      end
-
-      def adjust_args( args )
-        if ! defined?( JRUBY_VERSION ) &&
-           ( args.index( '-f' ) || args.index( '--file' ) ).nil?
-
-          pom = ::Maven::Tools::POM.new
-          pom_file = '.pom.xml'
-          if pom.to_file( pom_file )
-            args = args + [ '-f', pom_file ]
-          else
-            args
-          end
-        else
-          args
-        end
-      end
-
-      def launch_java(*args)
-        # TODO works only on unix like OS
-        result = system "java -cp #{self.class.classpath_array( ::Maven.boot ).join(':')} -Dmaven.home=#{::Maven.home} -Dclassworlds.conf=#{::Maven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
-
-        if @embedded and not result
-          raise 'error in executing maven'
-        else
-          result
         end
       end
 
@@ -128,7 +116,6 @@ module Maven
           end
         end.flatten
       end
-      private :options_array
 
       public
 
@@ -141,7 +128,7 @@ module Maven
         if project
           f = File.expand_path( temp_pom || '.pom.xml' )
           v = ::Maven::Tools::Visitor.new( File.open( f, 'w' ) )
-          # parse block and write out to temp_pom file
+          # parse project and write out to temp_pom file
           v.accept_project( project )
           # tell maven to use the generated file
           options[ '-f' ] = f
@@ -163,7 +150,7 @@ module Maven
 
       def verbose
         if @verbose.nil?
-          @verbose = options.delete('-Dverbose').to_s != 'false'
+          @verbose = options.delete('-Dverbose').to_s == 'true'
         else
           @verbose
         end
