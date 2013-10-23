@@ -158,7 +158,6 @@ module Maven
 
       def exec(*args)
         a = args.dup + options_array
-        a = adjust_args( a.flatten )
         if a.delete( '-Dverbose=true' ) || a.delete( '-Dverbose' ) || verbose
           puts "mvn #{a.join(' ')}"
         end

@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob("*.txt") +
     Dir.glob("bin/rmvn") +
-    Dir.glob("bin/m2.conf") +
+    Dir.glob("bin/m2*") +
     Dir.glob("ext/ruby/maven-tools-*") +
     Dir.glob("ext/ruby/tesla-*") +
     Dir.glob("ruby/**/*.rb") +
