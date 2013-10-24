@@ -1,4 +1,5 @@
 # -*- mode:ruby -*-
+$LOAD_PATH.unshift File.expand_path( File.dirname( __FILE__ ) ) + '/../ruby-maven-libs/ruby'
 require './ruby/maven/ruby/version'
 Gem::Specification.new do |s|
   s.name = 'ruby-maven'

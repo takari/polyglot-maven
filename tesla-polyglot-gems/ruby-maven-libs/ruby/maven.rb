@@ -1,6 +1,6 @@
 module Maven
 
-  VERSION = '3.1.0'.freeze
+  VERSION = '3.1.1'.freeze
   
   def self.home
     File.expand_path( File.join( File.dirname( File.expand_path( __FILE__ ) ), '..' ) )

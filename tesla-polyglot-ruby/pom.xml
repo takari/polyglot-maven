@@ -34,8 +34,9 @@
     </dependency>
     <dependency>
       <groupId>org.jruby</groupId>
-      <artifactId>jruby-core</artifactId>
-      <version>1.7.4</version>
+      <artifactId>jruby</artifactId>
+      <version>1.7.5</version>
+      <scope>provided</scope>
     </dependency>
     <!-- Test -->
     <dependency>
@@ -57,6 +58,25 @@
         <configuration>
           <header>../license-header.txt</header>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <configuration>
+          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>install</goal>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
+              <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

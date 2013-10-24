@@ -50,6 +50,8 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
             }
         };
+        rubyModelReader.setupManager = new SetupClassRealmRuby();
+
         File pomRubyFile =  new File( poms, pomRuby );
         Reader reader = new FileReader( pomRubyFile );
         Map<String, Object> options = new HashMap<String, Object>();
@@ -85,6 +87,8 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 				log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
 			}
 		};
+		rubyModelReader.setupManager = new SetupClassRealmRuby();
+		
 	    StringReader reader = new StringReader( w.toString() );
 	    Model rubyModel = rubyModelReader.read( reader, new HashMap<String, Object>() );
 	    

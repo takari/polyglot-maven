@@ -4,6 +4,8 @@ bin/m2*
 bin/translate*
 ext
 conf
-*.txt
-lib/*jar
+LICENSE*
+README*
+NOTICE*
+lib
 pkg

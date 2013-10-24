@@ -22,7 +22,7 @@ plugin( :clean, '2.5',
                        { :directory => 'boot' },
                        { :directory => 'bin' },
                        { :directory => './',
-                         :includes => ['*.txt'] } ] )
+                         :includes => ['README*', 'LICENSE*', 'NOTICE*'] } ] )
 
 plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
         :header => '${project.basedir}/../../license-header.txt',
@@ -31,7 +31,16 @@ plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
 resource do
   target_path "${project.basedir}"
   directory "${project.build.directory}/apache-maven-${project.version}"
-  includes [ 'lib/**/*', 'conf/**/*', 'boot/*', 'bin/*', '*.txt' ]
+  includes [ 'lib/**/*', 'conf/**/*', 'boot/*', 'bin/*', 'README*', 'LICENSE*', 'NOTICE*' ]
+end
+
+build do
+  execute("check versions", :validate) do |context|
+    mavenVersion = context.project.properties[ 'mavenVersion' ]
+    if context.project.version != mavenVersion
+      raise "\n\n\tmismatched maven versions: #{context.project.version} <=> #{mavenVersion}\n\ttesla uses a different version than ruby/maven.rb\n"
+    end
+  end
 end
 
 # vim: syntax=Ruby

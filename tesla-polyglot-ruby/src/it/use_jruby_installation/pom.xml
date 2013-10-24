@@ -1,0 +1,71 @@
+<!--
+
+    Copyright (c) 2012 to original author or authors
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
+
+-->
+<project>
+  <groupId>io.tesla.polyglot</groupId>
+  <artifactId>execute-ruby</artifactId>
+  <version>1</version>
+  <modelVersion>4.0.0</modelVersion>
+
+  <properties>
+    <jruby.home>${project.build.directory}/dependency/jruby-1.7.4</jruby.home>
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+	<artifactId>maven-dependency-plugin</artifactId>      
+	<executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <outputAbsoluteArtifactFilename>false</outputAbsoluteArtifactFilename>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.jruby</groupId>
+                  <artifactId>jruby-dist</artifactId>
+                  <version>1.7.4</version>
+                  <classifier>bin</classifier>
+                  <type>zip</type>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-maven-plugin</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <configuration>
+	  <nativePom>pom.rb</nativePom>
+        </configuration>
+	<executions>
+	  <execution>
+	    <phase>initialize</phase>
+	    <goals><goal>execute</goal></goals>
+	    <configuration>
+	      <taskId>first</taskId>
+	    </configuration>
+	  </execution>
+	</executions>
+	<dependencies>
+	  <dependency>
+	    <groupId>io.tesla.polyglot</groupId>
+	    <artifactId>tesla-polyglot-ruby</artifactId>
+	    <version>0.0.1-SNAPSHOT</version>
+	  </dependency>
+	</dependencies>
+      </plugin>
+    </plugins>
+  </build>
+</project>
