@@ -135,6 +135,7 @@
             <exclude>**/src/test/resources/*.scala</exclude>
             <exclude>**/release.properties</exclude>
             <exclude>**/pom.xml.releaseBackup</exclude>
+            <exclude>release.sh</exclude>
           </excludes>
           <mapping>
             <scala>JAVADOC_STYLE</scala>

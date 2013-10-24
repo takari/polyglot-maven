@@ -12,3 +12,4 @@ tesla-polyglot-*-SNAPSHOT/
 .cache
 release.properties
 pom.xml.releaseBackup
+release.sh
