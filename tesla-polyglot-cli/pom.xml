@@ -15,7 +15,7 @@
   <parent>
     <groupId>io.tesla.polyglot</groupId>
     <artifactId>tesla-polyglot</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2-SNAPSHOT</version>
   </parent>
   <artifactId>tesla-polyglot-cli</artifactId>
   <name>Polyglot Tesla :: CLI</name>
@@ -27,32 +27,32 @@
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-groovy</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-atom</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-yaml</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-ruby</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-scala</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-clojure</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <!-- Used for XML Canonicalization, to compare pom.xml files -->
     <dependency>
