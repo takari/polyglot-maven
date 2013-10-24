@@ -10,3 +10,5 @@ target/
 .tesla.pom.xml
 tesla-polyglot-*-SNAPSHOT/
 .cache
+release.properties
+pom.xml.releaseBackup
