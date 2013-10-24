@@ -133,7 +133,7 @@
             <exclude>**/pkg/**</exclude>
             <exclude>**/.idea/**</exclude>
             <exclude>**/src/test/resources/*.scala</exclude>
-            <exclude>**/releases.properties</exclude>
+            <exclude>**/release.properties</exclude>
             <exclude>**/pom.xml.releaseBackup</exclude>
           </excludes>
           <mapping>
