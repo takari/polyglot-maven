@@ -14,6 +14,7 @@ object DependencyManagement {
 }
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
+import java.util
 
 class PrettiedDependencyManagement(dm: DependencyManagement) {
   def asDoc: Doc = {
@@ -26,7 +27,7 @@ class PrettiedDependencyManagement(dm: DependencyManagement) {
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
 import scala.collection.JavaConverters._
-import org.apache.maven.model.{DependencyManagement => MavenDependencyManagement}
+import org.apache.maven.model.{Dependency => MavenDependency, DependencyManagement => MavenDependencyManagement}
 
 class ConvertibleMavenDependencyManagement(mdm: MavenDependencyManagement) {
   def asScala: DependencyManagement = {
@@ -41,7 +42,10 @@ import org.sonatype.maven.polyglot.scala.ScalaConverters._
 class ConvertibleScalaDependencyManagement(dm: DependencyManagement) {
   def asJava: MavenDependencyManagement = {
     val mdm = new MavenDependencyManagement
-    mdm.setDependencies(dm.dependencies.map(_.asJava).asJava)
+    // Wrap the list in a mutable structure to circumvent an issue with Maven assuming this to
+    // be a mutable structure: http://jira.codehaus.org/browse/MNG-5529
+    // FIXME: Remove the need for composing with util.ArrayList once the Maven issue is fixed.
+    mdm.setDependencies(new util.ArrayList[MavenDependency](dm.dependencies.map(_.asJava).asJava))
     mdm
   }
 }
