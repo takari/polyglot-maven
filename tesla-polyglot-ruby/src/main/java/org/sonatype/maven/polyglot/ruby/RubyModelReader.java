@@ -18,9 +18,12 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelReader;
+import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
+import org.sonatype.maven.polyglot.Constants;
+import org.sonatype.maven.polyglot.PolyglotModelUtil;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 
@@ -42,31 +45,35 @@ public class RubyModelReader extends ModelReaderSupport {
             throws IOException {
         assert input != null;
 
-        setupManager.setupArtifact( "io.tesla.polyglot:tesla-polyglot-ruby:0.0.1-SNAPSHOT" );
-            
+        // use the classloader which loaded that class here
+        // for testing that classloader does not need to be a ClassRealm, i.e. the test setup needs 
+        // to take care that all classes are in place
+        if ( getClass().getClassLoader() instanceof ClassRealm ) {
+            // TODO get that version out of here !!!
+            setupManager.setupArtifact( Constants.getGAV( "ruby" ),
+                                        (ClassRealm) getClass().getClassLoader() );
+        }
         
-        // read the stream from our pom.rb into a String
-        StringWriter ruby = new StringWriter();
-        IOUtil.copy( input, ruby );
+        ClassLoader old = null;
+        try {
+            // make sure jruby will find the right classloader
+            old = Thread.currentThread().getContextClassLoader();
+            Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
 
-        // TODO String source = PolyglotModelUtil.getLocation( options );
-        Object src = options.get( ModelProcessor.SOURCE );
-        final File source;
-        if ( src instanceof URL )
-        {
-            source = new File( ( (URL) src ).getFile() );
+            // read the stream from our pom.rb into a String
+            StringWriter ruby = new StringWriter();
+            IOUtil.copy( input, ruby );
+    
+            String location = PolyglotModelUtil.getLocation( options );
+            File source = location == null ? null : new File( location );
+    
+            // parse the String and create a POM model
+            return new RubyParser( executeManager ).parse( ruby.toString(),
+                                                           source,
+                                                           options );
         }
-        else if( src != null )
-        {
-            ModelSource sm = (ModelSource) src;
-            source = new File(  sm.getLocation() );
+        finally {
+            Thread.currentThread().setContextClassLoader( old );
         }
-        else
-        {
-            source = null;
-        }
-
-        // parse the String and create a POM model
-        return new RubyParser( executeManager ).parse( ruby.toString(), source );
     }
 }

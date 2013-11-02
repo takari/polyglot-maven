@@ -20,22 +20,22 @@ public class SetupClassRealmRuby extends SetupClassRealm {
     private static final String JRUBY_HOME = "jruby.home";
 
     @Override
-    public void setupArtifact( String gav ) throws MalformedURLException
+    public void setupArtifact( String gav, ClassRealm realm) throws MalformedURLException
     {        
         try
         {
             // test if class is already there
-            Thread.currentThread().getContextClassLoader().loadClass( "org.jruby.embed.ScriptingContainer" );
+            realm.loadClass( "org.jruby.embed.ScriptingContainer" );
         }
         catch (ClassNotFoundException e)
         {
                
             // add the provided jars for the given artifact
-            setup( gav );
+            setup( gav, realm );
         }
     }
     
-    private void setup( String gav ) throws MalformedURLException
+    private void setup( String gav, ClassRealm realm ) throws MalformedURLException
     {        
         // see if we have a jruby-home set somewhere
         String jrubyHome = System.getenv( "JRUBY_HOME" );
@@ -60,7 +60,7 @@ public class SetupClassRealmRuby extends SetupClassRealm {
         else {
                 
             // use jruby from an artifact
-            super.setupArtifact( gav );
+            super.setupArtifact( gav, realm );
         }
     }
 

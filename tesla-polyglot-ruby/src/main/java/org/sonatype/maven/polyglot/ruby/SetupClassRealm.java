@@ -7,8 +7,6 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
@@ -32,8 +30,8 @@ public class SetupClassRealm {
 
     @Requirement
     protected LegacySupport legacySupport;
-
-    public void setupArtifact( String gav )
+    
+    public void setupArtifact( String gav, ClassRealm realm )
             throws MalformedURLException
     {
         String[] parts = gav.split( ":" );
@@ -49,7 +47,7 @@ public class SetupClassRealm {
                            !"test".equals( artifact.getScope() );
                 }
             } )
-            .setResolveRoot( false )
+            .setResolveRoot( true )
             .setOffline( legacySupport.getSession().getRequest().isOffline() )
             .setMirrors( legacySupport.getSession().getRequest().getMirrors() )
             .setProxies( legacySupport.getSession().getRequest().getProxies() )
@@ -58,8 +56,6 @@ public class SetupClassRealm {
             .setRemoteRepositories( legacySupport.getSession().getRequest().getRemoteRepositories() )
             .setResolveTransitively( true ) );
 
-        ClassRealm realm = (ClassRealm) Thread.currentThread().getContextClassLoader(); 
-
         // get searchable list of existing urls
         Set<String> urls = new TreeSet<String>();
         for( URL url : realm.getURLs() ){
@@ -67,7 +63,7 @@ public class SetupClassRealm {
         }
 
         for( Artifact a: result.getArtifacts() ){
-            if ( "jar".equals( a.getType() ) ){
+            if ( "jar".equals( a.getType() ) && a.getFile() != null ){
                 URL url = a.getFile().toURI().toURL();
                 // add only if not already exist
                 if ( !urls.contains( url.toString() ) ){
