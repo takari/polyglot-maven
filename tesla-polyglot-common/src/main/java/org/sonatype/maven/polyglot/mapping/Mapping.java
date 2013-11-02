@@ -31,4 +31,6 @@ public interface Mapping
     ModelWriter getWriter();
 
     float getPriority();
+    
+    String getFlavour();
 }

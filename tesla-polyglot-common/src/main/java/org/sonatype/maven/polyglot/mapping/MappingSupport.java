@@ -52,6 +52,10 @@ public abstract class MappingSupport
         this.roleHint = roleHint == null? "default" : roleHint;
     }
 
+    public String getFlavour() {
+        return roleHint;
+    }
+
     public ModelReader getReader() {
         if (reader == null) {
             try {

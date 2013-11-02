@@ -10,6 +10,7 @@ package org.sonatype.maven.polyglot.execute;
 import org.apache.maven.model.Model;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Manages {@link ExecuteTask}s for a project. Tasks are registered against a model and then the model is
@@ -25,5 +26,12 @@ public interface ExecuteManager
 
     List<ExecuteTask> getTasks(Model model);
 
+    /**
+     * @deprecated use install with extra options parameter
+     * @param model
+     */
+    @Deprecated
     void install(Model model);
+
+    void install( Model model, Map<String, ?> options );
 }

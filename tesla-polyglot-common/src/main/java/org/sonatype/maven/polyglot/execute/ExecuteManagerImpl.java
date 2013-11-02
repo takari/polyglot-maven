@@ -7,7 +7,14 @@
  */
 package org.sonatype.maven.polyglot.execute;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.model.Build;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
@@ -15,12 +22,7 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.sonatype.maven.polyglot.PolyglotModelManager;
 
 /**
  * Default implementation of the {@link ExecuteManager} component.
@@ -33,9 +35,19 @@ import java.util.Map;
 public class ExecuteManagerImpl
     implements ExecuteManager
 {
+    private static final String TESLA_POLYGLOT = "tesla-polyglot-";
+
+    // FIXME do not hardcode the version
+    private static final String VERSION = "0.0.8";
+
+    private static final String IO_TESLA_POLYGLOT = "io.tesla.polyglot";
+
     @Requirement
     protected Logger log;
 
+    @Requirement
+    protected PolyglotModelManager manager;
+    
     private final Map<String,List<ExecuteTask>> modelTasks = new HashMap<String,List<ExecuteTask>>();
 
     public void register(final Model model, final List<ExecuteTask> tasks) {
@@ -46,10 +58,6 @@ public class ExecuteManagerImpl
         List<ExecuteTask> copy = new ArrayList<ExecuteTask>(tasks.size());
         copy.addAll(tasks);
         modelTasks.put(model.getId(), Collections.unmodifiableList(copy));
-
-        if (log.isDebugEnabled()) {
-          log.debug("!!!!!! Registered tasks for: " + model.getId() + "=" + tasks);
-        }
     }
 
     public List<ExecuteTask> getTasks(final Model model) {
@@ -87,8 +95,15 @@ public class ExecuteManagerImpl
 
         return tasks;
     }
-
+    
+    //@Override
+    @Deprecated
     public void install(final Model model) {
+        install( model, new HashMap<String, String>() );
+    }
+    
+    //@Override
+    public void install(final Model model, final Map<String, ?> options ) {
         assert model != null;
 
         List<ExecuteTask> tasks = getTasks(model);
@@ -104,11 +119,13 @@ public class ExecuteManagerImpl
             model.setBuild(new Build());
         }
 
-        // FIMXE: Should not need to hard-code the version here
         Plugin plugin = new Plugin();
-        plugin.setGroupId("io.tesla.polyglot");
-        plugin.setArtifactId("tesla-polyglot-maven-plugin");
-        plugin.setVersion("0.0.1-SNAPSHOT");
+        plugin.setGroupId(IO_TESLA_POLYGLOT);
+        plugin.setArtifactId(TESLA_POLYGLOT + "maven-plugin");
+
+        // FIMXE: Should not need to hard-code the version here
+        plugin.setVersion(VERSION);
+        
         // Do not assume that the existing list is mutable.
         List<Plugin> existingPlugins = model.getBuild().getPlugins();
         List<Plugin> plugins = new ArrayList<Plugin>(existingPlugins);
@@ -125,7 +142,9 @@ public class ExecuteManagerImpl
             String id = task.getId();
 
             PluginExecution execution = new PluginExecution();
-            execution.setId(id);
+            if ( id != null && id.length() > 0 ){
+                execution.setId(id);
+            }
             execution.setPhase(task.getPhase());
             execution.setGoals(goals);
 
@@ -133,10 +152,29 @@ public class ExecuteManagerImpl
             execution.setConfiguration(config);
 
             Xpp3Dom child = new Xpp3Dom("taskId");
-            child.setValue(id);
+            child.setValue( id != null && id.length() > 0 ? id : "default" );
             config.addChild(child);
 
+            if ( model.getPomFile() != null ) {
+                Xpp3Dom nativePom = new Xpp3Dom("nativePom");
+                nativePom.setValue( model.getPomFile().getName() );
+                config.addChild(nativePom);
+            }
+
             plugin.addExecution(execution);
+        }
+
+        try {
+            String flavour = manager.getFlavourFor( options );
+            Dependency dep = new Dependency();
+            dep.setGroupId( IO_TESLA_POLYGLOT );
+            dep.setArtifactId( TESLA_POLYGLOT + flavour );
+            dep.setVersion( VERSION );
+            plugin.addDependency( dep );
+        }
+        catch( RuntimeException e ){
+            e.printStackTrace();
+            // ignore for the time being
         }
     }
 }

@@ -32,7 +32,7 @@ public class PolyglotModelManager implements ModelLocator {
   protected Logger log;
 
   @Requirement(role = Mapping.class)
-  private List<Mapping> mappings;
+  protected List<Mapping> mappings;
 
   public void addMapping(final Mapping mapping) {
     assert mapping != null;
@@ -73,5 +73,31 @@ public class PolyglotModelManager implements ModelLocator {
     }
 
     return pomFile;
+  }
+
+  public String determinFlavourFromPom(final File dir) {
+      assert dir != null;
+
+      String flavour = null;
+      float mappingPriority = Float.MIN_VALUE;
+      for (Mapping mapping : mappings) {
+        File file = mapping.locatePom(dir);
+        if (file != null && (flavour == null || mappingPriority < mapping.getPriority())) {
+          flavour = mapping.getFlavour();
+          mappingPriority = mapping.getPriority();
+        }
+      }
+
+      return flavour;
+    }
+
+  public String getFlavourFor( final Map<String, ?> options ) { 
+    for (Mapping mapping : mappings) {
+      if (mapping.accept(options)) {
+        return mapping.getFlavour();
+      }
+    }
+
+    throw new RuntimeException("Unable determine model input format; options=" + options);
   }
 }

@@ -44,6 +44,7 @@ public class TeslaModelProcessor implements ModelProcessor {
 
   public File locatePom(final File dir) {
     assert manager != null;
+
     File pomFile = manager.locatePom(dir);
     if ( pomFile != null && 
             ! pomFile.getName().endsWith( ".pom" ) && 
