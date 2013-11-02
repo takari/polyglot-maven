@@ -20,7 +20,7 @@
       <plugin>
         <groupId>io.tesla.polyglot</groupId>
         <artifactId>tesla-polyglot-maven-plugin</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.8</version>
         <executions>
           <execution>
             <phase>validate</phase>
@@ -81,7 +81,7 @@
           <dependency>
             <groupId>io.tesla.polyglot</groupId>
             <artifactId>tesla-polyglot-ruby</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.0.8</version>
           </dependency>
         </dependencies>
       </plugin>
