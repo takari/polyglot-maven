@@ -69,31 +69,7 @@ public class ExecuteMojo
     
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
-        Model model;
-        if( nativePom == null ) {
-            model = project.getModel();
-        }
-        else {
-            Map<String, ModelSource> options = new HashMap<String, ModelSource>();
-            options.put( ModelProcessor.SOURCE, new FileModelSource( nativePom ) );
-
-            assert modelManager != null;
-            try
-            {
-                ModelReader reader = modelManager.getReaderFor( options );
-                if( reader == null ){
-                    throw new MojoExecutionException( "no model reader found for " + nativePom );
-                }
-                if (log.isDebugEnabled()) {
-                    log.debug( "Parsing native pom " + nativePom );
-                }
-                model = reader.read( nativePom, options );
-            }
-            catch (IOException e)
-            {
-                throw new MojoFailureException( "error parsing " + nativePom, e );
-            }
-        }
+        Model model = project.getModel();
 
         if (log.isDebugEnabled()) {
             log.debug( "Executing task '" + taskId + "' for model: " + model.getId() );
@@ -101,6 +77,12 @@ public class ExecuteMojo
         
         assert manager != null;
         List<ExecuteTask> tasks = manager.getTasks(model);
+        // if there are no tasks that means we run in proper maven and 
+        // have to load the nativePom to setup the ExecuteManager
+        if ( tasks.size() == 0 && nativePom != null ){
+            // TODO avoid parsing the nativePom for each task
+            tasks = manager.getTasks( modelFromNativePom( log ) );
+        }
         
         ExecuteContext ctx = new ExecuteContext()
         {
@@ -124,5 +106,30 @@ public class ExecuteMojo
         }
 
         throw new MojoFailureException("Unable to find task for id: " + taskId);
+    }
+
+
+    protected Model modelFromNativePom( Log log )
+            throws MojoExecutionException, MojoFailureException
+    {
+        Map<String, ModelSource> options = new HashMap<String, ModelSource>();
+        options.put( ModelProcessor.SOURCE, new FileModelSource( nativePom ) );
+
+        assert modelManager != null;
+        try
+        {
+            ModelReader reader = modelManager.getReaderFor( options );
+            if( reader == null ){
+                throw new MojoExecutionException( "no model reader found for " + nativePom );
+            }
+            if (log.isDebugEnabled()) {
+                log.debug( "Parsing native pom " + nativePom );
+            }
+            return reader.read( nativePom, options );
+        }
+        catch (IOException e)
+        {
+            throw new MojoFailureException( "error parsing " + nativePom, e );
+        }
     }
 }
