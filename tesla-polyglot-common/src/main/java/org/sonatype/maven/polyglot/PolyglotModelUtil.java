@@ -53,4 +53,18 @@ public class PolyglotModelUtil
         }
         return null;
     }
+    
+    public static File getLocationFile(final Map<?, ?> options) {
+        if (options != null) {
+            Object src = options.get(ModelProcessor.SOURCE);
+            if ( src instanceof URL ) {
+                return new File( ( (URL) src ).getFile() );
+            }
+            else if( src != null ) {
+                ModelSource sm = (ModelSource) src;
+                return new File(  sm.getLocation() );
+            }
+        }
+        return null;
+    }
 }
