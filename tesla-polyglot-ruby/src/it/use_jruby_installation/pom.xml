@@ -45,7 +45,7 @@
       <plugin>
         <groupId>io.tesla.polyglot</groupId>
         <artifactId>tesla-polyglot-maven-plugin</artifactId>
-        <version>0.0.1</version>
+        <version>@project.version@</version>
         <configuration>
 	  <nativePom>pom.rb</nativePom>
         </configuration>
@@ -62,7 +62,7 @@
 	  <dependency>
 	    <groupId>io.tesla.polyglot</groupId>
 	    <artifactId>tesla-polyglot-ruby</artifactId>
-	    <version>0.0.1</version>
+	    <version>@project.version@</version>
 	  </dependency>
 	</dependencies>
       </plugin>
