@@ -47,6 +47,11 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
       if (attributedTasks._1) attributedTasks._2 else List[ExecuteTask]().asJava
     }
 
+    def install(model: Model, options: java.util.Map[String, _]) {
+      val attributedTasks = modelTasks.get(model).get
+      modelTasks.put(model, (true, attributedTasks._2))
+    }
+
     def install(model: Model) {
       val attributedTasks = modelTasks.get(model).get
       modelTasks.put(model, (true, attributedTasks._2))
