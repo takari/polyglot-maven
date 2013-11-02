@@ -11,33 +11,27 @@ package org.sonatype.maven.polyglot.ruby;
 public class RubyReaderWithGemspecsTest extends AbstractInjectedTestCase {
 
   public void testGemspec() throws Exception {
-	  assertModels( "gemspec/pom.xml",
-	                "gemspec/Mavenfile", false );
+	  assertModels( "gemspec/Mavenfile", false );
   }
 
   public void testGemspecInProfile() throws Exception {
-      assertModels( "gemspec_in_profile/pom.xml",
-                    "gemspec_in_profile/Mavenfile", false );
+      assertModels( "gemspec_in_profile/Mavenfile", false );
   }
 
   public void testGemspecWithAccessToModel() throws Exception {
-      assertModels( "gemspec_with_access_to_model/pom.xml",
-                    "gemspec_with_access_to_model/Mavenfile", false );
+      assertModels( "gemspec_with_access_to_model/Mavenfile", false );
   }
 
   public void testGemspecWithExtras() throws Exception {
-      assertModels( "gemspec_with_extras/pom.xml",
-                    "gemspec_with_extras/Mavenfile", false );
+      assertModels( "gemspec_with_extras/Mavenfile", false );
   }
 
   public void testGemspecIncludeJars() throws Exception {
-      assertModels( "gemspec_include_jars/pom.xml",
-                    "gemspec_include_jars/Mavenfile", false );
+      assertModels( "gemspec_include_jars/Mavenfile", false );
   }
 
   public void testGemspecWithSource() throws Exception {
-      assertModels( "gemspec_with_source/pom.xml",
-                    "gemspec_with_source/Mavenfile", false );
+      assertModels( "gemspec_with_source/Mavenfile", false );
   }
 
   public void testGemspecWithSourceAndNoJar() throws Exception {

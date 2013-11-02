@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +29,9 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.sisu.launch.InjectedTestCase;
+import org.sonatype.maven.polyglot.PolyglotModelManager;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
+import org.sonatype.maven.polyglot.mapping.Mapping;
 
 public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 
@@ -36,8 +39,21 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	@Named("${basedir}/src/test/poms")
 	protected File poms;
 
+    protected void assertModels( String pomRuby, boolean debug ) throws Exception {
+        File dir = new File( poms, pomRuby ).getParentFile();
+        File pom = new File( dir, "pom.xml" );
+        if( !pom.exists() ){
+            pom = new File( dir.getParentFile(), "pom.xml" );
+        }
+
+        assertModels( pom, pomRuby, debug );
+    }
+
     protected void assertModels( String pomXml, String pomRuby, boolean debug ) throws Exception {
-        File pom = new File( poms, pomXml );
+        assertModels( new File( poms, pomXml ), pomRuby, debug );
+    }
+    
+    protected void assertModels( File pom, String pomRuby, boolean debug ) throws Exception {
         MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
         Model xmlModel = xmlModelReader.read(new FileInputStream( pom ));
                 
@@ -45,9 +61,16 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
         // Read in the Ruby POM
         //
         RubyModelReader rubyModelReader = new RubyModelReader();
+        final PolyglotModelManager modelManager = new PolyglotModelManager() {
+            {
+               mappings = new ArrayList<Mapping>();
+            }
+        };
+        modelManager.addMapping( new RubyMapping() );
         rubyModelReader.executeManager = new ExecuteManagerImpl() {
             {
                 log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
+                manager = modelManager;
             }
         };
         rubyModelReader.setupManager = new SetupClassRealmRuby();
@@ -82,11 +105,18 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	    // Read in the Ruby POM
 	    //
 	    RubyModelReader rubyModelReader = new RubyModelReader();
-		rubyModelReader.executeManager = new ExecuteManagerImpl() {
-			{
-				log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
-			}
-		};
+        final PolyglotModelManager modelManager = new PolyglotModelManager() {
+            {
+               mappings = new ArrayList<Mapping>();
+            }
+        };
+        modelManager.addMapping( new RubyMapping() );
+        rubyModelReader.executeManager = new ExecuteManagerImpl() {
+            {
+                log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
+                manager = modelManager;
+            }
+        };
 		rubyModelReader.setupManager = new SetupClassRealmRuby();
 		
 	    StringReader reader = new StringReader( w.toString() );

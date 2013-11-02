@@ -11,8 +11,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,9 +24,11 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.sisu.launch.InjectedTestCase;
+import org.sonatype.maven.polyglot.PolyglotModelManager;
 import org.sonatype.maven.polyglot.execute.ExecuteContext;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 import org.sonatype.maven.polyglot.execute.ExecuteTask;
+import org.sonatype.maven.polyglot.mapping.Mapping;
 
 public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
 
@@ -39,10 +43,17 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
         // Read in the Ruby POM
         //
         RubyModelReader rubyModelReader = new RubyModelReader();
-        rubyModelReader.executeManager = new ExecuteManagerImpl() {
+        final PolyglotModelManager modelManager = new PolyglotModelManager() {
             {
-                log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
-            }
+                mappings = new ArrayList<Mapping>();
+             }
+         };
+         modelManager.addMapping( new RubyMapping() );
+         rubyModelReader.executeManager = new ExecuteManagerImpl() {
+             {
+                 log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
+                 manager = modelManager;
+             }
         };
         rubyModelReader.setupManager = new SetupClassRealmRuby();
 
@@ -51,8 +62,10 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
         System.setOut(new PrintStream(bytes));
         try {
             
-            final Model rubyModel = rubyModelReader.read(new FileReader(pom),
-                    new HashMap<String, Object>());
+            Map<String, Object> options = new HashMap<String, Object>();
+            options.put(  "ruby:4.0.0", true );
+            final Model rubyModel = rubyModelReader.read( new FileReader(pom),
+                                                          options );
 
             //
             // Test for fidelity
