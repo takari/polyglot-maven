@@ -22,6 +22,7 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.sonatype.maven.polyglot.Constants;
 import org.sonatype.maven.polyglot.PolyglotModelManager;
 
 /**
@@ -35,13 +36,6 @@ import org.sonatype.maven.polyglot.PolyglotModelManager;
 public class ExecuteManagerImpl
     implements ExecuteManager
 {
-    private static final String TESLA_POLYGLOT = "tesla-polyglot-";
-
-    // FIXME do not hardcode the version
-    private static final String VERSION = "0.0.8";
-
-    private static final String IO_TESLA_POLYGLOT = "io.tesla.polyglot";
-
     @Requirement
     protected Logger log;
 
@@ -120,11 +114,11 @@ public class ExecuteManagerImpl
         }
 
         Plugin plugin = new Plugin();
-        plugin.setGroupId(IO_TESLA_POLYGLOT);
-        plugin.setArtifactId(TESLA_POLYGLOT + "maven-plugin");
+        plugin.setGroupId(Constants.getGroupId());
+        plugin.setArtifactId(Constants.getArtifactId( "maven-plugin" ) );
 
         // FIMXE: Should not need to hard-code the version here
-        plugin.setVersion(VERSION);
+        plugin.setVersion(Constants.getVersion());
         
         // Do not assume that the existing list is mutable.
         List<Plugin> existingPlugins = model.getBuild().getPlugins();
@@ -167,9 +161,9 @@ public class ExecuteManagerImpl
         try {
             String flavour = manager.getFlavourFor( options );
             Dependency dep = new Dependency();
-            dep.setGroupId( IO_TESLA_POLYGLOT );
-            dep.setArtifactId( TESLA_POLYGLOT + flavour );
-            dep.setVersion( VERSION );
+            dep.setGroupId( Constants.getGroupId() );
+            dep.setArtifactId( Constants.getArtifactId( flavour ) );
+            dep.setVersion( Constants.getVersion() );
             plugin.addDependency( dep );
         }
         catch( RuntimeException e ){
