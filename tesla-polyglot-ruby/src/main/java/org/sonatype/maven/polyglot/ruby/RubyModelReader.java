@@ -7,16 +7,12 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.net.URL;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelProcessor;
-import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
 import org.codehaus.plexus.component.annotations.Component;
@@ -63,13 +59,10 @@ public class RubyModelReader extends ModelReaderSupport {
             // read the stream from our pom.rb into a String
             StringWriter ruby = new StringWriter();
             IOUtil.copy( input, ruby );
-    
-            String location = PolyglotModelUtil.getLocation( options );
-            File source = location == null ? null : new File( location );
-    
+        
             // parse the String and create a POM model
             return new RubyParser( executeManager ).parse( ruby.toString(),
-                                                           source,
+                                                           PolyglotModelUtil.getLocationFile( options ),
                                                            options );
         }
         finally {
