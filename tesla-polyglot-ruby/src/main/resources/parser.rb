@@ -7,6 +7,7 @@ org.apache.maven.model.ActivationFile
 org.apache.maven.model.ActivationOS
 org.apache.maven.model.ActivationProperty
 org.apache.maven.model.Build
+org.apache.maven.model.Contributor
 org.apache.maven.model.Dependency
 org.apache.maven.model.DependencyManagement
 org.apache.maven.model.DeploymentRepository
@@ -15,12 +16,15 @@ org.apache.maven.model.Developer
 org.apache.maven.model.Exclusion
 org.apache.maven.model.Extension
 org.apache.maven.model.IssueManagement
+org.apache.maven.model.License
 org.apache.maven.model.MailingList
 org.apache.maven.model.Model
+org.apache.maven.model.Organization
 org.apache.maven.model.Parent
 org.apache.maven.model.Plugin
 org.apache.maven.model.PluginExecution
 org.apache.maven.model.PluginManagement
+org.apache.maven.model.Prerequisites
 org.apache.maven.model.Profile
 org.apache.maven.model.Reporting
 org.apache.maven.model.ReportPlugin
@@ -46,7 +50,7 @@ module Tesla
           eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src ) 
       else
 	      eval_pom( "tesla do\n#{pom}\nend", src )
-	  end
+      end
 
     ensure
       # keep no state for the execute blocks
@@ -55,12 +59,48 @@ module Tesla
 
     private
 
-    def execute( id, phase, &block )
-      @factory.add_execute_task( id.to_s, phase.to_s, block )
-    end
-
     include Maven::Tools::DSL
 
+	# override hook from DSL
+    def add_execute_task( options, &block )
+      @factory.add_execute_task( options[ :id ].to_s,
+                                 options[ :phase ].to_s, 
+                                 block )
+    end
+
+	def fill_options( receiver, options )
+      options.each do |k,v|
+        if v.is_a? Hash
+          props = java.util.Properties.new
+          v.each { |kk,vv| props[ kk.to_s ] = vv.to_s }
+          receiver.send( "#{k}=".to_sym, props )        
+        else
+          fill( receiver, k, v )
+        end
+      end
+    end
+    
+    class PropertiesWrapper
+       def initialize( prop )
+         @prop = prop
+       end
+       
+       def []=( key, val )
+         @prop[ key.to_s ] = val.to_s
+       end
+       
+       def method_missing( method, *args )
+         @prop.send( method, *args )
+       end
+    end
+    
+    def properties(props = {})
+      props.each do |k,v|
+        @current.properties[k.to_s] = v.to_s
+      end
+      PropertiesWrapper.new @current.properties
+    end
+    
     def xml( xml )
       Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
     end
@@ -96,7 +136,7 @@ module Tesla
             when Xpp3Dom
               node.addChild( val )
             else
-              child.setValue( val )
+              child.setValue( val.to_s )
               node.addChild( child )
             end
           end
