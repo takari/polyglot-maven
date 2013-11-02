@@ -1,8 +1,7 @@
 project 'tesla-polyglot-gems' do
 
-  model_version '4.0.0'
-  id 'io.tesla.polyglot:tesla-polyglot-gems:0.0.1-SNAPSHOT'
-  inherit 'io.tesla.polyglot:tesla-polyglot:0.0.1-SNAPSHOT'
+  inherit 'io.tesla.polyglot:tesla-polyglot:0.0.8'
+  id 'tesla-polyglot-gems'
   packaging 'pom'
 
   modules [ 'ruby-maven-libs',

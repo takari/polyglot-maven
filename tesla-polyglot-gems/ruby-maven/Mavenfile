@@ -4,7 +4,7 @@ gemspec
 
 require File.join( basedir, 'ruby', 'tesla_maven' )
 
-inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}-SNAPSHOT"
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" #-SNAPSHOT"
 
 plugin( :dependency,
 
@@ -25,7 +25,7 @@ plugin( :clean, '2.5',
                        { :directory => 'lib' },
                        { :directory => 'bin',
                          :includes => [ '*' ],
-                         :excludes => [ 'rmvn', 'm2.conf' ] } ] )
+                         :excludes => [ 'rmvn', 'm2*.conf' ] } ] )
 
 resource do
   target_path "${project.basedir}"

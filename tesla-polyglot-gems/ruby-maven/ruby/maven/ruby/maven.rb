@@ -19,9 +19,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 unless defined? JRUBY_VERSION
-#  require 'java'
   require 'maven/tools/model'
-  require 'maven/tools/pom'
 end
 require 'maven/tools/visitor'
 require 'fileutils'

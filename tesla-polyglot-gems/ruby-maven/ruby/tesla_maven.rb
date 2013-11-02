@@ -6,7 +6,7 @@ end
 
 module TeslaMaven
 
-  VERSION = '0.0.1'.freeze
+  VERSION = '0.0.8'.freeze
   
   def self.home
     File.expand_path( File.join( File.dirname( File.expand_path( __FILE__ ) ), '..' ) )
