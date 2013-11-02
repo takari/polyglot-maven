@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 import org.apache.maven.model.Model;
 import org.jruby.embed.ScriptingContainer;
@@ -58,7 +59,7 @@ public class RubyParser {
     }
 
     // synchronize it since it is not clear how threadsafe everything is
-    public synchronized Model parse( String ruby, File source )
+    public synchronized Model parse( String ruby, File source, Map<String, ?> options )
     {
         Model model = this.jruby.callMethod( this.parser,
                     "parse",
@@ -66,8 +67,9 @@ public class RubyParser {
                                    this.factory,
                                    source != null ? source.getAbsolutePath() : null },
                     Model.class );
+        model.setPomFile( source );
         executeManager.register( model, this.factory.getExecuteTasks() );
-        executeManager.install( model );
+        executeManager.install( model, options );
         return model;
     }
 }
