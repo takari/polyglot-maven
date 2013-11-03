@@ -145,9 +145,11 @@ public class ExecuteManagerImpl
             Xpp3Dom config = new Xpp3Dom("configuration");
             execution.setConfiguration(config);
 
-            Xpp3Dom child = new Xpp3Dom("taskId");
-            child.setValue( id != null && id.length() > 0 ? id : "default" );
-            config.addChild(child);
+            if (id != null && id.length() > 0 ) {
+                Xpp3Dom child = new Xpp3Dom("taskId");
+                child.setValue( id );
+                config.addChild(child);
+            }
 
             if ( model.getPomFile() != null ) {
                 Xpp3Dom nativePom = new Xpp3Dom("nativePom");
