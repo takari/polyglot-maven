@@ -30,7 +30,7 @@
     <dependency>
       <groupId>de.saumya.mojo</groupId>
       <artifactId>maven-tools</artifactId>
-      <version>0.33.2</version>
+      <version>0.33.5</version>
     </dependency>
     <dependency>
       <groupId>org.jruby</groupId>
@@ -39,6 +39,12 @@
       <scope>provided</scope>
     </dependency>
     <!-- Test -->
+    <dependency>
+      <groupId>io.tesla.polyglot</groupId>
+      <artifactId>tesla-polyglot-maven-plugin</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
