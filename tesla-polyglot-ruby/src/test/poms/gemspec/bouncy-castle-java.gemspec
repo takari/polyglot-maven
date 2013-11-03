@@ -4,7 +4,7 @@ require './bouncy-castle-version.rb'
 
 Gem::Specification.new do |s|
   s.name = 'bouncy-castle-java'
-  s.version = "1.5.0#{BouncyCastle::VERSION}"
+  s.version = "1.5.0#{BouncyCastle::VERSION_}"
   s.author = 'Hiroshi Nakamura'
   s.email = [ 'nahi@ruby-lang.org' ]
   s.rubyforge_project = "jruby-extras"

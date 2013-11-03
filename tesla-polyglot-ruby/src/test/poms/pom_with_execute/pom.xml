@@ -28,7 +28,6 @@
               <goal>execute</goal>
             </goals>
             <configuration>
-              <taskId>default</taskId>
               <nativePom>pom.rb</nativePom>
             </configuration>
           </execution>
