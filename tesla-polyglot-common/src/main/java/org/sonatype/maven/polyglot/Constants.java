@@ -12,7 +12,7 @@ public class Constants {
     private static final String TESLA_POLYGLOT = "tesla-polyglot-";
     private static final String IO_TESLA_POLYGLOT = "io.tesla.polyglot";
     // FIXME do not hardcode the version
-    private static final String VERSION = "0.0.8";
+    private static final String VERSION = "0.0.9";
         
     public static String getGroupId(){
         return IO_TESLA_POLYGLOT;
