@@ -7,7 +7,9 @@ require File.join( basedir,
 
 gemspec
 
-inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}"
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" do
+  relative_path '../pom.rb'
+end
 
 plugin( :dependency,
         :phase => 'process-sources' ) do
