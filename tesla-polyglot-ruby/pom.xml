@@ -30,12 +30,12 @@
     <dependency>
       <groupId>de.saumya.mojo</groupId>
       <artifactId>maven-tools</artifactId>
-      <version>0.33.5</version>
+      <version>0.34.1</version>
     </dependency>
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
-      <version>1.7.5</version>
+      <version>1.7.8</version>
       <scope>provided</scope>
     </dependency>
     <!-- Test -->

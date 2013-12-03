@@ -102,6 +102,21 @@ module Tesla
       PropertiesWrapper.new @current.properties
     end
     
+    # fix typos upstream of maven-tools-0.34.1
+      def releases( config )
+        @current.releases = repository_policy( config )
+      end
+      def snapshots( config )
+        @current.snapshots = repository_policy( config )
+      end
+      def snapshot_repository( url, options = {}, &block )
+        unless @current.respond_to? :snapshot_repository=
+            options[ :releases ] = false unless options.key?( :releases ) || options.key?( 'releases' )
+          options[ :snapshots ] = true unless options.key?( :snapshots ) || options.key?( 'snapshots' )
+        end
+        do_repository( :snapshot_repository=, url, options, block )
+      end
+
     def xml( xml )
       Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
     end
