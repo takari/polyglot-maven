@@ -1,8 +1,13 @@
 # -*- mode:ruby -*-
+require File.join( basedir,
+                   '..',
+                   'ruby-maven',
+                   'ruby',
+                   'tesla_maven' )
 
 gemspec
 
-inherit "io.tesla.polyglot:tesla-polyglot-gems:0.0.8"
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}"
 
 plugin( :dependency,
         :phase => 'process-sources' ) do
