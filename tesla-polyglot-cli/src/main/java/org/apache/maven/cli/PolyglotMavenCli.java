@@ -7,8 +7,6 @@
  */
 package org.apache.maven.cli;
 
-import java.util.List;
-
 import org.apache.maven.model.building.ModelProcessor;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.ClassWorld;
@@ -64,10 +62,5 @@ public class PolyglotMavenCli extends MavenCli {
     assert classWorld != null;
     final PolyglotMavenCli cli = new PolyglotMavenCli();
     return cli.doMain(new CliRequest(args, classWorld));
-  }
-  
-  // helper which can be called from within jruby - jruby does not find the other method :(
-  public static int main(final List<String> args, final ClassWorld classWorld) {
-    return main( args.toArray( new String[ args.size() ] ), classWorld );
   }
 }
