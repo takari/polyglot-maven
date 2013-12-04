@@ -33,18 +33,6 @@ module Maven
 
       private
 
-      def launch_jruby_embedded(args)
-        classloader = self.class.class_world.get_realm( 'plexus.core' )
-        
-        cli = classloader.load_class( 'org.apache.maven.cli.PolyglotMavenCli' )
-
-        a = java.util.ArrayList.new
-        args.each { |arg| a << arg.to_s }
-        unless org.apache.maven.cli.PolyglotMavenCli.main( a, self.class.class_world )
-          raise 'error executing maven'
-        end
-      end
-
       def launch_jruby(args)
         java.lang.System.setProperty( "classworlds.conf",
                                       TeslaMaven.bin( "m2jruby.conf" ) )
@@ -58,32 +46,12 @@ module Maven
         self.class.require_classpath( TeslaMaven.maven_lib )
         self.class.require_classpath( TeslaMaven.lib )
 
-        # NOTE that execution will call System.exit on the java side
-        org.codehaus.plexus.classworlds.launcher.Launcher.main( args )
+        org.codehaus.plexus.classworlds.launcher.Launcher.main_with_exit_code( args )
       end
 
       def launch_java(args)
         # TODO works only on unix like OS
-        result = system "java -cp #{self.class.classpath( TeslaMaven.maven_boot )} -Dmaven.home=#{TeslaMaven.maven_home} -Dtesla.home=#{TeslaMaven.home} -Dclassworlds.conf=#{TeslaMaven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
-
-        if @embedded and not result
-          raise 'error in executing maven'
-        else
-          result
-        end
-      end
-
-      def self.class_world
-        @class_world ||= class_world!
-      end
-
-      def self.class_world!
-        require_classpath( TeslaMaven.ext )
-        require_classpath( TeslaMaven.lib )
-        require_classpath( TeslaMaven.maven_boot )
-        require_classpath( TeslaMaven.maven_lib )
-        org.codehaus.plexus.classworlds.ClassWorld.new( "plexus.core",
-                                                        java.lang.Thread.currentThread().getContextClassLoader())
+        system "java -cp #{self.class.classpath( TeslaMaven.maven_boot )} -Dmaven.home=#{TeslaMaven.maven_home} -Dtesla.home=#{TeslaMaven.home} -Dclassworlds.conf=#{TeslaMaven.bin( 'm2.conf' )} org.codehaus.plexus.classworlds.launcher.Launcher #{args.join ' '}"
       end
 
       def self.classpath_array( dir )
@@ -116,10 +84,6 @@ module Maven
       end
 
       public
-
-      def self.class_world
-        @class_world ||= class_world!
-      end
 
       def initialize( project = nil, temp_pom = nil )
         super()
@@ -158,24 +122,36 @@ module Maven
         a = args.dup + options_array
         if a.delete( '-Dverbose=true' ) || a.delete( '-Dverbose' ) || verbose
           puts "mvn #{a.join(' ')}"
-        end
-        if defined? JRUBY_VERSION
-          if @embedded
-            puts "using jruby #{JRUBY_VERSION} embedded invokation" if verbose
-            launch_jruby_embedded(a)            
-          else
-            puts "using jruby #{JRUBY_VERSION} invokation" if verbose
-            launch_jruby(a)
+        end   
+        if defined? Bundler
+          # it can be switching from ruby to jruby with invoking maven
+          # just keep it clean
+          Bundler.with_clean_env do
+            launch( a )
           end
         else
+          launch( a )
+        end
+      end
+
+      def launch( args )
+        if defined? JRUBY_VERSION
+          puts "using jruby #{JRUBY_VERSION} invokation" if verbose
+          result = launch_jruby( args )
+        else
           puts "using java invokation" if verbose
-          launch_java(a)
+          result = launch_java( args )
+        end
+        if @embedded and not result
+          raise "error in executing maven #{result}"
+        else
+          result
         end
       end
 
       def method_missing( method, *args )
         method = method.to_s.gsub( /_/, '-' ).to_sym
-        exec( [ method ] + args )
+        exec( *([ method ] + args) )
       end
     end
   end
