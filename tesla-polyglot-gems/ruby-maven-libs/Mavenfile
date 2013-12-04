@@ -41,6 +41,10 @@ resource do
   includes [ 'lib/**/*', 'conf/**/*', 'boot/*', 'bin/*', 'README*', 'LICENSE*', 'NOTICE*' ]
 end
 
+execute 'fix permissions', :phase => 'process-resources' do
+  File.chmod 0755, 'bin/mvn'
+end
+
 build do
   execute("check versions", :validate) do |context|
     mavenVersion = context.project.properties[ 'mavenVersion' ]
