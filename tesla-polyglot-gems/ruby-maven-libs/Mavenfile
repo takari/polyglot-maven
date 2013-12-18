@@ -41,8 +41,8 @@ resource do
   includes [ 'lib/**/*', 'conf/**/*', 'boot/*', 'bin/*', 'README*', 'LICENSE*', 'NOTICE*' ]
 end
 
-execute 'fix permissions', :phase => 'process-resources' do
-  File.chmod 0755, 'bin/mvn'
+execute 'fix permissions', :phase => 'process-resources' do |ctx|
+  File.chmod 0755, "#{ctx.project.basedir}/bin/mvn"
 end
 
 build do

@@ -9,7 +9,6 @@ inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" do
 end
 
 plugin( :dependency,
-
         :phase => 'process-sources' ) do
   execute_goals( :unpack,
                  :outputAbsoluteArtifactFilename => false,
