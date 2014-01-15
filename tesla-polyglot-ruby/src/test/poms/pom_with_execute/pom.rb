@@ -21,4 +21,10 @@ project 'example with execute' do
       p ctx.project
     end
   end
+
+  profile 'some' do
+    execute :phase => :initialize do |ctx|
+      p ctx.basedir
+    end
+  end
 end

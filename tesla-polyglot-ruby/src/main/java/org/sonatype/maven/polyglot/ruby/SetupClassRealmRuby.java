@@ -70,7 +70,7 @@ public class SetupClassRealmRuby extends SetupClassRealm {
         ClassRealm realm = (ClassRealm) Thread.currentThread().getContextClassLoader();
         
         System.setProperty( JRUBY_HOME, jrubyHome );
-        
+
         File[] jars = new File( jrubyHome, "lib" ).listFiles( new FileFilter() {
 
             public boolean accept( File pathname )
@@ -78,6 +78,9 @@ public class SetupClassRealmRuby extends SetupClassRealm {
                 return pathname.getName().endsWith( ".jar" );
             }
         } );
+        if ( jars == null || jars.length == 0 ){
+            throw new RuntimeException( "found jruby-home variable but no jruby.jar: " + jrubyHome );
+        }
         for( File jar : jars ){
             realm.addURL( jar.toURI().toURL() );
         }

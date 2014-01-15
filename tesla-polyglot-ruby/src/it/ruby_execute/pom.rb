@@ -13,6 +13,12 @@ project 'Execute Ruby Tasks' do
     execute(:third, :initialize) do
       java.lang.System.out.println where 
     end
+    phase :validate do
+      execute(:forth) do |ctx|
+        ctx.info 'hello world'
+        ctx.log.error ctx.basedir
+      end
+    end
   end
   
   def where

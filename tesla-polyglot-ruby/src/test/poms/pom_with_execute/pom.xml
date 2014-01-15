@@ -15,12 +15,15 @@
   <artifactId>pom_with_execute</artifactId>
   <version>0.0.0</version>
   <name>example with execute</name>
+  <properties>
+    <tesla.version>0.0.9</tesla.version>
+  </properties>
   <build>
     <plugins>
       <plugin>
         <groupId>io.tesla.polyglot</groupId>
         <artifactId>tesla-polyglot-maven-plugin</artifactId>
-        <version>0.0.9</version>
+        <version>${tesla.version}</version>
         <executions>
           <execution>
             <phase>validate</phase>
@@ -80,10 +83,42 @@
           <dependency>
             <groupId>io.tesla.polyglot</groupId>
             <artifactId>tesla-polyglot-ruby</artifactId>
-            <version>0.0.9</version>
+            <version>${tesla.version}</version>
           </dependency>
         </dependencies>
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>some</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.tesla.polyglot</groupId>
+            <artifactId>tesla-polyglot-maven-plugin</artifactId>
+            <version>${tesla.version}</version>
+            <executions>
+              <execution>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>execute</goal>
+                </goals>
+                <configuration>
+                  <nativePom>pom.rb</nativePom>
+                </configuration>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>io.tesla.polyglot</groupId>
+                <artifactId>tesla-polyglot-ruby</artifactId>
+                <version>${tesla.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

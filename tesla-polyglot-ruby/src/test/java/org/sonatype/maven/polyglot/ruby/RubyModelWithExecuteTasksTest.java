@@ -20,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
@@ -76,6 +77,14 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
 
                 public MavenProject getProject() {
                     return new MavenProject(rubyModel);
+                }
+                
+                public File basedir() {
+                    return getProject().getBasedir();
+                }
+                
+                public Log log() {
+                    return null;
                 }
             };
             List<ExecuteTask> tasks = rubyModelReader.executeManager.getTasks(

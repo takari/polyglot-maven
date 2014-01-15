@@ -19,6 +19,12 @@ public interface ExecuteTask
     String getId();
 
     String getPhase();
+    
+    /**
+     * profile id of the execute task. can be <code>null</code> then the execute task belongs to
+     * project.build
+     */
+    String getProfileId();
 
     void execute(ExecuteContext context) throws Exception;
 }

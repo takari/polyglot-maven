@@ -44,7 +44,8 @@ public class RubyExecuteTask extends ExecuteTaskSupport {
     public String toString() {
         return getClass().getSimpleName() + "{" +
             "id='" + getId() + '\'' +
-            ", phase='" + getPhase() + '\'' +
+            ", phase='" + getPhase() + '\'' + 
+            ( getProfileId() == null ? "" : ", profile='" + getProfileId() + '\'' ) +
             "," + script + "}";
     }
 }

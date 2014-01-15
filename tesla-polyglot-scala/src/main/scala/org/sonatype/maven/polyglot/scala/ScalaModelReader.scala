@@ -155,5 +155,7 @@ private class ScalaTask(t: Task) extends ExecuteTask {
 
   def getPhase: String = t.phase
 
+  def getProfileId: String = t.profileId
+
   def execute(ec: ExecuteContext): Unit = t.block(ec)
 }

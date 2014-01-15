@@ -64,8 +64,10 @@ module Tesla
 	# override hook from DSL
     def add_execute_task( options, &block )
       options[ :phase ] = retrieve_phase( options )
+      profile_id = @context == :profile ? @current.id : nil
       @factory.add_execute_task( options[ :id ].to_s,
-                                 options[ :phase ].to_s, 
+                                 options[ :phase ].to_s,
+                                 profile_id,
                                  block )
     end
 

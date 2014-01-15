@@ -101,7 +101,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
         ScalaBuild(
           tasks = Seq(
             ScalaModelTask(
-              "someId", "somePhase"
+              "someId", "somePhase", null
             ) {
               ec => println("here I am")
             }
@@ -129,6 +129,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
       val project = new MavenProject
       val ec = new ExecuteContext {
         def getProject: MavenProject = project
+        def basedir: java.io.File = project.getBasedir
+        def log: org.apache.maven.plugin.logging.Log = null
       }
       tasks(0).execute(ec)
       project.getArtifactId must_== "We executed!"

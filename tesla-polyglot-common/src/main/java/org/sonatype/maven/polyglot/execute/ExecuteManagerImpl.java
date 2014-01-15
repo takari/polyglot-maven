@@ -14,10 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.maven.model.Build;
+import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
+import org.apache.maven.model.Profile;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
@@ -36,6 +38,8 @@ import org.sonatype.maven.polyglot.PolyglotModelManager;
 public class ExecuteManagerImpl
     implements ExecuteManager
 {
+    private static final String TESLA_VERSION = "tesla.version";
+
     @Requirement
     protected Logger log;
 
@@ -105,33 +109,29 @@ public class ExecuteManagerImpl
             return;
         }
 
+        // use a property to determine the version of the plugin
+        // that allows to lock down the plugin version in the pom
+        String version = model.getProperties().getProperty( TESLA_VERSION );
+        if ( version == null )
+        {
+            // FIMXE: Should not need to hard-code the version here
+            model.getProperties().setProperty( TESLA_VERSION, Constants.getVersion() );
+        }
+        
         if (log.isDebugEnabled()) {
             log.debug("Registering tasks for: " + model.getId());
         }
 
-        if (model.getBuild() == null) {
-            model.setBuild(new Build());
-        }
-
-        Plugin plugin = new Plugin();
-        plugin.setGroupId(Constants.getGroupId());
-        plugin.setArtifactId(Constants.getArtifactId( "maven-plugin" ) );
-
-        // FIMXE: Should not need to hard-code the version here
-        plugin.setVersion(Constants.getVersion());
-        
-        // Do not assume that the existing list is mutable.
-        List<Plugin> existingPlugins = model.getBuild().getPlugins();
-        List<Plugin> plugins = new ArrayList<Plugin>(existingPlugins);
-        model.getBuild().setPlugins(plugins);
-        model.getBuild().addPlugin(plugin);
-
         List<String> goals = Collections.singletonList("execute");
 
+        Map<String, Plugin> plugins = new HashMap<String, Plugin>();
+        
         for (ExecuteTask task : tasks) {
             if (log.isDebugEnabled()) {
                 log.debug("Registering task: " + task.getId());
             }
+
+            Plugin plugin = getPlugin( model, task.getProfileId(), plugins );
 
             String id = task.getId();
 
@@ -160,17 +160,65 @@ public class ExecuteManagerImpl
             plugin.addExecution(execution);
         }
 
-        try {
-            String flavour = manager.getFlavourFor( options );
+        String flavour = manager.getFlavourFor( options );
+        for( Plugin plugin: plugins.values() )
+        {
             Dependency dep = new Dependency();
             dep.setGroupId( Constants.getGroupId() );
             dep.setArtifactId( Constants.getArtifactId( flavour ) );
-            dep.setVersion( Constants.getVersion() );
+            dep.setVersion( "${" + TESLA_VERSION + "}" );
             plugin.addDependency( dep );
         }
-        catch( RuntimeException e ){
-            e.printStackTrace();
-            // ignore for the time being
+    }
+
+    private BuildBase getBuild( final Model model, String profileId )
+    {
+        if ( profileId == null )
+        {
+            if (model.getBuild() == null) {
+                model.setBuild( new Build() );
+            }
+            return model.getBuild();
         }
+        else 
+        {
+            for( Profile p :model.getProfiles() )
+            {
+                if ( profileId.equals( p.getId() ) )
+                {
+                    if (p.getBuild() == null) {
+                        p.setBuild( new Build() );
+                    }
+                    return p.getBuild();
+                }
+            }
+            Profile profile = new Profile();
+            profile.setId( profileId );
+            profile.setBuild( new Build() );
+            model.addProfile( profile );
+            return profile.getBuild();
+        }
+    }
+
+    private Plugin getPlugin( final Model model, String profileId, Map<String, Plugin> plugins )
+    {
+        Plugin plugin = plugins.get( profileId );
+        if ( plugin == null )
+        {
+            plugin = new Plugin();
+            plugin.setGroupId(Constants.getGroupId());
+            plugin.setArtifactId(Constants.getArtifactId( "maven-plugin" ) );
+            plugin.setVersion( "${" + TESLA_VERSION + "}" );
+        
+            // Do not assume that the existing list is mutable.
+            BuildBase build = getBuild( model, profileId );
+            List<Plugin> existingPlugins = build.getPlugins();
+            List<Plugin> mutablePlugins = new ArrayList<Plugin>(existingPlugins);
+            build.setPlugins(mutablePlugins);
+            build.addPlugin(plugin);
+            
+            plugins.put( profileId, plugin );
+        }
+        return plugin;
     }
 }

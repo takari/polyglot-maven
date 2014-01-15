@@ -89,6 +89,14 @@ public class ExecuteMojo
             public MavenProject getProject() {
                 return project;
             }
+            
+            public File basedir() {
+                return project.getBasedir();
+            }
+            
+            public Log log() {
+                return getLog();
+            }
         };
 
         for (ExecuteTask task : tasks) {

@@ -7,6 +7,9 @@
  */
 package org.sonatype.maven.polyglot.execute;
 
+import java.io.File;
+
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -19,4 +22,8 @@ import org.apache.maven.project.MavenProject;
 public interface ExecuteContext
 {
     MavenProject getProject();
+    
+    File basedir();
+    
+    Log log();
 }

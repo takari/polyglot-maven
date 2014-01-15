@@ -21,6 +21,8 @@ public abstract class ExecuteTaskSupport
 
     private String phase;
 
+    private String profileId = null;
+
     public String getId() {
         return id;
     }
@@ -35,5 +37,15 @@ public abstract class ExecuteTaskSupport
 
     public void setPhase(final String phase) {
         this.phase = phase;
+    }
+
+    public String getProfileId()
+    {
+        return profileId;
+    }
+
+    public void setProfileId( String profileId )
+    {
+        this.profileId = profileId;
     }
 }

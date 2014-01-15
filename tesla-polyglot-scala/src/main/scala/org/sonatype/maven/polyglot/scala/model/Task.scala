@@ -9,11 +9,13 @@ package org.sonatype.maven.polyglot.scala.model
 
 import org.sonatype.maven.polyglot.execute.ExecuteContext
 
-class Task(val id: String, val phase: String, val block: ExecuteContext => Unit)
+class Task(val id: String, val phase: String, val profileId: String, val block: ExecuteContext => Unit)
 
 object Task {
   def apply(id: String, phase: String)(block: ExecuteContext => Unit) =
-    new Task(id, phase, block)
+    new Task(id, phase, null, block)
+  def apply(id: String, phase: String, profileId: String)(block: ExecuteContext => Unit) =
+    new Task(id, phase, profileId, block)
 }
 
 
