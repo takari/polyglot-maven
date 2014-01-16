@@ -46,7 +46,22 @@ module Maven
         self.class.require_classpath( TeslaMaven.maven_lib )
         self.class.require_classpath( TeslaMaven.lib )
 
+        # this is a hack to ensure ruby-maven also works inside the
+        # jruby development itself where the lib/jruby.jar gets build
+        # during the execution of maven and the jar used to launch jruby
+        # will be replaced.
+
+        jar = 'lib/jruby.jar'
+        jar_copy = 'lib/jruby-copy.jar'
+        if File.exists? jar
+          FileUtils.mv( jar, jar_copy )
+        end
+
         org.codehaus.plexus.classworlds.launcher.Launcher.main_with_exit_code( args )
+      ensure
+        if File.exists? jar_copy
+          FileUtils.mv( jar_copy, jar )
+        end
       end
 
       def launch_java(args)
