@@ -33,6 +33,7 @@ object Config extends Dynamic {
 
   def applyDynamicNamed(method: String)(params: (String, Any)*): Config =
     if (method == "apply") new Config(params map {
+      case (k, Optional(v)) if k.startsWith("$at") && k.size > 3 => s"@${k.substring(3)}" -> v
       case (k, Optional(v)) => k -> v
     } toSeq)
     else throw new UnsupportedOperationException
@@ -52,7 +53,8 @@ class PrettiedConfig(c: Config) {
           case value: String => dquotes(value)
           case value: Any => value.toString
         }).getOrElse("None")
-        args += assign(e._1, value)
+        val name = if (e._1.startsWith("@")) s"`${e._1}`" else e._1
+        args += assign(name, value)
     }
     `object`("Config", args)
   }
@@ -63,16 +65,28 @@ class ConvertibleMavenConfig(mc: Object) {
 
   private val config = mc match {
     case xmlConfig: Xpp3Dom =>
-      def asConfig(children: Array[Xpp3Dom]): Config = {
+      def asConfig(xmlConfig: Xpp3Dom): Config = {
         val elements = ListBuffer[(String, Option[Any])]()
-        children.foreach {
+        xmlConfig.getAttributeNames.foreach {
+          attrName =>
+            val attrValue = Option(xmlConfig.getAttribute(attrName))
+            elements += (s"@$attrName" -> attrValue)
+        }
+        xmlConfig.getChildren.foreach {
+          // Note: a limitation of this model is that we can't have both attributes and values (attributes and
+          // child elements are fine though). 'hopefully this won't turn out to be a restriction.
           child =>
-            val childValue = if (child.getChildCount == 0) child.getValue else asConfig(child.getChildren)
+            val childValue =
+              if (child.getChildCount == 0 && child.getAttributeNames.isEmpty) {
+                child.getValue
+              } else {
+                asConfig(child)
+              }
             elements += (child.getName -> Option(childValue))
         }
         new Config(elements)
       }
-      asConfig(xmlConfig.getChildren)
+      asConfig(xmlConfig)
     case _ => new Config(Seq.empty)
   }
 
@@ -84,11 +98,15 @@ class ConvertibleScalaConfig(config: Config) {
   private def addChildren(parent: Xpp3Dom, children: Config): Xpp3Dom = {
     children.elements.foreach {
       p =>
-        val e = new Xpp3Dom(p._1)
-        parent.addChild(e)
-        p._2.foreach {
-          case value: Config => addChildren(e, value)
-          case value: Any => e.setValue(value.toString)
+        if (p._1.startsWith("@") && p._1.size > 1) {
+          parent.setAttribute(p._1.substring(1), p._2.map(_.toString).orNull)
+        } else {
+          val e = new Xpp3Dom(p._1)
+          parent.addChild(e)
+          p._2.foreach {
+            case value: Config => addChildren(e, value)
+            case value: Any => e.setValue(value.toString)
+          }
         }
     }
     parent

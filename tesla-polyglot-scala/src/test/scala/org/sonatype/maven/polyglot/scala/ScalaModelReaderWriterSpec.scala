@@ -168,5 +168,51 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
       tasks(0).execute(ec)
       project.getArtifactId must_== "We executed!"
     }
+    "format a configuration with an attribute properly" in {
+      import model._
+      import ScalaPrettyPrinter._
+
+      val m = ScalaRawModel(
+        "someGroupId" % "someArtifactId" % "someVersion",
+        ScalaBuild(
+          plugins = Seq(
+            Plugin(
+              "someGroupId" % "someArtifactId" % "someVersion",
+              extensions = true,
+              executions = Seq(
+                Execution(
+                  configuration = Config(
+                    `@someattr` = "someAttr",
+                    someValue = "someValue"
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+
+      pp must_== """Model(
+                   |  "someGroupId" % "someArtifactId" % "someVersion",
+                   |  build = Build(
+                   |    plugins = Seq(
+                   |      Plugin(
+                   |        "someGroupId" % "someArtifactId" % "someVersion",
+                   |        extensions = true,
+                   |        executions = Seq(
+                   |          Execution(
+                   |            configuration = Config(
+                   |              `@someattr` = "someAttr",
+                   |              someValue = "someValue"
+                   |            )
+                   |          )
+                   |        )
+                   |      )
+                   |    )
+                   |  )
+                   |)""".stripMargin
+    }
   }
 }
