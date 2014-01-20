@@ -1,6 +1,6 @@
 # Overview
 
-[Polyglot for Maven](http://github.com/tesla-polyglot/) is an experimental distribution of Maven that allows the expression of a POM in something other than XML (oh nooooo!). A couple of the dialects also have the capability to write plugins inline: the Groovy and Ruby dialects allow this.
+[Polyglot for Maven](http://github.com/tesla/tesla-polyglot/) is an experimental distribution of Maven that allows the expression of a POM in something other than XML (oh nooooo!). A couple of the dialects also have the capability to write plugins inline: the Groovy and Ruby dialects allow this.
 
 # Download
 
@@ -45,8 +45,6 @@ If you want to see what various POMs look like you can take a look here:
 
 [https://github.com/tesla/tesla-polyglot/tree/master/poms](https://github.com/tesla/tesla-polyglot/tree/master/poms)
 
-The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. Also note that the whole interoperability story has not been worked out. A pom.xml will currently not be installed or deployed so use this at your own risk. It's fully functional but interoperability is not a priority right now. Getting out a minimal viable product (MVP) is in order to get feedback is.
-
 # Building
 
 ### Requirements
@@ -66,3 +64,12 @@ After this completes, you can unzip and play with polyglot for maven:
     ./tesla-polyglot-*/bin/mvn
 
 Now you can look at the usage guide above.
+
+# Things we know that are less than ideal
+
+We know there are short comings, but the distribution is functional and we care more about feedback right now.
+
+- The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. 
+- The whole interoperability story has not been worked out. 
+- A pom.xml will currently not be installed or deployed so use this at your own risk. 
+
