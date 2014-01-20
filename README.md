@@ -72,4 +72,5 @@ We know there are short comings, but the distribution is functional and we care 
 - The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. 
 - The whole interoperability story has not been worked out. 
 - A pom.xml will currently not be installed or deployed so use this at your own risk. 
+- The distribution is the size of a small galaxy. There's no way, currently, in Maven to dynamically download what's required to parse the discovered model. We'll sort this out eventually but there are more imporant things to figure out.
 
