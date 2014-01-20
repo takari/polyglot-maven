@@ -9,22 +9,22 @@ package org.sonatype.maven.polyglot.scala.model
 
 import org.sonatype.maven.polyglot.execute.ExecuteContext
 
-class Task(val id: String, val phase: String, val profileId: String, val block: ExecuteContext => Unit)
+class Task(val id: String, val phase: String, val profileId: Option[String], val block: ExecuteContext => Unit)
 
 object Task {
-  def apply(id: String, phase: String)(block: ExecuteContext => Unit) =
-    new Task(id, phase, null, block)
-  def apply(id: String, phase: String, profileId: String)(block: ExecuteContext => Unit) =
-    new Task(id, phase, profileId, block)
+  def apply(id: String, phase: String, profileId: String = null)(block: ExecuteContext => Unit) =
+    new Task(id, phase, Option(profileId), block)
 }
 
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
 class PrettiedTask(t: Task) {
-  def asDoc: Doc =
-    "Task" <> lparen <>
-      assignString("id", t.id) <> comma <+>
-      assignString("phase", t.phase) <> rparen <+>
-      "{compiled code}"
+  def asDoc: Doc = {
+    val args = scala.collection.mutable.ListBuffer[Doc]()
+    args += assignString("id", t.id)
+    args += assignString("phase", t.phase)
+    t.profileId.foreach(args += assignString("profileId", _))
+    `object`("Task", args) <+> "{compiled code}"
+  }
 }
