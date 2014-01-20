@@ -21,6 +21,7 @@ import org.codehaus.plexus.util.io.RawInputStreamFacade
 import org.sonatype.maven.polyglot.PolyglotModelUtil
 import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
 import javax.inject.{Named, Inject}
+import java.util.Collections
 
 /**
  * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
@@ -142,7 +143,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   private def registerExecutors(m: Model, tasks: Seq[Task]): Unit = {
     import scala.collection.JavaConverters._
     executeManager.register(m, tasks.map(new ScalaTask(_).asInstanceOf[ExecuteTask]).asJava)
-    executeManager.install(m)
+    executeManager.install(m, Collections.emptyMap())
   }
 
 }
@@ -155,7 +156,7 @@ private class ScalaTask(t: Task) extends ExecuteTask {
 
   def getPhase: String = t.phase
 
-  def getProfileId: String = t.profileId
+  def getProfileId: String = t.profileId.orNull
 
   def execute(ec: ExecuteContext): Unit = t.block(ec)
 }

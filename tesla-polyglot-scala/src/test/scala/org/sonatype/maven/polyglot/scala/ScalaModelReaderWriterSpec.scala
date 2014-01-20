@@ -100,9 +100,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
         "someGroupId" % "someArtifactId" % "someVersion",
         ScalaBuild(
           tasks = Seq(
-            ScalaModelTask(
-              "someId", "somePhase", null
-            ) {
+            ScalaModelTask("someId", "somePhase") {
               ec => println("here I am")
             }
           )
@@ -115,7 +113,40 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
                    |  "someGroupId" % "someArtifactId" % "someVersion",
                    |  build = Build(
                    |    tasks = Seq(
-                   |      Task(id = "someId", phase = "somePhase") {compiled code}
+                   |      Task(
+                   |        id = "someId",
+                   |        phase = "somePhase"
+                   |      ) {compiled code}
+                   |    )
+                   |  )
+                   |)""".stripMargin
+    }
+    "prettyify a task with a profile" in {
+      import model._
+      import ScalaPrettyPrinter._
+
+      val m = ScalaRawModel(
+        "someGroupId" % "someArtifactId" % "someVersion",
+        ScalaBuild(
+          tasks = Seq(
+            ScalaModelTask("someId", "somePhase", "someProfileId") {
+              ec => println("here I am")
+            }
+          )
+        )
+      )
+
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+
+      pp must_== """Model(
+                   |  "someGroupId" % "someArtifactId" % "someVersion",
+                   |  build = Build(
+                   |    tasks = Seq(
+                   |      Task(
+                   |        id = "someId",
+                   |        phase = "somePhase",
+                   |        profileId = "someProfileId"
+                   |      ) {compiled code}
                    |    )
                    |  )
                    |)""".stripMargin
@@ -129,11 +160,59 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
       val project = new MavenProject
       val ec = new ExecuteContext {
         def getProject: MavenProject = project
+
         def basedir: java.io.File = project.getBasedir
+
         def log: org.apache.maven.plugin.logging.Log = null
       }
       tasks(0).execute(ec)
       project.getArtifactId must_== "We executed!"
+    }
+    "format a configuration with an attribute properly" in {
+      import model._
+      import ScalaPrettyPrinter._
+
+      val m = ScalaRawModel(
+        "someGroupId" % "someArtifactId" % "someVersion",
+        ScalaBuild(
+          plugins = Seq(
+            Plugin(
+              "someGroupId" % "someArtifactId" % "someVersion",
+              extensions = true,
+              executions = Seq(
+                Execution(
+                  configuration = Config(
+                    `@someattr` = "someAttr",
+                    someValue = "someValue"
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+
+      pp must_== """Model(
+                   |  "someGroupId" % "someArtifactId" % "someVersion",
+                   |  build = Build(
+                   |    plugins = Seq(
+                   |      Plugin(
+                   |        "someGroupId" % "someArtifactId" % "someVersion",
+                   |        extensions = true,
+                   |        executions = Seq(
+                   |          Execution(
+                   |            configuration = Config(
+                   |              `@someattr` = "someAttr",
+                   |              someValue = "someValue"
+                   |            )
+                   |          )
+                   |        )
+                   |      )
+                   |    )
+                   |  )
+                   |)""".stripMargin
     }
   }
 }
