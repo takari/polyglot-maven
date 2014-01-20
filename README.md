@@ -65,4 +65,4 @@ After this completes, you can unzip and play with polyglot for maven:
     tar -xzvf tesla-polyglot-cli/target/tesla-polyglot-*-bin.tar.gz
     ./tesla-polyglot-*/bin/mvn
 
-Now you can usage guide above.
+Now you can look at the usage guide above.
