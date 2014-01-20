@@ -47,6 +47,14 @@
 	      <taskId>third</taskId>
 	    </configuration>
 	  </execution>
+	  <execution>
+	    <id>4</id>
+	    <phase>validate</phase>
+	    <goals><goal>execute</goal></goals>
+	    <configuration>
+	      <taskId>forth</taskId>
+	    </configuration>
+	  </execution>
 	</executions>
 	<dependencies>
 	  <dependency>

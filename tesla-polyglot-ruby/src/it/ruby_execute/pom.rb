@@ -15,8 +15,8 @@ project 'Execute Ruby Tasks' do
     end
     phase :validate do
       execute(:forth) do |ctx|
-        ctx.info 'hello world'
-        ctx.log.error ctx.basedir
+        ctx.log.info 'hello world'
+        ctx.log.error ctx.basedir.to_s
       end
     end
   end
