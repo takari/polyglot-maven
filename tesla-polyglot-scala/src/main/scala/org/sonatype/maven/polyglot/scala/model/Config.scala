@@ -48,12 +48,9 @@ class PrettiedConfig(c: Config) {
     c.elements.foreach {
       e =>
         val value: Doc = e._2.map[Doc]({
-          value =>
-            value match {
-              case value: Config => value.asDoc
-              case value: String => dquotes(value)
-              case value: Any => value.toString
-            }
+          case value: Config => value.asDoc
+          case value: String => dquotes(value)
+          case value: Any => value.toString
         }).getOrElse("None")
         args += assign(e._1, value)
     }
@@ -65,7 +62,7 @@ class PrettiedConfig(c: Config) {
 class ConvertibleMavenConfig(mc: Object) {
 
   private val config = mc match {
-    case xmlConfig: Xpp3Dom => {
+    case xmlConfig: Xpp3Dom =>
       def asConfig(children: Array[Xpp3Dom]): Config = {
         val elements = ListBuffer[(String, Option[Any])]()
         children.foreach {
@@ -76,7 +73,6 @@ class ConvertibleMavenConfig(mc: Object) {
         new Config(elements)
       }
       asConfig(xmlConfig.getChildren)
-    }
     case _ => new Config(Seq.empty)
   }
 
@@ -91,11 +87,8 @@ class ConvertibleScalaConfig(config: Config) {
         val e = new Xpp3Dom(p._1)
         parent.addChild(e)
         p._2.foreach {
-          value =>
-            value match {
-              case value: Config => addChildren(e, value)
-              case value: Any => e.setValue(value.toString)
-            }
+          case value: Config => addChildren(e, value)
+          case value: Any => e.setValue(value.toString)
         }
     }
     parent
