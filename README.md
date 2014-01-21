@@ -2,7 +2,7 @@
 
 [Polyglot for Maven](http://github.com/tesla/tesla-polyglot/) is an experimental distribution of Maven that allows the expression of a POM in something other than XML (oh nooooo!). A couple of the dialects also have the capability to write plugins inline: the Groovy, Ruby and Scala dialects allow this.
 
-Here's something to wet your appetite:
+Here's something to whet your appetite:
 
 ```scala
 import org.sonatype.maven.polyglot.scala.model._
