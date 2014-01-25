@@ -26,6 +26,9 @@ class ConfigSpec extends Specification {
       child1.addChild(child2)
       val child3 = new Xpp3Dom("key3")
       child1.addChild(child3)
+      val child4 = new Xpp3Dom("key4")
+      child4.setAttribute("attr4", "attrValue4")
+      child1.addChild(child4)
 
       val c = new ConvertibleMavenConfig(xml)
       val es = c.asScala.elements
@@ -33,11 +36,16 @@ class ConfigSpec extends Specification {
       es.size must_== 1
       es(0)._1 must_== "key1"
       val e = es(0)._2.get.asInstanceOf[Config].elements
-      e.size must_== 2
+      e.size must_== 3
       e(0)._1 must_== "key2"
       e(0)._2.get.asInstanceOf[String] must_== "value2"
       e(1)._1 must_== "key3"
       e(1)._2 must beNone
+      e(2)._1 must_== "key4"
+      val ea = e(2)._2.get.asInstanceOf[Config].elements
+      ea.size must_== 1
+      ea(0)._1 must_== "@attr4"
+      ea(0)._2.get.asInstanceOf[String] must_== "attrValue4"
     }
     "should convert from a config to an xml doc" in {
       val config = new Config(
@@ -45,7 +53,12 @@ class ConfigSpec extends Specification {
           "key1" -> Some(new Config(
             Seq(
               "key2" -> Some("value2"),
-              "key3" -> None
+              "key3" -> None,
+              "key4" -> Some(new Config(
+                Seq(
+                  "@attr4" -> Some("attrValue4")
+                )
+              ))
             )
           ))
         )
@@ -58,27 +71,35 @@ class ConfigSpec extends Specification {
       xml.getChildCount must_== 1
       val child1 = xml.getChild(0)
       child1.getName must_== "key1"
-      child1.getChildCount must_== 2
+      child1.getChildCount must_== 3
       val child2 = child1.getChild(0)
       child2.getName must_== "key2"
       child2.getValue must_== "value2"
       val child3 = child1.getChild(1)
       child3.getName must_== "key3"
       child3.getValue must beNull
+      val child4 = child1.getChild(2)
+      child4.getName must_== "key4"
+      child4.getAttributeNames.size must_== 1
+      val child4Attr = child4.getAttribute("attr4")
+      child4Attr must_== "attrValue4"
+      child4.getChildCount must_== 0
     }
     "should permit elements to be assigned via dynamic apply" in {
-      val config = Config(key1 = Config(key2 = "value2", key3 = None))
+      val config = Config(key1 = Config(key2 = "value2", key3 = None, `@key4` = "attrValue4"))
 
       val es = config.elements
 
       es.size must_== 1
       es(0)._1 must_== "key1"
       val e = es(0)._2.get.asInstanceOf[Config].elements
-      e.size must_== 2
+      e.size must_== 3
       e(0)._1 must_== "key2"
       e(0)._2.get.asInstanceOf[String] must_== "value2"
       e(1)._1 must_== "key3"
       e(1)._2 must beNone
+      e(2)._1 must_== "@key4"
+      e(2)._2.get.asInstanceOf[String] must_== "attrValue4"
     }
   }
 }
