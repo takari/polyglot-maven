@@ -1,15 +1,9 @@
 require 'maven/ruby/maven'
-require 'maven/tools/dsl'
 require 'rake'
 
 module Maven
   class Tasks
     include Rake::DSL
-
-    def self.instance( maven = nil )
-      @maven = maven if maven
-      @maven
-    end
 
     def install
 
@@ -51,20 +45,10 @@ module Maven
   Tasks.new.install
 end
 
-#include Maven::Tools::DSL
-
-def maven( &block )
-  if block
-    require 'maven/tools/model'
-    Maven::Tasks.instance( Maven::Ruby::Maven.new( tesla( &block ),
-                                                   '.rake.pom.xml' ) )
-  else
-    if Maven::Tasks.instance
-      Maven::Tasks.instance
-    else
-      m = Maven::Ruby::Maven.new
-      m.embedded = true
-      Maven::Tasks.instance( m )
-    end
+def maven
+  unless @__maven__
+    @__maven__ = Maven::Ruby::Maven.new
+    @__maven__.embedded = true
   end
+  @__maven__
 end
