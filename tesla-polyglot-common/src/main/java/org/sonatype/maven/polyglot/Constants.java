@@ -7,27 +7,49 @@
  */
 package org.sonatype.maven.polyglot;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+import org.codehaus.plexus.util.IOUtil;
+
 public class Constants {
 
-    private static final String TESLA_POLYGLOT = "tesla-polyglot-";
-    private static final String IO_TESLA_POLYGLOT = "io.tesla.polyglot";
-    // FIXME do not hardcode the version
-    private static final String VERSION = "0.0.9";
-        
-    public static String getGroupId(){
-        return IO_TESLA_POLYGLOT;
-    }
-    
-    public static String getArtifactId( String postfix){
-        return TESLA_POLYGLOT + postfix;
-    }
-    
-    public static String getVersion(){
-        return VERSION;
-    }
+  private static Properties polyglotProperties;
+  
+  static {
+    polyglotProperties = getPolyglotMavenProperties();
+  }
+  
+  public static String getGroupId() {
+    return polyglotProperties.getProperty("groupId");
+  }
 
-    public static String getGAV( String postfix ){
-        return getGroupId() + ":" + getArtifactId( postfix ) + ":" + getVersion();
-    }
+  public static String getArtifactId(String postfix) {
+    return polyglotProperties.getProperty("prefix") + postfix;
+  }
 
+  public static String getVersion() {
+    return polyglotProperties.getProperty("version");
+  }
+
+  public static String getGAV(String postfix) {
+    return getGroupId() + ":" + getArtifactId(postfix) + ":" + getVersion();
+  }
+
+  public static Properties getPolyglotMavenProperties() {
+    Properties properties = new Properties();
+    InputStream resourceAsStream = null;
+    try {
+      resourceAsStream = Constants.class.getClassLoader().getResourceAsStream("maven-polyglot.properties");
+      if (resourceAsStream != null) {
+        properties.load(resourceAsStream);
+      }
+    } catch (IOException e) {
+      System.err.println("Unable determine version from JAR file: " + e.getMessage());
+    } finally {
+      IOUtil.close(resourceAsStream);
+    }
+    return properties;
+  }
 }
