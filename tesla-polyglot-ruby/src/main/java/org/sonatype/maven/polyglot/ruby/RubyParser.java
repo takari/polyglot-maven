@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
+import org.jruby.CompatVersion;
 import org.jruby.embed.ScriptingContainer;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.ruby.execute.RubyExecuteTaskFactory;
@@ -37,6 +38,7 @@ public class RubyParser {
     {
         this.executeManager = executeManager;
         this.jruby = new ScriptingContainer();
+        this.jruby.setCompatVersion( CompatVersion.RUBY1_9 );
         this.parser = runScript( "parser.rb" );
         this.factory = new RubyExecuteTaskFactory( jruby );
     }
