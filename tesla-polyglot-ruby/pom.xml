@@ -28,14 +28,9 @@
       <artifactId>tesla-polyglot-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>de.saumya.mojo</groupId>
-      <artifactId>maven-tools</artifactId>
-      <version>0.34.2</version>
-    </dependency>
-    <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
-      <version>1.7.10</version>
+      <version>1.7.12</version>
       <scope>provided</scope>
     </dependency>
     <!-- Test -->
@@ -55,6 +50,10 @@
       <artifactId>org.eclipse.sisu.inject.tests</artifactId>
     </dependency>
   </dependencies>
+
+  <properties>
+    <maven-tools.version>1.0.0.rc3</maven-tools.version>
+  </properties>
 
   <build>
     <plugins>
@@ -85,6 +84,101 @@
         </executions>
       </plugin>
     </plugins>
+    <pluginManagement>
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>de.saumya.mojo</groupId>
+                    <artifactId>
+                      gem-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.0.1,)
+                    </versionRange>
+                    <goals>
+                      <goal>initialize</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore></ignore>
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
   </build>
+  <profiles>
+    <!--
+         that profile looks for the development setup and then gets all the 
+         needed gems from http://rubygems-proxy.torquebox.org/releases
+         this repo does not show when the pom is used from maven central
+         
+         all the gems here are embedded into the jar itself, i.e. those
+         gem dependencies are only for build time
+    -->
+    <profile>
+      <id>build</id>
+   
+      <activation>
+        <file>
+          <exists>../tesla-polyglot-cli</exists>
+        </file>
+      </activation>
 
+      <repositories>
+        <repository>
+	  <id>rubygems-releases</id>
+	  <url>http://rubygems-proxy.torquebox.org/releases</url>
+	</repository>
+      </repositories>
+      
+      <dependencies>
+	<dependency>
+	  <groupId>rubygems</groupId>
+	  <artifactId>maven-tools</artifactId>
+	  <version>${maven-tools.version}</version>
+	  <type>gem</type>
+	  <scope>provided</scope>
+	</dependency>
+      </dependencies>
+
+      <properties>
+	<jruby.plugins.version>1.0.1</jruby.plugins.version>
+      </properties>
+
+      <build>
+	
+	<plugins>
+	  <plugin>
+            <groupId>de.saumya.mojo</groupId>
+            <artifactId>gem-maven-plugin</artifactId>
+            <version>${jruby.plugins.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>initialize</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+	      <includeGemsInResources>provided</includeGemsInResources>
+	    </configuration>
+	  </plugin>
+	  
+	</plugins>
+      </build>
+
+    </profile>
+  </profiles>
 </project>

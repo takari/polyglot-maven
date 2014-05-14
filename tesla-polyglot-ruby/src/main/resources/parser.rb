@@ -8,6 +8,7 @@ org.apache.maven.model.ActivationOS
 org.apache.maven.model.ActivationProperty
 org.apache.maven.model.Build
 org.apache.maven.model.Contributor
+org.apache.maven.model.CiManagement
 org.apache.maven.model.Dependency
 org.apache.maven.model.DependencyManagement
 org.apache.maven.model.DeploymentRepository
@@ -19,6 +20,7 @@ org.apache.maven.model.IssueManagement
 org.apache.maven.model.License
 org.apache.maven.model.MailingList
 org.apache.maven.model.Model
+org.apache.maven.model.Notifier
 org.apache.maven.model.Organization
 org.apache.maven.model.Parent
 org.apache.maven.model.Plugin
@@ -26,6 +28,7 @@ org.apache.maven.model.PluginExecution
 org.apache.maven.model.PluginManagement
 org.apache.maven.model.Prerequisites
 org.apache.maven.model.Profile
+org.apache.maven.model.Relocation
 org.apache.maven.model.Reporting
 org.apache.maven.model.ReportPlugin
 org.apache.maven.model.ReportSet
@@ -47,9 +50,9 @@ module Tesla
       @factory = factory
 
       if src and ( src.match /[.]gemspec$/ )
-          eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src ) 
+        eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src ) 
       else
-	      eval_pom( "tesla do\n#{pom}\nend", src )
+        eval_pom( "tesla do\n#{pom}\nend", src || '.' )
       end
 
     ensure
@@ -61,7 +64,7 @@ module Tesla
 
     include Maven::Tools::DSL
 
-	# override hook from DSL
+    # override hook from DSL
     def add_execute_task( options, &block )
       options[ :phase ] = retrieve_phase( options )
       profile_id = @context == :profile ? @current.id : nil
@@ -71,7 +74,7 @@ module Tesla
                                  block )
     end
 
-	def fill_options( receiver, options )
+    def fill_options( receiver, options )
       options.each do |k,v|
         if v.is_a? Hash
           props = java.util.Properties.new
@@ -83,6 +86,16 @@ module Tesla
       end
     end
     
+    def configuration( v )
+      if @context == :notifier
+        props = java.util.Properties.new
+        v.each { |kk,vv| props[ kk.to_s ] = vv.to_s }
+        @current.configuration = props
+      else
+        set_config( @current, v )
+      end
+    end
+
     class PropertiesWrapper
        def initialize( prop )
          @prop = prop
@@ -104,26 +117,12 @@ module Tesla
       PropertiesWrapper.new @current.properties
     end
     
-    # fix typos upstream of maven-tools-0.34.1
-      def releases( config )
-        @current.releases = repository_policy( config )
-      end
-      def snapshots( config )
-        @current.snapshots = repository_policy( config )
-      end
-      def snapshot_repository( url, options = {}, &block )
-        unless @current.respond_to? :snapshot_repository=
-            options[ :releases ] = false unless options.key?( :releases ) || options.key?( 'releases' )
-          options[ :snapshots ] = true unless options.key?( :snapshots ) || options.key?( 'snapshots' )
-        end
-        do_repository( :snapshot_repository=, url, options, block )
-      end
-
     def xml( xml )
       Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
     end
 
     def set_config( receiver, options )
+      prepare_config( receiver, options )
       if options && options.size > 0
         config = Xpp3Dom.new("configuration")
         fill_dom( config, options )

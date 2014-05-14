@@ -7,6 +7,7 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
+
 public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
 
   public void testPomWithExecute() throws Exception {

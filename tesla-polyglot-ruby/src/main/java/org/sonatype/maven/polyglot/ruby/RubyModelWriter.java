@@ -106,8 +106,8 @@ public class RubyModelWriter extends ModelWriterSupport {
                     Site site = distribution.getSite();
                     p.printWithOptions( "site",
                                         options( "id", site.getId(),
-                                                 "name", site.getName() ),
-                                      site.getUrl() );
+                                                 "name", site.getName(),
+                                                 "url", site.getUrl() ) );
                 }
                 p.printEndBlock();
                 p.println();
@@ -135,10 +135,10 @@ public class RubyModelWriter extends ModelWriterSupport {
         void sourceControl( Scm scm ){
             if ( scm != null ){
                 p.printWithOptions( "source_control",
-                                    options( "connection", scm.getConnection(),
+                                    options( "url", scm.getUrl(),
+                                             "connection", scm.getConnection(),
                                              "developer_connection", scm.getDeveloperConnection(),
-                                             "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ),
-                                    scm.getUrl() );
+                                             "tag", scm.getTag().equals( "HEAD" ) ? null : scm.getTag() ) );
                 p.println();
             }
         }
@@ -150,15 +150,15 @@ public class RubyModelWriter extends ModelWriterSupport {
                 {
                     p.printWithOptions( name,
                                         options( "id", r.getId(),
-                                                 "name", r.getName() ),
-                                        r.getUrl() );
+                                                 "name", r.getName(),
+                                                 "url", r.getUrl() ) );
                 }
                 else
                 {
                     p.printStartBlock( name,
                                        options( "id", r.getId(),
-                                                 "name", r.getName() ),
-                                       r.getUrl() );
+                                                 "name", r.getName(),
+                                                 "url", r.getUrl() ) );
                     printRepositoryPolicy( "releases", r.getReleases() );
                     printRepositoryPolicy( "snapshots", r.getSnapshots() );
                     p.printEndBlock();
@@ -169,7 +169,7 @@ public class RubyModelWriter extends ModelWriterSupport {
         private void printRepositoryPolicy( String name, RepositoryPolicy policy )
         {
             if ( policy.getChecksumPolicy() == null && policy.getUpdatePolicy() == null ){
-                    p.println( name, Boolean.toString( policy.isEnabled() ) );
+                    p.println( name + " " + policy.isEnabled() );
             }
             else
             {
