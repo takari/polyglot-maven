@@ -58,12 +58,17 @@ class RubyPrintWriter extends PrintWriter {
                     append(value);
                 }
                 else {
-                    append("'").append(value).append("'");
+                    append("'").append( escape( value ) ).append("'");
                 }
             }
         }
     }
 
+    private String escape( String value )
+    {
+        return value.replaceAll( "([^\\\\])'", "$1\\\\'" );
+    }
+    
     public void println(String name) {
         print(name);
         println();
@@ -113,7 +118,7 @@ class RubyPrintWriter extends PrintWriter {
                 appendName( item.getKey() ).append( " => " );
                 if ( item.getValue() instanceof String )
                 {
-                    append( "'" ).append( item.getValue().toString() ).append( "'" );
+                    append( "'" ).append( escape( item.getValue().toString() ) ).append( "'" );
                 }
                 else {
                     append( item.getValue().toString() );
@@ -168,7 +173,7 @@ class RubyPrintWriter extends PrintWriter {
         }
         else
         {
-            append( "'" ).append( name ).append( "'" );
+            append( "'" ).append( escape( name ) ).append( "'" );
         }
         return this;
     }
@@ -197,7 +202,7 @@ class RubyPrintWriter extends PrintWriter {
                 append( "'" ).append( entry.getKey() ).append( "' => " );
                 if ( config.value != null )
                 {
-                    append( " '" ).append( config.value ).append( "'" );
+                    append( " '" ).append( escape( config.value ) ).append( "'" );
                 }
                 else
                 {
@@ -213,7 +218,7 @@ class RubyPrintWriter extends PrintWriter {
                     String c = config.stringList.get(j);
                     if ( c != null )
                     {
-                        append( " '" ).append( c ).append( "'" );
+                        append( " '" ).append( escape( c  ) ).append( "'" );
                     }
                     else
                     {
@@ -237,11 +242,11 @@ class RubyPrintWriter extends PrintWriter {
                     ListItem c = config.list.get(j);
                     if ( c.isXml() )
                     {
-                        append( " xml( '" ).append( c.xml ).append( "' )" );
+                        append( " xml( '" ).append( escape( c.xml ) ).append( "' )" );
                     }
                     else
                     {
-                        append( " '" ).append( c.value ).append( "'" );
+                        append( " '" ).append( escape( c.value ) ).append( "'" );
                     }
                     if( ++j < count )
                     {

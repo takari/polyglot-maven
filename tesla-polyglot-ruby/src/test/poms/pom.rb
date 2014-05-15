@@ -10,7 +10,7 @@ project 'Apache Maven', 'http://maven.apache.org/' do
     publication, and distribution publication are all controlled from
     the declarative file. Maven can be extended by plugins to utilise a
     number of other development tools for reporting or the build
-    process.'
+    process. All of Square\'s Java projects. It\'s like a party for your code.'
 
   properties( 'gossipVersion' => '1.7',
               'aetherVersion' => '1.12',

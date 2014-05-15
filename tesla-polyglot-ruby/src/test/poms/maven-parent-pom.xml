@@ -29,7 +29,7 @@
     publication, and distribution publication are all controlled from
     the declarative file. Maven can be extended by plugins to utilise a
     number of other development tools for reporting or the build
-    process.
+    process. All of Square's Java projects. It's like a party for your code.
   </description>
   <url>http://maven.apache.org/</url>
   <inceptionYear>2001</inceptionYear>
