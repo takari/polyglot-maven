@@ -16,7 +16,8 @@ project 'Execute Ruby Tasks' do
     phase :validate do
       execute(:forth) do |ctx|
         ctx.log.info 'hello world'
-        ctx.log.error ctx.basedir.to_s
+        ctx.log.error ( ctx.basedir.to_pathname == ctx.project.basedir.to_pathname ).to_s
+        ctx.log.error ctx.project.build.directory.to_pathname
       end
     end
   end

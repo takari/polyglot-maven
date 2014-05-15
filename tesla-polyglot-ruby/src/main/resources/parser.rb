@@ -43,6 +43,25 @@ org.codehaus.plexus.util.xml.Xpp3DomBuilder
 
 Execution=PluginExecution unless defined? Execution
 
+# ruby internal path uses / as separator on ALL platforms
+# the to_pathname converts all platform dependent path to
+# a ruby path
+class ::Java::JavaIo::File
+  def to_pathname
+    to_s.gsub( /\\/, '/' )
+  end
+end
+class ::Java::JavaLang::String
+  def to_pathname
+    to_s.gsub( /\\/, '/' )
+  end
+end
+class ::String
+  def to_pathname
+    self.gsub( /\\/, '/' )
+  end
+end
+
 module Tesla
   class Parser
 
