@@ -156,8 +156,9 @@
 	<plugin> 
           <artifactId>maven-release-plugin</artifactId> 
           <configuration> 
-            <mavenExecutorId>forked-path</mavenExecutorId> 
-          </configuration> 
+	    <preparationGoals>clean install</preparationGoals>
+            <mavenExecutorId>forked-path</mavenExecutorId>
+          </configuration>
         </plugin> 
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
