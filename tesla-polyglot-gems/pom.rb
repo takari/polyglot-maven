@@ -13,7 +13,7 @@ project 'tesla-polyglot-gems' do
             'ruby-maven' ]
 
   plugin( 'io.tesla.maven.plugins:tesla-license-plugin',
-          'header' =>  '${project.parent.basedir}/license-header.txt',
+          'header' =>  '${basedir}/../license-header.txt',
           'excludes' => [ '**/conf/**',
                           '**/pkg/**',
                           '**/*pom.xml' ] )
