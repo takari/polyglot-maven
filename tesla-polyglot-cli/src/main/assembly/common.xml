@@ -106,7 +106,6 @@
       <useStrictFiltering>true</useStrictFiltering>
       <includes>
         <include>io.tesla.polyglot:tesla-polyglot-ruby</include>
-	<include>de.saumya.mojo:maven-tools</include>
       </includes>
     </dependencySet>
 
