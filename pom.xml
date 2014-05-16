@@ -20,7 +20,7 @@
 
   <groupId>io.tesla.polyglot</groupId>
   <artifactId>tesla-polyglot</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.0</version>
   <name>Polyglot Tesla :: Aggregator</name>
   <packaging>pom</packaging>
 
@@ -60,7 +60,7 @@
       <dependency>
         <groupId>io.tesla.polyglot</groupId>
         <artifactId>tesla-polyglot-common</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.0</version>
       </dependency>
       <!--  We inline Maven's dependency management section to align dependency versions from Maven's core -->
       <dependency>
