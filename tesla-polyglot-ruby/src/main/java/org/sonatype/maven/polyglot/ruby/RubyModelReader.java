@@ -41,15 +41,14 @@ public class RubyModelReader extends ModelReaderSupport {
             throws IOException {
         assert input != null;
 
-        // use the classloader which loaded that class here
         // for testing that classloader does not need to be a ClassRealm, i.e. the test setup needs 
         // to take care that all classes are in place
         if ( getClass().getClassLoader() instanceof ClassRealm ) {
-            // TODO get that version out of here !!!
             setupManager.setupArtifact( Constants.getGAV( "ruby" ),
                                         (ClassRealm) getClass().getClassLoader() );
         }
         
+        // use the classloader which loaded that class here
         ClassLoader old = null;
         try {
             // make sure jruby will find the right classloader

@@ -35,7 +35,7 @@ public class SetupClassRealm {
             throws MalformedURLException
     {
         String[] parts = gav.split( ":" );
-        Artifact root = system.createArtifact( parts[ 0 ], parts[ 1 ], parts[ 2 ], "jar" );
+        Artifact root = system.createArtifact( parts[ 0 ], parts[ 1 ], parts[ 2 ], "pom" );
         ArtifactResolutionResult result;
         result = system.resolve( new ArtifactResolutionRequest()
             .setArtifact( root )
@@ -48,6 +48,7 @@ public class SetupClassRealm {
                 }
             } )
             .setResolveRoot( true )
+            .setForceUpdate( true )
             .setOffline( legacySupport.getSession().getRequest().isOffline() )
             .setMirrors( legacySupport.getSession().getRequest().getMirrors() )
             .setProxies( legacySupport.getSession().getRequest().getProxies() )
