@@ -168,12 +168,15 @@ public class RubyModelWriter extends ModelWriterSupport {
 
         private void printRepositoryPolicy( String name, RepositoryPolicy policy )
         {
-            if ( policy.getChecksumPolicy() == null && policy.getUpdatePolicy() == null ){
-                    p.println( name + " " + policy.isEnabled() );
-            }
-            else
+            if ( policy != null )
             {
-                p.println( "TODO: " + policy );
+                if ( policy.getChecksumPolicy() == null && policy.getUpdatePolicy() == null ){
+                    p.println( name + " " + policy.isEnabled() );
+                }
+                else
+                {
+                    p.println( "TODO: " + policy );
+                }
             }
         }
 

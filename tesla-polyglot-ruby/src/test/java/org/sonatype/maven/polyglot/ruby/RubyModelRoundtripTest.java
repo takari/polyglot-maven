@@ -8,8 +8,10 @@
 package org.sonatype.maven.polyglot.ruby;
 
 
-public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
+// that is just a random collection of real world pom.xml !!!
 
+public class RubyModelRoundtripTest extends AbstractInjectedTestCase {
+ 
   public void testSitebricksPom() throws Exception {
 	  assertRoundtrip( "sitebricks-pom.xml", false );
   }
