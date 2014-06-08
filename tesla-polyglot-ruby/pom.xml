@@ -51,7 +51,7 @@
   </dependencies>
 
   <properties>
-    <maven-tools.version>1.0.0.rc4</maven-tools.version>
+    <maven-tools.version>1.0.0.rc5</maven-tools.version>
   </properties>
 
   <build>
