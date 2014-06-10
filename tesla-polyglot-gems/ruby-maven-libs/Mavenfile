@@ -7,7 +7,7 @@ require File.join( basedir,
 
 gemspec
 
-inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" do
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}-SNAPSHOT" do
   relative_path '../pom.rb'
 end
 
