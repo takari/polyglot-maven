@@ -109,12 +109,20 @@ public class TeslaModelProcessor implements ModelProcessor {
 
         // dump pom if filename is given via the pom properties
         String dump = model.getProperties().getProperty( "tesla.dump.pom" );
-        if ( dump != null ) {
+        if ( dump == null )
+        {
+            // just nice to dump the pom.xml via commandline switch
+            dump = System.getProperty( "tesla.dump.pom" );
+        }
+        if ( dump != null )
+        {
             File dumpPom =  new File( pom.getParentFile(), dump );
-            if ( !dumpPom.exists() || ! FileUtils.fileRead( dumpPom ).equals( xml.toString() ) ){
+            if ( !dumpPom.exists() || ! FileUtils.fileRead( dumpPom ).equals( xml.toString() ) )
+            {
                 dumpPom.setWritable( true );
                 FileUtils.fileWrite( dumpPom, xml.toString() );
-                if ( "true".equals( model.getProperties().getProperty( "tesla.dump.readonly" ) ) ){
+                if ( "true".equals( model.getProperties().getProperty( "tesla.dump.readonly" ) ) )
+                {
                     dumpPom.setReadOnly();
                 }
             }
