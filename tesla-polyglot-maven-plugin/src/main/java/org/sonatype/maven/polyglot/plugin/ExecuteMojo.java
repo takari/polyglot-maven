@@ -32,6 +32,7 @@ import org.sonatype.maven.polyglot.execute.ExecuteTask;
  * Executes registered {@link org.sonatype.maven.polyglot.execute.ExecuteTask}s.
  *
  * @goal execute
+ * @requiresDependencyResolution compile
  *
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
