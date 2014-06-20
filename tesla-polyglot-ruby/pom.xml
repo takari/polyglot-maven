@@ -28,7 +28,7 @@
     </dependency>
     <dependency>
       <groupId>org.jruby</groupId>
-      <artifactId>jruby</artifactId>
+      <artifactId>jruby-noasm</artifactId>
       <version>1.7.12</version>
       <scope>provided</scope>
     </dependency>
@@ -51,7 +51,7 @@
   </dependencies>
 
   <properties>
-    <maven-tools.version>1.0.0.rc4</maven-tools.version>
+    <maven-tools.version>1.0.0.rc6</maven-tools.version>
   </properties>
 
   <build>
