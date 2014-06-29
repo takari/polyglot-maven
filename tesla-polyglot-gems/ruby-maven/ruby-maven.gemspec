@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['ruby']
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{maven support for ruby projects}
-  s.add_dependency 'maven-tools', "~> 1.0.0.rc4" 
+  s.add_dependency 'maven-tools', "~> 1.0.0" 
   s.add_dependency 'ruby-maven-libs', "=#{Maven::Ruby::MAVEN_VERSION}"
   s.add_development_dependency 'minitest', '~> 5.3'  
   s.add_development_dependency 'rake', '~> 10.3'
