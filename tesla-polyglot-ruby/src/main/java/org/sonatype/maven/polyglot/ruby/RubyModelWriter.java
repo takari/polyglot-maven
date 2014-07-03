@@ -630,6 +630,9 @@ public class RubyModelWriter extends ModelWriterSupport {
                             p.append( item.getValue().toString() );
                             p.append( "'" );
                         }
+                        else if ( item.getValue() instanceof Boolean ){
+                            p.append( item.getValue().toString() );
+                        }
                         else {
                             @SuppressWarnings("unchecked")
                             List<String> list = (List<String>) item.getValue();
