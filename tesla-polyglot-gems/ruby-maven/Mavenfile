@@ -6,7 +6,7 @@ require File.join( basedir, 'ruby', 'tesla_maven' )
 
 # if you install that gem via maven it will get a pom.xml which is not
 # working for regular maven
-inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}-SNAPSHOT" do
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" do
   relative_path '../pom.rb'
 end
 
