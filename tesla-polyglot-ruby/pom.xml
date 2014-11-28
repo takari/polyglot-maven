@@ -51,7 +51,7 @@
   </dependencies>
 
   <properties>
-    <maven-tools.version>1.0.2</maven-tools.version>
+    <maven-tools.version>1.0.6</maven-tools.version>
   </properties>
 
   <build>
