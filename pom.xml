@@ -13,9 +13,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.tesla</groupId>
-    <artifactId>tesla</artifactId>
-    <version>7</version>
+    <groupId>io.takari</groupId>
+    <artifactId>takari</artifactId>
+    <version>15</version>
   </parent>
 
   <groupId>io.tesla.polyglot</groupId>
@@ -33,7 +33,7 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.1.1</mavenVersion>
+    <mavenVersion>3.2.6-SNAPSHOT</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
   </properties>
 
@@ -50,7 +50,7 @@
     <module>tesla-polyglot-groovy</module>
     <module>tesla-polyglot-yaml</module>
     <module>tesla-polyglot-clojure</module>
-    <module>tesla-polyglot-scala</module>
+    <module>tesla-polyglot-scala</module>  
     <module>tesla-polyglot-cli</module>
     <module>tesla-polyglot-maven-plugin</module>
   </modules>
