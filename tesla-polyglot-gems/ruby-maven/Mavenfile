@@ -2,7 +2,7 @@
 
 gemspec
 
-require File.join( basedir, 'ruby', 'tesla_maven' )
+require File.join( basedir, 'lib', 'tesla_maven' )
 
 # if you install that gem via maven it will get a pom.xml which is not
 # working for regular maven
@@ -10,30 +10,37 @@ inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" do
   relative_path '../pom.rb'
 end
 
-plugin( :dependency,
-        :phase => 'process-sources' ) do
-  execute_goals( :unpack,
-                 :outputAbsoluteArtifactFilename => false,
-                 :artifactItems => [ { :groupId => '${project.parent.groupId}',
-                                       :artifactId => 'tesla-polyglot-cli',
-                                       :version => '${project.parent.version}',
-                                       :classifier => 'bin',
-                                       :type => 'tar.gz',
-                                       :outputDirectory => '${project.build.directory}' } ] )
-                 
-end # maven-dependency-plugin
+phase 'process-sources' do
+  plugin( :dependency ) do
+    execute_goals( :unpack,
+                   :outputAbsoluteArtifactFilename => false,
+                   :artifactItems => [ { :groupId => '${project.parent.groupId}',
+                                         :artifactId => 'tesla-polyglot-cli',
+                                         :version => '${project.parent.version}',
+                                         :classifier => 'bin',
+                                         :type => 'tar.gz',
+                                         :outputDirectory => '${project.build.directory}' } ] )
+    
+  end # maven-dependency-plugin
+end
+
+#phase 'prepare-package' do
+#  execute 'pack200' do |ctx|
+#    Dir[ ctx.basedir.to_pathname + '/ruby-maven-home/**/*jar' ].each do |f|
+#      system( "pack200 #{f.sub /.jar/, '.pack.gz'} #{f}" )
+#    end
+#  end
+#end
 
 plugin( :clean, '2.5',
-        :filesets => [ { :directory => 'ext' },
-                       { :directory => 'lib' },
-                       { :directory => 'bin',
-                         :includes => [ '*' ],
-                         :excludes => [ 'rmvn', 'm2*.conf' ] } ] )
+        :filesets => [ { :directory => 'ruby-maven-home',
+                         :includes => [ '**/*' ],
+                         :excludes => [ 'bin/m2*.conf' ] } ] )
 
 resource do
-  target_path "${project.basedir}"
+  target_path "${project.basedir}/ruby-maven-home"
   directory "${project.build.directory}/tesla-polyglot-${project.parent.version}"
-  includes [ 'ext/ruby/**', 'bin/translate*', 'lib/tesla-*.jar' ]
+  includes [ '*', 'ext/ruby/**', 'bin/translate*', 'lib/tesla-*.jar', 'lib/tesla-*.pack.gz' ]
 end
 
 plugin( 'io.tesla.maven.plugins:tesla-license-plugin',

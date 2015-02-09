@@ -1,6 +1,8 @@
 # -*- mode:ruby -*-
-$LOAD_PATH.unshift File.expand_path( File.dirname( __FILE__ ) ) + '/../ruby-maven-libs/ruby'
-require './ruby/maven/ruby/version'
+
+$LOAD_PATH << File.dirname( File.expand_path( __FILE__, '..' ) ) + '/lib'
+require 'maven/ruby/version'
+
 Gem::Specification.new do |s|
   s.name = 'ruby-maven'
   s.version = Maven::Ruby::VERSION
@@ -13,19 +15,19 @@ Gem::Specification.new do |s|
 
   s.files = Dir.glob("*.txt") +
     Dir.glob("bin/rmvn") +
-    Dir.glob("bin/m2*") +
-    Dir.glob("ext/ruby/maven-tools-*") +
-    Dir.glob("ext/ruby/tesla-*") +
-    Dir.glob("ruby/**/*.rb") +
-    Dir.glob("lib/tesla*.jar")
+    Dir.glob("ruby-maven-home/bin/m2*") +
+    Dir.glob("ruby-maven-home/ext/ruby/maven-tools-*jar") +
+    Dir.glob("ruby-maven-home/ext/ruby/tesla-*jar") +
+    Dir.glob("lib/**/*.rb") +
+    Dir.glob("ruby-maven-home/lib/tesla*.jar")
   s.bindir = "bin"
   s.executables = ['rmvn']
   s.homepage = %q{https://github.com/tesla/tesla-polyglot/tree/master/tesla-polyglot-gem}
   s.rdoc_options = ["--main", "README.md"]
-  s.require_paths = ['ruby']
+  s.require_paths = ['lib']
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{maven support for ruby projects}
-  s.add_dependency 'maven-tools', "~> 1.0.6" 
+  s.add_dependency 'maven-tools', "~> 1.0.7" 
   s.add_dependency 'ruby-maven-libs', "=#{Maven::Ruby::MAVEN_VERSION}"
   s.add_development_dependency 'minitest', '~> 5.3'  
   s.add_development_dependency 'rake', '~> 10.3'

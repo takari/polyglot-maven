@@ -1,7 +1,4 @@
-require File.join( basedir,
-                   'ruby-maven',
-                   'ruby',
-                   'tesla_maven' )
+require File.join( basedir, 'ruby-maven/lib/tesla_maven' )
 
 project 'tesla-polyglot-gems' do
 
