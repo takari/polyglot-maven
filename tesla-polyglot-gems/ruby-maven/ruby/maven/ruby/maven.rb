@@ -33,6 +33,7 @@ module Maven
 
       private
 
+      # TODO if this is not needed anymore remove it completely
       def launch_jruby(args)
         java.lang.System.setProperty( "classworlds.conf",
                                       TeslaMaven.bin( "m2jruby.conf" ) )
@@ -150,13 +151,8 @@ module Maven
       end
 
       def launch( args )
-        if defined? JRUBY_VERSION
-          puts "using jruby #{JRUBY_VERSION} invokation" if verbose
-          result = launch_jruby( args )
-        else
-          puts "using java invokation" if verbose
-          result = launch_java( args )
-        end
+        puts "using java invokation" if verbose
+        result = launch_java( args )
         if @embedded and not result
           raise "error in executing maven #{result}"
         else
