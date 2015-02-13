@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
     Dir.glob("lib/tesla*.jar")
   s.bindir = "bin"
   s.executables = ['rmvn']
-  s.homepage = %q{https://github.com/tesla/tesla-polyglot/tree/master/tesla-polyglot-gem}
+  s.homepage = %q{https://github.com/takari/maven-polyglot/tree/master/tesla-polyglot-gems}
   s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ['ruby']
   s.rubygems_version = %q{1.3.5}
