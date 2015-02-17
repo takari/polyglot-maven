@@ -43,6 +43,7 @@ public class TeslaModelProcessor implements ModelProcessor {
   @Requirement
   private PolyglotModelManager manager;
 
+  @Override
   public File locatePom(final File dir) {
     assert manager != null;
 
@@ -70,6 +71,7 @@ public class TeslaModelProcessor implements ModelProcessor {
     return pomFile;
   }
 
+  @Override
   public Model read(final File input, final Map<String, ?> options) throws IOException, ModelParseException {
     Model model;
 
@@ -83,10 +85,12 @@ public class TeslaModelProcessor implements ModelProcessor {
     return model;
   }
 
+  @Override
   public Model read(final InputStream input, final Map<String, ?> options) throws IOException, ModelParseException {
     return read(new InputStreamReader(input), options);
   }
 
+  @Override
   @SuppressWarnings( { "unchecked", "rawtypes" } )
   public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
     assert manager != null;
