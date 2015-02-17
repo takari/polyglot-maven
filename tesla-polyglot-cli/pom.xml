@@ -118,15 +118,6 @@
           </execution>
         </executions>
       </plugin>
-
-      <plugin>
-        <groupId>io.tesla.maven.plugins</groupId>
-        <artifactId>tesla-license-plugin</artifactId>
-        <configuration>
-          <header>../license-header.txt</header>
-        </configuration>
-      </plugin>
-
     </plugins>
     <pluginManagement>
       <plugins>

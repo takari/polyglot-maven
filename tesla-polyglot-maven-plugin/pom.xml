@@ -1,63 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!-- Copyright (c) 2012 to original author or authors All rights reserved. 
+  This program and the accompanying materials are made available under the 
+  terms of the Eclipse Public License v1.0 which accompanies this distribution, 
+  and is available at http://www.eclipse.org/legal/epl-v10.html -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    Copyright (c) 2012 to original author or authors
-    All rights reserved. This program and the accompanying materials
-    are made available under the terms of the Eclipse Public License v1.0
-    which accompanies this distribution, and is available at
-    http://www.eclipse.org/legal/epl-v10.html
+  <modelVersion>4.0.0</modelVersion>
 
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <groupId>io.tesla.polyglot</groupId>
+    <artifactId>tesla-polyglot</artifactId>
+    <version>0.1.2-SNAPSHOT</version>
+  </parent>
 
-    <modelVersion>4.0.0</modelVersion>
+  <artifactId>tesla-polyglot-maven-plugin</artifactId>
+  <name>Polyglot Tesla :: Maven Plugin</name>
+  <packaging>maven-plugin</packaging>
 
-    <parent>
+  <dependencies>
+    <dependency>
       <groupId>io.tesla.polyglot</groupId>
-      <artifactId>tesla-polyglot</artifactId>
-      <version>0.1.2-SNAPSHOT</version>
-    </parent>
+      <artifactId>tesla-polyglot-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 
-    <artifactId>tesla-polyglot-maven-plugin</artifactId>
-    <name>Polyglot Tesla :: Maven Plugin</name>
-    <packaging>maven-plugin</packaging>
-    
-    <dependencies>
-      <dependency>
-        <groupId>io.tesla.polyglot</groupId>
-        <artifactId>tesla-polyglot-common</artifactId>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.maven</groupId>
-        <artifactId>maven-plugin-api</artifactId>
-      </dependency>
-
-      <dependency>
-      	<groupId>junit</groupId>
-      	<artifactId>junit</artifactId>
-      	<scope>test</scope>
-      </dependency>
-    </dependencies>
-
-    <build>
-      <plugins>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <systemPropertyVariables>
-              <projectversion>${project.version}</projectversion>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>io.tesla.maven.plugins</groupId>
-          <artifactId>tesla-license-plugin</artifactId>
-          <configuration>
-            <header>../license-header.txt</header>
-          </configuration>
-        </plugin>
-      </plugins>
-    </build>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <projectversion>${project.version}</projectversion>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

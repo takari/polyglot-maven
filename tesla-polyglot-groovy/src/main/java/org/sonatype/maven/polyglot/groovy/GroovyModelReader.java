@@ -10,23 +10,25 @@ package org.sonatype.maven.polyglot.groovy;
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.util.Map;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.DefaultModelWriter;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.groovy.runtime.StackTraceUtils;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.IOUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.PolyglotModelUtil;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.groovy.builder.ModelBuilder;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.util.Map;
 
 /**
  * Reads a <tt>pom.groovy</tt> and transforms into a Maven {@link Model}.
@@ -39,8 +41,7 @@ import java.util.Map;
 public class GroovyModelReader
     extends ModelReaderSupport
 {
-    @Requirement
-    protected Logger log;
+    protected Logger log = LoggerFactory.getLogger(GroovyModelReader.class);
 
     @Requirement
     private ModelBuilder builder;
@@ -48,6 +49,7 @@ public class GroovyModelReader
     @Requirement
     private ExecuteManager executeManager;
 
+    @Override
     public Model read(final Reader input, final Map<String,?> options) throws IOException {
         assert input != null;
 

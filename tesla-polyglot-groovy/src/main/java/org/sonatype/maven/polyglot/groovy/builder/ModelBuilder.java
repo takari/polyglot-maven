@@ -42,9 +42,8 @@ import org.apache.maven.model.Resource;
 import org.codehaus.groovy.runtime.InvokerHelper;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.execute.ExecuteTask;
 import org.sonatype.maven.polyglot.groovy.builder.factory.ChildFactory;
@@ -80,10 +79,8 @@ import org.sonatype.maven.polyglot.groovy.builder.factory.StringFactory;
 @Component(role=ModelBuilder.class)
 public class ModelBuilder
     extends FactoryBuilderSupport
-    implements Initializable
 {
-    @Requirement
-    protected Logger log;
+    protected Logger log = LoggerFactory.getLogger(ModelBuilder.class);
     
     private final Set<String> factoryNames = new HashSet<String>();
 
@@ -94,10 +91,10 @@ public class ModelBuilder
     @Requirement
     private ExecuteManager executeManager;
 
-    public void initialize() throws InitializationException {
-        registerFactories();
+    public ModelBuilder() {
+      registerFactories();      
     }
-
+    
     @Override
     protected void setClosureDelegate(final Closure c, final Object o) {
         c.setDelegate(this);

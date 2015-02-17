@@ -36,7 +36,8 @@ import org.codehaus.plexus.util.IOUtil;
  *
  * @since 0.7
  */
-@Component(role = ModelProcessor.class, hint = "tesla-polyglot")
+//@Component(role = ModelProcessor.class, hint = "tesla-polyglot")
+@Component(role = ModelProcessor.class)
 public class TeslaModelProcessor implements ModelProcessor {
 
   @Requirement

@@ -8,12 +8,24 @@
 package org.sonatype.maven.polyglot.groovy;
 
 import groovy.util.IndentPrinter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.DefaultModelWriter;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -21,16 +33,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Map;
 
 /**
  * Writes a Maven {@link org.apache.maven.model.Model} to a <tt>pom.groovy</tt>.
@@ -43,9 +45,9 @@ import java.util.Map;
 public class GroovyModelWriter
     extends ModelWriterSupport
 {
-    @Requirement
-    protected Logger log;
+    protected Logger log = LoggerFactory.getLogger(GroovyModelWriter.class);
     
+    @Override
     public void write(final Writer output, final Map<String,Object> options, final Model model) throws IOException {
         assert output != null;
         assert model != null;

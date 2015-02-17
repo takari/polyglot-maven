@@ -26,26 +26,5 @@
       <groupId>io.tesla.polyglot</groupId>
       <artifactId>tesla-polyglot-common</artifactId>
     </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.inject.tests</artifactId>
-    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>io.tesla.maven.plugins</groupId>
-        <artifactId>tesla-license-plugin</artifactId>
-        <configuration>
-          <header>../license-header.txt</header>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-
 </project>
