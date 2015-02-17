@@ -1,13 +1,9 @@
 # -*- mode:ruby -*-
-require File.join( basedir,
-                   '..',
-                   'ruby-maven',
-                   'ruby',
-                   'tesla_maven' )
+require File.join( basedir, '../ruby-maven/lib/tesla_maven' )
 
 gemspec
 
-inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}-SNAPSHOT" do
+inherit "io.tesla.polyglot:tesla-polyglot-gems:#{TeslaMaven::VERSION}" do
   relative_path '../pom.rb'
 end
 
@@ -49,7 +45,7 @@ build do
   execute("check versions", :validate) do |context|
     mavenVersion = context.project.properties[ 'mavenVersion' ]
     if context.project.version != mavenVersion
-      raise "\n\n\tmismatched maven versions: #{context.project.version} <=> #{mavenVersion}\n\ttesla uses a different version than ruby/maven.rb\n"
+      warn "\n\n\tmismatched maven versions: #{context.project.version} <=> #{mavenVersion}\n\ttesla uses a different version than ruby/maven.rb\n"
     end
   end
 end

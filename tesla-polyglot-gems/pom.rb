@@ -13,5 +13,6 @@ project 'tesla-polyglot-gems' do
           'header' =>  '${basedir}/../license-header.txt',
           'excludes' => [ '**/conf/**',
                           '**/pkg/**',
-                          '**/*pom.xml' ] )
+                          '**/*pom.xml',
+                          '**/*gemspec.xml' ] )
 end

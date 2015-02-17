@@ -1,5 +1,8 @@
 bin/mvn*
-bin/translate*
+ruby-maven-home/bin/translate*
+ruby-maven-home/L*
+ruby-maven-home/N*
+ruby-maven-home/lib
 ext
 *.txt
 lib/*jar

@@ -21,13 +21,13 @@ Gem::Specification.new do |s|
     Dir.glob("lib/**/*.rb") +
     Dir.glob("ruby-maven-home/lib/tesla*.jar")
   s.bindir = "bin"
-  s.executables = ['rmvn']
-  s.homepage = %q{https://github.com/tesla/tesla-polyglot/tree/master/tesla-polyglot-gem}
+  s.executables = ['rmvn', 'dumppom']
+  s.homepage = %q{https://github.com/takari/maven-polyglot/tree/master/tesla-polyglot-gems}
   s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ['lib']
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{maven support for ruby projects}
-  s.add_dependency 'maven-tools', "~> 1.0.7" 
+  s.add_dependency 'maven-tools', "~> 1.0.8" 
   s.add_dependency 'ruby-maven-libs', "=#{Maven::Ruby::MAVEN_VERSION}"
   s.add_development_dependency 'minitest', '~> 5.3'  
   s.add_development_dependency 'rake', '~> 10.3'
