@@ -44,8 +44,8 @@
     <module>tesla-polyglot-maven-plugin</module>    
     <module>tesla-polyglot-atom</module>
     <module>tesla-polyglot-ruby</module>
-    <module>tesla-polyglot-scala</module>    
     <!--
+    <module>tesla-polyglot-scala</module>    
     <module>tesla-polyglot-groovy</module>
     <module>tesla-polyglot-yaml</module>
     <module>tesla-polyglot-clojure</module>
