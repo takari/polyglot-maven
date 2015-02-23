@@ -56,7 +56,7 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
                  manager = modelManager;
              }
         };
-        rubyModelReader.setupManager = new SetupClassRealmRuby();
+        rubyModelReader.setupManager = new SetupClassRealm();
 
         PrintStream out = System.out;
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

@@ -98,7 +98,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 manager = modelManager;
             }
         };
-        rubyModelReader.setupManager = new SetupClassRealmRuby();
+        rubyModelReader.setupManager = new SetupClassRealm();
 
         File pomRubyFile =  new File( specs(), pomRuby );
         Reader reader = new FileReader( pomRubyFile );
@@ -142,7 +142,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 manager = modelManager;
             }
         };
-		rubyModelReader.setupManager = new SetupClassRealmRuby();
+		rubyModelReader.setupManager = new SetupClassRealm();
 		
 	    StringReader reader = new StringReader( w.toString() );
 	    Model rubyModel = rubyModelReader.read( reader, new HashMap<String, Object>() );

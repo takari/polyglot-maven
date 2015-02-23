@@ -39,6 +39,7 @@ public class RubyParser {
         this.executeManager = executeManager;
         this.jruby = new ScriptingContainer();
         this.jruby.setCompatVersion( CompatVersion.RUBY1_9 );
+        this.jruby.setClassLoader(getClass().getClassLoader());
         this.parser = runScript( "parser.rb" );
         this.factory = new RubyExecuteTaskFactory( jruby );
     }
@@ -47,15 +48,10 @@ public class RubyParser {
     {
         InputStream stream = getClass().getClassLoader()
                 .getResourceAsStream( script );
-        if ( stream != null )
+        if ( stream == null )
         {
-            stream = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream( script );
-            if ( stream == null )
-            {
-                throw new FileNotFoundException( "not found in classloader: "
-                                                 + script );
-            }
+            throw new FileNotFoundException( "not found in classloader: "
+                    + script );
         }
         return this.jruby.runScriptlet( stream, script );
     }

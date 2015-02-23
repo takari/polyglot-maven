@@ -34,7 +34,7 @@ public class RubyModelReader extends ModelReaderSupport {
     @Requirement
     ExecuteManager executeManager;
     
-    @Requirement( hint = "ruby" )
+    @Requirement
     SetupClassRealm setupManager;
     
     public Model read( final Reader input, final Map<String, ?> options )
@@ -48,24 +48,13 @@ public class RubyModelReader extends ModelReaderSupport {
                                         (ClassRealm) getClass().getClassLoader() );
         }
         
-        // use the classloader which loaded that class here
-        ClassLoader old = null;
-        try {
-            // make sure jruby will find the right classloader
-            old = Thread.currentThread().getContextClassLoader();
-            Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
-
-            // read the stream from our pom.rb into a String
-            StringWriter ruby = new StringWriter();
-            IOUtil.copy( input, ruby );
+        // read the stream from our pom.rb into a String
+        StringWriter ruby = new StringWriter();
+        IOUtil.copy( input, ruby );
         
-            // parse the String and create a POM model
-            return new RubyParser( executeManager ).parse( ruby.toString(),
-                                                           PolyglotModelUtil.getLocationFile( options ),
-                                                           options );
-        }
-        finally {
-            Thread.currentThread().setContextClassLoader( old );
-        }
+        // parse the String and create a POM model
+        return new RubyParser( executeManager ).parse( ruby.toString(),
+                PolyglotModelUtil.getLocationFile( options ),
+                options );
     }
 }
