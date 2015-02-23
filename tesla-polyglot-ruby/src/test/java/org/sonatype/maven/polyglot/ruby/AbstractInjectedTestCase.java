@@ -30,6 +30,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.sisu.launch.InjectedTestCase;
+import org.sonatype.maven.polyglot.Constants;
 import org.sonatype.maven.polyglot.PolyglotModelManager;
 import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 import org.sonatype.maven.polyglot.mapping.Mapping;
@@ -175,7 +176,17 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	
 	private String simplify( StringWriter xml, boolean debug )
 	{
-		String x = xml.toString().replaceAll( "\\s", "").replaceFirst("<\\?.*\\?>", "").replaceAll("<properties>.*?</properties>", "").replaceAll( "></(arg|chmod)>", "/>" );
+		String x = xml.toString()
+		        // no whitespace
+		        .replaceAll( "\\s", "")
+		        // no process instructions
+		        .replaceFirst("<\\?.*\\?>", "")
+		        // properties have different ordering
+		        .replaceAll("<properties>.*?</properties>", "")
+                // allow old style plugin definition to match new one
+                .replaceAll("\\$\\{tesla.version\\}", Constants.getVersion())
+		        // ??
+		        .replaceAll( "></(arg|chmod)>", "/>" );
         if ( debug )
         {
             System.out.println(x);

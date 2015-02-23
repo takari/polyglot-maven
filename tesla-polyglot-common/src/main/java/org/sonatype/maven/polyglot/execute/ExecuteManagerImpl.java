@@ -38,7 +38,6 @@ import org.sonatype.maven.polyglot.PolyglotModelManager;
 public class ExecuteManagerImpl
     implements ExecuteManager
 {
-    private static final String TESLA_VERSION = "tesla.version";
 
     @Requirement
     protected Logger log;
@@ -108,15 +107,6 @@ public class ExecuteManagerImpl
         if (tasks.isEmpty()) {
             return;
         }
-
-        // use a property to determine the version of the plugin
-        // that allows to lock down the plugin version in the pom
-        String version = model.getProperties().getProperty( TESLA_VERSION );
-        if ( version == null )
-        {
-            // FIMXE: Should not need to hard-code the version here
-            model.getProperties().setProperty( TESLA_VERSION, Constants.getVersion() );
-        }
         
         if (log.isDebugEnabled()) {
             log.debug("Registering tasks for: " + model.getId());
@@ -166,7 +156,7 @@ public class ExecuteManagerImpl
             Dependency dep = new Dependency();
             dep.setGroupId( Constants.getGroupId() );
             dep.setArtifactId( Constants.getArtifactId( flavour ) );
-            dep.setVersion( "${" + TESLA_VERSION + "}" );
+            dep.setVersion( Constants.getVersion() );
             plugin.addDependency( dep );
         }
     }
@@ -208,7 +198,7 @@ public class ExecuteManagerImpl
             plugin = new Plugin();
             plugin.setGroupId(Constants.getGroupId());
             plugin.setArtifactId(Constants.getArtifactId( "maven-plugin" ) );
-            plugin.setVersion( "${" + TESLA_VERSION + "}" );
+            plugin.setVersion( Constants.getVersion() );
         
             // Do not assume that the existing list is mutable.
             BuildBase build = getBuild( model, profileId );
