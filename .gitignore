@@ -8,8 +8,6 @@
 log/
 target/
 bin/
-.tesla.pom.xml
-tesla-polyglot-*-SNAPSHOT/
 .cache
 release.properties
 pom.xml.releaseBackup
