@@ -115,7 +115,7 @@
    
       <activation>
         <file>
-          <exists>../tesla-polyglot-cli</exists>
+          <exists>../polyglot-common</exists>
         </file>
       </activation>
 

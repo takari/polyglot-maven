@@ -3,9 +3,9 @@ require File.join( basedir,
                    'ruby',
                    'tesla_maven' )
 
-project 'tesla-polyglot-gems' do
+project 'polyglot-gems' do
 
-  inherit "io.tesla.polyglot:tesla-polyglot:#{TeslaMaven::VERSION}"
+  inherit "io.takari.polyglot:polyglot:#{TeslaMaven::VERSION}"
   id 'tesla-polyglot-gems'
   packaging 'pom'
 
