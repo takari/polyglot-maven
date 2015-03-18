@@ -72,8 +72,7 @@ public class GroovyModelReader extends ModelReaderSupport {
     }
 
     // FIXME: Looks like there are cases where the model is loaded more than once
-
-    executeManager.install(model);
+    executeManager.install(model, options);
 
     if (log.isDebugEnabled()) {
       DefaultModelWriter writer = new DefaultModelWriter();

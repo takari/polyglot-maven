@@ -93,7 +93,6 @@ public class PolyglotModelManager implements ModelLocator {
   }
 
   public String getFlavourFor(final Map<String, ?> options) {
-    System.out.println("XXXX " + options);
     for (Mapping mapping : mappings) {
       if (mapping.accept(options)) {
         return mapping.getFlavour();

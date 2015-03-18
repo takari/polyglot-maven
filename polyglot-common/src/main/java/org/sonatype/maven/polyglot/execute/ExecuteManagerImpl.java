@@ -45,6 +45,7 @@ public class ExecuteManagerImpl implements ExecuteManager {
 
   private final Map<String, List<ExecuteTask>> modelTasks = new HashMap<String, List<ExecuteTask>>();
 
+  @Override
   public void register(final Model model, final List<ExecuteTask> tasks) {
     assert model != null;
     assert tasks != null;
@@ -55,6 +56,7 @@ public class ExecuteManagerImpl implements ExecuteManager {
     modelTasks.put(model.getId(), Collections.unmodifiableList(copy));
   }
 
+  @Override
   public List<ExecuteTask> getTasks(final Model model) {
     assert model != null;
 
@@ -92,12 +94,13 @@ public class ExecuteManagerImpl implements ExecuteManager {
   }
 
   //@Override
-  @Deprecated
-  public void install(final Model model) {
-    install(model, new HashMap<String, String>());
-  }
+  //@Deprecated
+  //public void install(final Model model) {
+  //  install(model, new HashMap<String, String>());
+ // }
 
   //@Override
+  @Override
   public void install(final Model model, final Map<String, ?> options) {
     assert model != null;
 
