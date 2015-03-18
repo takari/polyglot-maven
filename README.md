@@ -1,97 +1,60 @@
 # Overview
 
-[Polyglot for Maven](http://github.com/tesla/tesla-polyglot/) is an experimental distribution of Maven that allows the expression of a POM in something other than XML (oh nooooo!). A couple of the dialects also have the capability to write plugins inline: the Groovy, Ruby and Scala dialects allow this.
+[Polyglot for Maven](http://github.com/tesla/tesla-polyglot/) is a set of extensions for `Maven 3.3.1+` that allows the POM model to be written in dialects other than XML. Several the dialects also allow inlined plugins: the Ruby, Groovy and Scala dialects allow this.
 
-Here's something to whet your appetite:
+Here's an example POM written in the Ruby dialect:
 
-```scala
-import org.sonatype.maven.polyglot.scala.model._
+```ruby
+project 'Polyglot :: Aggregator' do
 
-Model(
-  "io.tesla.polyglot" % "tesla-polyglot" % "0.0.1-SNAPSHOT",
-  dependencies = Seq(
-    "someGroupId" % "someArtifactId" % "someVersion",
-    "someGroupId" % "someArtifactId" % "someVersion" % "test"
-  ),
-  tasks = Seq(
-    Task("someInlineTaskId", "compile") {
-      ec =>
-        // This will execute during the compile phase
-        println(s"Artifact id: ${ec.getProject.getArtifactId}")
-    }
-  )
-)
+  model_version '4.0.0'
+  id 'io.tesla.polyglot:tesla-polyglot:0.0.1-SNAPSHOT'
+  inherit 'io.tesla:tesla:4'
+  packaging 'pom'
+
+  properties( 'sisuInjectVersion' => '0.0.0.M2a',
+              'teslaVersion' => '3.1.0' )
+
+  modules [ 'tesla-polyglot-common',
+            'tesla-polyglot-atom',
+            'tesla-polyglot-ruby',
+            'tesla-polyglot-groovy',
+            'tesla-polyglot-yaml',
+            'tesla-polyglot-clojure',
+            'tesla-polyglot-scala',
+            'tesla-polyglot-cli',
+            'tesla-polyglot-maven-plugin' ]
+
+  overrides do
+    jar 'org.eclipse.sisu:org.eclipse.sisu.inject:${sisuInjectVersion}'
+    jar 'org.eclipse.sisu:org.eclipse.sisu.plexus:${sisuInjectVersion}'
+    jar 'org.apache.maven:maven-model-builder:3.1.0'
+    jar 'org.apache.maven:maven-embedder:3.1.0'
+    jar( 'junit:junit:4.11', :scope => 'test' )
+
+  end
+
+  plugin 'org.codehaus.plexus:plexus-component-metadata:1.5.4' do
+    execute_goals 'generate-metadata', 'generate-test-metadata'
+  end
+
+  build do
+    execute("first", :validate) do |context|
+      puts "Hello from JRuby!"
+    end
+  end
+end
 ```
-
-# Download
-
-You can download the distribution from Maven Central:
-
-[http://repo1.maven.org/maven2/io/tesla/polyglot/tesla-polyglot-cli/0.0.9/tesla-polyglot-cli-0.0.9-bin.tar.gz](http://repo1.maven.org/maven2/io/tesla/polyglot/tesla-polyglot-cli/0.0.9/tesla-polyglot-cli-0.0.9-bin.tar.gz)
-
-# Usage
-
-Polyglot for Maven includes a copy of maven 3.1.1, and can be used like a normal Maven distribution.
-
-There is a translate command that will translate between a `pom.xml` and the other supported dialects. For example:
-
-```
-translate pom.xml pom.rb
-```
-
-or
-
-```
-translate pom.xml pom.groovy
-```
-or
-
-```
-translate pom.xml pom.scala
-```
-
-or
-
-```
-translate pom.xml pom.yaml
-```
-
-or
-
-```
-translate pom.xml pom.atom
-```
-
-If you want to see what various POMs look like you can take a look here:
-
-[https://github.com/tesla/tesla-polyglot/tree/master/poms](https://github.com/tesla/tesla-polyglot/tree/master/poms)
 
 # Building
 
 ### Requirements
 
-* [Maven](http://maven.apache.org) 3.1.1+
-* [Java](http://java.sun.com/) 6+
+* [Maven](http://maven.apache.org) 3.3.1+
+* [Java](http://java.sun.com/) 7+
 
-Check-out and build:
+# Note of caution
 
-    git clone git@github.com:tesla/tesla-polyglot.git
-    cd tesla-polyglot
-    mvn install
+The whole interoperability story has not been worked out but we expect to sort this out very quickly now that Polyglot for Maven can be used easily.
 
-After this completes, you can unzip and play with polyglot for maven:
-
-    tar -xzvf tesla-polyglot-cli/target/tesla-polyglot-*-bin.tar.gz
-    ./tesla-polyglot-*/bin/mvn
-
-Now you can look at the usage guide above.
-
-# Things we know that are less than ideal
-
-We know there are short comings, but the distribution is functional and we care more about feedback right now.
-
-- The rules about precedence of which format to be read, and what should happen when there are mixed flavors of POMs have yet to be fully worked out. 
-- The whole interoperability story has not been worked out. 
-- A pom.xml will currently not be installed or deployed so use this at your own risk. 
-- The distribution is the size of a small galaxy. There's no way, currently, in Maven to dynamically download what's required to parse the discovered model. We'll sort this out eventually but there are more imporant things to figure out.
-
+A pom.xml will currently not be installed or deployed except for the Ruby DSL but we will add this feature very shortly.
