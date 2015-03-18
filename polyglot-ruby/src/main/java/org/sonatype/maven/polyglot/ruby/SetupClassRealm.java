@@ -110,7 +110,7 @@ public class SetupClassRealm {
                 
                 public boolean include( Artifact artifact )
                 {
-                    return !"tesla-polyglot-common".equals( artifact.getArtifactId() ) &&
+                    return !"polyglot-common".equals( artifact.getArtifactId() ) &&
                            !"test".equals( artifact.getScope() );
                 }
             } )

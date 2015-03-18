@@ -12,7 +12,7 @@ if ( !log.contains( expected ) )
 {
     throw new RuntimeException( "log file does not contain '" + expected + "'" );
 }
-expected = "io.tesla.polyglot:execute-ruby:1:jar";
+expected = "io.takari.polyglot:execute-ruby:1:jar";
 if ( !log.contains( expected ) )
 {
     throw new RuntimeException( "log file does not contain '" + expected + "'" );

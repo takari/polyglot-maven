@@ -6,6 +6,6 @@
   </exportedPackages>
  
   <exportedArtifacts>
-    <exportedArtifact>io.tesla.polyglot:tesla-polyglot-common</exportedArtifact>
+    <exportedArtifact>io.takari.polyglot:polyglot-common</exportedArtifact>
   </exportedArtifacts>
 </extension>

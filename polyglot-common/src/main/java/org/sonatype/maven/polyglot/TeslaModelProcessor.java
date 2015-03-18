@@ -51,7 +51,7 @@ public class TeslaModelProcessor implements ModelProcessor {
     if ( pomFile != null && 
             ! pomFile.getName().endsWith( ".pom" ) && 
             ! pomFile.getName().endsWith( ".xml" ) ) {
-        pomFile = new File( pomFile.getParentFile(), ".tesla." + pomFile.getName() );
+        pomFile = new File( pomFile.getParentFile(), ".polyglot." + pomFile.getName() );
         try
         {
             pomFile.createNewFile();
@@ -95,11 +95,11 @@ public class TeslaModelProcessor implements ModelProcessor {
   public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
     assert manager != null;
     ModelSource source = (ModelSource) options.get( ModelProcessor.SOURCE );
-    if ( ( "" + source ).contains(  ".tesla." ) ) {
+    if ( ( "" + source ).contains(  ".polyglot." ) ) {
         System.out.println( source.getLocation() );
 
         File pom = new File( source.getLocation() );
-        source =  new FileModelSource( new File( pom.getPath().replaceFirst( "[.]tesla[.]", "" ) ) );
+        source =  new FileModelSource( new File( pom.getPath().replaceFirst( "[.]polyglot[.]", "" ) ) );
 
         ((Map)options).put( ModelProcessor.SOURCE, source );
 
@@ -113,11 +113,11 @@ public class TeslaModelProcessor implements ModelProcessor {
         FileUtils.fileWrite( pom, xml.toString() );
 
         // dump pom if filename is given via the pom properties
-        String dump = model.getProperties().getProperty( "tesla.dump.pom" );
+        String dump = model.getProperties().getProperty( "polyglot.dump.pom" );
         if ( dump == null )
         {
             // just nice to dump the pom.xml via commandline switch
-            dump = System.getProperty( "tesla.dump.pom" );
+            dump = System.getProperty( "polyglot.dump.pom" );
         }
         if ( dump != null )
         {
@@ -126,7 +126,7 @@ public class TeslaModelProcessor implements ModelProcessor {
             {
                 dumpPom.setWritable( true );
                 FileUtils.fileWrite( dumpPom, xml.toString() );
-                if ( "true".equals( model.getProperties().getProperty( "tesla.dump.readonly" ) ) )
+                if ( "true".equals( model.getProperties().getProperty( "polyglot.dump.readonly" ) ) )
                 {
                     dumpPom.setReadOnly();
                 }
