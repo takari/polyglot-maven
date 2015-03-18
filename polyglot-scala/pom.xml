@@ -13,7 +13,7 @@
   <parent>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>polyglot</artifactId>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.1.3</version>
   </parent>
   <artifactId>polyglot-scala</artifactId>
   <name>Polyglot :: Scala</name>
