@@ -14,10 +14,10 @@
     <version>14</version>
   </parent>
 
-  <groupId>io.tesla.polyglot</groupId>
-  <artifactId>tesla-polyglot</artifactId>
+  <groupId>io.takari.polyglot</groupId>
+  <artifactId>polyglot</artifactId>
   <version>0.1.2-SNAPSHOT</version>
-  <name>Polyglot Tesla :: Aggregator</name>
+  <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
 
   <licenses>
@@ -40,26 +40,26 @@
   </scm>
 
   <modules>
-    <module>tesla-polyglot-common</module>
-    <module>tesla-polyglot-maven-plugin</module>    
-    <module>tesla-polyglot-atom</module>
-    <module>tesla-polyglot-ruby</module>
-    <module>tesla-polyglot-scala</module>    
-    <module>tesla-polyglot-groovy</module>
-    <module>tesla-polyglot-yaml</module>
-    <module>tesla-polyglot-clojure</module>
+    <module>polyglot-common</module>
+    <module>polyglot-maven-plugin</module>    
+    <module>polyglot-atom</module>
+    <module>polyglot-ruby</module>
+    <module>polyglot-scala</module>    
+    <module>polyglot-groovy</module>
+    <module>polyglot-yaml</module>
+    <module>polyglot-clojure</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.tesla.polyglot</groupId>
-        <artifactId>tesla-polyglot-common</artifactId>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-common</artifactId>
         <version>0.1.2-SNAPSHOT</version>
       </dependency>
       <dependency>
-        <groupId>io.tesla.polyglot</groupId>
-        <artifactId>tesla-polyglot-ruby</artifactId>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-ruby</artifactId>
         <version>0.1.2-SNAPSHOT</version>
       </dependency>
       <!-- We inline Maven's dependency management section to align dependency 

@@ -9,19 +9,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.tesla.polyglot</groupId>
-    <artifactId>tesla-polyglot</artifactId>
+    <groupId>io.takari.polyglot</groupId>
+    <artifactId>polyglot</artifactId>
     <version>0.1.2-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tesla-polyglot-maven-plugin</artifactId>
-  <name>Polyglot Tesla :: Maven Plugin</name>
+  <artifactId>polyglot-maven-plugin</artifactId>
+  <name>Polyglot :: Maven Plugin</name>
   <packaging>maven-plugin</packaging>
 
   <dependencies>
     <dependency>
-      <groupId>io.tesla.polyglot</groupId>
-      <artifactId>tesla-polyglot-common</artifactId>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
