@@ -76,267 +76,256 @@ import org.sonatype.maven.polyglot.groovy.builder.factory.StringFactory;
  *
  * @since 0.7
  */
-@Component(role=ModelBuilder.class)
-public class ModelBuilder
-    extends FactoryBuilderSupport
-{
-    protected Logger log = LoggerFactory.getLogger(ModelBuilder.class);
-    
-    private final Set<String> factoryNames = new HashSet<String>();
+@Component(role = ModelBuilder.class)
+public class ModelBuilder extends FactoryBuilderSupport {
+  protected Logger log = LoggerFactory.getLogger(ModelBuilder.class);
 
-    private final Set<Class> factoryTypes = new HashSet<Class>();
+  private final Set<String> factoryNames = new HashSet<String>();
 
-    private final List<ExecuteTask> tasks = new ArrayList<ExecuteTask>();
+  private final Set<Class> factoryTypes = new HashSet<Class>();
 
-    @Requirement
-    private ExecuteManager executeManager;
+  private final List<ExecuteTask> tasks = new ArrayList<ExecuteTask>();
 
-    public ModelBuilder() {
-      registerFactories();      
+  @Requirement
+  private ExecuteManager executeManager;
+
+  public ModelBuilder() {
+    registerFactories();
+  }
+
+  @Override
+  protected void setClosureDelegate(final Closure c, final Object o) {
+    c.setDelegate(this);
+    c.setResolveStrategy(Closure.DELEGATE_FIRST);
+  }
+
+  @Override
+  public void setVariable(final String name, final Object value) {
+    InvokerHelper.setProperty(getCurrent(), name, value);
+  }
+
+  public ExecuteManager getExecuteManager() {
+    return executeManager;
+  }
+
+  public List<ExecuteTask> getTasks() {
+    return tasks;
+  }
+
+  public void registerFactories() {
+    registerStringFactory("module");
+    registerStringFactory("filter");
+    registerStringFactory("include");
+    registerStringFactory("exclude");
+    registerStringFactory("goal");
+    registerStringFactory("role");
+    registerStringFactory("otherArchive");
+    registerStringFactory("activeByDefault");
+    registerStringFactory("report");
+
+    registerFactory(new PluginFactory());
+    registerFactoriesFor(Plugin.class);
+
+    registerFactory(new ModulesFactory());
+    registerFactory(new ExclusionsFactory());
+    registerFactory(new ExtensionsFactory());
+    registerFactory(new IncludesFactory());
+    registerFactory(new ExcludesFactory());
+    registerFactory(new GoalsFactory());
+    registerFactory(new ExecuteFactory());
+    registerFactory(new ReportSetsFactory());
+    registerFactory(new ReportsFactory());
+
+    registerFactory(new ReportingFactory());
+    registerFactoriesFor(Reporting.class);
+
+    registerFactory(new ExecutionFactory());
+    registerFactoriesFor(PluginExecution.class);
+
+    registerFactory(new ModelFactory());
+    registerFactoriesFor(Model.class);
+
+    registerChildFactory("dependency", Dependency.class);
+    registerChildFactory("exclusion", Exclusion.class);
+    registerChildFactory("extension", Extension.class);
+    registerChildFactory("resource", Resource.class);
+    registerChildFactory("testResource", Resource.class);
+    registerChildFactory("notifier", Notifier.class);
+    registerChildFactory("contributor", Contributor.class);
+    registerChildFactory("developer", Developer.class);
+    registerChildFactory("license", License.class);
+    registerChildFactory("mailingList", MailingList.class);
+    registerChildFactory("profile", Profile.class);
+    registerChildFactory("repository", DeploymentRepository.class);
+    registerChildFactory("pluginRepository", Repository.class);
+    registerChildFactory("reportSet", ReportSet.class);
+    registerChildFactory("activation", Activation.class);
+  }
+
+  @Override
+  public void registerBeanFactory(final String name, final Class type) {
+    super.registerBeanFactory(name, type);
+    registerFactoriesFor(type);
+  }
+
+  @Override
+  public void registerFactory(final String name, final String groupName, final Factory factory) {
+    if (log.isDebugEnabled()) {
+      log.debug("Registering factory: " + name + ", factory: " + factory);
+      if (factoryNames.contains(name)) {
+        log.warn("Duplicate factory: " + name);
+      }
     }
-    
-    @Override
-    protected void setClosureDelegate(final Closure c, final Object o) {
-        c.setDelegate(this);
-        c.setResolveStrategy(Closure.DELEGATE_FIRST);
+    factoryNames.add(name);
+    super.registerFactory(name, groupName, factory);
+  }
+
+  private void registerFactory(final NamedFactory factory) {
+    assert factory != null;
+    registerFactory(factory.getName(), null, factory);
+  }
+
+  private void registerChildFactory(final String name, final Class type) {
+    registerFactory(createChildFactory(name, type));
+    registerFactoriesFor(type);
+  }
+
+  private NamedFactory createChildFactory(final String name, final Class type) {
+    assert name != null;
+    assert type != null;
+
+    if (type == Parent.class) {
+      return new ParentFactory();
     }
-
-    @Override
-    public void setVariable(final String name, final Object value) {
-        InvokerHelper.setProperty(getCurrent(), name, value);
+    if (type == Dependency.class) {
+      return new DependencyFactory();
     }
-
-    public ExecuteManager getExecuteManager() {
-        return executeManager;
-    }
-
-    public List<ExecuteTask> getTasks() {
-        return tasks;
-    }
-
-    public void registerFactories() {
-        registerStringFactory("module");
-        registerStringFactory("filter");
-        registerStringFactory("include");
-        registerStringFactory("exclude");
-        registerStringFactory("goal");
-        registerStringFactory("role");
-        registerStringFactory("otherArchive");
-        registerStringFactory("activeByDefault");
-        registerStringFactory("report");
-
-        registerFactory(new PluginFactory());
-        registerFactoriesFor(Plugin.class);
-
-        registerFactory(new ModulesFactory());
-        registerFactory(new ExclusionsFactory());
-        registerFactory(new ExtensionsFactory());
-        registerFactory(new IncludesFactory());
-        registerFactory(new ExcludesFactory());
-        registerFactory(new GoalsFactory());
-        registerFactory(new ExecuteFactory());
-        registerFactory(new ReportSetsFactory());
-        registerFactory(new ReportsFactory());
-
-
-        registerFactory(new ReportingFactory());
-        registerFactoriesFor(Reporting.class);
-        
-        registerFactory(new ExecutionFactory());
-        registerFactoriesFor(PluginExecution.class);
-
-        registerFactory(new ModelFactory());
-        registerFactoriesFor(Model.class);
-
-        registerChildFactory("dependency", Dependency.class);
-        registerChildFactory("exclusion", Exclusion.class);
-        registerChildFactory("extension", Extension.class);
-        registerChildFactory("resource", Resource.class);
-        registerChildFactory("testResource", Resource.class);
-        registerChildFactory("notifier", Notifier.class);
-        registerChildFactory("contributor", Contributor.class);
-        registerChildFactory("developer", Developer.class);
-        registerChildFactory("license", License.class);
-        registerChildFactory("mailingList", MailingList.class);
-        registerChildFactory("profile", Profile.class);
-        registerChildFactory("repository", DeploymentRepository.class);
-        registerChildFactory("pluginRepository", Repository.class);
-        registerChildFactory("reportSet", ReportSet.class);
-        registerChildFactory("activation", Activation.class);
-    }
-
-    @Override
-    public void registerBeanFactory(final String name, final Class type) {
-        super.registerBeanFactory(name, type);
-        registerFactoriesFor(type);
-    }
-
-    @Override
-    public void registerFactory(final String name, final String groupName, final Factory factory) {
-        if (log.isDebugEnabled()) {
-            log.debug("Registering factory: " + name + ", factory: " + factory);
-            if (factoryNames.contains(name)) {
-                log.warn("Duplicate factory: " + name);
-            }
-        }
-        factoryNames.add(name);
-        super.registerFactory(name, groupName, factory);
-    }
-
-    private void registerFactory(final NamedFactory factory) {
-        assert factory != null;
-        registerFactory(factory.getName(), null, factory);
-    }
-
-    private void registerChildFactory(final String name, final Class type) {
-        registerFactory(createChildFactory(name, type));
-        registerFactoriesFor(type);
-    }
-
-    private NamedFactory createChildFactory(final String name, final Class type) {
-        assert name != null;
-        assert type != null;
-
-        if (type == Parent.class) {
-            return new ParentFactory();
-        }
-        if (type == Dependency.class) {
-            return new DependencyFactory();
-        }
-        if (type == Exclusion.class) {
-            return new ExclusionFactory();
-        }
-
-        return new ChildFactory(name, type);
+    if (type == Exclusion.class) {
+      return new ExclusionFactory();
     }
 
-    private void registerStringFactory(final String name) {
-        registerFactory(new StringFactory(name));
+    return new ChildFactory(name, type);
+  }
+
+  private void registerStringFactory(final String name) {
+    registerFactory(new StringFactory(name));
+  }
+
+  private void registerListFactory(final String name) {
+    registerFactory(new ListFactory(name));
+  }
+
+  private void registerPropertiesFactory(final String name) {
+    registerFactory(new PropertiesFactory(name));
+  }
+
+  private void registerObjectFactory(final String name) {
+    registerFactory(new ObjectFactory(name));
+  }
+
+  private void registerFactoriesFor(final Class type) {
+    assert type != null;
+
+    if (factoryTypes.contains(type)) {
+      return;
+    }
+    factoryTypes.add(type);
+
+    if (log.isDebugEnabled()) {
+      log.debug("Registering factories for type: " + type);
     }
 
-    private void registerListFactory(final String name) {
-        registerFactory(new ListFactory(name));
-    }
+    Method[] methods = type.getMethods();
+    for (Method method : methods) {
+      if (isSetter(method)) {
+        String name = propertyNameOf(method);
 
-    private void registerPropertiesFactory(final String name) {
-        registerFactory(new PropertiesFactory(name));
-    }
-
-    private void registerObjectFactory(final String name) {
-        registerFactory(new ObjectFactory(name));
-    }
-
-    private void registerFactoriesFor(final Class type) {
-        assert type != null;
-
-        if (factoryTypes.contains(type)) {
-            return;
-        }
-        factoryTypes.add(type);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Registering factories for type: " + type);
-        }
-
-        Method[] methods = type.getMethods();
-        for (Method method : methods) {
-            if (isSetter(method) ){
-                String name = propertyNameOf(method);
-
-                if (factoryNames.contains(name)) {
-                    continue;
-                }
-
-                Class param = method.getParameterTypes()[0];
-                if (param == String.class) {
-                    registerStringFactory(name);
-                }
-                else if (param == List.class) {
-                    registerListFactory(name);
-                }
-                else if (param == Properties.class) {
-                    registerPropertiesFactory(name);
-                }
-                else if (param == Object.class) {
-                    registerObjectFactory(name);
-                }
-                else if (param.getName().startsWith("org.apache.maven.model.")) {
-                    registerChildFactory(name, param);
-                }
-                else {
-                    // Skip setters with unsupported types (model will use string versions)
-                    if (log.isDebugEnabled()) {
-                        log.debug("Skipping setter with unsupported type: " + method);
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean isSetter(final Method method) {
-        assert method != null;
-        if (!method.getName().startsWith("set")) {
-            return false;
+        if (factoryNames.contains(name)) {
+          continue;
         }
 
-        if (method.getParameterTypes().length > 1) {
-            return false;
-
+        Class param = method.getParameterTypes()[0];
+        if (param == String.class) {
+          registerStringFactory(name);
+        } else if (param == List.class) {
+          registerListFactory(name);
+        } else if (param == Properties.class) {
+          registerPropertiesFactory(name);
+        } else if (param == Object.class) {
+          registerObjectFactory(name);
+        } else if (param.getName().startsWith("org.apache.maven.model.")) {
+          registerChildFactory(name, param);
+        } else {
+          // Skip setters with unsupported types (model will use string versions)
+          if (log.isDebugEnabled()) {
+            log.debug("Skipping setter with unsupported type: " + method);
+          }
         }
-        if (method.getReturnType() != Void.TYPE) {
-            return false;
-        }
+      }
+    }
+  }
 
-        int m = method.getModifiers();
-        if (!Modifier.isPublic(m) || Modifier.isStatic(m)) {
-            return false;
-        }
-
-        return true;
+  private boolean isSetter(final Method method) {
+    assert method != null;
+    if (!method.getName().startsWith("set")) {
+      return false;
     }
 
-    private String propertyNameOf(final Method method) {
-        assert method != null;
+    if (method.getParameterTypes().length > 1) {
+      return false;
 
-        String name = method.getName();
-        name = name.substring(3, name.length());
-
-        return new StringBuffer(name.length())
-                .append(Character.toLowerCase(name.charAt(0)))
-                .append(name.substring(1))
-                .toString();
+    }
+    if (method.getReturnType() != Void.TYPE) {
+      return false;
     }
 
-    public Object findInContext(final String key) {
-        for (Map<String,Object> ctx : getContexts()) {
-            if (ctx.containsKey(key)) {
-                return ctx.get(key);
-            }
-        }
-
-        return null;
+    int m = method.getModifiers();
+    if (!Modifier.isPublic(m) || Modifier.isStatic(m)) {
+      return false;
     }
-    
-    // BEGIN: Kludgy Workaround
-    // Explanation: When I translated the slf4j pom.xml to pom.groovy, I ended up with this:
-    //  plugin {
-    //    artifactId 'maven-project-info-reports-plugin'
-    //    reportSets {
-    //      reportSet
-    //    }
-    //  }
-    // The ModelBuilder saw this, and assumed that it was trying to populate the reportSet method.  Note
-    // that this shows up because the slf4j pom.xml includes 
-    // a <reportSets><reportSet><report/></reportSet></reportSets>
-    private ReportSet reportSet;
 
-	public ReportSet getReportSet() {
-		return reportSet;
-	}
+    return true;
+  }
 
-	public void setReportSet(ReportSet reportSet) {
-		this.reportSet = reportSet;
-	}
-	// END: Kludgy Workaround
-    
+  private String propertyNameOf(final Method method) {
+    assert method != null;
+
+    String name = method.getName();
+    name = name.substring(3, name.length());
+
+    return new StringBuffer(name.length()).append(Character.toLowerCase(name.charAt(0))).append(name.substring(1)).toString();
+  }
+
+  public Object findInContext(final String key) {
+    for (Map<String, Object> ctx : getContexts()) {
+      if (ctx.containsKey(key)) {
+        return ctx.get(key);
+      }
+    }
+
+    return null;
+  }
+
+  // BEGIN: Kludgy Workaround
+  // Explanation: When I translated the slf4j pom.xml to pom.groovy, I ended up with this:
+  //  plugin {
+  //    artifactId 'maven-project-info-reports-plugin'
+  //    reportSets {
+  //      reportSet
+  //    }
+  //  }
+  // The ModelBuilder saw this, and assumed that it was trying to populate the reportSet method.  Note
+  // that this shows up because the slf4j pom.xml includes 
+  // a <reportSets><reportSet><report/></reportSet></reportSets>
+  private ReportSet reportSet;
+
+  public ReportSet getReportSet() {
+    return reportSet;
+  }
+
+  public void setReportSet(ReportSet reportSet) {
+    this.reportSet = reportSet;
+  }
+  // END: Kludgy Workaround
+
 }

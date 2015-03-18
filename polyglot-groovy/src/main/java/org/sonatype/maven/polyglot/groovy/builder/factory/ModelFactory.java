@@ -23,25 +23,23 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public class ModelFactory
-    extends NamedFactory
-{
-    public ModelFactory() {
-        super("project");
-    }
+public class ModelFactory extends NamedFactory {
+  public ModelFactory() {
+    super("project");
+  }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        return new Model();
-    }
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    return new Model();
+  }
 
-    @Override
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-        Model model = (Model)node;
-        ExecuteManager manager = ((ModelBuilder)builder).getExecuteManager();
-        List<ExecuteTask> tasks = ((ModelBuilder) builder).getTasks();
-        manager.register(model, tasks);
-        
-        // Reset the tasks list for sanity
-        tasks.clear();
-    }
+  @Override
+  public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    Model model = (Model) node;
+    ExecuteManager manager = ((ModelBuilder) builder).getExecuteManager();
+    List<ExecuteTask> tasks = ((ModelBuilder) builder).getTasks();
+    manager.register(model, tasks);
+
+    // Reset the tasks list for sanity
+    tasks.clear();
+  }
 }

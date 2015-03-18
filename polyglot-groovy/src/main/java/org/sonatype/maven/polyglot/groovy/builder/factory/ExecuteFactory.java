@@ -24,49 +24,46 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public class ExecuteFactory
-    extends NamedFactory
-{
-    public ExecuteFactory() {
-        super("$execute");
-    }
+public class ExecuteFactory extends NamedFactory {
+  public ExecuteFactory() {
+    super("$execute");
+  }
 
-    @Override
-    public boolean isHandlesNodeChildren() {
-        return true;
-    }
+  @Override
+  public boolean isHandlesNodeChildren() {
+    return true;
+  }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        return new GroovyExecuteTask(value, attrs);
-    }
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    return new GroovyExecuteTask(value, attrs);
+  }
 
-    @Override
-    public void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
-        if (parent instanceof Build) {
-            GroovyExecuteTask task = (GroovyExecuteTask) child;
-            List<ExecuteTask> tasks = ((ModelBuilder) builder).getTasks();
-            tasks.add(task);
-        }
-        else {
-            throw new IllegalStateException("The " + getName() + " element must only be defined under 'build'");
-        }
+  @Override
+  public void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
+    if (parent instanceof Build) {
+      GroovyExecuteTask task = (GroovyExecuteTask) child;
+      List<ExecuteTask> tasks = ((ModelBuilder) builder).getTasks();
+      tasks.add(task);
+    } else {
+      throw new IllegalStateException("The " + getName() + " element must only be defined under 'build'");
     }
+  }
 
-    @Override
-    public boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure content) {
-        GroovyExecuteTask task = (GroovyExecuteTask) node;
-        task.setClosure(content);
-        return false;
-    }
+  @Override
+  public boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure content) {
+    GroovyExecuteTask task = (GroovyExecuteTask) node;
+    task.setClosure(content);
+    return false;
+  }
 
-    @Override
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-        GroovyExecuteTask task = (GroovyExecuteTask) node;
-        if (task.getId() == null) {
-            throw new IllegalStateException("Execute task is missing attribute 'id'");
-        }
-        if (task.getPhase() == null) {
-            throw new IllegalStateException("Execute task is missing attribute 'phase'");
-        }
+  @Override
+  public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    GroovyExecuteTask task = (GroovyExecuteTask) node;
+    if (task.getId() == null) {
+      throw new IllegalStateException("Execute task is missing attribute 'id'");
     }
+    if (task.getPhase() == null) {
+      throw new IllegalStateException("Execute task is missing attribute 'phase'");
+    }
+  }
 }

@@ -20,48 +20,45 @@ import org.apache.maven.model.Extension;
  *
  * @since 0.8
  */
-public class ExtensionFactory
-    extends NamedFactory
-{
-    public ExtensionFactory() {
-        super("extension");
+public class ExtensionFactory extends NamedFactory {
+  public ExtensionFactory() {
+    super("extension");
+  }
+
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    Extension node;
+
+    if (value != null) {
+      node = parse(value);
+      if (node == null) {
+        throw new NodeValueParseException(this, value);
+      }
+    } else {
+      node = new Extension();
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        Extension node;
+    return node;
+  }
 
-        if (value != null) {
-            node = parse(value);
-            if (node == null) {
-                throw new NodeValueParseException(this, value);
-            }
-        }
-        else {
-            node = new Extension();
-        }
+  public static Extension parse(final Object value) {
+    assert value != null;
 
+    if (value instanceof String) {
+      Extension node = new Extension();
+      String[] items = ((String) value).split(":");
+      switch (items.length) {
+      case 2:
+        node.setGroupId(items[0]);
+        node.setArtifactId(items[1]);
         return node;
+      case 3:
+        node.setGroupId(items[0]);
+        node.setArtifactId(items[1]);
+        node.setVersion(items[2]);
+        return node;
+      }
     }
 
-    public static Extension parse(final Object value) {
-        assert value != null;
-
-        if (value instanceof String) {
-            Extension node = new Extension();
-            String[] items = ((String)value).split(":");
-            switch (items.length) {
-                case 2:
-                    node.setGroupId(items[0]);
-                    node.setArtifactId(items[1]);
-                    return node;
-                case 3:
-                    node.setGroupId(items[0]);
-                    node.setArtifactId(items[1]);
-                    node.setVersion(items[2]);
-                    return node;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

@@ -20,43 +20,40 @@ import java.util.Map;
  *
  * @since 0.8
  */
-public class ReportSetFactory
-    extends NamedFactory
-{
-    public ReportSetFactory() {
-        super("reportSet");
+public class ReportSetFactory extends NamedFactory {
+  public ReportSetFactory() {
+    super("reportSet");
+  }
+
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    ReportSet node;
+
+    if (value != null) {
+      node = parse(value);
+      if (node == null) {
+        throw new NodeValueParseException(this, value);
+      }
+    } else {
+      node = new ReportSet();
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        ReportSet node;
+    return node;
+  }
 
-        if (value != null) {
-            node = parse(value);
-            if (node == null) {
-                throw new NodeValueParseException(this, value);
-            }
-        }
-        else {
-            node = new ReportSet();
-        }
+  public static ReportSet parse(final Object value) {
+    assert value != null;
 
-        return node;
-    }
+    /**        if (value instanceof String) {
+                ReportSet node = new ReportSEt();
+                String[] items = ((String)value).split(":");
+                switch (items.length) {
+                    case 2:
+                        node.setGroupId(items[0]);
+                        node.setArtifactId(items[1]);
+                        return node;
+                }
+            } **/
 
-    public static ReportSet parse(final Object value) {
-        assert value != null;
-
-/**        if (value instanceof String) {
-            ReportSet node = new ReportSEt();
-            String[] items = ((String)value).split(":");
-            switch (items.length) {
-                case 2:
-                    node.setGroupId(items[0]);
-                    node.setArtifactId(items[1]);
-                    return node;
-            }
-        } **/
-
-        return null;
-    }
+    return null;
+  }
 }

@@ -23,71 +23,69 @@ import java.util.Properties;
  *
  * @since 0.7
  */
-public class PropertiesFactory
-    extends NamedFactory
-{
-    public PropertiesFactory(final String name) {
-        super(name);
+public class PropertiesFactory extends NamedFactory {
+  public PropertiesFactory(final String name) {
+    super(name);
+  }
+
+  @Override
+  public boolean isHandlesNodeChildren() {
+    return true;
+  }
+
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    return new Properties();
+  }
+
+  @Override
+  public boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure content) {
+    Properties props = (Properties) node;
+
+    NodeBuilder nodes = new NodeBuilder() {
+      @Override
+      protected void setClosureDelegate(final Closure c, final Object o) {
+        c.setDelegate(this);
+        c.setResolveStrategy(Closure.DELEGATE_FIRST);
+      }
+
+      @Override
+      public void setProperty(final String name, final Object value) {
+        this.invokeMethod(name, value);
+      }
+    };
+
+    content.setDelegate(nodes);
+    content.setResolveStrategy(Closure.DELEGATE_FIRST);
+    Node root = (Node) nodes.invokeMethod(getName(), content);
+
+    for (Node child : (List<Node>) root.value()) {
+      merge(props, child, "");
     }
 
-    @Override
-    public boolean isHandlesNodeChildren() {
-        return true;
+    return false;
+  }
+
+  private void merge(Properties props, Node node, String prefix) {
+    assert props != null;
+    assert node != null;
+    assert prefix != null;
+
+    String name = prefix + node.name();
+
+    Object value = node.value();
+    if (value instanceof String) {
+      props.setProperty(name, String.valueOf(value));
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        return new Properties();
+    Map attrs = node.attributes();
+    for (Object key : attrs.keySet()) {
+      props.setProperty(name + "." + key, String.valueOf(attrs.get(key)));
     }
 
-    @Override
-    public boolean onNodeChildren(FactoryBuilderSupport builder, Object node, Closure content) {
-        Properties props = (Properties)node;
-
-        NodeBuilder nodes = new NodeBuilder() {
-            @Override
-            protected void setClosureDelegate(final Closure c, final Object o) {
-                c.setDelegate(this);
-                c.setResolveStrategy(Closure.DELEGATE_FIRST);
-            }
-
-            @Override
-            public void setProperty(final String name, final Object value) {
-                this.invokeMethod(name, value);
-            }
-        };
-        
-        content.setDelegate(nodes);
-        content.setResolveStrategy(Closure.DELEGATE_FIRST);
-        Node root = (Node) nodes.invokeMethod(getName(), content);
-
-        for (Node child : (List<Node>)root.value()) {
-            merge(props, child, "");
-        }
-
-        return false;
+    for (Object child : node.children()) {
+      if (child instanceof Node) {
+        merge(props, (Node) child, name + ".");
+      }
     }
-
-    private void merge(Properties props, Node node, String prefix) {
-        assert props != null;
-        assert node != null;
-        assert prefix != null;
-
-        String name = prefix + node.name();
-
-        Object value = node.value();
-        if (value instanceof String) {
-            props.setProperty(name, String.valueOf(value));
-        }
-
-        Map attrs = node.attributes();
-        for (Object key : attrs.keySet()) {
-            props.setProperty(name + "." + key, String.valueOf(attrs.get(key)));
-        }
-
-        for (Object child : node.children()) {
-            if (child instanceof Node) {
-                merge(props, (Node)child, name + ".");
-            }
-        }
-    }
+  }
 }

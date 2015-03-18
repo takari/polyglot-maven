@@ -19,45 +19,42 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public class ParentFactory
-    extends NamedFactory
-{
-    public ParentFactory() {
-        super("parent");
+public class ParentFactory extends NamedFactory {
+  public ParentFactory() {
+    super("parent");
+  }
+
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    Parent node;
+
+    if (value != null) {
+      node = parse(value);
+
+      if (node == null) {
+        throw new NodeValueParseException(this, value);
+      }
+    } else {
+      node = new Parent();
     }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        Parent node;
+    return node;
+  }
 
-        if (value != null) {
-            node = parse(value);
+  public static Parent parse(final Object value) {
+    assert value != null;
 
-            if (node == null) {
-                throw new NodeValueParseException(this, value);
-            }
-        }
-        else {
-            node = new Parent();
-        }
-
+    if (value instanceof String) {
+      Parent node = new Parent();
+      String[] items = ((String) value).split(":");
+      switch (items.length) {
+      case 3:
+        node.setGroupId(items[0]);
+        node.setArtifactId(items[1]);
+        node.setVersion(items[2]);
         return node;
+      }
     }
 
-    public static Parent parse(final Object value) {
-        assert value != null;
-
-        if (value instanceof String) {
-            Parent node = new Parent();
-            String[] items = ((String)value).split(":");
-            switch (items.length) {
-                case 3:
-                    node.setGroupId(items[0]);
-                    node.setArtifactId(items[1]);
-                    node.setVersion(items[2]);
-                    return node;
-            }
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

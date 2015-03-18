@@ -20,42 +20,37 @@ import java.util.List;
  *
  * @since 0.7
  */
-public abstract class NamedFactory
-    extends AbstractFactory
-{
-    private final String name;
+public abstract class NamedFactory extends AbstractFactory {
+  private final String name;
 
-    protected NamedFactory(final String name) {
-        this.name = name;
-    }
+  protected NamedFactory(final String name) {
+    this.name = name;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    @SuppressWarnings({"unchecked"})
-    @Override
-    public void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
-        if (parent instanceof List) {
-            ((List)parent).add(child);
-        }
-        else {
-            InvokerHelper.setProperty(parent, getName(), child);
-        }
+  @SuppressWarnings({
+    "unchecked"
+  })
+  @Override
+  public void setParent(FactoryBuilderSupport builder, Object parent, Object child) {
+    if (parent instanceof List) {
+      ((List) parent).add(child);
+    } else {
+      InvokerHelper.setProperty(parent, getName(), child);
     }
+  }
 
-    protected static class NodeValueParseException
-        extends IllegalArgumentException
-    {
-        public NodeValueParseException(final NamedFactory factory, final Object value) {
-            super("Unable to parse " + factory.getName() + " for: " + value + " (" + value.getClass() + ")");
-        }
+  protected static class NodeValueParseException extends IllegalArgumentException {
+    public NodeValueParseException(final NamedFactory factory, final Object value) {
+      super("Unable to parse " + factory.getName() + " for: " + value + " (" + value.getClass() + ")");
     }
+  }
 
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "{" +
-            "name='" + name + '\'' +
-            '}';
-    }
+  @Override
+  public String toString() {
+    return getClass().getSimpleName() + "{" + "name='" + name + '\'' + '}';
+  }
 }

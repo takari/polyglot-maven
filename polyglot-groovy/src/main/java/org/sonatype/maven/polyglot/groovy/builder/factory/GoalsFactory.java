@@ -20,46 +20,42 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public class GoalsFactory
-    extends ListFactory
-{
-    public GoalsFactory() {
-        super("goals");
+public class GoalsFactory extends ListFactory {
+  public GoalsFactory() {
+    super("goals");
+  }
+
+  @Override
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    List node;
+
+    if (value != null) {
+      node = parse(value);
+
+      if (node == null) {
+        throw new NodeValueParseException(this, value);
+      }
+    } else {
+      node = new ArrayList();
     }
 
-    @Override
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        List node;
+    return node;
+  }
 
-        if (value != null) {
-            node = parse(value);
+  public static List parse(final Object value) {
+    assert value != null;
 
-            if (node == null) {
-                throw new NodeValueParseException(this, value);
-            }
-        }
-        else {
-            node = new ArrayList();
-        }
-
-        return node;
+    List<String> node = new ArrayList<String>();
+    if (value instanceof String) {
+      node.add((String) value);
+      return node;
+    } else if (value instanceof List) {
+      for (Object item : (List) value) {
+        node.add(String.valueOf(item));
+      }
+      return node;
     }
 
-    public static List parse(final Object value) {
-        assert value != null;
-
-        List<String> node = new ArrayList<String>();
-        if (value instanceof String) {
-            node.add((String)value);
-            return node;
-        }
-        else if (value instanceof List) {
-            for (Object item : (List)value) {
-                node.add(String.valueOf(item));
-            }
-            return node;
-        }
-
-        return null;
-    }
+    return null;
+  }
 }

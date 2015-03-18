@@ -41,44 +41,40 @@ import org.xml.sax.SAXException;
  *
  * @since 0.7
  */
-@Component(role=ModelWriter.class, hint="groovy")
-public class GroovyModelWriter
-    extends ModelWriterSupport
-{
-    protected Logger log = LoggerFactory.getLogger(GroovyModelWriter.class);
-    
-    @Override
-    public void write(final Writer output, final Map<String,Object> options, final Model model) throws IOException {
-        assert output != null;
-        assert model != null;
+@Component(role = ModelWriter.class, hint = "groovy")
+public class GroovyModelWriter extends ModelWriterSupport {
+  protected Logger log = LoggerFactory.getLogger(GroovyModelWriter.class);
 
-        StringWriter buff = new StringWriter();
-        DefaultModelWriter writer = new DefaultModelWriter();
-        writer.write(buff, options, model);
+  @Override
+  public void write(final Writer output, final Map<String, Object> options, final Model model) throws IOException {
+    assert output != null;
+    assert model != null;
 
-        Dom2Groovy converter = new Dom2Groovy(new IndentPrinter(new PrintWriter(output), "  "));
+    StringWriter buff = new StringWriter();
+    DefaultModelWriter writer = new DefaultModelWriter();
+    writer.write(buff, options, model);
 
-        try {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = builder.parse(new InputSource(new StringReader(buff.toString())));
+    Dom2Groovy converter = new Dom2Groovy(new IndentPrinter(new PrintWriter(output), "  "));
 
-            Element root = doc.getDocumentElement();
-            NamedNodeMap attrs = root.getAttributes();
-            for (int i=0; i<attrs.getLength(); i++) {
-                Attr attr = (Attr)attrs.item(i);
-                root.removeAttribute(attr.getName());
-            }
-            // Not sure where this comes from but the above will not nuke it
-            root.removeAttribute("xmlns:xsi");
-            
-            converter.print(doc);
-            output.flush();
-        }
-        catch (ParserConfigurationException e) {
-            throw (IOException) new IOException().initCause( e );
-        }
-        catch (SAXException e) {
-            throw (IOException) new IOException().initCause( e );
-        }
+    try {
+      DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      Document doc = builder.parse(new InputSource(new StringReader(buff.toString())));
+
+      Element root = doc.getDocumentElement();
+      NamedNodeMap attrs = root.getAttributes();
+      for (int i = 0; i < attrs.getLength(); i++) {
+        Attr attr = (Attr) attrs.item(i);
+        root.removeAttribute(attr.getName());
+      }
+      // Not sure where this comes from but the above will not nuke it
+      root.removeAttribute("xmlns:xsi");
+
+      converter.print(doc);
+      output.flush();
+    } catch (ParserConfigurationException e) {
+      throw (IOException) new IOException().initCause(e);
+    } catch (SAXException e) {
+      throw (IOException) new IOException().initCause(e);
     }
+  }
 }

@@ -19,14 +19,12 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public class ListFactory
-    extends NamedFactory
-{
-    public ListFactory(final String name) {
-        super(name);
-    }
+public class ListFactory extends NamedFactory {
+  public ListFactory(final String name) {
+    super(name);
+  }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        return new ArrayList();
-    }
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    return new ArrayList();
+  }
 }

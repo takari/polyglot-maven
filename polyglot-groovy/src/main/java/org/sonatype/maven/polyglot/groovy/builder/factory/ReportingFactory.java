@@ -19,20 +19,18 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public class ReportingFactory
-    extends NamedFactory
-{
-    public ReportingFactory() {
-        super("reporting");
-    }
+public class ReportingFactory extends NamedFactory {
+  public ReportingFactory() {
+    super("reporting");
+  }
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
-        builder.getContext().put(Reporting.class.getName(), true);
-        return new Reporting();
-    }
+  public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attrs) throws InstantiationException, IllegalAccessException {
+    builder.getContext().put(Reporting.class.getName(), true);
+    return new Reporting();
+  }
 
-    @Override
-    public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
-        builder.getContext().remove(Reporting.class.getName());
-    }
+  @Override
+  public void onNodeCompleted(FactoryBuilderSupport builder, Object parent, Object node) {
+    builder.getContext().remove(Reporting.class.getName());
+  }
 }
