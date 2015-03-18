@@ -7,6 +7,7 @@
 .DS_Store
 log/
 target/
+bin/
 .tesla.pom.xml
 tesla-polyglot-*-SNAPSHOT/
 .cache
