@@ -20,24 +20,21 @@ import org.codehaus.plexus.component.annotations.Component;
  *
  * @since 0.7
  */
-@Component(role=Mapping.class, hint="xml")
-public class XmlMapping
-    extends MappingSupport
-{
-    public XmlMapping() {
-        super(null);
-        setPomNames("pom.xml");
-        setAcceptLocationExtensions(".xml", ".pom");
-        setAcceptOptionKeys("xml:4.0.0");
-    }
+@Component(role = Mapping.class, hint = "xml")
+public class XmlMapping extends MappingSupport {
+  public XmlMapping() {
+    super(null);
+    setPomNames("pom.xml");
+    setAcceptLocationExtensions(".xml", ".pom");
+    setAcceptOptionKeys("xml:4.0.0");
+  }
 
-    @Override
-    public boolean accept( Map<String, ?> options )
-    {
-        // assume StringModelSource is default maven, i.e. xml
-        if (options != null && options.get( ModelProcessor.SOURCE ) instanceof StringModelSource  ){
-            return true;
-        }
-        return super.accept( options );
+  @Override
+  public boolean accept(Map<String, ?> options) {
+    // assume StringModelSource is default maven, i.e. xml
+    if (options != null && options.get(ModelProcessor.SOURCE) instanceof StringModelSource) {
+      return true;
     }
+    return super.accept(options);
+  }
 }

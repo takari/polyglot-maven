@@ -20,17 +20,16 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public interface Mapping
-{
-    File locatePom(File dir);
+public interface Mapping {
+  File locatePom(File dir);
 
-    boolean accept(Map<String,?> options);
+  boolean accept(Map<String, ?> options);
 
-    ModelReader getReader();
+  ModelReader getReader();
 
-    ModelWriter getWriter();
+  ModelWriter getWriter();
 
-    float getPriority();
-    
-    String getFlavour();
+  float getPriority();
+
+  String getFlavour();
 }

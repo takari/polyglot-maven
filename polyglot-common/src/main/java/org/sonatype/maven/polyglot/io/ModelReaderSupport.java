@@ -30,24 +30,21 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public abstract class ModelReaderSupport
-    implements ModelReader
-{
-    public Model read(final File input, final  Map<String,?> options) throws IOException {
-        Model model;
+public abstract class ModelReaderSupport implements ModelReader {
+  public Model read(final File input, final Map<String, ?> options) throws IOException {
+    Model model;
 
-        Reader reader = new BufferedReader(new FileReader(input));
-        try {
-            model = read(reader, options);
-            model.setPomFile(input);
-        }
-        finally {
-            IOUtil.close(reader);
-        }
-        return model;
+    Reader reader = new BufferedReader(new FileReader(input));
+    try {
+      model = read(reader, options);
+      model.setPomFile(input);
+    } finally {
+      IOUtil.close(reader);
     }
+    return model;
+  }
 
-    public Model read(final InputStream input, final Map<String,?> options) throws IOException {
-        return read(new InputStreamReader(input), options);
-    }
+  public Model read(final InputStream input, final Map<String, ?> options) throws IOException {
+    return read(new InputStreamReader(input), options);
+  }
 }

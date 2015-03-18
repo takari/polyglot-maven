@@ -19,11 +19,10 @@ import org.apache.maven.project.MavenProject;
  *
  * @since 0.7
  */
-public interface ExecuteContext
-{
-    MavenProject getProject();
-    
-    File basedir();
-    
-    Log log();
+public interface ExecuteContext {
+  MavenProject getProject();
+
+  File basedir();
+
+  Log log();
 }

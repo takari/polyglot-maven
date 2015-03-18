@@ -7,6 +7,10 @@
  */
 package org.sonatype.maven.polyglot;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.locator.ModelLocator;
@@ -14,10 +18,6 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.sonatype.maven.polyglot.mapping.Mapping;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Manages the mapping for polyglot model support.
@@ -59,6 +59,7 @@ public class PolyglotModelManager implements ModelLocator {
     throw new RuntimeException("Unable determine model output format; options=" + options);
   }
 
+  @Override
   public File locatePom(final File dir) {
     assert dir != null;
 
@@ -76,22 +77,23 @@ public class PolyglotModelManager implements ModelLocator {
   }
 
   public String determinFlavourFromPom(final File dir) {
-      assert dir != null;
+    assert dir != null;
 
-      String flavour = null;
-      float mappingPriority = Float.MIN_VALUE;
-      for (Mapping mapping : mappings) {
-        File file = mapping.locatePom(dir);
-        if (file != null && (flavour == null || mappingPriority < mapping.getPriority())) {
-          flavour = mapping.getFlavour();
-          mappingPriority = mapping.getPriority();
-        }
+    String flavour = null;
+    float mappingPriority = Float.MIN_VALUE;
+    for (Mapping mapping : mappings) {
+      File file = mapping.locatePom(dir);
+      if (file != null && (flavour == null || mappingPriority < mapping.getPriority())) {
+        flavour = mapping.getFlavour();
+        mappingPriority = mapping.getPriority();
       }
-
-      return flavour;
     }
 
-  public String getFlavourFor( final Map<String, ?> options ) { 
+    return flavour;
+  }
+
+  public String getFlavourFor(final Map<String, ?> options) {
+    System.out.println("XXXX " + options);
     for (Mapping mapping : mappings) {
       if (mapping.accept(options)) {
         return mapping.getFlavour();

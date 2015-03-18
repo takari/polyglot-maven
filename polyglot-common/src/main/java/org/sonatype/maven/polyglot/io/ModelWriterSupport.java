@@ -26,27 +26,24 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public abstract class ModelWriterSupport
-    implements ModelWriter
-{
-    public void write(final File file, final Map<String,Object> options, final Model model) throws IOException {
-        assert file != null;
-        assert model != null;
+public abstract class ModelWriterSupport implements ModelWriter {
+  public void write(final File file, final Map<String, Object> options, final Model model) throws IOException {
+    assert file != null;
+    assert model != null;
 
-        OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
-        try {
-            write(out, options, model);
-            out.flush();
-        }
-        finally {
-            IOUtil.close(out);
-        }
+    OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+    try {
+      write(out, options, model);
+      out.flush();
+    } finally {
+      IOUtil.close(out);
     }
+  }
 
-    public void write(final OutputStream output, final Map<String,Object> options, final Model model) throws IOException {
-        assert output != null;
-        assert model != null;
+  public void write(final OutputStream output, final Map<String, Object> options, final Model model) throws IOException {
+    assert output != null;
+    assert model != null;
 
-        write(new OutputStreamWriter(output), options, model);
-    }
+    write(new OutputStreamWriter(output), options, model);
+  }
 }

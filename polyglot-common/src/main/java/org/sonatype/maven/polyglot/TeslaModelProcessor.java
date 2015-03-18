@@ -48,24 +48,17 @@ public class TeslaModelProcessor implements ModelProcessor {
     assert manager != null;
 
     File pomFile = manager.locatePom(dir);
-    if ( pomFile != null && 
-            ! pomFile.getName().endsWith( ".pom" ) && 
-            ! pomFile.getName().endsWith( ".xml" ) ) {
-        pomFile = new File( pomFile.getParentFile(), ".polyglot." + pomFile.getName() );
-        try
-        {
-            pomFile.createNewFile();
-            pomFile.deleteOnExit();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException( "error creating empty file", e );
-        }
-    }
-    else
-    {
-        // behave like proper maven in case there is no pom from manager
-        pomFile = new File(dir, "pom.xml");
+    if (pomFile != null && !pomFile.getName().endsWith(".pom") && !pomFile.getName().endsWith(".xml")) {
+      pomFile = new File(pomFile.getParentFile(), ".polyglot." + pomFile.getName());
+      try {
+        pomFile.createNewFile();
+        pomFile.deleteOnExit();
+      } catch (IOException e) {
+        throw new RuntimeException("error creating empty file", e);
+      }
+    } else {
+      // behave like proper maven in case there is no pom from manager
+      pomFile = new File(dir, "pom.xml");
     }
 
     return pomFile;
@@ -91,54 +84,51 @@ public class TeslaModelProcessor implements ModelProcessor {
   }
 
   @Override
-  @SuppressWarnings( { "unchecked", "rawtypes" } )
+  @SuppressWarnings({
+      "unchecked", "rawtypes"
+  })
   public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
     assert manager != null;
-    ModelSource source = (ModelSource) options.get( ModelProcessor.SOURCE );
-    if ( ( "" + source ).contains(  ".polyglot." ) ) {
-        System.out.println( source.getLocation() );
+    ModelSource source = (ModelSource) options.get(ModelProcessor.SOURCE);
+    if (("" + source).contains(".polyglot.")) {
+      System.out.println(source.getLocation());
 
-        File pom = new File( source.getLocation() );
-        source =  new FileModelSource( new File( pom.getPath().replaceFirst( "[.]polyglot[.]", "" ) ) );
+      File pom = new File(source.getLocation());
+      source = new FileModelSource(new File(pom.getPath().replaceFirst("[.]polyglot[.]", "")));
 
-        ((Map)options).put( ModelProcessor.SOURCE, source );
+      ((Map) options).put(ModelProcessor.SOURCE, source);
 
-        ModelReader reader = manager.getReaderFor(options);
-        Model model = reader.read(source.getInputStream(), options);
+      ModelReader reader = manager.getReaderFor(options);
+      Model model = reader.read(source.getInputStream(), options);
 
-        MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
-        StringWriter xml = new StringWriter();
-        xmlWriter.write( xml, model );
+      MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
+      StringWriter xml = new StringWriter();
+      xmlWriter.write(xml, model);
 
-        FileUtils.fileWrite( pom, xml.toString() );
+      FileUtils.fileWrite(pom, xml.toString());
 
-        // dump pom if filename is given via the pom properties
-        String dump = model.getProperties().getProperty( "polyglot.dump.pom" );
-        if ( dump == null )
-        {
-            // just nice to dump the pom.xml via commandline switch
-            dump = System.getProperty( "polyglot.dump.pom" );
+      // dump pom if filename is given via the pom properties
+      String dump = model.getProperties().getProperty("polyglot.dump.pom");
+      if (dump == null) {
+        // just nice to dump the pom.xml via commandline switch
+        dump = System.getProperty("polyglot.dump.pom");
+      }
+      if (dump != null) {
+        File dumpPom = new File(pom.getParentFile(), dump);
+        if (!dumpPom.exists() || !FileUtils.fileRead(dumpPom).equals(xml.toString())) {
+          dumpPom.setWritable(true);
+          FileUtils.fileWrite(dumpPom, xml.toString());
+          if ("true".equals(model.getProperties().getProperty("polyglot.dump.readonly"))) {
+            dumpPom.setReadOnly();
+          }
         }
-        if ( dump != null )
-        {
-            File dumpPom =  new File( pom.getParentFile(), dump );
-            if ( !dumpPom.exists() || ! FileUtils.fileRead( dumpPom ).equals( xml.toString() ) )
-            {
-                dumpPom.setWritable( true );
-                FileUtils.fileWrite( dumpPom, xml.toString() );
-                if ( "true".equals( model.getProperties().getProperty( "polyglot.dump.readonly" ) ) )
-                {
-                    dumpPom.setReadOnly();
-                }
-            }
-        }
+      }
 
-        model.setPomFile(pom);
-        return model;
-    }
-    else {
-        ModelReader reader = manager.getReaderFor(options);
-        return reader.read(input, options);
+      model.setPomFile(pom);
+      return model;
+    } else {
+      ModelReader reader = manager.getReaderFor(options);
+      return reader.read(input, options);
     }
   }
 }

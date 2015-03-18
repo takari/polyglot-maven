@@ -27,9 +27,7 @@ public class TeslaTranslatorCli {
       classWorld = new ClassWorld("plexus.core", Thread.currentThread().getContextClassLoader());
     }
 
-    ContainerConfiguration cc = new DefaultContainerConfiguration()
-      .setClassWorld(classWorld)
-      .setName("translator");
+    ContainerConfiguration cc = new DefaultContainerConfiguration().setClassWorld(classWorld).setName("translator");
 
     container = new DefaultPlexusContainer(cc);
     translator = container.lookup(TeslaModelTranslator.class);

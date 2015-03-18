@@ -20,18 +20,17 @@ import java.util.Map;
  *
  * @since 0.7
  */
-public interface ExecuteManager
-{
-    void register(Model model, List<ExecuteTask> tasks);
+public interface ExecuteManager {
+  void register(Model model, List<ExecuteTask> tasks);
 
-    List<ExecuteTask> getTasks(Model model);
+  List<ExecuteTask> getTasks(Model model);
 
-    /**
-     * @deprecated use install with extra options parameter
-     * @param model
-     */
-    @Deprecated
-    void install(Model model);
+  /**
+   * @deprecated use install with extra options parameter
+   * @param model
+   */
+  @Deprecated
+  void install(Model model);
 
-    void install( Model model, Map<String, ?> options );
+  void install(Model model, Map<String, ?> options);
 }

@@ -16,11 +16,11 @@ import org.codehaus.plexus.util.IOUtil;
 public class Constants {
 
   private static Properties polyglotProperties;
-  
+
   static {
     polyglotProperties = getPolyglotMavenProperties();
   }
-  
+
   public static String getGroupId() {
     return polyglotProperties.getProperty("groupId");
   }
