@@ -3,8 +3,7 @@
   This program and the accompanying materials are made available under the 
   terms of the Eclipse Public License v1.0 which accompanies this distribution, 
   and is available at http://www.eclipse.org/legal/epl-v10.html -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +15,7 @@
 
   <groupId>io.takari.polyglot</groupId>
   <artifactId>polyglot</artifactId>
-  <version>0.1.2-SNAPSHOT</version>
+  <version>0.1.2</version>
   <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
 
@@ -37,6 +36,7 @@
     <connection>scm:git:git@github.com:tesla/tesla-polyglot.git</connection>
     <developerConnection>scm:git:git@github.com:tesla/tesla-polyglot.git</developerConnection>
     <url>https://github.com/tesla/tesla-polyglot</url>
+    <tag>polyglot-0.1.2</tag>
   </scm>
 
   <modules>
@@ -55,12 +55,12 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-common</artifactId>
-        <version>0.1.2-SNAPSHOT</version>
+        <version>0.1.2</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-ruby</artifactId>
-        <version>0.1.2-SNAPSHOT</version>
+        <version>0.1.2</version>
       </dependency>
       <!-- We inline Maven's dependency management section to align dependency 
         versions from Maven's core -->
