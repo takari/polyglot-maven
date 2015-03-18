@@ -185,8 +185,11 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 		        .replaceAll("<properties>.*?</properties>", "")
                 // allow old style plugin definition to match new one
                 .replaceAll("\\$\\{tesla.version\\}", Constants.getVersion())
-		        // ??
-		        .replaceAll( "></(arg|chmod)>", "/>" );
+                // the test cases still use the old groupIds and artifactIds
+                .replaceAll("io.tesla.polyglot", "io.takari.polyglot")
+                .replaceAll("tesla-polyglot", "polyglot")
+                // some of the configuration tags are empty - unify them
+                .replaceAll( "></(arg|chmod)>", "/>" );
         if ( debug )
         {
             System.out.println(x);
