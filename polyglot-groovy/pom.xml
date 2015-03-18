@@ -13,7 +13,7 @@
     <version>0.1.3-SNAPSHOT</version>
   </parent>
 
-  <artifactId>tesla-polyglot-groovy</artifactId>
+  <artifactId>polyglot-groovy</artifactId>
   <name>Polyglot :: Groovy</name>
 
   <dependencies>
