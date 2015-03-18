@@ -29,7 +29,7 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.2.6-SNAPSHOT</mavenVersion>
+    <mavenVersion>3.3.1</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
   </properties>
 
@@ -44,13 +44,10 @@
     <module>tesla-polyglot-maven-plugin</module>    
     <module>tesla-polyglot-atom</module>
     <module>tesla-polyglot-ruby</module>
-    <!--
     <module>tesla-polyglot-scala</module>    
     <module>tesla-polyglot-groovy</module>
     <module>tesla-polyglot-yaml</module>
     <module>tesla-polyglot-clojure</module>
-    <module>tesla-polyglot-cli</module> <module>tesla-polyglot-scala</module>
-    -->
   </modules>
 
   <dependencyManagement>
@@ -58,6 +55,11 @@
       <dependency>
         <groupId>io.tesla.polyglot</groupId>
         <artifactId>tesla-polyglot-common</artifactId>
+        <version>0.1.2-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.tesla.polyglot</groupId>
+        <artifactId>tesla-polyglot-ruby</artifactId>
         <version>0.1.2-SNAPSHOT</version>
       </dependency>
       <!-- We inline Maven's dependency management section to align dependency 
