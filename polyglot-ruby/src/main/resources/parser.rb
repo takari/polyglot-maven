@@ -62,135 +62,140 @@ class ::String
   end
 end
 
-module Tesla
-  class Parser
+module Maven
+  module Polyglot
+    class Parser
 
-    def parse( pom, factory, src )
-      @factory = factory
+      def parse( pom, factory, src )
+        @factory = factory
 
-      if src and ( src.match /[.]gemspec$/ )
-        eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src ) 
-      else
-        eval_pom( "tesla do\n#{pom}\nend", src || '.' )
+        if src and ( src.match /[.]gemspec$/ )
+          eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src )
+        else
+          eval_pom( "tesla do\n#{pom}\nend", src || '.' )
+        end
+
+      ensure
+        # keep no state for the execute blocks
+        @factory = nil
       end
 
-    ensure
-      # keep no state for the execute blocks
-      @factory = nil      
-    end
+      private
 
-    private
+      include Maven::Tools::DSL
 
-    include Maven::Tools::DSL
+      # override hook from DSL
+      def add_execute_task( options, &block )
+        options[ :phase ] = retrieve_phase( options )
+        profile_id = @context == :profile ? @current.id : nil
+        @factory.add_execute_task( options[ :id ].to_s,
+                                   options[ :phase ].to_s,
+                                   profile_id,
+                                   block )
+      end
 
-    # override hook from DSL
-    def add_execute_task( options, &block )
-      options[ :phase ] = retrieve_phase( options )
-      profile_id = @context == :profile ? @current.id : nil
-      @factory.add_execute_task( options[ :id ].to_s,
-                                 options[ :phase ].to_s,
-                                 profile_id,
-                                 block )
-    end
+      def fill_options( receiver, options )
+        options.each do |k,v|
+          if v.is_a? Hash
+            props = java.util.Properties.new
+            v.each { |kk,vv| props[ kk.to_s ] = vv.to_s }
+            receiver.send( "#{k}=".to_sym, props )
+          else
+            fill( receiver, k, v )
+          end
+        end
+      end
 
-    def fill_options( receiver, options )
-      options.each do |k,v|
-        if v.is_a? Hash
+      def configuration( v )
+        if @context == :notifier
           props = java.util.Properties.new
           v.each { |kk,vv| props[ kk.to_s ] = vv.to_s }
-          receiver.send( "#{k}=".to_sym, props )        
+          @current.configuration = props
         else
-          fill( receiver, k, v )
+          set_config( @current, v )
         end
       end
-    end
-    
-    def configuration( v )
-      if @context == :notifier
-        props = java.util.Properties.new
-        v.each { |kk,vv| props[ kk.to_s ] = vv.to_s }
-        @current.configuration = props
-      else
-        set_config( @current, v )
-      end
-    end
 
-    class PropertiesWrapper
-       def initialize( prop )
-         @prop = prop
-       end
-       
-       def []=( key, val )
-         @prop[ key.to_s ] = val.to_s
-       end
-       
-       def method_missing( method, *args )
-         @prop.send( method, *args )
-       end
-    end
-    
-    def properties(props = {})
-      props.each do |k,v|
-        @current.properties[k.to_s] = v.to_s
-      end
-      PropertiesWrapper.new @current.properties
-    end
-    
-    def xml( xml )
-      Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
-    end
+      class PropertiesWrapper
+        def initialize( prop )
+          @prop = prop
+        end
 
-    def set_config( receiver, options )
-      prepare_config( receiver, options )
-      if options && options.size > 0
-        config = Xpp3Dom.new("configuration")
-        fill_dom( config, options )
-        receiver.configuration = config
-      end
-    end
+        def []=( key, val )
+          @prop[ key.to_s ] = val.to_s
+        end
 
-    def fill_dom(parent, map = {})
-      map.each do |k, v|
-        case v
-        when Hash
-          child = Xpp3Dom.new(k.to_s)
-          fill_dom(child, v)
-        when Array
-          if k.to_s.match( /s$/ )
-            node = Xpp3Dom.new( k.to_s )
-            name = k.to_s.sub( /s$/, '' )
-          else
-            node = parent
-            name = k.to_s
-          end
-          v.each do |val|
-            child = Xpp3Dom.new( name )
-            case val
-            when Hash
-              fill_dom( child, val )
-              node.addChild( child )
-            when Xpp3Dom
-              node.addChild( val )
+        def method_missing( method, *args )
+          @prop.send( method, *args )
+        end
+      end
+    
+      def properties(props = {})
+        props.each do |k,v|
+          @current.properties[k.to_s] = v.to_s
+        end
+        PropertiesWrapper.new @current.properties
+      end
+    
+      def xml( xml )
+        Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
+      end
+
+      def set_config( receiver, options )
+        prepare_config( receiver, options )
+        if options && options.size > 0
+          config = Xpp3Dom.new("configuration")
+          fill_dom( config, options )
+          receiver.configuration = config
+        end
+      end
+
+      def fill_dom(parent, map = {})
+        # sort attributes to stay consistent
+        map.keys.select { |k| k.to_s =~ /^@/ }.sort{ |m,n| m.to_s <=> n.to_s }.each do |k|
+          parent.setAttribute( k.to_s[ 1..-1 ], map[ k ] )
+        end
+        map.each do |k, v|
+          case v
+          when Hash
+            child = Xpp3Dom.new(k.to_s)
+            fill_dom(child, v)
+          when Array
+            if k.to_s.match( /s$/ )
+              node = Xpp3Dom.new( k.to_s )
+              name = k.to_s.sub( /s$/, '' )
             else
-              child.setValue( val.to_s )
-              node.addChild( child )
+              node = parent
+              name = k.to_s
+            end
+            v.each do |val|
+              child = Xpp3Dom.new( name )
+              case val
+              when Hash
+                fill_dom( child, val )
+                node.addChild( child )
+              when Xpp3Dom
+                node.addChild( val )
+              else
+                child.setValue( val.to_s )
+                node.addChild( child )
+              end
+            end
+            parent.addChild( node ) if node != parent
+            child = nil
+          else
+            case k.to_s
+            when /^@/
+        #      parent.setAttribute( k.to_s[ 1..-1 ], v.to_s )
+            else
+              child = Xpp3Dom.new(k.to_s)
+              child.setValue(v.to_s) unless v.nil?
             end
           end
-          parent.addChild( node ) if node != parent
-          child = nil
-        else
-          case k.to_s
-          when /^@/
-            parent.setAttribute( k.to_s[ 1..-1 ], v.to_s )
-          else
-            child = Xpp3Dom.new(k.to_s)
-            child.setValue(v.to_s) unless v.nil?
-          end
+          parent.addChild(child) if child
         end
-        parent.addChild(child) if child
       end
     end
   end
 end
-
-Tesla::Parser.new
+Maven::Polyglot::Parser.new

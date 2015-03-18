@@ -99,7 +99,7 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
 
             bytes.reset();
             tasks.get(2).execute(context);
-            assertEquals("#<Tesla::Parser",
+            assertEquals("#<Maven::Polyglot::Parser",
                     bytes.toString().replaceFirst( "Parser.*$", "Parser" ) );
             
         } finally {
