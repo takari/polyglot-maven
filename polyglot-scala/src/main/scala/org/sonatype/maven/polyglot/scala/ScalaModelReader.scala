@@ -108,7 +108,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     IOUtil.copy(reader, new FileOutputStream(evalPomFile))
     val sm = eval(evalPomFile, evalPomFile)
     val m = sm.asJava
-    sm.build.map(b => registerExecutors(m, b.tasks))
+    sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
   }
 
@@ -117,7 +117,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     FileUtils.copyStreamToFile(new RawInputStreamFacade(input), evalPomFile)
     val sm = eval(evalPomFile, evalPomFile)
     val m = sm.asJava
-    sm.build.map(b => registerExecutors(m, b.tasks))
+    sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
   }
 
@@ -125,7 +125,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     val evalPomFile = locateEvalPomFile(options)
     val sm = eval(evalPomFile, input).copy(pomFile = Some(input))
     val m = sm.asJava
-    sm.build.map(b => registerExecutors(m, b.tasks))
+    sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
   }
 
@@ -140,10 +140,10 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     new Eval(Some(evalPomFile.getParentFile)).apply[ScalaModel](sourcePomFile)
   }
 
-  private def registerExecutors(m: Model, tasks: Seq[Task]): Unit = {
+  private def registerExecutors(m: Model, options: util.Map[String, _], tasks: Seq[Task]): Unit = {
     import scala.collection.JavaConverters._
     executeManager.register(m, tasks.map(new ScalaTask(_).asInstanceOf[ExecuteTask]).asJava)
-    executeManager.install(m, Collections.emptyMap())
+    executeManager.install(m, options)
   }
 
 }
