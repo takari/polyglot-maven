@@ -56,155 +56,138 @@ import java.util.Properties;
  *
  * @since 0.7
  */
-public class ModelConstructor
-    extends Constructor
-{
-    public ModelConstructor()
-    {
-        super( Model.class );
+public class ModelConstructor extends Constructor {
+  public ModelConstructor() {
+    super(Model.class);
 
-        yamlConstructors.put( Tags.MAP, new ConstructXpp3Dom() );
+    yamlConstructors.put(Tags.MAP, new ConstructXpp3Dom());
 
-        TypeDescription desc;
+    TypeDescription desc;
 
-        desc = new TypeDescription( Model.class );
-        desc.putListPropertyType( "licenses", License.class );
-        desc.putListPropertyType( "mailingLists", MailingList.class );
-        desc.putListPropertyType( "dependencies", Dependency.class );
-        desc.putListPropertyType( "modules", String.class );
-        desc.putListPropertyType( "profiles", Profile.class );
-        desc.putListPropertyType( "repositories", Repository.class );
-        desc.putListPropertyType( "pluginRepositories", Repository.class );
-        desc.putListPropertyType( "developers", Developer.class );
-        desc.putListPropertyType( "contributors", Contributor.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Model.class);
+    desc.putListPropertyType("licenses", License.class);
+    desc.putListPropertyType("mailingLists", MailingList.class);
+    desc.putListPropertyType("dependencies", Dependency.class);
+    desc.putListPropertyType("modules", String.class);
+    desc.putListPropertyType("profiles", Profile.class);
+    desc.putListPropertyType("repositories", Repository.class);
+    desc.putListPropertyType("pluginRepositories", Repository.class);
+    desc.putListPropertyType("developers", Developer.class);
+    desc.putListPropertyType("contributors", Contributor.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( Dependency.class );
-        desc.putListPropertyType( "exclusions", Exclusion.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Dependency.class);
+    desc.putListPropertyType("exclusions", Exclusion.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( DependencyManagement.class );
-        desc.putListPropertyType( "dependencies", Dependency.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(DependencyManagement.class);
+    desc.putListPropertyType("dependencies", Dependency.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( Build.class );
-        desc.putListPropertyType( "extensions", Extension.class );
-        desc.putListPropertyType( "resources", Resource.class );
-        desc.putListPropertyType( "testResources", Resource.class );
-        desc.putListPropertyType( "filters", String.class );
-        desc.putListPropertyType( "plugins", Plugin.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Build.class);
+    desc.putListPropertyType("extensions", Extension.class);
+    desc.putListPropertyType("resources", Resource.class);
+    desc.putListPropertyType("testResources", Resource.class);
+    desc.putListPropertyType("filters", String.class);
+    desc.putListPropertyType("plugins", Plugin.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( BuildBase.class );
-        desc.putListPropertyType( "resources", Resource.class );
-        desc.putListPropertyType( "testResources", Resource.class );
-        desc.putListPropertyType( "filters", String.class );
-        desc.putListPropertyType( "plugins", Plugin.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(BuildBase.class);
+    desc.putListPropertyType("resources", Resource.class);
+    desc.putListPropertyType("testResources", Resource.class);
+    desc.putListPropertyType("filters", String.class);
+    desc.putListPropertyType("plugins", Plugin.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( PluginManagement.class );
-        desc.putListPropertyType( "plugins", Plugin.class );
-        addTypeDescription( desc );
-        
-        desc = new TypeDescription( Plugin.class );
-        desc.putListPropertyType( "executions", PluginExecution.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(PluginManagement.class);
+    desc.putListPropertyType("plugins", Plugin.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription ( PluginExecution.class );
-        desc.putListPropertyType ( "goals" , String.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Plugin.class);
+    desc.putListPropertyType("executions", PluginExecution.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( Reporting.class );
-        desc.putListPropertyType( "plugins", ReportPlugin.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(PluginExecution.class);
+    desc.putListPropertyType("goals", String.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( ReportPlugin.class );
-        desc.putListPropertyType( "reportSets", ReportSet.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Reporting.class);
+    desc.putListPropertyType("plugins", ReportPlugin.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( ReportSet.class );
-        desc.putListPropertyType( "reports", String.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(ReportPlugin.class);
+    desc.putListPropertyType("reportSets", ReportSet.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( CiManagement.class );
-        desc.putListPropertyType( "notifiers", Notifier.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(ReportSet.class);
+    desc.putListPropertyType("reports", String.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( Developer.class );
-        desc.putListPropertyType( "roles", String.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(CiManagement.class);
+    desc.putListPropertyType("notifiers", Notifier.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( Contributor.class );
-        desc.putListPropertyType( "roles", String.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Developer.class);
+    desc.putListPropertyType("roles", String.class);
+    addTypeDescription(desc);
 
-        desc = new TypeDescription( MailingList.class );
-        desc.putListPropertyType( "otherArchives", String.class );
-        addTypeDescription( desc );
+    desc = new TypeDescription(Contributor.class);
+    desc.putListPropertyType("roles", String.class);
+    addTypeDescription(desc);
 
-        // Simple types
-        addTypeDescription( new TypeDescription( DistributionManagement.class ) );
-        addTypeDescription( new TypeDescription( Scm.class ) );
-        addTypeDescription( new TypeDescription( IssueManagement.class ) );
-        addTypeDescription( new TypeDescription( Parent.class ) );
-        addTypeDescription( new TypeDescription( Organization.class ) );
+    desc = new TypeDescription(MailingList.class);
+    desc.putListPropertyType("otherArchives", String.class);
+    addTypeDescription(desc);
+
+    // Simple types
+    addTypeDescription(new TypeDescription(DistributionManagement.class));
+    addTypeDescription(new TypeDescription(Scm.class));
+    addTypeDescription(new TypeDescription(IssueManagement.class));
+    addTypeDescription(new TypeDescription(Parent.class));
+    addTypeDescription(new TypeDescription(Organization.class));
+  }
+
+  @Override
+  protected Map<Object, Object> constructMapping(MappingNode node) {
+    Map<Object, Object> mapping = createDefaultMap(node);
+    constructMapping2ndStep(node, mapping);
+    return mapping;
+  }
+
+  // TODO: This should be moved down to SnakeYAML, we shouldn't need to tell how to map Properties
+  protected Map<Object, Object> createDefaultMap(Node node) {
+    if (node.getType() != null && Properties.class.isAssignableFrom(node.getType())) {
+      return new Properties();
+    } else {
+      // respect order from YAML document
+      return new LinkedHashMap<Object, Object>();
+    }
+  }
+
+  private class ConstructXpp3Dom implements Construct {
+    private Xpp3Dom toDom(Map<Object, Object> map) {
+      Xpp3Dom dom = new Xpp3Dom("configuration");
+
+      for (Map.Entry<Object, Object> entry : map.entrySet()) {
+        if (entry.getValue() instanceof Xpp3Dom) {
+          Xpp3Dom child = new Xpp3Dom((Xpp3Dom) entry.getValue(), entry.getKey().toString());
+          dom.addChild(child);
+        } else {
+          Xpp3Dom child = new Xpp3Dom(entry.getKey().toString());
+          child.setValue(entry.getValue().toString());
+          dom.addChild(child);
+        }
+      }
+
+      return dom;
     }
 
-    @Override
-    protected Map<Object, Object> constructMapping( MappingNode node )
-    {
-        Map<Object, Object> mapping = createDefaultMap( node );
-        constructMapping2ndStep( node, mapping );
-        return mapping;
+    public Object construct(Node node) {
+      return toDom(constructMapping((MappingNode) node));
     }
 
-    // TODO: This should be moved down to SnakeYAML, we shouldn't need to tell how to map Properties
-    protected Map<Object, Object> createDefaultMap( Node node )
-    {
-        if ( node.getType() != null && Properties.class.isAssignableFrom( node.getType() ) )
-        {
-            return new Properties();
-        }
-        else
-        {
-            // respect order from YAML document
-            return new LinkedHashMap<Object, Object>();
-        }
+    public void construct2ndStep(Node node, Object object) {
+      throw new YAMLException("Unexpected recursive mapping structure. Node: " + node);
     }
-
-    private class ConstructXpp3Dom
-        implements Construct
-    {
-        private Xpp3Dom toDom( Map<Object, Object> map )
-        {
-            Xpp3Dom dom = new Xpp3Dom( "configuration" );
-
-            for ( Map.Entry<Object, Object> entry : map.entrySet() )
-            {
-                if ( entry.getValue() instanceof Xpp3Dom )
-                {
-                    Xpp3Dom child = new Xpp3Dom( (Xpp3Dom) entry.getValue(), entry.getKey().toString() );
-                    dom.addChild( child );
-                }
-                else
-                {
-                    Xpp3Dom child = new Xpp3Dom( entry.getKey().toString() );
-                    child.setValue( entry.getValue().toString() );
-                    dom.addChild( child );
-                }
-            }
-
-            return dom;
-        }
-
-        public Object construct( Node node )
-        {
-            return toDom( constructMapping( (MappingNode) node ) );
-        }
-
-        public void construct2ndStep( Node node, Object object )
-        {
-            throw new YAMLException( "Unexpected recursive mapping structure. Node: " + node );
-        }
-    }
+  }
 }

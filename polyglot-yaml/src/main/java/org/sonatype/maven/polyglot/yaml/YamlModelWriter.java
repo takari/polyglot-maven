@@ -31,23 +31,19 @@ import java.util.Map;
  * @since 0.7
  */
 @Component(role = ModelWriter.class, hint = "yaml")
-public class YamlModelWriter
-    extends ModelWriterSupport
-{
-    public void write( Writer output, Map<String, Object> o, Model model )
-        throws IOException
-    {
-        DumperOptions options = new DumperOptions();
-        options.setExplicitRoot( Tags.MAP );
-        options.setDefaultFlowStyle( FlowStyle.AUTO );
-        options.setIndent( 2 );
-        options.setWidth( 80 );
+public class YamlModelWriter extends ModelWriterSupport {
+  public void write(Writer output, Map<String, Object> o, Model model) throws IOException {
+    DumperOptions options = new DumperOptions();
+    options.setExplicitRoot(Tags.MAP);
+    options.setDefaultFlowStyle(FlowStyle.AUTO);
+    options.setIndent(2);
+    options.setWidth(80);
 
-        Representer representer = new ModelRepresenter();
+    Representer representer = new ModelRepresenter();
 
-        Dumper dumper = new Dumper( representer, options );
-        Yaml yaml = new Yaml( dumper );
-        yaml.dump( model, output );
-    }
+    Dumper dumper = new Dumper(representer, options);
+    Yaml yaml = new Yaml(dumper);
+    yaml.dump(model, output);
+  }
 
 }

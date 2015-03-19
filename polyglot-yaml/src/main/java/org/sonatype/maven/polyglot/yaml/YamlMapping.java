@@ -18,15 +18,13 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  *
  * @since 0.7
  */
-@Component(role=Mapping.class, hint="yaml")
-public class YamlMapping
-    extends MappingSupport
-{
-    public YamlMapping() {
-        super("yaml");
-        setPomNames("pom.yml");
-        setAcceptLocationExtensions(".yml", ".yaml");
-        setAcceptOptionKeys("yaml:4.0.0");
-        setPriority( -2 );
-    }
+@Component(role = Mapping.class, hint = "yaml")
+public class YamlMapping extends MappingSupport {
+  public YamlMapping() {
+    super("yaml");
+    setPomNames("pom.yml");
+    setAcceptLocationExtensions(".yml", ".yaml");
+    setAcceptOptionKeys("yaml:4.0.0");
+    setPriority(-2);
+  }
 }

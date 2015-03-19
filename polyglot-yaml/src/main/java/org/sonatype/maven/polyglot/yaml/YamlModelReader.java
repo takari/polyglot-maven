@@ -28,26 +28,20 @@ import java.util.Map;
  * @since 0.7
  */
 @Component(role = ModelReader.class, hint = "yaml")
-public class YamlModelReader
-    extends ModelReaderSupport
-{
-    private final Yaml yaml;
+public class YamlModelReader extends ModelReaderSupport {
+  private final Yaml yaml;
 
-    public YamlModelReader()
-    {
-        ModelConstructor constructor = new ModelConstructor();
-        Loader loader = new Loader( constructor );
-        yaml = new Yaml( loader );
+  public YamlModelReader() {
+    ModelConstructor constructor = new ModelConstructor();
+    Loader loader = new Loader(constructor);
+    yaml = new Yaml(loader);
+  }
+
+  public Model read(Reader input, Map<String, ?> options) throws IOException, ModelParseException {
+    if (input == null) {
+      throw new IllegalArgumentException("YAML Reader is null.");
     }
 
-    public Model read( Reader input, Map<String, ?> options )
-        throws IOException, ModelParseException
-    {
-        if ( input == null )
-        {
-            throw new IllegalArgumentException( "YAML Reader is null." );
-        }
-
-        return (Model) yaml.load( input );
-    }
+    return (Model) yaml.load(input);
+  }
 }
