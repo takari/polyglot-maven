@@ -41,13 +41,14 @@
 
   <modules>
     <module>polyglot-common</module>
-    <module>polyglot-maven-plugin</module>    
     <module>polyglot-atom</module>
     <module>polyglot-ruby</module>
     <module>polyglot-scala</module>    
     <module>polyglot-groovy</module>
     <module>polyglot-yaml</module>
     <module>polyglot-clojure</module>
+    <module>polyglot-maven-plugin</module>    
+    <module>polyglot-translate-plugin</module>    
   </modules>
 
   <dependencyManagement>
@@ -62,6 +63,26 @@
         <artifactId>polyglot-ruby</artifactId>
         <version>0.1.6-SNAPSHOT</version>
       </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-groovy</artifactId>
+        <version>0.1.6-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-atom</artifactId>
+        <version>0.1.6-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-scala</artifactId>
+        <version>0.1.6-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-yaml</artifactId>
+        <version>0.1.6-SNAPSHOT</version>
+      </dependency>      
       <!-- We inline Maven's dependency management section to align dependency 
         versions from Maven's core -->
       <dependency>
