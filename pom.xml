@@ -15,7 +15,7 @@
 
   <groupId>io.takari.polyglot</groupId>
   <artifactId>polyglot</artifactId>
-  <version>0.1.6</version>
+  <version>0.1.7-SNAPSHOT</version>
   <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
 
@@ -36,7 +36,7 @@
     <connection>scm:git:git@github.com:tesla/tesla-polyglot.git</connection>
     <developerConnection>scm:git:git@github.com:tesla/tesla-polyglot.git</developerConnection>
     <url>https://github.com/tesla/tesla-polyglot</url>
-    <tag>polyglot-0.1.6</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <modules>
@@ -56,32 +56,32 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-common</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-ruby</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-groovy</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-atom</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-scala</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-yaml</artifactId>
-        <version>0.1.6</version>
+        <version>0.1.7-SNAPSHOT</version>
       </dependency>      
       <!-- We inline Maven's dependency management section to align dependency 
         versions from Maven's core -->
