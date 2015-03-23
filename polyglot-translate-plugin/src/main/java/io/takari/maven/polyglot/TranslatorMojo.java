@@ -14,37 +14,35 @@ import java.net.URL;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.sonatype.maven.polyglot.TeslaModelTranslator;
 
 /**
  * Polgyglot model translator Mojo.
  * 
- * @goal translate
+ * @author Jason van Zyl
  */
+@Mojo(name = "translate", requiresProject = false)
 public class TranslatorMojo extends AbstractMojo {
 
-  /** @component */
+  @Component
   private TeslaModelTranslator translator;
 
-  /**
-   * @parameter expression="${input}"
-   * @required
-   */
+  @Parameter(required = true, property = "input")
   private File input;
 
-  /**
-   * @parameter expression="${output}"
-   * @required
-   */
+  @Parameter(required = true, property = "output")
   private File output;
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    getLog().info(String.format("Translating %s -> %s",input, output));
+    getLog().info(String.format("Translating %s -> %s", input, output));
     try {
       translate(input, output);
     } catch (IOException e) {
-      throw new MojoExecutionException(String.format("Error translating %s -> %s",input, output), e);
+      throw new MojoExecutionException(String.format("Error translating %s -> %s", input, output), e);
     }
   }
 

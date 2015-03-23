@@ -27,6 +27,11 @@
       <artifactId>maven-plugin-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>    
   </dependencies>
 
   <build>
@@ -41,5 +46,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>
