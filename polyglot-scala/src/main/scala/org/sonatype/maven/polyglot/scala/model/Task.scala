@@ -25,6 +25,6 @@ class PrettiedTask(t: Task) {
     args += assignString("id", t.id)
     args += assignString("phase", t.phase)
     t.profileId.foreach(args += assignString("profileId", _))
-    `object`("Task", args) <+> "{compiled code}"
+    `object`("Task", args.toList) <+> "{compiled code}"
   }
 }

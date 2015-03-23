@@ -30,7 +30,7 @@ class PrettiedIssueManagement(im: IssueManagement) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     im.system.foreach(args += assignString("system", _))
     im.url.foreach(args += assignString("url", _))
-    `object`("IssueManagement", args)
+    `object`("IssueManagement", args.toList)
   }
 }
 

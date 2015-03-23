@@ -35,7 +35,7 @@ class PrettiedSite(s: Site) {
     s.id.foreach(args += assignString("id", _))
     s.name.foreach(args += assignString("name", _))
     s.url.foreach(args += assignString("url", _))
-    `object`("Site", args)
+    `object`("Site", args.toList)
   }
 }
 

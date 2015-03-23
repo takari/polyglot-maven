@@ -31,7 +31,7 @@ class PrettiedActivationFile(aFile: ActivationFile) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     aFile.missing.foreach(args += assignString("missing", _))
     aFile.exists.foreach(args += assignString("exists", _))
-    `object`("ActivationFile", args)
+    `object`("ActivationFile", args.toList)
   }
 }
 

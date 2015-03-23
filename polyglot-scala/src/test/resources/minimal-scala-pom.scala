@@ -1,4 +1,5 @@
 import org.sonatype.maven.polyglot.scala.model._
+import scala.collection.immutable.Seq
 
 Model(
   "someGroupId" % "someArtifactId" % "someVersion",
@@ -19,7 +20,7 @@ Model(
                   pluginExecutionFilter = Config(
                     groupId = "net.alchim31.maven",
                     artifactId = "scala-maven-plugin",
-                    versionRange = "[3.1.5,)",
+                    versionRange = "[3.2.0,)",
                     goals = Config(
                       goal = "add-source",
                       goal = "compile",
@@ -38,7 +39,7 @@ Model(
     ),
     plugins = Seq(
       Plugin(
-        "org.apache.maven.plugins" % "maven-compiler-plugin",
+        "org.apache.maven.plugins" % "maven-compiler-plugin" % "3.2",
         executions = Seq(
           Execution(
             id = "default-compile",
@@ -47,7 +48,7 @@ Model(
         )
       ),
       Plugin(
-        "net.alchim31.maven" % "scala-maven-plugin" % "3.1.5",
+        "net.alchim31.maven" % "scala-maven-plugin" % "3.2.0",
         executions = Seq(
           Execution(
             goals = Seq(
@@ -65,7 +66,7 @@ Model(
         )
       ),
       Plugin(
-        "org.apache.maven.plugins" % "maven-surefire-plugin",
+        "org.apache.maven.plugins" % "maven-surefire-plugin" % "2.18.1",
         configuration = Config(
           includes = Config(
             include = "%regex[.*Spec.*]"

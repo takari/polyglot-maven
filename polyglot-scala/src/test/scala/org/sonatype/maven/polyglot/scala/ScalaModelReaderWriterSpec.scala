@@ -20,7 +20,7 @@ import java.util.Collections
 import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
 import java.util
 import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, Model => ScalaRawModel, Task => ScalaModelTask}
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 import org.apache.maven.project.MavenProject
 
 @RunWith(classOf[JUnitRunner])
@@ -92,14 +92,14 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
     "read, write and compare a typical pom" in {
       readWriteAndCompare("typical-pom.scala")
     }
-    "prettyify a task properly" in {
+    "prettify a task properly" in {
       import model._
       import ScalaPrettyPrinter._
 
       val m = ScalaRawModel(
         "someGroupId" % "someArtifactId" % "someVersion",
         ScalaBuild(
-          tasks = Seq(
+          tasks = immutable.Seq(
             ScalaModelTask("someId", "somePhase") {
               ec => println("here I am")
             }
@@ -121,14 +121,14 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
                    |  )
                    |)""".stripMargin
     }
-    "prettyify a task with a profile" in {
+    "prettify a task with a profile" in {
       import model._
       import ScalaPrettyPrinter._
 
       val m = ScalaRawModel(
         "someGroupId" % "someArtifactId" % "someVersion",
         ScalaBuild(
-          tasks = Seq(
+          tasks = immutable.Seq(
             ScalaModelTask("someId", "somePhase", "someProfileId") {
               ec => println("here I am")
             }
@@ -155,8 +155,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
       val m = readScalaModel("tasks-pom.scala")
       val tasks = TestExecuteManager.getTasks(m).asScala
       tasks.size must_== 1
-      tasks(0).getId must_== "someId"
-      tasks(0).getPhase must_== "compile"
+      tasks.head.getId must_== "someId"
+      tasks.head.getPhase must_== "compile"
       val project = new MavenProject
       val ec = new ExecuteContext {
         def getProject: MavenProject = project
@@ -165,7 +165,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
 
         def log: org.apache.maven.plugin.logging.Log = null
       }
-      tasks(0).execute(ec)
+      tasks.head.execute(ec)
       project.getArtifactId must_== "We executed!"
     }
     "format a configuration with an attribute properly" in {
@@ -175,11 +175,11 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
       val m = ScalaRawModel(
         "someGroupId" % "someArtifactId" % "someVersion",
         ScalaBuild(
-          plugins = Seq(
+          plugins = immutable.Seq(
             Plugin(
               "someGroupId" % "someArtifactId" % "someVersion",
               extensions = true,
-              executions = Seq(
+              executions = immutable.Seq(
                 Execution(
                   configuration = Config(
                     `@someattr` = "someAttr",

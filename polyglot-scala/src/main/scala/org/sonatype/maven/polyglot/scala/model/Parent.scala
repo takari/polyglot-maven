@@ -31,7 +31,7 @@ class PrettiedParent(p: Parent) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     p.gav.foreach(gav => args += assign("gav", gav.asDoc))
     Some(p.relativePath).filterNot(_ == "../pom.xml").foreach(args += assignString("relativePath", _))
-    `object`("Parent", args)
+    `object`("Parent", args.toList)
   }
 }
 

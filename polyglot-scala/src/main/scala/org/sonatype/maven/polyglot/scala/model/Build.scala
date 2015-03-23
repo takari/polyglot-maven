@@ -7,22 +7,24 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Build(
              val sourceDirectory: Option[String],
              val scriptSourceDirectory: Option[String],
              val testSourceDirectory: Option[String],
              val outputDirectory: Option[String],
              val testOutputDirectory: Option[String],
-             val extensions: Seq[Extension],
+             val extensions: immutable.Seq[Extension],
              defaultGoal: Option[String],
-             resources: Seq[Resource],
-             testResources: Seq[Resource],
+             resources: immutable.Seq[Resource],
+             testResources: immutable.Seq[Resource],
              directory: Option[String],
              finalName: Option[String],
-             filters: Seq[String],
+             filters: immutable.Seq[String],
              pluginManagement: Option[PluginManagement],
-             plugins: Seq[Plugin],
-             tasks: Seq[Task]
+             plugins: immutable.Seq[Plugin],
+             tasks: immutable.Seq[Task]
              )
   extends
   BuildBase(
@@ -44,16 +46,16 @@ object Build {
              testSourceDirectory: String = null,
              outputDirectory: String = null,
              testOutputDirectory: String = null,
-             extensions: Seq[Extension] = Nil,
+             extensions: immutable.Seq[Extension] = Nil,
              defaultGoal: String = null,
-             resources: Seq[Resource] = Nil,
-             testResources: Seq[Resource] = Nil,
+             resources: immutable.Seq[Resource] = Nil,
+             testResources: immutable.Seq[Resource] = Nil,
              directory: String = null,
              finalName: String = null,
-             filters: Seq[String] = Nil,
+             filters: immutable.Seq[String] = Nil,
              pluginManagement: PluginManagement = null,
-             plugins: Seq[Plugin] = Nil,
-             tasks: Seq[Task] = Nil
+             plugins: immutable.Seq[Plugin] = Nil,
+             tasks: immutable.Seq[Task] = Nil
              ) =
     new Build(
       Option(sourceDirectory),
@@ -87,7 +89,7 @@ class PrettiedBuild(b: Build) {
     b.testOutputDirectory.foreach(args += assignString("testOutputDirectory", _))
     Some(b.extensions).filterNot(_.isEmpty).foreach(es => args += assign("extensions", seq(es.map(_.asDoc))))
     args ++= b.asDocArgs
-    `object`("Build", args)
+    `object`("Build", args.toList)
   }
 }
 
@@ -104,15 +106,15 @@ class ConvertibleMavenBuild(mb: MavenBuild) {
       mb.getTestSourceDirectory,
       mb.getOutputDirectory,
       mb.getTestOutputDirectory,
-      mb.getExtensions.asScala.map(_.asScala),
+      mb.getExtensions.asScala.map(_.asScala).toList,
       mb.getDefaultGoal,
-      mb.getResources.asScala.map(_.asScala),
-      mb.getTestResources.asScala.map(_.asScala),
+      mb.getResources.asScala.map(_.asScala).toList,
+      mb.getTestResources.asScala.map(_.asScala).toList,
       mb.getDirectory,
       mb.getFinalName,
-      mb.getFilters.asScala,
+      mb.getFilters.asScala.toList,
       Option(mb.getPluginManagement).map(_.asScala).orNull,
-      mb.getPlugins.asScala.map(_.asScala)
+      mb.getPlugins.asScala.map(_.asScala).toList
     )
   }
 }

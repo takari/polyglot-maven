@@ -19,7 +19,7 @@ class PrettiedPrerequisites(ps: Prerequisites) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     Option(ps.maven).filterNot(_ == "2.0").foreach(args += assignString("maven", _))
-    `object`("Prerequisites", args)
+    `object`("Prerequisites", args.toList)
   }
 }
 

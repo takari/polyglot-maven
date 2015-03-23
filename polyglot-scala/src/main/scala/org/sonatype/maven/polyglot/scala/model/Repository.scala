@@ -37,10 +37,12 @@ object Repository {
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
+import scala.collection.immutable
+
 class PrettiedRepository(r: Repository) {
   def asDoc: Doc = `object`("Repository", asDocArgs)
 
-  def asDocArgs: Seq[Doc] = {
+  def asDocArgs: immutable.Seq[Doc] = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     r.releases.foreach(rs => args += assign("releases", rs.asDoc))
     r.snapshots.foreach(ss => args += assign("snapshots", ss.asDoc))
@@ -48,7 +50,7 @@ class PrettiedRepository(r: Repository) {
     r.name.foreach(args += assignString("name", _))
     r.url.foreach(args += assignString("url", _))
     Option(r.layout).filterNot(_ == "default").foreach(args += assignString("layout", _))
-    args
+    args.toList
   }
 }
 

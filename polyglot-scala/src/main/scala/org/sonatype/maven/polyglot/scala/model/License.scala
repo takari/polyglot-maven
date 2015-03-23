@@ -38,7 +38,7 @@ class PrettiedLicense(im: License) {
     im.url.foreach(args += assignString("url", _))
     im.distribution.foreach(args += assignString("distribution", _))
     im.comments.foreach(args += assignString("comments", _))
-    `object`("License", args)
+    `object`("License", args.toList)
   }
 }
 

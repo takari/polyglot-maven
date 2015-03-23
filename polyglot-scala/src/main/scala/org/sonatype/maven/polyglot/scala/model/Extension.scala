@@ -19,7 +19,7 @@ import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 class PrettiedExtension(e: Extension) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer(e.gav.asDoc)
-    `object`("Extension", args)
+    `object`("Extension", args.toList)
   }
 }
 

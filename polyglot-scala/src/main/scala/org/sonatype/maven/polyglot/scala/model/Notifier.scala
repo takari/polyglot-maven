@@ -51,7 +51,7 @@ class PrettiedNotifier(n: Notifier) {
     Some(n.sendOnSuccess).filterNot(_ == true).foreach(e => args += assign("sendOnSuccess", e.toString))
     Some(n.sendOnWarning).filterNot(_ == true).foreach(e => args += assign("sendOnWarning", e.toString))
     Some(n.`type`).filterNot(_ == "mail").foreach(args += assignString("`type`", _))
-    `object`("Notifier", args)
+    `object`("Notifier", args.toList)
   }
 }
 

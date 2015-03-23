@@ -7,13 +7,15 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class MailingList(
                    val name: Option[String],
                    val subscribe: Option[String],
                    val unsubscribe: Option[String],
                    val post: Option[String],
                    val archive: Option[String],
-                   val otherArchives: Seq[String]
+                   val otherArchives: immutable.Seq[String]
                    )
 
 object MailingList {
@@ -23,7 +25,7 @@ object MailingList {
              unsubscribe: String = null,
              post: String = null,
              archive: String = null,
-             otherArchives: Seq[String] = Nil
+             otherArchives: immutable.Seq[String] = Nil
              ) =
     new MailingList(
       Option(name),
@@ -46,7 +48,7 @@ class PrettiedMailingList(ml: MailingList) {
     ml.post.foreach(args += assignString("post", _))
     ml.archive.foreach(args += assignString("archive", _))
     Some(ml.otherArchives).filterNot(_.isEmpty).foreach(ds => args += assign("otherArchives", seqString(ds)))
-    `object`("MailingList", args)
+    `object`("MailingList", args.toList)
   }
 }
 
@@ -62,7 +64,7 @@ class ConvertibleMavenMailingList(mml: MavenMailingList) {
       mml.getUnsubscribe,
       mml.getPost,
       mml.getArchive,
-      mml.getOtherArchives.asScala
+      mml.getOtherArchives.asScala.toList
     )
   }
 }

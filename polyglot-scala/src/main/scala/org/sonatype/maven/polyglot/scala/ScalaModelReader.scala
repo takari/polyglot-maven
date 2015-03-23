@@ -13,7 +13,7 @@ import com.twitter.util.Eval
 import org.sonatype.maven.polyglot.scala.model.{Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Config => ScalaConfig, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Scm => ScalaScm, Site => ScalaSite, _}
 import org.codehaus.plexus.util.{FileUtils, IOUtil}
 import java.io._
-import scala.Some
+import scala.collection.immutable
 import scala.language.implicitConversions
 import java.io.File
 import org.apache.maven.model.Model
@@ -21,77 +21,109 @@ import org.codehaus.plexus.util.io.RawInputStreamFacade
 import org.sonatype.maven.polyglot.PolyglotModelUtil
 import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
 import javax.inject.{Named, Inject}
-import java.util.Collections
 
 /**
  * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
  */
 object ScalaConverters {
-  implicit def enrichScalaActivation(v: ScalaActivation) = new ConvertibleScalaActivation(v)
+  implicit def enrichScalaActivation(v: ScalaActivation): ConvertibleScalaActivation =
+    new ConvertibleScalaActivation(v)
 
-  implicit def enrichScalaActivationFile(v: ScalaActivationFile) = new ConvertibleScalaActivationFile(v)
+  implicit def enrichScalaActivationFile(v: ScalaActivationFile): ConvertibleScalaActivationFile =
+    new ConvertibleScalaActivationFile(v)
 
-  implicit def enrichScalaActivationOS(v: ScalaActivationOS) = new ConvertibleScalaActivationOS(v)
+  implicit def enrichScalaActivationOS(v: ScalaActivationOS): ConvertibleScalaActivationOS =
+    new ConvertibleScalaActivationOS(v)
 
-  implicit def enrichScalaActivationProperty(v: ScalaActivationProperty) = new ConvertibleScalaActivationProperty(v)
+  implicit def enrichScalaActivationProperty(v: ScalaActivationProperty): ConvertibleScalaActivationProperty =
+    new ConvertibleScalaActivationProperty(v)
 
-  implicit def enrichScalaBuild(v: ScalaBuild) = new ConvertibleScalaBuild(v)
+  implicit def enrichScalaBuild(v: ScalaBuild): ConvertibleScalaBuild =
+    new ConvertibleScalaBuild(v)
 
-  implicit def enrichScalaBuildBase(v: ScalaBuildBase) = new ConvertibleScalaBuildBase(v)
+  implicit def enrichScalaBuildBase(v: ScalaBuildBase): ConvertibleScalaBuildBase =
+    new ConvertibleScalaBuildBase(v)
 
-  implicit def enrichScalaCiManagement(v: ScalaCiManagement) = new ConvertibleScalaCiManagement(v)
+  implicit def enrichScalaCiManagement(v: ScalaCiManagement): ConvertibleScalaCiManagement =
+    new ConvertibleScalaCiManagement(v)
 
-  implicit def enrichScalaConfig(v: ScalaConfig) = new ConvertibleScalaConfig(v)
+  implicit def enrichScalaConfig(v: ScalaConfig): ConvertibleScalaConfig =
+    new ConvertibleScalaConfig(v)
 
-  implicit def enrichScalaContributor(v: ScalaContributor) = new ConvertibleScalaContributor(v)
+  implicit def enrichScalaContributor(v: ScalaContributor): ConvertibleScalaContributor =
+    new ConvertibleScalaContributor(v)
 
-  implicit def enrichScalaDependency(v: ScalaDependency) = new ConvertibleScalaDependency(v)
+  implicit def enrichScalaDependency(v: ScalaDependency): ConvertibleScalaDependency =
+    new ConvertibleScalaDependency(v)
 
-  implicit def enrichScalaDependencyManagement(v: ScalaDependencyManagement) = new ConvertibleScalaDependencyManagement(v)
+  implicit def enrichScalaDependencyManagement(v: ScalaDependencyManagement): ConvertibleScalaDependencyManagement =
+    new ConvertibleScalaDependencyManagement(v)
 
-  implicit def enrichScalaDeploymentRepository(v: ScalaDeploymentRepository) = new ConvertibleScalaDeploymentRepository(v)
+  implicit def enrichScalaDeploymentRepository(v: ScalaDeploymentRepository): ConvertibleScalaDeploymentRepository =
+    new ConvertibleScalaDeploymentRepository(v)
 
-  implicit def enrichScalaDeveloper(v: ScalaDeveloper) = new ConvertibleScalaDeveloper(v)
+  implicit def enrichScalaDeveloper(v: ScalaDeveloper): ConvertibleScalaDeveloper =
+    new ConvertibleScalaDeveloper(v)
 
-  implicit def enrichScalaDistributionManagement(v: ScalaDistributionManagement) = new ConvertibleScalaDistributionManagement(v)
+  implicit def enrichScalaDistributionManagement(v: ScalaDistributionManagement): ConvertibleScalaDistributionManagement =
+    new ConvertibleScalaDistributionManagement(v)
 
-  implicit def enrichScalaExecution(v: ScalaExecution) = new ConvertibleScalaExecution(v)
+  implicit def enrichScalaExecution(v: ScalaExecution): ConvertibleScalaExecution =
+    new ConvertibleScalaExecution(v)
 
-  implicit def enrichScalaExtension(v: ScalaExtension) = new ConvertibleScalaExtension(v)
+  implicit def enrichScalaExtension(v: ScalaExtension): ConvertibleScalaExtension =
+    new ConvertibleScalaExtension(v)
 
-  implicit def enrichScalaIssueManagement(v: ScalaIssueManagement) = new ConvertibleScalaIssueManagement(v)
+  implicit def enrichScalaIssueManagement(v: ScalaIssueManagement): ConvertibleScalaIssueManagement =
+    new ConvertibleScalaIssueManagement(v)
 
-  implicit def enrichScalaLicense(v: ScalaLicense) = new ConvertibleScalaLicense(v)
+  implicit def enrichScalaLicense(v: ScalaLicense): ConvertibleScalaLicense =
+    new ConvertibleScalaLicense(v)
 
-  implicit def enrichScalaMailingList(v: ScalaMailingList) = new ConvertibleScalaMailingList(v)
+  implicit def enrichScalaMailingList(v: ScalaMailingList): ConvertibleScalaMailingList =
+    new ConvertibleScalaMailingList(v)
 
-  implicit def enrichScalaModel(v: ScalaModel) = new ConvertibleScalaModel(v)
+  implicit def enrichScalaModel(v: ScalaModel): ConvertibleScalaModel =
+    new ConvertibleScalaModel(v)
 
-  implicit def enrichScalaNotifier(v: ScalaNotifier) = new ConvertibleScalaNotifier(v)
+  implicit def enrichScalaNotifier(v: ScalaNotifier): ConvertibleScalaNotifier =
+    new ConvertibleScalaNotifier(v)
 
-  implicit def enrichScalaOrganization(v: ScalaOrganization) = new ConvertibleScalaOrganization(v)
+  implicit def enrichScalaOrganization(v: ScalaOrganization): ConvertibleScalaOrganization =
+    new ConvertibleScalaOrganization(v)
 
-  implicit def enrichScalaParent(v: ScalaParent) = new ConvertibleScalaParent(v)
+  implicit def enrichScalaParent(v: ScalaParent): ConvertibleScalaParent =
+    new ConvertibleScalaParent(v)
 
-  implicit def enrichScalaPlugin(v: ScalaPlugin) = new ConvertibleScalaPlugin(v)
+  implicit def enrichScalaPlugin(v: ScalaPlugin): ConvertibleScalaPlugin =
+    new ConvertibleScalaPlugin(v)
 
-  implicit def enrichScalaPluginManagement(v: ScalaPluginManagement) = new ConvertibleScalaPluginManagement(v)
+  implicit def enrichScalaPluginManagement(v: ScalaPluginManagement): ConvertibleScalaPluginManagement =
+    new ConvertibleScalaPluginManagement(v)
 
-  implicit def enrichScalaPrerequisites(v: Prerequisites) = new ConvertibleScalaPrerequisites(v)
+  implicit def enrichScalaPrerequisites(v: Prerequisites): ConvertibleScalaPrerequisites =
+    new ConvertibleScalaPrerequisites(v)
 
-  implicit def enrichScalaProfile(v: Profile) = new ConvertibleScalaProfile(v)
+  implicit def enrichScalaProfile(v: Profile): ConvertibleScalaProfile =
+    new ConvertibleScalaProfile(v)
 
-  implicit def enrichScalaReleasePolicy(v: ScalaRepositoryPolicy) = new ConvertibleScalaRepositoryPolicy(v)
+  implicit def enrichScalaReleasePolicy(v: ScalaRepositoryPolicy): ConvertibleScalaRepositoryPolicy =
+    new ConvertibleScalaRepositoryPolicy(v)
 
-  implicit def enrichScalaRelocation(v: ScalaRelocation) = new ConvertibleScalaRelocation(v)
+  implicit def enrichScalaRelocation(v: ScalaRelocation): ConvertibleScalaRelocation =
+    new ConvertibleScalaRelocation(v)
 
-  implicit def enrichScalaRepository(v: ScalaRepository) = new ConvertibleScalaRepository(v)
+  implicit def enrichScalaRepository(v: ScalaRepository): ConvertibleScalaRepository =
+    new ConvertibleScalaRepository(v)
 
-  implicit def enrichScalaResource(v: ScalaResource) = new ConvertibleScalaResource(v)
+  implicit def enrichScalaResource(v: ScalaResource): ConvertibleScalaResource =
+    new ConvertibleScalaResource(v)
 
-  implicit def enrichScalaScm(v: ScalaScm) = new ConvertibleScalaScm(v)
+  implicit def enrichScalaScm(v: ScalaScm): ConvertibleScalaScm =
+    new ConvertibleScalaScm(v)
 
-  implicit def enrichScalaSite(v: ScalaSite) = new ConvertibleScalaSite(v)
+  implicit def enrichScalaSite(v: ScalaSite): ConvertibleScalaSite =
+    new ConvertibleScalaSite(v)
 }
 
 /**
@@ -140,7 +172,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     new Eval(Some(evalPomFile.getParentFile)).apply[ScalaModel](sourcePomFile)
   }
 
-  private def registerExecutors(m: Model, options: util.Map[String, _], tasks: Seq[Task]): Unit = {
+  private def registerExecutors(m: Model, options: util.Map[String, _], tasks: immutable.Seq[Task]): Unit = {
     import scala.collection.JavaConverters._
     executeManager.register(m, tasks.map(new ScalaTask(_).asInstanceOf[ExecuteTask]).asJava)
     executeManager.install(m, options)

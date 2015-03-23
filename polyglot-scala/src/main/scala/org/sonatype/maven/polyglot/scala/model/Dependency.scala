@@ -7,13 +7,15 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Dependency(
                   val gav: Gav,
                   val `type`: String,
                   val classifier: Option[String],
                   val scope: Option[String],
                   val systemPath: Option[String],
-                  val exclusions: Seq[GroupArtifactId],
+                  val exclusions: immutable.Seq[GroupArtifactId],
                   val optional: Boolean
                   )
 
@@ -24,7 +26,7 @@ object Dependency {
              classifier: String = null,
              scope: String = null,
              systemPath: String = null,
-             exclusions: Seq[GroupArtifactId] = Seq.empty,
+             exclusions: immutable.Seq[GroupArtifactId] = immutable.Seq.empty,
              optional: Boolean = false
              ) =
     new Dependency(
@@ -46,7 +48,7 @@ class PrettiedDependency(d: Dependency) {
     val typeAssigned = d.`type` != "jar"
     val classifierAssigned = d.classifier.isDefined
     val systemPathAssigned = d.systemPath.isDefined
-    val exclusionsAssigned = !d.exclusions.isEmpty
+    val exclusionsAssigned = d.exclusions.nonEmpty
     val optionalAssigned = d.optional
     if (typeAssigned || classifierAssigned || systemPathAssigned || exclusionsAssigned || optionalAssigned) {
       val args = scala.collection.mutable.ListBuffer(d.gav.asDoc)
@@ -56,7 +58,7 @@ class PrettiedDependency(d: Dependency) {
       d.systemPath.foreach(args += assignString("systemPath", _))
       if (exclusionsAssigned) args += assign("exclusions", seq(d.exclusions.map(_.asDoc)))
       if (optionalAssigned) args += assign("optional", d.optional.toString)
-      `object`("Dependency", args)
+      `object`("Dependency", args.toList)
     } else {
       val gav = d.gav.asDoc
       val version = if (d.gav.version.isEmpty) space <> percent <+> dquote <> dquote else empty
@@ -78,7 +80,7 @@ class ConvertibleMavenDependency(md: MavenDependency) {
       md.getClassifier,
       md.getScope,
       md.getSystemPath,
-      md.getExclusions.asScala.map(e => (e.getGroupId, e.getArtifactId).asScala),
+      md.getExclusions.asScala.map(e => (e.getGroupId, e.getArtifactId).asScala).toList,
       md.isOptional
     )
   }

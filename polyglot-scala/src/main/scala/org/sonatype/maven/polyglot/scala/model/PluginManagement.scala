@@ -7,10 +7,12 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-class PluginManagement(plugins: Seq[Plugin]) extends PluginContainer(plugins)
+import scala.collection.immutable
+
+class PluginManagement(plugins: immutable.Seq[Plugin]) extends PluginContainer(plugins)
 
 object PluginManagement {
-  def apply(plugins: Seq[Plugin] = Seq.empty) = new PluginManagement(plugins)
+  def apply(plugins: immutable.Seq[Plugin] = immutable.Seq.empty) = new PluginManagement(plugins)
 }
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
@@ -19,7 +21,7 @@ class PrettiedPluginManagement(p: PluginManagement) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     args ++= p.asDocArgs
-    `object`("PluginManagement", args)
+    `object`("PluginManagement", args.toList)
   }
 }
 
@@ -31,7 +33,7 @@ import org.apache.maven.model.{PluginManagement => MavenPluginManagement}
 class ConvertibleMavenPluginManagement(mpm: MavenPluginManagement) {
   def asScala: PluginManagement = {
     PluginManagement(
-      mpm.getPlugins.asScala.map(_.asScala)
+      mpm.getPlugins.asScala.map(_.asScala).toList
     )
   }
 }
