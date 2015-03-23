@@ -30,7 +30,7 @@ class PrettiedOrganization(im: Organization) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     im.name.foreach(args += assignString("name", _))
     im.url.foreach(args += assignString("url", _))
-    `object`("Organization", args)
+    `object`("Organization", args.toList)
   }
 }
 

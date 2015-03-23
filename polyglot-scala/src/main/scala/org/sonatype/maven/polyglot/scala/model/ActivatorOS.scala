@@ -39,7 +39,7 @@ class PrettiedActivationOS(aos: ActivationOS) {
     aos.family.foreach(args += assignString("family", _))
     aos.arch.foreach(args += assignString("arch", _))
     aos.version.foreach(args += assignString("version", _))
-    `object`("ActivationOS", args)
+    `object`("ActivationOS", args.toList)
   }
 }
 

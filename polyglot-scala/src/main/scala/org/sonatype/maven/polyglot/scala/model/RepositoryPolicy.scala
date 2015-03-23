@@ -34,7 +34,7 @@ class PrettiedRepositoryPolicy(rp: RepositoryPolicy) {
     Option(rp.enabled).filterNot(_ == true).map(e => args += assign("enabled", e.toString))
     Option(rp.updatePolicy).filterNot(_ == "daily").map(args += assignString("updatePolicy", _))
     Option(rp.checksumPolicy).filterNot(_ == "warn").map(args += assignString("checksumPolicy", _))
-    `object`("RepositoryPolicy", args)
+    `object`("RepositoryPolicy", args.toList)
   }
 }
 

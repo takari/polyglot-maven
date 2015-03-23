@@ -7,12 +7,14 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Resource(
                 val targetPath: Option[String],
                 val filtering: Boolean,
                 val directory: Option[String],
-                val includes: Seq[String],
-                val excludes: Seq[String]
+                val includes: immutable.Seq[String],
+                val excludes: immutable.Seq[String]
                 )
 
 object Resource {
@@ -20,8 +22,8 @@ object Resource {
              targetPath: String = null,
              filtering: Boolean = false,
              directory: String = null,
-             includes: Seq[String] = Nil,
-             excludes: Seq[String] = Nil
+             includes: immutable.Seq[String] = Nil,
+             excludes: immutable.Seq[String] = Nil
              ) =
     new Resource(
       Option(targetPath),
@@ -43,7 +45,7 @@ class PrettiedResource(r: Resource) {
     r.directory.foreach(args += assignString("directory", _))
     Some(r.includes).filterNot(_.isEmpty).foreach(is => args += assign("includes", seqString(is)))
     Some(r.excludes).filterNot(_.isEmpty).foreach(ex => args += assign("excludes", seqString(ex)))
-    `object`("Resource", args)
+    `object`("Resource", args.toList)
   }
 }
 
@@ -57,8 +59,8 @@ class ConvertibleMavenResource(mr: MavenResource) {
       mr.getTargetPath,
       mr.isFiltering,
       mr.getDirectory,
-      mr.getIncludes.asScala,
-      mr.getExcludes.asScala
+      mr.getIncludes.asScala.toList,
+      mr.getExcludes.asScala.toList
     )
   }
 }

@@ -7,29 +7,31 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class BuildBase(
                  val defaultGoal: Option[String],
-                 val resources: Seq[Resource],
-                 val testResources: Seq[Resource],
+                 val resources: immutable.Seq[Resource],
+                 val testResources: immutable.Seq[Resource],
                  val directory: Option[String],
                  val finalName: Option[String],
-                 val filters: Seq[String],
+                 val filters: immutable.Seq[String],
                  val pluginManagement: Option[PluginManagement],
-                 val plugins: Seq[Plugin],
-                 val tasks: Seq[Task]
+                 val plugins: immutable.Seq[Plugin],
+                 val tasks: immutable.Seq[Task]
                  )
 
 object BuildBase {
   def apply(
              defaultGoal: String = null,
-             resources: Seq[Resource] = Nil,
-             testResources: Seq[Resource] = Nil,
+             resources: immutable.Seq[Resource] = Nil,
+             testResources: immutable.Seq[Resource] = Nil,
              directory: String = null,
              finalName: String = null,
-             filters: Seq[String] = Nil,
+             filters: immutable.Seq[String] = Nil,
              pluginManagement: PluginManagement = null,
-             plugins: Seq[Plugin] = Nil,
-             tasks: Seq[Task] = Nil
+             plugins: immutable.Seq[Plugin] = Nil,
+             tasks: immutable.Seq[Task] = Nil
              ) =
     new BuildBase(
       Option(defaultGoal),
@@ -52,7 +54,7 @@ class PrettiedBuildBase(b: BuildBase) {
     `object`("BuildBase", asDocArgs)
   }
 
-  def asDocArgs: Seq[Doc] = {
+  def asDocArgs: immutable.Seq[Doc] = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     b.defaultGoal.foreach(args += assignString("defaultGoal", _))
     Some(b.resources).filterNot(_.isEmpty).foreach(r => args += assign("resources", seq(r.map(_.asDoc))))
@@ -63,7 +65,7 @@ class PrettiedBuildBase(b: BuildBase) {
     b.pluginManagement.foreach(pm => args += assign("pluginManagement", pm.asDoc))
     Some(b.plugins).filterNot(_.isEmpty).foreach(ps => args += assign("plugins", seq(ps.map(_.asDoc))))
     Some(b.tasks).filterNot(_.isEmpty).foreach(ps => args += assign("tasks", seq(ps.map(_.asDoc))))
-    args
+    args.toList
   }
 }
 
@@ -76,13 +78,13 @@ class ConvertibleMavenBuildBase(mb: MavenBuildBase) {
   def asScala: BuildBase = {
     BuildBase(
       mb.getDefaultGoal,
-      mb.getResources.asScala.map(_.asScala),
-      mb.getTestResources.asScala.map(_.asScala),
+      mb.getResources.asScala.map(_.asScala).toList,
+      mb.getTestResources.asScala.map(_.asScala).toList,
       mb.getDirectory,
       mb.getFinalName,
-      mb.getFilters.asScala,
+      mb.getFilters.asScala.toList,
       Option(mb.getPluginManagement).map(_.asScala).orNull,
-      mb.getPlugins.asScala.map(_.asScala)
+      mb.getPlugins.asScala.map(_.asScala).toList
     )
   }
 }

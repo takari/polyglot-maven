@@ -43,7 +43,7 @@ class PrettiedActivation(p: Activation) {
     p.os.foreach(os => args += assign("os", os.asDoc))
     p.property.foreach(p => args += assign("property", p.asDoc))
     p.file.foreach(f => args += assign("file", f.asDoc))
-    `object`("Activation", args)
+    `object`("Activation", args.toList)
   }
 }
 

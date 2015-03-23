@@ -47,7 +47,7 @@ class PrettiedDistributionManagement(dm: DistributionManagement) {
     dm.downloadUrl.foreach(args += assignString("downloadUrl", _))
     dm.relocation.foreach(r => args += assign("relocation", r.asDoc))
     dm.status.foreach(args += assignString("status", _))
-    `object`("DistributionManagement", args)
+    `object`("DistributionManagement", args.toList)
   }
 }
 

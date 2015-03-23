@@ -31,7 +31,7 @@ class PrettiedActivationProperty(ap: ActivationProperty) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     ap.name.foreach(args += assignString("name", _))
     ap.value.foreach(args += assignString("value", _))
-    `object`("ActivationProperty", args)
+    `object`("ActivationProperty", args.toList)
   }
 }
 

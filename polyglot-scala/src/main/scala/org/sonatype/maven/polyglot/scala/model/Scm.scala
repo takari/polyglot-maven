@@ -38,7 +38,7 @@ class PrettiedScm(scm: Scm) {
     scm.developerConnection.foreach(args += assignString("developerConnection", _))
     Option(scm.tag).filterNot(_ == "HEAD").foreach(args += assignString("tag", _))
     scm.url.foreach(args += assignString("url", _))
-    `object`("Scm", args)
+    `object`("Scm", args.toList)
   }
 }
 

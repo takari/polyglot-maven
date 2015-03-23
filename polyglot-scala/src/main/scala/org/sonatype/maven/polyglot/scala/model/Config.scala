@@ -8,6 +8,7 @@
 package org.sonatype.maven.polyglot.scala.model
 
 import org.codehaus.plexus.util.xml.Xpp3Dom
+import scala.collection.immutable
 import scala.collection.mutable.ListBuffer
 import scala.language.dynamics
 import scala.language.postfixOps
@@ -17,10 +18,10 @@ import scala.language.postfixOps
  * serves as configuration to a plugin. The following sample illustrates configuration being created:
  * {{{
  *   scala> val c = Config(a = 1, b = "hi")
- *   c: Seq[(String, Any)] = List((a,1), (b,hi))
+ *   c: immutable.Seq[(String, Any)] = List((a,1), (b,hi))
  * }}}
  */
-class Config(val elements: Seq[(String, Option[Any])])
+class Config(val elements: immutable.Seq[(String, Option[Any])])
 
 object Config extends Dynamic {
 
@@ -35,7 +36,7 @@ object Config extends Dynamic {
     if (method == "apply") new Config(params map {
       case (k, Optional(v)) if k.startsWith("$at") && k.size > 3 => s"@${k.substring(3)}" -> v
       case (k, Optional(v)) => k -> v
-    } toSeq)
+    } toList)
     else throw new UnsupportedOperationException
 
 }
@@ -56,7 +57,7 @@ class PrettiedConfig(c: Config) {
         val name = if (e._1.startsWith("@")) s"`${e._1}`" else e._1
         args += assign(name, value)
     }
-    `object`("Config", args)
+    `object`("Config", args.toList)
   }
 }
 
@@ -84,10 +85,10 @@ class ConvertibleMavenConfig(mc: Object) {
               }
             elements += (child.getName -> Option(childValue))
         }
-        new Config(elements)
+        new Config(elements.toList)
       }
       asConfig(xmlConfig)
-    case _ => new Config(Seq.empty)
+    case _ => new Config(immutable.Seq.empty)
   }
 
   def asScala = config

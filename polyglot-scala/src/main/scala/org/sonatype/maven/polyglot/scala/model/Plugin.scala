@@ -7,11 +7,13 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Plugin(
               val gav: Gav,
               val extensions: Boolean,
-              val executions: Seq[Execution],
-              val dependencies: Seq[Dependency],
+              val executions: immutable.Seq[Execution],
+              val dependencies: immutable.Seq[Dependency],
               override val inherited: Boolean,
               override val configuration: Option[Config]
               ) extends ConfigurationContainer(inherited, configuration)
@@ -20,8 +22,8 @@ object Plugin {
   def apply(
              gav: Gav,
              extensions: Boolean = false,
-             executions: Seq[Execution] = Seq.empty,
-             dependencies: Seq[Dependency] = Seq.empty,
+             executions: immutable.Seq[Execution] = immutable.Seq.empty,
+             dependencies: immutable.Seq[Dependency] = immutable.Seq.empty,
              inherited: Boolean = true,
              configuration: Config = null
              ) =
@@ -45,7 +47,7 @@ class PrettiedPlugin(p: Plugin) {
     Some(p.executions).filterNot(_.isEmpty).foreach(es => args += assign("executions", seq(es.map(_.asDoc))))
     Some(p.dependencies).filterNot(_.isEmpty).foreach(es => args += assign("dependencies", seq(es.map(_.asDoc))))
     args ++= p.asDocArgs
-    `object`("Plugin", args)
+    `object`("Plugin", args.toList)
   }
 }
 
@@ -60,8 +62,8 @@ class ConvertibleMavenPlugin(mp: MavenPlugin) {
     Plugin(
       (mp.getGroupId, mp.getArtifactId, mp.getVersion).asScala,
       mp.isExtensions,
-      mp.getExecutions.asScala.map(_.asScala),
-      mp.getDependencies.asScala.map(_.asScala),
+      mp.getExecutions.asScala.map(_.asScala).toList,
+      mp.getDependencies.asScala.map(_.asScala).toList,
       mp.isInherited,
       Option(mp.getConfiguration).map(_.asScala).orNull
     )

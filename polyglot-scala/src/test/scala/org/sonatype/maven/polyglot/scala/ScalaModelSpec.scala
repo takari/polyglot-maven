@@ -16,6 +16,8 @@ import org.codehaus.plexus.util.IOUtil
 import java.io.StringWriter
 import java.util.Collections
 
+import scala.collection.immutable
+
 @RunWith(classOf[JUnitRunner])
 class ScalaModelSpec extends Specification {
 
@@ -38,7 +40,7 @@ class ScalaModelSpec extends Specification {
     "configure a project and not have its scala settings overridden" in {
       val m = ScalaModel(
         "" % "tesla-polyglot-scala",
-        dependencies = Seq(
+        dependencies = immutable.Seq(
           "org.scala-lang" % "scala-library" % "0",
           "org.specs2" % "specs2_2.10" % "2.1.1" % "test",
           "junit" % "junit" % "" % "test"
@@ -46,8 +48,8 @@ class ScalaModelSpec extends Specification {
         build = Build(
           sourceDirectory = "src/main/scala2",
           testSourceDirectory = "src/test/scala2",
-          pluginManagement = PluginManagement(Seq(Plugin("org.eclipse.m2e" % "lifecycle-mapping" % "0"))),
-          plugins = Seq(
+          pluginManagement = PluginManagement(immutable.Seq(Plugin("org.eclipse.m2e" % "lifecycle-mapping" % "0"))),
+          plugins = immutable.Seq(
             Plugin("org.apache.maven.plugins" % "maven-compiler-plugin" % "0"),
             Plugin("net.alchim31.maven" % "scala-maven-plugin" % "0"),
             Plugin("org.apache.maven.plugins" % "maven-surefire-plugin" % "0")
@@ -56,14 +58,14 @@ class ScalaModelSpec extends Specification {
       )
 
       m.dependencies.size must_== 3
-      m.dependencies(0).gav.version must_== Some("0")
+      m.dependencies.head.gav.version must_== Some("0")
       m.build.get.sourceDirectory must_== Some("src/main/scala2")
       m.build.get.testSourceDirectory must_== Some("src/test/scala2")
       m.build.get.pluginManagement.get.plugins.size must_== 1
-      m.build.get.pluginManagement.get.plugins(0).gav.version must_== Some("0")
+      m.build.get.pluginManagement.get.plugins.head.gav.version must_== Some("0")
       m.build.get.plugins.size must_== 3
-      m.build.get.plugins(0).gav.artifactId must_== "maven-compiler-plugin"
-      m.build.get.plugins(0).gav.version must_== Some("0")
+      m.build.get.plugins.head.gav.artifactId must_== "maven-compiler-plugin"
+      m.build.get.plugins.head.gav.version must_== Some("0")
       m.build.get.plugins(1).gav.artifactId must_== "scala-maven-plugin"
       m.build.get.plugins(1).gav.version must_== Some("0")
       m.build.get.plugins(2).gav.artifactId must_== "maven-surefire-plugin"

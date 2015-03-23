@@ -7,10 +7,12 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
-class DependencyManagement(val dependencies: Seq[Dependency])
+import scala.collection.immutable
+
+class DependencyManagement(val dependencies: immutable.Seq[Dependency])
 
 object DependencyManagement {
-  def apply(dependencies: Seq[Dependency] = Nil) = new DependencyManagement(dependencies)
+  def apply(dependencies: immutable.Seq[Dependency] = Nil) = new DependencyManagement(dependencies)
 }
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
@@ -20,7 +22,7 @@ class PrettiedDependencyManagement(dm: DependencyManagement) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     Some(dm.dependencies).filterNot(_.isEmpty).foreach(ps => args += assign("dependencies", seq(ps.map(_.asDoc))))
-    `object`("DependencyManagement", args)
+    `object`("DependencyManagement", args.toList)
   }
 }
 
@@ -32,7 +34,7 @@ import org.apache.maven.model.{Dependency => MavenDependency, DependencyManageme
 class ConvertibleMavenDependencyManagement(mdm: MavenDependencyManagement) {
   def asScala: DependencyManagement = {
     DependencyManagement(
-      mdm.getDependencies.asScala.map(_.asScala)
+      mdm.getDependencies.asScala.map(_.asScala).toList
     )
   }
 }

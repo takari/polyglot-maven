@@ -7,13 +7,15 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Developer(
                  val id: Option[String],
                  override val email: Option[String],
                  override val name: Option[String],
                  override val organization: Option[String],
                  override val organizationUrl: Option[String],
-                 override val roles: Seq[String],
+                 override val roles: immutable.Seq[String],
                  override val timezone: Option[String],
                  override val url: Option[String]
                  )
@@ -35,7 +37,7 @@ object Developer {
              name: String = null,
              organization: String = null,
              organizationUrl: String = null,
-             roles: Seq[String] = Nil,
+             roles: immutable.Seq[String] = Nil,
              timezone: String = null,
              url: String = null
              ) =
@@ -59,7 +61,7 @@ class PrettiedDeveloper(d: Developer) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     d.id.foreach(args += assignString("id", _))
     args ++= d.asInstanceOf[Contributor].asDocArgs
-    `object`("Developer", args)
+    `object`("Developer", args.toList)
   }
 }
 
@@ -75,7 +77,7 @@ class ConvertibleMavenDeveloper(mc: MavenDeveloper) {
       mc.getName,
       mc.getOrganization,
       mc.getOrganizationUrl,
-      mc.getRoles.asScala,
+      mc.getRoles.asScala.toList,
       mc.getTimezone,
       mc.getUrl
     )

@@ -55,7 +55,7 @@ class PrettiedDeploymentRepository(dr: DeploymentRepository) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     Option(dr.uniqueVersion).filterNot(_ == true).foreach(uv => args += assign("uniqueVersion", uv.toString))
     args ++= dr.asInstanceOf[Repository].asDocArgs
-    `object`("DeploymentRepository", args)
+    `object`("DeploymentRepository", args.toList)
   }
 }
 

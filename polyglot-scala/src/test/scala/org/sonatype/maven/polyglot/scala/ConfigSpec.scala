@@ -13,6 +13,8 @@ import org.junit.runner.RunWith
 import org.sonatype.maven.polyglot.scala.model._
 import org.codehaus.plexus.util.xml.Xpp3Dom
 
+import scala.collection.immutable
+
 @RunWith(classOf[JUnitRunner])
 class ConfigSpec extends Specification {
 
@@ -34,28 +36,28 @@ class ConfigSpec extends Specification {
       val es = c.asScala.elements
 
       es.size must_== 1
-      es(0)._1 must_== "key1"
-      val e = es(0)._2.get.asInstanceOf[Config].elements
+      es.head._1 must_== "key1"
+      val e = es.head._2.get.asInstanceOf[Config].elements
       e.size must_== 3
-      e(0)._1 must_== "key2"
-      e(0)._2.get.asInstanceOf[String] must_== "value2"
+      e.head._1 must_== "key2"
+      e.head._2.get.asInstanceOf[String] must_== "value2"
       e(1)._1 must_== "key3"
       e(1)._2 must beNone
       e(2)._1 must_== "key4"
       val ea = e(2)._2.get.asInstanceOf[Config].elements
       ea.size must_== 1
-      ea(0)._1 must_== "@attr4"
-      ea(0)._2.get.asInstanceOf[String] must_== "attrValue4"
+      ea.head._1 must_== "@attr4"
+      ea.head._2.get.asInstanceOf[String] must_== "attrValue4"
     }
     "should convert from a config to an xml doc" in {
       val config = new Config(
-        Seq(
+        immutable.Seq(
           "key1" -> Some(new Config(
-            Seq(
+            immutable.Seq(
               "key2" -> Some("value2"),
               "key3" -> None,
               "key4" -> Some(new Config(
-                Seq(
+                immutable.Seq(
                   "@attr4" -> Some("attrValue4")
                 )
               ))
@@ -91,11 +93,11 @@ class ConfigSpec extends Specification {
       val es = config.elements
 
       es.size must_== 1
-      es(0)._1 must_== "key1"
-      val e = es(0)._2.get.asInstanceOf[Config].elements
+      es.head._1 must_== "key1"
+      val e = es.head._2.get.asInstanceOf[Config].elements
       e.size must_== 3
-      e(0)._1 must_== "key2"
-      e(0)._2.get.asInstanceOf[String] must_== "value2"
+      e.head._1 must_== "key2"
+      e.head._2.get.asInstanceOf[String] must_== "value2"
       e(1)._1 must_== "key3"
       e(1)._2 must beNone
       e(2)._1 must_== "@key4"

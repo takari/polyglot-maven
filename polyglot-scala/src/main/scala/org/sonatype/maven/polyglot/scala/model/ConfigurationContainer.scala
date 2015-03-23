@@ -14,11 +14,13 @@ abstract class ConfigurationContainer(
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
+import scala.collection.immutable
+
 class PrettiedConfigurationContainer(cc: ConfigurationContainer) {
-  def asDocArgs: Seq[Doc] = {
+  def asDocArgs: immutable.Seq[Doc] = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     Some(cc.inherited).filterNot(_ == true).foreach(i => args += assign("inherited", i.toString))
     cc.configuration.foreach(c => args += assign("configuration", c.asDoc))
-    args
+    args.toList
   }
 }

@@ -7,16 +7,18 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Profile(
                val id: String,
                val activation: Option[Activation],
                val build: Option[BuildBase],
                dependencyManagement: Option[DependencyManagement],
-               dependencies: Seq[Dependency],
+               dependencies: immutable.Seq[Dependency],
                distributionManagement: Option[DistributionManagement],
-               modules: Seq[String],
-               pluginRepositories: Seq[Repository],
-               repositories: Seq[Repository]
+               modules: immutable.Seq[String],
+               pluginRepositories: immutable.Seq[Repository],
+               repositories: immutable.Seq[Repository]
                )
   extends
   ModelBase(
@@ -34,11 +36,11 @@ object Profile {
              activation: Activation = null,
              build: BuildBase = null,
              dependencyManagement: DependencyManagement = null,
-             dependencies: Seq[Dependency] = Nil,
+             dependencies: immutable.Seq[Dependency] = Nil,
              distributionManagement: DistributionManagement = null,
-             modules: Seq[String] = Nil,
-             pluginRepositories: Seq[Repository] = Nil,
-             repositories: Seq[Repository] = Nil
+             modules: immutable.Seq[String] = Nil,
+             pluginRepositories: immutable.Seq[Repository] = Nil,
+             repositories: immutable.Seq[Repository] = Nil
              ) =
     new Profile(
       id,
@@ -63,7 +65,7 @@ class PrettiedProfile(p: Profile) {
     p.activation.foreach(a => args += assign("activation", a.asDoc))
     p.build.foreach(b => args += assign("build", b.asDoc))
     args ++= p.asDocArgs
-    `object`("Profile", args)
+    `object`("Profile", args.toList)
   }
 }
 
@@ -79,11 +81,11 @@ class ConvertibleMavenProfile(mp: MavenProfile) {
       Option(mp.getActivation).map(_.asScala).orNull,
       Option(mp.getBuild).map(_.asScala).orNull,
       Option(mp.getDependencyManagement).map(_.asScala).orNull,
-      mp.getDependencies.asScala.map(_.asScala),
+      mp.getDependencies.asScala.map(_.asScala).toList,
       Option(mp.getDistributionManagement).map(_.asScala).orNull,
-      mp.getModules.asScala,
-      mp.getPluginRepositories.asScala.map(_.asScala),
-      mp.getRepositories.asScala.map(_.asScala)
+      mp.getModules.asScala.toList,
+      mp.getPluginRepositories.asScala.map(_.asScala).toList,
+      mp.getRepositories.asScala.map(_.asScala).toList
     )
   }
 }

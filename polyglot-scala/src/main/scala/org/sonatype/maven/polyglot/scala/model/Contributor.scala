@@ -7,12 +7,14 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Contributor(
                    val email: Option[String],
                    val name: Option[String],
                    val organization: Option[String],
                    val organizationUrl: Option[String],
-                   val roles: Seq[String],
+                   val roles: immutable.Seq[String],
                    val timezone: Option[String],
                    val url: Option[String]
                    )
@@ -23,7 +25,7 @@ object Contributor {
              name: String = null,
              organization: String = null,
              organizationUrl: String = null,
-             roles: Seq[String] = Nil,
+             roles: immutable.Seq[String] = Nil,
              timezone: String = null,
              url: String = null
              ) =
@@ -44,7 +46,7 @@ import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 class PrettiedContributor(c: Contributor) {
   def asDoc: Doc = `object`("Contributor", this.asDocArgs)
 
-  def asDocArgs: Seq[Doc] = {
+  def asDocArgs: immutable.Seq[Doc] = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     c.email.foreach(args += assignString("email", _))
     c.name.foreach(args += assignString("name", _))
@@ -53,7 +55,7 @@ class PrettiedContributor(c: Contributor) {
     Some(c.roles).filterNot(_.isEmpty).foreach(rs => args += assign("roles", seqString(rs)))
     c.timezone.foreach(args += assignString("timezone", _))
     c.url.foreach(args += assignString("url", _))
-    args
+    args.toList
   }
 }
 
@@ -68,7 +70,7 @@ class ConvertibleMavenContributor(mc: MavenContributor) {
       mc.getName,
       mc.getOrganization,
       mc.getOrganizationUrl,
-      mc.getRoles.asScala,
+      mc.getRoles.asScala.toList,
       mc.getTimezone,
       mc.getUrl
     )

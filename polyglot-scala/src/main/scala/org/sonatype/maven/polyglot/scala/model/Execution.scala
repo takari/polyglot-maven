@@ -7,10 +7,12 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 class Execution(
                  val id: String,
                  val phase: Option[String],
-                 val goals: Seq[String],
+                 val goals: immutable.Seq[String],
                  override val inherited: Boolean,
                  override val configuration: Option[Config]
                  ) extends ConfigurationContainer(inherited, configuration)
@@ -19,7 +21,7 @@ object Execution {
   def apply(
              id: String = "default",
              phase: String = null,
-             goals: Seq[String] = Seq.empty,
+             goals: immutable.Seq[String] = immutable.Seq.empty,
              inherited: Boolean = true,
              configuration: Config = null
              ) = {
@@ -43,7 +45,7 @@ class PrettiedExecution(e: Execution) {
     e.phase.foreach(args += assignString("phase", _))
     Some(e.goals).filterNot(_.isEmpty).foreach(g => args += assign("goals", seqString(g)))
     args ++= e.asDocArgs
-    `object`("Execution", args)
+    `object`("Execution", args.toList)
   }
 }
 
@@ -57,7 +59,7 @@ class ConvertibleMavenExecution(me: MavenExecution) {
     Execution(
       me.getId,
       me.getPhase,
-      me.getGoals.asScala,
+      me.getGoals.asScala.toList,
       me.isInherited,
       Option(me.getConfiguration).map(_.asScala).orNull
     )

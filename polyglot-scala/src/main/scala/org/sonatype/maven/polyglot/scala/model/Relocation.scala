@@ -39,7 +39,7 @@ class PrettiedRelocation(r: Relocation) {
     r.artifactId.foreach(args += assignString("artifactId", _))
     r.version.foreach(args += assignString("version", _))
     r.message.foreach(args += assignString("message", _))
-    `object`("Relocation", args)
+    `object`("Relocation", args.toList)
   }
 }
 

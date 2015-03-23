@@ -7,6 +7,8 @@
  */
 package org.sonatype.maven.polyglot.scala.model
 
+import scala.collection.immutable
+
 /**
  * A ScalaModel provides a convenient construction of a regular Model that is configured to support
  * Scala projects. Configuration includes setting up the source and test source directories (src/main/scala,
@@ -17,7 +19,7 @@ package org.sonatype.maven.polyglot.scala.model
  * {{{
  *   import org.sonatype.maven.polyglot.scala.model._
  *
- *   implicit val scalaVersion = ScalaVersion("2.10.2")
+ *   implicit val scalaVersion = ScalaVersion("2.11.6")
  *   ScalaModel("somegroup" % "someartifact" % "somever")
  * }}}
  */
@@ -35,7 +37,7 @@ object ScalaModel {
             pluginExecutionFilter = Config(
               groupId = "net.alchim31.maven",
               artifactId = "scala-maven-plugin",
-              versionRange = "[3.1.5,)",
+              versionRange = "[3.2.0,)",
               goals = Config(
                 goal = "add-source",
                 goal = "compile",
@@ -52,8 +54,8 @@ object ScalaModel {
   )
 
   val mavenCompiler = Plugin(
-    "org.apache.maven.plugins" % "maven-compiler-plugin",
-    executions = Seq(
+    "org.apache.maven.plugins" % "maven-compiler-plugin" % "3.2",
+    executions = immutable.Seq(
       Execution(
         id = "default-compile",
         phase = "none"
@@ -62,10 +64,10 @@ object ScalaModel {
   )
 
   val scalaCompiler = Plugin(
-    "net.alchim31.maven" % "scala-maven-plugin" % "3.1.5",
-    executions = Seq(
+    "net.alchim31.maven" % "scala-maven-plugin" % "3.2.0",
+    executions = immutable.Seq(
       Execution(
-        goals = Seq(
+        goals = immutable.Seq(
           "compile",
           "testCompile"
         ),
@@ -81,7 +83,7 @@ object ScalaModel {
   )
 
   val surefire = Plugin(
-    "org.apache.maven.plugins" % "maven-surefire-plugin",
+    "org.apache.maven.plugins" % "maven-surefire-plugin" % "2.18.1",
     configuration = Config(
       includes = Config(
         include = "%regex[.*Spec.*]"
@@ -93,29 +95,29 @@ object ScalaModel {
              gav: Gav,
              build: Build = null,
              ciManagement: CiManagement = null,
-             contributors: Seq[Contributor] = Nil,
+             contributors: immutable.Seq[Contributor] = Nil,
              dependencyManagement: DependencyManagement = null,
-             dependencies: Seq[Dependency] = Nil,
+             dependencies: immutable.Seq[Dependency] = Nil,
              description: String = null,
-             developers: Seq[Developer] = Nil,
+             developers: immutable.Seq[Developer] = Nil,
              distributionManagement: DistributionManagement = null,
              inceptionYear: String = null,
              issueManagement: IssueManagement = null,
-             licenses: Seq[License] = Nil,
-             mailingLists: Seq[MailingList] = Nil,
+             licenses: immutable.Seq[License] = Nil,
+             mailingLists: immutable.Seq[MailingList] = Nil,
              modelEncoding: String = "UTF-8",
              modelVersion: String = null,
-             modules: Seq[String] = Nil,
+             modules: immutable.Seq[String] = Nil,
              name: String = null,
              organization: Organization = null,
              packaging: String = "jar",
              parent: Parent = null,
-             pluginRepositories: Seq[Repository] = Nil,
+             pluginRepositories: immutable.Seq[Repository] = Nil,
              pomFile: File = null,
              prerequisites: Prerequisites = null,
-             profiles: Seq[Profile] = Nil,
+             profiles: immutable.Seq[Profile] = Nil,
              properties: Map[String, String] = Map.empty,
-             repositories: Seq[Repository] = Nil,
+             repositories: immutable.Seq[Repository] = Nil,
              scm: Scm = null,
              url: String = null
              )(implicit scalaVersion: ScalaVersion) = {
@@ -163,7 +165,7 @@ object ScalaModel {
         val targetSurefire =
           if (surefireIncluded) None
           else Some(surefire)
-        val targetPlugins = b.plugins ++: Seq(targetMavenCompiler, targetScalaCompiler, targetSurefire).flatten
+        val targetPlugins = b.plugins ++: immutable.Seq(targetMavenCompiler, targetScalaCompiler, targetSurefire).flatten
 
         new Build(
           targetSourceDirectory,
@@ -186,8 +188,8 @@ object ScalaModel {
       Build(
         sourceDirectory = sourceDirectory,
         testSourceDirectory = testSourceDirectory,
-        pluginManagement = PluginManagement(Seq(lifeCycleMapping)),
-        plugins = Seq(mavenCompiler, scalaCompiler, surefire)
+        pluginManagement = PluginManagement(immutable.Seq(lifeCycleMapping)),
+        plugins = immutable.Seq(mavenCompiler, scalaCompiler, surefire)
       )
     )
 
