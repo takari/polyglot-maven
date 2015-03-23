@@ -26,6 +26,7 @@ import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
@@ -42,6 +43,8 @@ public class TeslaModelProcessor implements ModelProcessor {
 
   @Requirement
   private PolyglotModelManager manager;
+  @Requirement
+  private Logger log;
 
   @Override
   public File locatePom(final File dir) {
@@ -91,7 +94,7 @@ public class TeslaModelProcessor implements ModelProcessor {
     assert manager != null;
     ModelSource source = (ModelSource) options.get(ModelProcessor.SOURCE);
     if (("" + source).contains(".polyglot.")) {
-      System.out.println(source.getLocation());
+      log.debug(source.getLocation());
 
       File pom = new File(source.getLocation());
       source = new FileModelSource(new File(pom.getPath().replaceFirst("[.]polyglot[.]", "")));
