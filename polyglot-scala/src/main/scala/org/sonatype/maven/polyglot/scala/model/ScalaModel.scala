@@ -119,87 +119,94 @@ object ScalaModel {
              properties: Map[String, String] = Map.empty,
              repositories: immutable.Seq[Repository] = Nil,
              scm: Scm = null,
-             url: String = null
+             url: String = null,
+             pimpScalaToolchain: Boolean = true
              )(implicit scalaVersion: ScalaVersion) = {
 
-    val scalaLang = "org.scala-lang" % "scala-library" % scalaVersion.version
-    val scalaLangIncluded = dependencies.exists {
-      d => d.gav.groupId == scalaLang.groupId && d.gav.artifactId == scalaLang.artifactId
-    }
-    val targetDependencies = if (scalaLangIncluded) dependencies else dependencies :+ Dependency(scalaLang)
+    case class Pimped(targetBuild: Option[Build], targetDependencies: immutable.Seq[Dependency])
 
-    val targetBuild = Option(build).map({
-      b =>
-        val targetSourceDirectory =
-          if (b.sourceDirectory.isEmpty) Some(sourceDirectory)
-          else b.sourceDirectory
+    val pimped = if (!pimpScalaToolchain) Pimped(Option(build), dependencies)  else {
 
-        val targetTestSourceDirectory =
-          if (b.testSourceDirectory.isEmpty) Some(testSourceDirectory)
-          else b.testSourceDirectory
-
-        val pluginManagement = b.pluginManagement.getOrElse(PluginManagement())
-        val lifeCycleMappingIncluded = pluginManagement.plugins.exists {
-          p => p.gav.groupId == lifeCycleMapping.gav.groupId && p.gav.artifactId == lifeCycleMapping.gav.artifactId
-        }
-        val targetPluginManagementPlugins =
-          if (lifeCycleMappingIncluded) pluginManagement.plugins
-          else pluginManagement.plugins :+ lifeCycleMapping
-        val targetPluginManagement = Some(new PluginManagement(targetPluginManagementPlugins))
-
-        val mavenCompilerIncluded = b.plugins.exists {
-          p => p.gav.groupId == mavenCompiler.gav.groupId && p.gav.artifactId == mavenCompiler.gav.artifactId
-        }
-        val targetMavenCompiler =
-          if (mavenCompilerIncluded) None
-          else Some(mavenCompiler)
-        val scalaCompilerIncluded = b.plugins.exists {
-          p => p.gav.groupId == scalaCompiler.gav.groupId && p.gav.artifactId == scalaCompiler.gav.artifactId
-        }
-        val targetScalaCompiler =
-          if (scalaCompilerIncluded) None
-          else Some(scalaCompiler)
-        val surefireIncluded = b.plugins.exists {
-          p => p.gav.groupId == surefire.gav.groupId && p.gav.artifactId == surefire.gav.artifactId
-        }
-        val targetSurefire =
-          if (surefireIncluded) None
-          else Some(surefire)
-        val targetPlugins = b.plugins ++: immutable.Seq(targetMavenCompiler, targetScalaCompiler, targetSurefire).flatten
-
-        new Build(
-          targetSourceDirectory,
-          b.scriptSourceDirectory,
-          targetTestSourceDirectory,
-          b.outputDirectory,
-          b.testOutputDirectory,
-          b.extensions,
-          b.defaultGoal,
-          b.resources,
-          b.testResources,
-          b.directory,
-          b.finalName,
-          b.filters,
-          targetPluginManagement,
-          targetPlugins,
-          b.tasks
+      val scalaLang = "org.scala-lang" % "scala-library" % scalaVersion.version
+      val scalaLangIncluded = dependencies.exists {
+        d => d.gav.groupId == scalaLang.groupId && d.gav.artifactId == scalaLang.artifactId
+      }
+      val targetDependencies = if (scalaLangIncluded) dependencies else dependencies :+ Dependency(scalaLang)
+  
+      val targetBuild = Option(build).map({
+        b =>
+          val targetSourceDirectory =
+            if (b.sourceDirectory.isEmpty) Some(sourceDirectory)
+            else b.sourceDirectory
+  
+          val targetTestSourceDirectory =
+            if (b.testSourceDirectory.isEmpty) Some(testSourceDirectory)
+            else b.testSourceDirectory
+  
+          val pluginManagement = b.pluginManagement.getOrElse(PluginManagement())
+          val lifeCycleMappingIncluded = pluginManagement.plugins.exists {
+            p => p.gav.groupId == lifeCycleMapping.gav.groupId && p.gav.artifactId == lifeCycleMapping.gav.artifactId
+          }
+          val targetPluginManagementPlugins =
+            if (lifeCycleMappingIncluded) pluginManagement.plugins
+            else pluginManagement.plugins :+ lifeCycleMapping
+          val targetPluginManagement = Some(new PluginManagement(targetPluginManagementPlugins))
+  
+          val mavenCompilerIncluded = b.plugins.exists {
+            p => p.gav.groupId == mavenCompiler.gav.groupId && p.gav.artifactId == mavenCompiler.gav.artifactId
+          }
+          val targetMavenCompiler =
+            if (mavenCompilerIncluded) None
+            else Some(mavenCompiler)
+          val scalaCompilerIncluded = b.plugins.exists {
+            p => p.gav.groupId == scalaCompiler.gav.groupId && p.gav.artifactId == scalaCompiler.gav.artifactId
+          }
+          val targetScalaCompiler =
+            if (scalaCompilerIncluded) None
+            else Some(scalaCompiler)
+          val surefireIncluded = b.plugins.exists {
+            p => p.gav.groupId == surefire.gav.groupId && p.gav.artifactId == surefire.gav.artifactId
+          }
+          val targetSurefire =
+            if (surefireIncluded) None
+            else Some(surefire)
+          val targetPlugins = b.plugins ++: immutable.Seq(targetMavenCompiler, targetScalaCompiler, targetSurefire).flatten
+  
+          new Build(
+            targetSourceDirectory,
+            b.scriptSourceDirectory,
+            targetTestSourceDirectory,
+            b.outputDirectory,
+            b.testOutputDirectory,
+            b.extensions,
+            b.defaultGoal,
+            b.resources,
+            b.testResources,
+            b.directory,
+            b.finalName,
+            b.filters,
+            targetPluginManagement,
+            targetPlugins,
+            b.tasks
+          )
+      }).getOrElse(
+        Build(
+          sourceDirectory = sourceDirectory,
+          testSourceDirectory = testSourceDirectory,
+          pluginManagement = PluginManagement(immutable.Seq(lifeCycleMapping)),
+          plugins = immutable.Seq(mavenCompiler, scalaCompiler, surefire)
         )
-    }).getOrElse(
-      Build(
-        sourceDirectory = sourceDirectory,
-        testSourceDirectory = testSourceDirectory,
-        pluginManagement = PluginManagement(immutable.Seq(lifeCycleMapping)),
-        plugins = immutable.Seq(mavenCompiler, scalaCompiler, surefire)
       )
-    )
+      Pimped(Some(targetBuild), targetDependencies)
+    }
 
     new Model(
       gav,
-      Some(targetBuild),
+      pimped.targetBuild,
       Option(ciManagement),
       contributors,
       Option(dependencyManagement),
-      targetDependencies,
+      pimped.targetDependencies,
       Option(description),
       developers,
       Option(distributionManagement),
