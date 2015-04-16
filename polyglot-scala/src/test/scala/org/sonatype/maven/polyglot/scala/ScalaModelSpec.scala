@@ -71,5 +71,25 @@ class ScalaModelSpec extends Specification {
       m.build.get.plugins(2).gav.artifactId must_== "maven-surefire-plugin"
       m.build.get.plugins(2).gav.version must_== Some("0")
     }
+
+    "configure a minimal project and pimp the scala settings" in {
+      val m = ScalaModel(
+          gav = "" % "maven-polyglot-scala",
+          pimpScalaToolchain = true
+      )
+
+      m.dependencies.size must be_>=(1)
+      m.build must_!= None
+    }
+
+    "configure a minimal project and do not pimp the scala settings" in {
+      val m = ScalaModel(
+          gav = "" % "maven-polyglot-scala",
+          pimpScalaToolchain = false
+      )
+
+      m.dependencies.size must_== 0
+      m.build.isEmpty must_== true
+    }
   }
 }
