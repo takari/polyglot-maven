@@ -1,7 +1,0 @@
-bin/mvn*
-bin/translate*
-ext
-*.txt
-lib/*jar
-pkg
-.pom.xml

@@ -1,5 +1,0 @@
-# -*- mode:ruby -*-
-
-require 'maven/ruby/tasks'
-
-# vim: syntax=Ruby

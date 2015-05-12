@@ -15,7 +15,7 @@
 
   <groupId>io.takari.polyglot</groupId>
   <artifactId>polyglot</artifactId>
-  <version>0.1.9-SNAPSHOT</version>
+  <version>0.1.10-SNAPSHOT</version>
   <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
 
@@ -56,32 +56,32 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-common</artifactId>
-        <version>0.1.9-SNAPSHOT</version>
+        <version>0.1.10-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-ruby</artifactId>
-        <version>0.1.9-SNAPSHOT</version>
+        <version>0.1.10-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-groovy</artifactId>
-        <version>0.1.9-SNAPSHOT</version>
+        <version>0.1.10-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-atom</artifactId>
-        <version>0.1.9-SNAPSHOT</version>
+        <version>0.1.10-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-scala</artifactId>
-        <version>0.1.9-SNAPSHOT</version>
+        <version>0.1.10-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-yaml</artifactId>
-        <version>0.1.9-SNAPSHOT</version>
+        <version>0.1.10-SNAPSHOT</version>
       </dependency>      
       <!-- We inline Maven's dependency management section to align dependency 
         versions from Maven's core -->
