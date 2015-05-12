@@ -14,14 +14,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <properties>
-    <jruby.home>${project.build.directory}/dependency/jruby-1.7.4</jruby.home>
+    <polyglot.jruby.home>${project.build.directory}/dependency/jruby-1.7.4</polyglot.jruby.home>
   </properties>
 
   <build>
     <plugins>
       <plugin>
-	<artifactId>maven-dependency-plugin</artifactId>      
-	<executions>
+	    <artifactId>maven-dependency-plugin</artifactId>      
+	    <executions>
           <execution>
             <phase>validate</phase>
             <goals>
@@ -49,22 +49,22 @@
         <configuration>
 	  <nativePom>pom.rb</nativePom>
         </configuration>
-	<executions>
-	  <execution>
-	    <phase>initialize</phase>
-	    <goals><goal>execute</goal></goals>
-	    <configuration>
-	      <taskId>first</taskId>
-	    </configuration>
-	  </execution>
-	</executions>
-	<dependencies>
-	  <dependency>
-	    <groupId>io.takari.polyglot</groupId>
-	    <artifactId>polyglot-ruby</artifactId>
-	    <version>@project.version@</version>
-	  </dependency>
-	</dependencies>
+	    <executions>
+	      <execution>
+	        <phase>initialize</phase>
+	        <goals><goal>execute</goal></goals>
+	        <configuration>
+	          <taskId>first</taskId>
+	        </configuration>
+	      </execution>
+	    </executions>
+	    <dependencies>
+	      <dependency>
+	        <groupId>io.takari.polyglot</groupId>
+	        <artifactId>polyglot-ruby</artifactId>
+	        <version>@project.version@</version>
+	      </dependency>
+	    </dependencies>
       </plugin>
     </plugins>
   </build>

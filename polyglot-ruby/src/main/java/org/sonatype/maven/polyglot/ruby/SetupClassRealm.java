@@ -32,7 +32,7 @@ public class SetupClassRealm {
 
     @Requirement
     protected LegacySupport legacySupport;
-    private static final String JRUBY_HOME = "jruby.home";
+    private static final String JRUBY_HOME = "polyglot.jruby.home";
 
     public void setupArtifact( String gav, ClassRealm realm) throws MalformedURLException
     {        
@@ -51,8 +51,8 @@ public class SetupClassRealm {
     
     private void setup( String gav, ClassRealm realm ) throws MalformedURLException
     {        
-        // see if we have a jruby-home set somewhere
-        String jrubyHome = System.getenv( "JRUBY_HOME" );
+        // see if we have shall use jruby from somewhere else
+        String jrubyHome = System.getenv( "POLYGLOT_JRUBY_HOME" );
         if ( jrubyHome == null ){
             jrubyHome = System.getProperty( JRUBY_HOME );
         }
