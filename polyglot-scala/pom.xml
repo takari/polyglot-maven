@@ -52,7 +52,7 @@
 
     <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2_2.10</artifactId>
+      <artifactId>specs2-junit_2.10</artifactId>
       <version>2.4.17</version>
       <scope>test</scope>
     </dependency>
