@@ -117,7 +117,7 @@ public class TeslaModelProcessor implements ModelProcessor {
       StringWriter xml = new StringWriter();
       xmlWriter.write(xml, model);
 
-      FileUtils.fileWrite(pom, xml.toString().replace("?>", WARNING));
+      FileUtils.fileWrite(pom, xml.toString());
 
       // dump pom if filename is given via the pom properties
       String dump = model.getProperties().getProperty("polyglot.dump.pom");
@@ -127,9 +127,9 @@ public class TeslaModelProcessor implements ModelProcessor {
       }
       if (dump != null) {
         File dumpPom = new File(pom.getParentFile(), dump);
-        if (!dumpPom.exists() || !FileUtils.fileRead(dumpPom).equals(xml.toString())) {
+        if (!dumpPom.exists() || !FileUtils.fileRead(dumpPom).equals(xml.toString().replace("?>", WARNING))) {
           dumpPom.setWritable(true);
-          FileUtils.fileWrite(dumpPom, xml.toString());
+          FileUtils.fileWrite(dumpPom, xml.toString().replace("?>", WARNING));
           if ("true".equals(model.getProperties().getProperty("polyglot.dump.readonly"))) {
             dumpPom.setReadOnly();
           }
