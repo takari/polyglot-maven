@@ -41,6 +41,15 @@ import org.codehaus.plexus.util.IOUtil;
 @Component(role = ModelProcessor.class)
 public class TeslaModelProcessor implements ModelProcessor {
 
+  private static final String NEW_LINE = System.getProperty("line.separator");
+  private static final String WARNING = "?>" + NEW_LINE + "<!--" +
+      NEW_LINE + "" +
+      NEW_LINE + "" +
+      NEW_LINE + "DO NOT MODIFIY - GENERATED CODE" +
+      NEW_LINE + "" +
+      NEW_LINE + "" +
+      NEW_LINE + "-->";
+        
   @Requirement
   private PolyglotModelManager manager;
   @Requirement
@@ -108,7 +117,7 @@ public class TeslaModelProcessor implements ModelProcessor {
       StringWriter xml = new StringWriter();
       xmlWriter.write(xml, model);
 
-      FileUtils.fileWrite(pom, xml.toString());
+      FileUtils.fileWrite(pom, xml.toString().replace("?>", WARNING));
 
       // dump pom if filename is given via the pom properties
       String dump = model.getProperties().getProperty("polyglot.dump.pom");
