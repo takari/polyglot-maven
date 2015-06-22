@@ -53,8 +53,57 @@ end
 * [Maven](http://maven.apache.org) 3.3.1+
 * [Java](http://java.sun.com/) 7+
 
+# Configuration
+
+To use Polyglot for Maven you need to edit 
+`${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` 
+and add the appropriate language extension.
+
+## Available Languages
+
+The available languages, in alphabetical order, with their artifact id are:
+
+| Language | Artifact Id        |
+|:--------:|:------------------:|
+| Atom     | `polyglot-atom`    |
+| Groovy   | `polyglot-groovy`  |
+| Clojure  | `polyglot-clojure` |
+| Ruby     | `polyglot-ruby`    |
+| Scala    | `polyglot-scala`   |
+| YAML     | `polyglot-yaml`    |
+
+## Update extensions.xml
+
+Edit the `extensions.xml` file and add the following, replacing ARTIFACTID with
+the artifact id for your chosen language.
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<extensions>
+  <extension>
+    <groupId>io.takari.polyglot</groupId>
+    <artifactId>ARTIFACTID</artifactId>
+    <version>0.1.10</version>
+  </extension>
+</extensions>
+```
+
+## Convert existing POM
+
+We have created a simple Maven Plugin that will help you convert any existing 
+`pom.xml` files:
+
+```
+mvn io.takari.polyglot:polyglot-translate-plugin:translate \
+  -Dinput=pom.xml -Doutput=pom.{format}
+```
+
+Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom` and of course `xml`.
+See [here](http://takari.io/2015/03/21/polyglot-maven.html) for more info.
+You can even convert back to `xml` or cross-convert between all supported formats.
+
 # Note of caution
 
 The whole interoperability story has not been worked out but we expect to sort this out very quickly now that Polyglot for Maven can be used easily.
 
-A pom.xml will currently not be installed or deployed except for the Ruby DSL but we will add this feature very shortly.
+A `pom.xml` will currently not be installed or deployed except for the Ruby DSL but we will add this feature very shortly.

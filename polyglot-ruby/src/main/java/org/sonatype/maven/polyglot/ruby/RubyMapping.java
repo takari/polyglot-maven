@@ -25,8 +25,8 @@ public class RubyMapping extends MappingSupport
   public RubyMapping()
   {
     super( "ruby" );
-    setPomNames( "pom.rb", "Mavenfile", "Gemfile" );
-    setAcceptLocationExtensions( ".rb", "Mavenfile", "Gemfile", ".gemspec" );
+    setPomNames( "pom.rb", "Mavenfile", "Jarfile", "Gemfile" );
+    setAcceptLocationExtensions( ".rb", "Mavenfile", "Jarfile", "Gemfile", ".gemspec" );
     setAcceptOptionKeys( "ruby:4.0.0" );
     setPriority(1);
   }

@@ -42,7 +42,7 @@
   </dependencies>
 
   <properties>
-    <maven-tools.version>1.0.9</maven-tools.version>
+    <maven-tools.version>1.0.10</maven-tools.version>
   </properties>
 
   <build>
@@ -121,29 +121,29 @@
 
       <repositories>
         <repository>
-	  <id>rubygems-releases</id>
-	  <url>http://rubygems-proxy.torquebox.org/releases</url>
-	</repository>
+          <id>rubygems-releases</id>
+          <url>http://rubygems-proxy.torquebox.org/releases</url>
+        </repository>
       </repositories>
       
       <dependencies>
-	<dependency>
-	  <groupId>rubygems</groupId>
-	  <artifactId>maven-tools</artifactId>
-	  <version>${maven-tools.version}</version>
-	  <type>gem</type>
-	  <scope>provided</scope>
-	</dependency>
+        <dependency>
+          <groupId>rubygems</groupId>
+          <artifactId>maven-tools</artifactId>
+          <version>${maven-tools.version}</version>
+          <type>gem</type>
+          <scope>provided</scope>
+        </dependency>
       </dependencies>
 
       <properties>
-	<jruby.plugins.version>1.0.8</jruby.plugins.version>
+        <jruby.plugins.version>1.0.8</jruby.plugins.version>
       </properties>
 
       <build>
-	
-	<plugins>
-	  <plugin>
+
+        <plugins>
+          <plugin>
             <groupId>de.saumya.mojo</groupId>
             <artifactId>gem-maven-plugin</artifactId>
             <version>${jruby.plugins.version}</version>
@@ -155,11 +155,11 @@
               </execution>
             </executions>
             <configuration>
-	      <includeGemsInResources>provided</includeGemsInResources>
-	    </configuration>
-	  </plugin>
-	  
-	</plugins>
+              <includeGemsInResources>provided</includeGemsInResources>
+            </configuration>
+          </plugin>
+
+        </plugins>
       </build>
 
     </profile>

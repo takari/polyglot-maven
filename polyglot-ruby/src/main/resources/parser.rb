@@ -69,8 +69,13 @@ module Maven
       def parse( pom, factory, src )
         @factory = factory
 
-        if src and ( src.match /[.]gemspec$/ )
+        case src
+        when /[.]gemspec$/
           eval_pom( "tesla do\ngemspec '#{File.basename( src )}' \nend", src )
+        when /Jarfile$/
+          eval_pom( "tesla do\njarfile\nend", src )
+        when /Gemfile$/
+          eval_pom( "tesla do\ngemfile\nend", src )
         else
           eval_pom( "tesla do\n#{pom}\nend", src || '.' )
         end
