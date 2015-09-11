@@ -8,6 +8,7 @@
 package org.sonatype.maven.polyglot.yaml;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.introspector.FieldProperty;
 import org.yaml.snakeyaml.introspector.MethodProperty;
@@ -16,7 +17,7 @@ import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
 import org.yaml.snakeyaml.nodes.ScalarNode;
-import org.yaml.snakeyaml.nodes.Tags;
+import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -72,7 +73,7 @@ class ModelRepresenter extends Representer {
   private class RepresentXpp3Dom implements Represent {
 
     public Node representData(Object data) {
-      return representMapping(Tags.MAP, toMap((Xpp3Dom) data), null);
+      return representMapping(Tag.MAP, toMap((Xpp3Dom) data), null);
     }
 
     private Map<String, Object> toMap(Xpp3Dom dom) {
@@ -94,7 +95,7 @@ class ModelRepresenter extends Representer {
   }
 
   @Override
-  protected Node representMapping(String tag, Map<? extends Object, Object> mapping, Boolean flowStyle) {
+  protected Node representMapping(Tag tag, Map<?, ?> mapping, Boolean flowStyle) {
     // TODO: skipping empty maps should likely be an option of the dumper (and probably default to true)
     if (mapping.isEmpty()) {
       return null;
@@ -123,8 +124,8 @@ class ModelRepresenter extends Representer {
       value.add(new NodeTuple(nodeKey, nodeValue));
     }
     if (flowStyle == null) {
-      if (defaultFlowStyle != null) {
-        node.setFlowStyle(defaultFlowStyle);
+      if (defaultFlowStyle != DumperOptions.FlowStyle.AUTO) {
+        node.setFlowStyle(defaultFlowStyle.getStyleBoolean());
       } else {
         node.setFlowStyle(bestStyle);
       }
@@ -133,20 +134,22 @@ class ModelRepresenter extends Representer {
   }
 
   @Override
-  protected Node representSequence(String tag, List<? extends Object> sequence, Boolean flowStyle) {
+  protected Node representSequence(Tag tag, Iterable<?> sequence, Boolean flowStyle) {
     // TODO: skipping empty sequences should likely be an option of the dumper (and probably default to true)
-    if (sequence.isEmpty()) {
-      return null;
+    if (sequence instanceof List<?>) {
+      int size = ((List<?>) sequence).size();
+      if (size == 0) {
+        return null;
+      }
     }
-
     return super.representSequence(tag, sequence, flowStyle);
   }
 
-  private Node representJavaBean(Set<Property> properties, Object javaBean) {
+  protected MappingNode representJavaBean(Set<Property> properties, Object javaBean) {
     List<NodeTuple> value = new LinkedList<NodeTuple>();
-    String tag;
-    String customTag = Tags.MAP;
-    tag = customTag != null ? customTag : Tags.getGlobalTagForClass(javaBean.getClass());
+    Tag tag;
+    Tag customTag = Tag.MAP;
+    tag = customTag != null ? customTag : new Tag(javaBean.getClass());
     // flow style will be chosen by BaseRepresenter
     MappingNode node = new MappingNode(tag, value, null);
     representedObjects.put(objectToRepresent, node);
@@ -174,11 +177,11 @@ class ModelRepresenter extends Representer {
           if (property.getType() == memberValue.getClass()) {
             // we do not need global tag because the property
             // Class is the same as the runtime class
-            nodeValue.setTag(Tags.MAP);
+            nodeValue.setTag(Tag.MAP);
           }
         }
       } else if (memberValue != null && Enum.class.isAssignableFrom(memberValue.getClass())) {
-        nodeValue.setTag(Tags.STR);
+        nodeValue.setTag(Tag.STR);
       }
       if (nodeKey.getStyle() != null) {
         bestStyle = false;
@@ -189,14 +192,14 @@ class ModelRepresenter extends Representer {
       value.add(new NodeTuple(nodeKey, nodeValue));
     }
     if (defaultFlowStyle != null) {
-      node.setFlowStyle(defaultFlowStyle);
+      node.setFlowStyle(false);
     } else {
-      node.setFlowStyle(bestStyle);
+      node.setFlowStyle(true);
     }
     return node;
   }
 
-  private Set<Property> getProperties(Class<? extends Object> type) throws IntrospectionException {
+  protected Set<Property> getProperties(Class<? extends Object> type) throws IntrospectionException {
     Set<Property> properties = new TreeSet<Property>();
     // add JavaBean getters
     for (PropertyDescriptor property : Introspector.getBeanInfo(type).getPropertyDescriptors())

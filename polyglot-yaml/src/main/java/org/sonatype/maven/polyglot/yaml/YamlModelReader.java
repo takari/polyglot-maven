@@ -12,7 +12,6 @@ import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
-import org.yaml.snakeyaml.Loader;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -33,8 +32,7 @@ public class YamlModelReader extends ModelReaderSupport {
 
   public YamlModelReader() {
     ModelConstructor constructor = new ModelConstructor();
-    Loader loader = new Loader(constructor);
-    yaml = new Yaml(loader);
+    yaml = new Yaml(constructor);
   }
 
   public Model read(Reader input, Map<String, ?> options) throws IOException, ModelParseException {

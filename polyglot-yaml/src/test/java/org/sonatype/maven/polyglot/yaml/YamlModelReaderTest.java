@@ -32,6 +32,8 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class YamlModelReaderTest {
   @Test
@@ -155,7 +157,11 @@ public class YamlModelReaderTest {
     p.setProperty("FOO", "BAR");
     model.setProperties(p);
     writer.write(sw, null, model);
-    System.out.println(sw.toString());
+    String output = sw.toString();
+    //System.out.println(output);
+    assertTrue(output, output.contains("\nproperties: {FOO: BAR}\n"));
+    assertFalse(output, output.contains("extensions: []"));
+    assertFalse(output, output.contains("properties: {}"));
   }
 
   protected Model getModel() throws Exception {
