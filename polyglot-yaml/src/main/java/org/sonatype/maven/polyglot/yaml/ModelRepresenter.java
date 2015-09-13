@@ -7,6 +7,7 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import org.apache.maven.model.Model;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.Node;
@@ -15,6 +16,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.beans.IntrospectionException;
 import java.util.*;
 
 /**
@@ -72,4 +74,67 @@ class ModelRepresenter extends Representer {
       return map;
     }
   }
+
+  /*
+   * Change the default order. Important data goes first.
+   */
+  @Override
+  protected Set<Property> getProperties(Class<? extends Object> type)
+          throws IntrospectionException {
+    if (type.isAssignableFrom(Model.class)) {
+      Set<Property> standard = super.getProperties(type);
+      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator());
+      sorted.addAll(standard);
+      return sorted;
+    } else {
+      return super.getProperties(type);
+    }
+  }
+
+  private class ModelPropertyComparator implements Comparator<Property> {
+    public int compare(Property o1, Property o2) {
+      // important go first
+      List<String> order = new ArrayList<String>(Arrays.asList(
+              "modelVersion",
+              "groupId",
+              "artifactId",
+              "version",
+              "packaging",
+              "properties",
+              "name",
+              "description",
+              "inceptionYear",
+              "url",
+              "issueManagement",
+              "ciManagement",
+              "mailingLists",
+              "scm",
+              "licenses",
+              "developers",
+              "contributers",
+              "prerequisites",
+              "dependencies",
+              "distributionManagement",
+              "build",
+              "reporting"));
+      for (String name : order) {
+        int c = compareByName(o1, o2, name);
+        if (c != 0) {
+          return c;
+        }
+      }
+      // all the rest
+      return o1.compareTo(o2);
+    }
+
+    private int compareByName(Property o1, Property o2, String name) {
+      if (o1.getName().equals(name)) {
+        return -1;
+      } else if (o2.getName().equals(name)) {
+        return 1;
+      }
+      return 0;// compare further
+    }
+  }
+
 }
