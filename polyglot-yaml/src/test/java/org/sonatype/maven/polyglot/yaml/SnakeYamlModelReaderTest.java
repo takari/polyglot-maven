@@ -115,8 +115,11 @@ public class SnakeYamlModelReaderTest {
     String output = sw.toString();
     System.out.println(output);
     assertTrue(output, output.contains("\nproperties: {FOO: BAR}\n"));
-    assertFalse(output, output.contains("extensions: []"));
-    assertFalse(output, output.contains("properties: {}"));
+    assertFalse("Null values should be printed.", output.contains("reporting: null"));
+    assertFalse("Empty maps should be printed.", output.contains("properties: {}"));
+    assertFalse("Empty lists should be printed.", output.contains("extensions: []"));
+    assertFalse("AsMap should be printed.", output.contains("AsMap"));
+    assertFalse("getModelEncoding should be printed.", output.contains("getModelEncoding"));
 
     YamlModelReader modelReader = new YamlModelReader();
     InputStream stream = new ByteArrayInputStream(output.getBytes(StandardCharsets.UTF_8));
