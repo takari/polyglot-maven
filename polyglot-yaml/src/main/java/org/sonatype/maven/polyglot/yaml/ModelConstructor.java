@@ -41,7 +41,7 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.MappingNode;
 import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.Tags;
+import org.yaml.snakeyaml.nodes.Tag;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -60,7 +60,7 @@ public class ModelConstructor extends Constructor {
   public ModelConstructor() {
     super(Model.class);
 
-    yamlConstructors.put(Tags.MAP, new ConstructXpp3Dom());
+    yamlConstructors.put(Tag.MAP, new ConstructXpp3Dom());
 
     TypeDescription desc;
 
@@ -149,19 +149,9 @@ public class ModelConstructor extends Constructor {
 
   @Override
   protected Map<Object, Object> constructMapping(MappingNode node) {
-    Map<Object, Object> mapping = createDefaultMap(node);
+    Map<Object, Object> mapping = createDefaultMap();
     constructMapping2ndStep(node, mapping);
     return mapping;
-  }
-
-  // TODO: This should be moved down to SnakeYAML, we shouldn't need to tell how to map Properties
-  protected Map<Object, Object> createDefaultMap(Node node) {
-    if (node.getType() != null && Properties.class.isAssignableFrom(node.getType())) {
-      return new Properties();
-    } else {
-      // respect order from YAML document
-      return new LinkedHashMap<Object, Object>();
-    }
   }
 
   private class ConstructXpp3Dom implements Construct {

@@ -1,0 +1,298 @@
+modelVersion: 4.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.17-SNAPSHOT
+packaging: jar
+properties: {FOO: BAR}
+name: SnakeYAML
+description: YAML 1.1 parser and emitter for Java
+inceptionYear: 2008
+url: http://www.snakeyaml.org
+issueManagement: {system: Bitbucket, url: 'https://bitbucket.org/asomov/snakeyaml/issues'}
+mailingLists:
+- {name: SnakeYAML developers and users List, post: snakeyaml-core@googlegroups.com}
+scm: {connection: 'scm:hg:http://bitbucket.org/asomov/snakeyaml', developerConnection: 'scm:hg:https://bitbucket.org/asomov/snakeyaml',
+  tag: HEAD, url: 'https://bitbucket.org/asomov/snakeyaml/src'}
+licenses:
+- {distribution: repo, name: 'Apache License, Version 2.0', url: 'http://www.apache.org/licenses/LICENSE-2.0.txt'}
+developers:
+- {name: Andrey Somov, id: asomov, email: public.somov@gmail.com}
+- {name: Alexander Maslov, id: maslovalex, email: alexander.maslov@gmail.com}
+- {name: Jordan Angold, id: Jordan, email: jordanangold@gmail.com}
+prerequisites: {maven: 3.3.1}
+dependencies:
+- {artifactId: junit, groupId: junit, scope: test, version: 4.12}
+- {artifactId: spring, groupId: org.springframework, scope: test, version: 2.5.6}
+- {artifactId: velocity, groupId: org.apache.velocity, scope: test, version: 1.6.2}
+- {artifactId: joda-time, groupId: joda-time, scope: test, version: 1.6}
+distributionManagement:
+  repository: {id: sonatype-nexus-staging, layout: default, name: Nexus Release Repository,
+    uniqueVersion: true, url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'}
+  snapshotRepository: {id: sonatype-nexus-snapshots, layout: default, name: Sonatype Nexus Snapshots,
+    uniqueVersion: false, url: 'https://oss.sonatype.org/content/repositories/snapshots/'}
+build:
+  pluginManagement:
+    plugins:
+    - {groupId: org.apache.maven.plugins, artifactId: maven-site-plugin, version: 3.4}
+  plugins:
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-compiler-plugin
+    version: 3.3
+    configuration: {source: 1.5, target: 1.5, encoding: '${project.build.sourceEncoding}'}
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-surefire-plugin
+    version: 2.18.1
+    configuration:
+      argLine: -Xmx512m
+      includes: {include: '**/*Test.java'}
+      excludes: {exclude: '**/ParallelTest.java'}
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-eclipse-plugin
+    version: 2.10
+    configuration: {buildOutputDirectory: bin}
+  - groupId: org.codehaus.mojo
+    artifactId: cobertura-maven-plugin
+    version: 2.7
+    configuration:
+      check: {totalBranchRate: 80, totalLineRate: 95}
+      formats: {format: xml}
+      instrumentation:
+        excludes: {exclude: org/yaml/snakeyaml/external/**}
+    executions:
+    - goals: [clean, check]
+      id: default
+      inherited: true
+      priority: 0
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-changes-plugin
+    version: 2.11
+    executions:
+    - configuration: {failOnError: true}
+      goals: [changes-validate]
+      id: validate-changes
+      inherited: true
+      phase: pre-site
+      priority: 0
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-source-plugin
+    version: 2.4
+    executions:
+    - goals: [jar]
+      id: default
+      inherited: true
+      priority: 0
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-javadoc-plugin
+    version: 2.10.3
+    configuration:
+      links: {link: 'http://java.sun.com/javase/6/docs/api/'}
+    executions:
+    - goals: [jar]
+      id: attach-javadocs
+      inherited: true
+      priority: 0
+  - groupId: com.mycila.maven-license-plugin
+    artifactId: maven-license-plugin
+    version: 1.10.b1
+    configuration:
+      header: src/etc/header.txt
+      quiet: false
+      failIfMissing: true
+      aggregate: false
+      includes: {include: src/**/*.java}
+      excludes: {exclude: src/main/java/org/yaml/snakeyaml/external/**}
+      useDefaultExcludes: true
+      useDefaultMapping: true
+      strictCheck: true
+      encoding: UTF-8
+    executions:
+    - goals: [format]
+      id: default
+      inherited: true
+      phase: site
+      priority: 0
+  - groupId: org.apache.felix
+    artifactId: maven-bundle-plugin
+    version: 2.5.4
+    extensions: true
+    configuration:
+      instructions:
+        _nouses: true
+        Export-Package: |-
+          !org.yaml.snakeyaml.external*,
+                                      org.yaml.snakeyaml.*;version=${project.version}
+        Bundle-RequiredExecutionEnvironment: J2SE-1.5
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-site-plugin
+    version: 3.4
+    executions:
+    - goals: [attach-descriptor]
+      id: attach-descriptor
+      inherited: true
+      priority: 0
+reporting:
+  excludeDefaults: false
+  plugins:
+  - artifactId: maven-changes-plugin
+    configuration: {issueLinkTemplate: 'https://bitbucket.org/asomov/snakeyaml/issues/%ISSUE%'}
+    groupId: org.apache.maven.plugins
+    inherited: true
+    reportSets:
+    - id: default
+      inherited: true
+      reports: [changes-report]
+    version: 2.11
+  - artifactId: maven-surefire-report-plugin
+    configuration: {showSuccess: true}
+    groupId: org.apache.maven.plugins
+    inherited: true
+    version: 2.18.1
+  - artifactId: cobertura-maven-plugin
+    configuration:
+      formats: {format: xml}
+    groupId: org.codehaus.mojo
+    inherited: true
+    version: 2.6
+  - artifactId: maven-javadoc-plugin
+    groupId: org.apache.maven.plugins
+    inherited: true
+    reportSets:
+    - configuration: {doctitle: 'API for ${project.name} ${project.version}', windowtitle: 'API
+          for ${project.name} ${project.version}', testDoctitle: 'Test API for ${project.name}
+          ${project.version}', testWindowtitle: 'Test API for ${project.name} ${project.version}'}
+      id: html
+      inherited: true
+      reports: [javadoc]
+    version: 2.10.1
+modelEncoding: UTF-8
+profiles:
+- activation: {activeByDefault: false, jdk: '[1.8,)'}
+  build:
+    plugins:
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-javadoc-plugin
+      configuration: {additionalparam: '-Xdoclint:none'}
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-site-plugin
+      configuration:
+        reportPlugins:
+          plugin:
+            groupId: org.apache.maven.plugins
+            artifactId: maven-javadoc-plugin
+            configuration: {additionalparam: '-Xdoclint:none'}
+  id: jdk8
+  source: pom
+- activation:
+    activeByDefault: false
+    property: {name: performRelease, value: true}
+  build:
+    plugins:
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-gpg-plugin
+      version: 1.6
+      executions:
+      - goals: [sign]
+        id: sign-artifacts
+        inherited: true
+        phase: verify
+        priority: 0
+  id: release
+  source: pom
+- build:
+    plugins:
+    - {groupId: org.codehaus.mojo, artifactId: findbugs-maven-plugin, version: 3.0.2}
+    - {groupId: org.apache.maven.plugins, artifactId: maven-pmd-plugin, version: 3.5}
+  id: findbugs
+  reporting:
+    excludeDefaults: false
+    plugins:
+    - {artifactId: maven-jxr-plugin, groupId: org.apache.maven.plugins, inherited: true,
+      version: 2.5}
+    - {artifactId: findbugs-maven-plugin, groupId: org.codehaus.mojo, inherited: true,
+      version: 3.0.0}
+    - artifactId: maven-pmd-plugin
+      configuration:
+        linkXref: true
+        sourceEncoding: utf-8
+        minimumTokens: 100
+        targetJdk: 1.5
+        excludes: {exclude: '**/external/*.java'}
+      groupId: org.apache.maven.plugins
+      inherited: true
+      version: 3.4
+  source: pom
+- build:
+    plugins:
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-resources-plugin
+      version: 2.7
+      executions:
+      - configuration:
+          outputDirectory: ${android.src}
+          resources:
+            resource:
+              directory: ${basedir}/src/main/java
+              filtering: false
+              excludes: {exclude: org/yaml/snakeyaml/introspector/MethodProperty.java}
+        goals: [copy-resources]
+        id: copy-src-for-android
+        inherited: true
+        phase: generate-sources
+        priority: 0
+      - configuration:
+          outputDirectory: ${android.test.classes}
+          resources:
+            resource: {directory: '${basedir}/src/test/resources'}
+        goals: [copy-resources]
+        id: copy-test-resources-for-android
+        inherited: true
+        phase: process-test-resources
+        priority: 0
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-patch-plugin
+      version: 1.2
+      configuration: {patchDirectory: '${basedir}/src/patches/android/', targetDirectory: '${android.src}',
+        skipApplication: false, strip: 4}
+      executions:
+      - configuration: {patchTrackingFile: '${project.build.directory}/android/patches-applied.txt',
+          naturalOrderProcessing: true}
+        goals: [apply]
+        id: android-patches
+        inherited: true
+        phase: process-sources
+        priority: 0
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-antrun-plugin
+      version: 1.8
+      executions:
+      - configuration:
+          target:
+            javac: {}
+        goals: [run]
+        id: build-for-android
+        inherited: true
+        phase: compile
+        priority: 0
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-surefire-plugin
+      executions:
+      - configuration: {classesDirectory: '${android.classes}', reportsDirectory: '${project.build.directory}/android/surefire-reports',
+          testClassesDirectory: '${android.test.classes}', testFailureIgnore: true}
+        goals: [test]
+        id: test-android
+        inherited: true
+        phase: test
+        priority: 0
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-jar-plugin
+      executions:
+      - configuration: {classesDirectory: '${android.classes}', classifier: android}
+        goals: [jar]
+        id: package-android-jar
+        inherited: true
+        phase: package
+        priority: 0
+  id: android
+  properties: {android.test.classes: '${project.build.directory}/android/test-classes/',
+    android.src: '${project.build.directory}/android/src/', android.classes: '${project.build.directory}/android/classes/'}
+  source: pom
