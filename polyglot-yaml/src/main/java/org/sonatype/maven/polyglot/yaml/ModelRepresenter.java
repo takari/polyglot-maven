@@ -10,6 +10,7 @@ package org.sonatype.maven.polyglot.yaml;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.Node;
@@ -52,17 +53,33 @@ class ModelRepresenter extends Representer {
     }
     if (javaBean instanceof Dependency) {
       //skip optional if it is false
-      if ("optional".equals(property.getName())) {
-        Boolean v = (Boolean) propertyValue;
-        if (!v) return null;
-      }
+      if (skipBoolean(property, "optional", propertyValue, false)) return null;
       //skip type if it is jar
-      if ("type".equals(property.getName())) {
-        String v = (String) propertyValue;
-        if ("jar".equals(v)) return null;
-      }
+      if (skipString(property, "type", propertyValue, "jar")) return null;
+    }
+    if (javaBean instanceof Plugin) {
+      //skip extensions if it is false
+      if (skipBoolean(property, "extensions", propertyValue, false)) return null;
+      //skip inherited if it is true
+      if (skipBoolean(property, "inherited", propertyValue, true)) return null;
     }
     return super.representJavaBeanProperty(javaBean, property, propertyValue, customTag);
+  }
+
+  private boolean skipString(Property property, String name, Object propertyValue, String value) {
+    if (name.equals(property.getName())) {
+      String v = (String) propertyValue;
+      return (value.equals(v));
+    }
+    return false;
+  }
+
+  private boolean skipBoolean(Property property, String name, Object propertyValue, boolean value) {
+    if (name.equals(property.getName())) {
+      Boolean v = (Boolean) propertyValue;
+      return (v.equals(value));
+    }
+    return false;
   }
 
 
@@ -126,6 +143,12 @@ class ModelRepresenter extends Representer {
     } else if (type.isAssignableFrom(Developer.class)) {
       Set<Property> standard = super.getProperties(type);
       List<String> order = new ArrayList<String>(Arrays.asList("name", "id", "email"));
+      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
+      sorted.addAll(standard);
+      return sorted;
+    }  else if (type.isAssignableFrom(Plugin.class)) {
+      Set<Property> standard = super.getProperties(type);
+      List<String> order = new ArrayList<String>(Arrays.asList("groupId", "artifactId", "version", "inherited", "extensions", "configuration"));
       Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
       sorted.addAll(standard);
       return sorted;

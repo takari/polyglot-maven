@@ -33,31 +33,26 @@ distributionManagement:
 build:
   pluginManagement:
     plugins:
-    - {artifactId: maven-site-plugin, extensions: false, groupId: org.apache.maven.plugins,
-      inherited: true, version: 3.4}
+    - {groupId: org.apache.maven.plugins, artifactId: maven-site-plugin, version: 3.4}
   plugins:
-  - artifactId: maven-compiler-plugin
-    configuration: {source: 1.5, target: 1.5, encoding: '${project.build.sourceEncoding}'}
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-compiler-plugin
     version: 3.3
-  - artifactId: maven-surefire-plugin
+    configuration: {source: 1.5, target: 1.5, encoding: '${project.build.sourceEncoding}'}
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-surefire-plugin
+    version: 2.18.1
     configuration:
       argLine: -Xmx512m
       includes: {include: '**/*Test.java'}
       excludes: {exclude: '**/ParallelTest.java'}
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
-    version: 2.18.1
-  - artifactId: maven-eclipse-plugin
-    configuration: {buildOutputDirectory: bin}
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-eclipse-plugin
     version: 2.10
-  - artifactId: cobertura-maven-plugin
+    configuration: {buildOutputDirectory: bin}
+  - groupId: org.codehaus.mojo
+    artifactId: cobertura-maven-plugin
+    version: 2.7
     configuration:
       check: {totalBranchRate: 80, totalLineRate: 95}
       formats: {format: xml}
@@ -68,11 +63,9 @@ build:
       id: default
       inherited: true
       priority: 0
-    extensions: false
-    groupId: org.codehaus.mojo
-    inherited: true
-    version: 2.7
-  - artifactId: maven-changes-plugin
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-changes-plugin
+    version: 2.11
     executions:
     - configuration: {failOnError: true}
       goals: [changes-validate]
@@ -80,21 +73,17 @@ build:
       inherited: true
       phase: pre-site
       priority: 0
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
-    version: 2.11
-  - artifactId: maven-source-plugin
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-source-plugin
+    version: 2.4
     executions:
     - goals: [jar]
       id: default
       inherited: true
       priority: 0
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
-    version: 2.4
-  - artifactId: maven-javadoc-plugin
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-javadoc-plugin
+    version: 2.10.3
     configuration:
       links: {link: 'http://java.sun.com/javase/6/docs/api/'}
     executions:
@@ -102,11 +91,9 @@ build:
       id: attach-javadocs
       inherited: true
       priority: 0
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
-    version: 2.10.3
-  - artifactId: maven-license-plugin
+  - groupId: com.mycila.maven-license-plugin
+    artifactId: maven-license-plugin
+    version: 1.10.b1
     configuration:
       header: src/etc/header.txt
       quiet: false
@@ -124,11 +111,10 @@ build:
       inherited: true
       phase: site
       priority: 0
-    extensions: false
-    groupId: com.mycila.maven-license-plugin
-    inherited: true
-    version: 1.10.b1
-  - artifactId: maven-bundle-plugin
+  - groupId: org.apache.felix
+    artifactId: maven-bundle-plugin
+    version: 2.5.4
+    extensions: true
     configuration:
       instructions:
         _nouses: true
@@ -136,20 +122,14 @@ build:
           !org.yaml.snakeyaml.external*,
                                       org.yaml.snakeyaml.*;version=${project.version}
         Bundle-RequiredExecutionEnvironment: J2SE-1.5
-    extensions: true
-    groupId: org.apache.felix
-    inherited: true
-    version: 2.5.4
-  - artifactId: maven-site-plugin
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-site-plugin
+    version: 3.4
     executions:
     - goals: [attach-descriptor]
       id: attach-descriptor
       inherited: true
       priority: 0
-    extensions: false
-    groupId: org.apache.maven.plugins
-    inherited: true
-    version: 3.4
 reporting:
   excludeDefaults: false
   plugins:
@@ -189,21 +169,17 @@ profiles:
 - activation: {activeByDefault: false, jdk: '[1.8,)'}
   build:
     plugins:
-    - artifactId: maven-javadoc-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-javadoc-plugin
       configuration: {additionalparam: '-Xdoclint:none'}
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
-    - artifactId: maven-site-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-site-plugin
       configuration:
         reportPlugins:
           plugin:
             groupId: org.apache.maven.plugins
             artifactId: maven-javadoc-plugin
             configuration: {additionalparam: '-Xdoclint:none'}
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
   id: jdk8
   source: pom
 - activation:
@@ -211,25 +187,21 @@ profiles:
     property: {name: performRelease, value: true}
   build:
     plugins:
-    - artifactId: maven-gpg-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-gpg-plugin
+      version: 1.6
       executions:
       - goals: [sign]
         id: sign-artifacts
         inherited: true
         phase: verify
         priority: 0
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
-      version: 1.6
   id: release
   source: pom
 - build:
     plugins:
-    - {artifactId: findbugs-maven-plugin, extensions: false, groupId: org.codehaus.mojo,
-      inherited: true, version: 3.0.2}
-    - {artifactId: maven-pmd-plugin, extensions: false, groupId: org.apache.maven.plugins,
-      inherited: true, version: 3.5}
+    - {groupId: org.codehaus.mojo, artifactId: findbugs-maven-plugin, version: 3.0.2}
+    - {groupId: org.apache.maven.plugins, artifactId: maven-pmd-plugin, version: 3.5}
   id: findbugs
   reporting:
     excludeDefaults: false
@@ -251,7 +223,9 @@ profiles:
   source: pom
 - build:
     plugins:
-    - artifactId: maven-resources-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-resources-plugin
+      version: 2.7
       executions:
       - configuration:
           outputDirectory: ${android.src}
@@ -274,11 +248,9 @@ profiles:
         inherited: true
         phase: process-test-resources
         priority: 0
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
-      version: 2.7
-    - artifactId: maven-patch-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-patch-plugin
+      version: 1.2
       configuration: {patchDirectory: '${basedir}/src/patches/android/', targetDirectory: '${android.src}',
         skipApplication: false, strip: 4}
       executions:
@@ -289,11 +261,9 @@ profiles:
         inherited: true
         phase: process-sources
         priority: 0
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
-      version: 1.2
-    - artifactId: maven-antrun-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-antrun-plugin
+      version: 1.8
       executions:
       - configuration:
           target:
@@ -303,11 +273,8 @@ profiles:
         inherited: true
         phase: compile
         priority: 0
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
-      version: 1.8
-    - artifactId: maven-surefire-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-surefire-plugin
       executions:
       - configuration: {classesDirectory: '${android.classes}', reportsDirectory: '${project.build.directory}/android/surefire-reports',
           testClassesDirectory: '${android.test.classes}', testFailureIgnore: true}
@@ -316,10 +283,8 @@ profiles:
         inherited: true
         phase: test
         priority: 0
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
-    - artifactId: maven-jar-plugin
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-jar-plugin
       executions:
       - configuration: {classesDirectory: '${android.classes}', classifier: android}
         goals: [jar]
@@ -327,9 +292,6 @@ profiles:
         inherited: true
         phase: package
         priority: 0
-      extensions: false
-      groupId: org.apache.maven.plugins
-      inherited: true
   id: android
   properties: {android.test.classes: '${project.build.directory}/android/test-classes/',
     android.src: '${project.build.directory}/android/src/', android.classes: '${project.build.directory}/android/classes/'}
