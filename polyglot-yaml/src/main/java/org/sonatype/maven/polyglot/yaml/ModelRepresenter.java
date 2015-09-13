@@ -7,6 +7,7 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.yaml.snakeyaml.introspector.Property;
@@ -83,17 +84,6 @@ class ModelRepresenter extends Representer {
           throws IntrospectionException {
     if (type.isAssignableFrom(Model.class)) {
       Set<Property> standard = super.getProperties(type);
-      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator());
-      sorted.addAll(standard);
-      return sorted;
-    } else {
-      return super.getProperties(type);
-    }
-  }
-
-  private class ModelPropertyComparator implements Comparator<Property> {
-    public int compare(Property o1, Property o2) {
-      // important go first
       List<String> order = new ArrayList<String>(Arrays.asList(
               "modelVersion",
               "groupId",
@@ -117,7 +107,30 @@ class ModelRepresenter extends Representer {
               "distributionManagement",
               "build",
               "reporting"));
-      for (String name : order) {
+      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
+      sorted.addAll(standard);
+      return sorted;
+    } else if (type.isAssignableFrom(Developer.class)) {
+      Set<Property> standard = super.getProperties(type);
+      List<String> order = new ArrayList<String>(Arrays.asList("name", "id", "email"));
+      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
+      sorted.addAll(standard);
+      return sorted;
+    } else {
+      return super.getProperties(type);
+    }
+  }
+
+  private class ModelPropertyComparator implements Comparator<Property> {
+    private List<String> names;
+
+    public ModelPropertyComparator(List<String> names) {
+      this.names = names;
+    }
+
+    public int compare(Property o1, Property o2) {
+      // important go first
+      for (String name : names) {
         int c = compareByName(o1, o2, name);
         if (c != 0) {
           return c;

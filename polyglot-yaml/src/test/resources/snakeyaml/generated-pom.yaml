@@ -16,9 +16,9 @@ scm: {connection: 'scm:hg:http://bitbucket.org/asomov/snakeyaml', developerConne
 licenses:
 - {distribution: repo, name: 'Apache License, Version 2.0', url: 'http://www.apache.org/licenses/LICENSE-2.0.txt'}
 developers:
-- {email: public.somov@gmail.com, id: asomov, name: Andrey Somov}
-- {email: alexander.maslov@gmail.com, id: maslovalex, name: Alexander Maslov}
-- {email: jordanangold@gmail.com, id: Jordan, name: Jordan Angold}
+- {name: Andrey Somov, id: asomov, email: public.somov@gmail.com}
+- {name: Alexander Maslov, id: maslovalex, email: alexander.maslov@gmail.com}
+- {name: Jordan Angold, id: Jordan, email: jordanangold@gmail.com}
 prerequisites: {maven: 3.3.1}
 dependencies:
 - {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: 4.12}
