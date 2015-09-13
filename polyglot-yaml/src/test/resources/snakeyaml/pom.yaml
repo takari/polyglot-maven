@@ -6,7 +6,7 @@ packaging: jar # TODO must be bundle
 properties: {project.scm.id: bitbucket, project.build.sourceEncoding: UTF-8}
 name: SnakeYAML
 description: YAML 1.1 parser and emitter for Java
-inceptionYear: '2008'
+inceptionYear: 2008
 url: http://www.snakeyaml.org
 issueManagement: {system: Bitbucket, url: 'https://bitbucket.org/asomov/snakeyaml/issues'}
 mailingLists:
@@ -21,13 +21,13 @@ developers:
 - {email: jordanangold@gmail.com, id: Jordan, name: Jordan Angold}
 prerequisites: {maven: 3.3.1}
 dependencies:
-- {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: '4.12'}
+- {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: 4.12}
 - {artifactId: spring, groupId: org.springframework, optional: false, scope: test,
   type: jar, version: 2.5.6}
 - {artifactId: velocity, groupId: org.apache.velocity, optional: false, scope: test,
   type: jar, version: 1.6.2}
 - {artifactId: joda-time, groupId: joda-time, optional: false, scope: test, type: jar,
-  version: '1.6'}
+  version: 1.6}
 distributionManagement:
   repository: {id: sonatype-nexus-staging, layout: default, name: Nexus Release Repository,
     uniqueVersion: true, url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'}
@@ -37,14 +37,14 @@ build:
   pluginManagement:
     plugins:
     - {artifactId: maven-site-plugin, extensions: false, groupId: org.apache.maven.plugins,
-      inherited: true, version: '3.4'}
+      inherited: true, version: 3.4}
   plugins:
   - artifactId: maven-compiler-plugin
-    configuration: {source: '1.5', target: '1.5', encoding: '${project.build.sourceEncoding}'}
+    configuration: {source: 1.5, target: 1.5, encoding: '${project.build.sourceEncoding}'}
     extensions: false
     groupId: org.apache.maven.plugins
     inherited: true
-    version: '3.3'
+    version: 3.3
   - artifactId: maven-surefire-plugin
     configuration:
       argLine: -Xmx512m
@@ -59,10 +59,10 @@ build:
     extensions: false
     groupId: org.apache.maven.plugins
     inherited: true
-    version: '2.10'
+    version: 2.10
   - artifactId: cobertura-maven-plugin
     configuration:
-      check: {totalBranchRate: '80', totalLineRate: '95'}
+      check: {totalBranchRate: 80, totalLineRate: 95}
       formats: {format: xml}
       instrumentation:
         excludes: {exclude: org/yaml/snakeyaml/external/**}
@@ -74,7 +74,7 @@ build:
     extensions: false
     groupId: org.codehaus.mojo
     inherited: true
-    version: '2.7'
+    version: 2.7
   - artifactId: maven-changes-plugin
     executions:
     - configuration: {failOnError: 'true'}
@@ -86,7 +86,7 @@ build:
     extensions: false
     groupId: org.apache.maven.plugins
     inherited: true
-    version: '2.11'
+    version: 2.11
   - artifactId: maven-source-plugin
     executions:
     - goals: [jar]
@@ -96,7 +96,7 @@ build:
     extensions: false
     groupId: org.apache.maven.plugins
     inherited: true
-    version: '2.4'
+    version: 2.4
   - artifactId: maven-javadoc-plugin
     configuration:
       links: {link: 'http://java.sun.com/javase/6/docs/api/'}
@@ -112,14 +112,14 @@ build:
   - artifactId: maven-license-plugin
     configuration:
       header: src/etc/header.txt
-      quiet: 'false'
-      failIfMissing: 'true'
-      aggregate: 'false'
+      quiet: false
+      failIfMissing: true
+      aggregate: false
       includes: {include: src/**/*.java}
       excludes: {exclude: src/main/java/org/yaml/snakeyaml/external/**}
-      useDefaultExcludes: 'true'
-      useDefaultMapping: 'true'
-      strictCheck: 'true'
+      useDefaultExcludes: true
+      useDefaultMapping: true
+      strictCheck: true
       encoding: UTF-8
     executions:
     - goals: [format]
@@ -133,7 +133,7 @@ build:
     version: 1.10.b1
   - artifactId: maven-bundle-plugin
     configuration:
-      instructions: {_nouses: 'true', Export-Package: "!org.yaml.snakeyaml.external*,\n\
+      instructions: {_nouses: true, Export-Package: "!org.yaml.snakeyaml.external*,\n\
           \                            org.yaml.snakeyaml.*;version=${project.version}",
         Bundle-RequiredExecutionEnvironment: J2SE-1.5}
     extensions: true
@@ -149,7 +149,7 @@ build:
     extensions: false
     groupId: org.apache.maven.plugins
     inherited: true
-    version: '3.4'
+    version: 3.4
 profiles:
 - activation: {activeByDefault: false, jdk: '[1.8,)'}
   build:
@@ -173,7 +173,7 @@ profiles:
   source: pom
 - activation:
     activeByDefault: false
-    property: {name: performRelease, value: 'true'}
+    property: {name: performRelease, value: true}
   build:
     plugins:
     - artifactId: maven-gpg-plugin
@@ -186,7 +186,7 @@ profiles:
       extensions: false
       groupId: org.apache.maven.plugins
       inherited: true
-      version: '1.6'
+      version: 1.6
   id: release
   source: pom
 - build:
@@ -194,25 +194,25 @@ profiles:
     - {artifactId: findbugs-maven-plugin, extensions: false, groupId: org.codehaus.mojo,
       inherited: true, version: 3.0.2}
     - {artifactId: maven-pmd-plugin, extensions: false, groupId: org.apache.maven.plugins,
-      inherited: true, version: '3.5'}
+      inherited: true, version: 3.5}
   id: findbugs
   reporting:
     excludeDefaults: false
     plugins:
     - {artifactId: maven-jxr-plugin, groupId: org.apache.maven.plugins, inherited: true,
-      version: '2.5'}
+      version: 2.5}
     - {artifactId: findbugs-maven-plugin, groupId: org.codehaus.mojo, inherited: true,
       version: 3.0.0}
     - artifactId: maven-pmd-plugin
       configuration:
-        linkXref: 'true'
+        linkXref: true
         sourceEncoding: utf-8
-        minimumTokens: '100'
-        targetJdk: '1.5'
+        minimumTokens: 100
+        targetJdk: 1.5
         excludes: {exclude: '**/external/*.java'}
       groupId: org.apache.maven.plugins
       inherited: true
-      version: '3.4'
+      version: 3.4
   source: pom
 - build:
     plugins:
@@ -223,7 +223,7 @@ profiles:
           resources:
             resource:
               directory: ${basedir}/src/main/java
-              filtering: 'false'
+              filtering: false
               excludes: {exclude: org/yaml/snakeyaml/introspector/MethodProperty.java}
         goals: [copy-resources]
         id: copy-src-for-android
@@ -242,13 +242,13 @@ profiles:
       extensions: false
       groupId: org.apache.maven.plugins
       inherited: true
-      version: '2.7'
+      version: 2.7
     - artifactId: maven-patch-plugin
       configuration: {patchDirectory: '${basedir}/src/patches/android/', targetDirectory: '${android.src}',
-        skipApplication: 'false', strip: '4'}
+        skipApplication: false, strip: 4}
       executions:
       - configuration: {patchTrackingFile: '${project.build.directory}/android/patches-applied.txt',
-          naturalOrderProcessing: 'true'}
+          naturalOrderProcessing: true}
         goals: [apply]
         id: android-patches
         inherited: true
@@ -257,7 +257,7 @@ profiles:
       extensions: false
       groupId: org.apache.maven.plugins
       inherited: true
-      version: '1.2'
+      version: 1.2
     - artifactId: maven-antrun-plugin
       executions:
       - configuration:
@@ -271,7 +271,7 @@ profiles:
       extensions: false
       groupId: org.apache.maven.plugins
       inherited: true
-      version: '1.8'
+      version: 1.8
     - artifactId: maven-surefire-plugin
       executions:
       - configuration: {classesDirectory: '${android.classes}', reportsDirectory: '${project.build.directory}/android/surefire-reports',
@@ -310,9 +310,9 @@ reporting:
     - id: default
       inherited: true
       reports: [changes-report]
-    version: '2.11'
+    version: 2.11
   - artifactId: maven-surefire-report-plugin
-    configuration: {showSuccess: 'true'}
+    configuration: {showSuccess: true}
     groupId: org.apache.maven.plugins
     inherited: true
     version: 2.18.1
@@ -321,7 +321,7 @@ reporting:
       formats: {format: xml}
     groupId: org.codehaus.mojo
     inherited: true
-    version: '2.6'
+    version: 2.6
   - artifactId: maven-javadoc-plugin
     groupId: org.apache.maven.plugins
     inherited: true

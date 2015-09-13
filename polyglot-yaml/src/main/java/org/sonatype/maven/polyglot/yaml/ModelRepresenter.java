@@ -26,12 +26,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * YAML model representer.
@@ -46,6 +41,12 @@ class ModelRepresenter extends Representer {
     this.representers.put(null, new RepresentJavaBean());
     this.representers.put(Xpp3Dom.class, new RepresentXpp3Dom());
     this.nullRepresenter = new RepresentNull();
+    Represent stringRepresenter = this.representers.get(String.class);
+    this.representers.put(Boolean.class, stringRepresenter);
+    this.multiRepresenters.put(Number.class, stringRepresenter);
+    this.multiRepresenters.put(Date.class, stringRepresenter);
+    this.multiRepresenters.put(Enum.class, stringRepresenter);
+    this.multiRepresenters.put(Calendar.class, stringRepresenter);
   }
 
   private class RepresentNull implements Represent {

@@ -38,7 +38,7 @@ public class YamlModelWriter extends ModelWriterSupport {
         DumperOptions dumperOptions = new DumperOptions();
         dumperOptions.setIndent(2);
         dumperOptions.setWidth(80);
-        Serializer serializer = new Serializer(new Emitter(output, dumperOptions), new Resolver(), dumperOptions, Tag.MAP);
+        Serializer serializer = new Serializer(new Emitter(output, dumperOptions), new ModelResolver(), dumperOptions, Tag.MAP);
         Representer representer = new ModelRepresenter();
         try {
             serializer.open();
