@@ -21,13 +21,10 @@ developers:
 - {name: Jordan Angold, id: Jordan, email: jordanangold@gmail.com}
 prerequisites: {maven: 3.3.1}
 dependencies:
-- {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: 4.12}
-- {artifactId: spring, groupId: org.springframework, optional: false, scope: test,
-  type: jar, version: 2.5.6}
-- {artifactId: velocity, groupId: org.apache.velocity, optional: false, scope: test,
-  type: jar, version: 1.6.2}
-- {artifactId: joda-time, groupId: joda-time, optional: false, scope: test, type: jar,
-  version: 1.6}
+- {artifactId: junit, groupId: junit, scope: test, version: 4.12}
+- {artifactId: spring, groupId: org.springframework, scope: test, version: 2.5.6}
+- {artifactId: velocity, groupId: org.apache.velocity, scope: test, version: 1.6.2}
+- {artifactId: joda-time, groupId: joda-time, scope: test, version: 1.6}
 distributionManagement:
   repository: {id: sonatype-nexus-staging, layout: default, name: Nexus Release Repository,
     uniqueVersion: true, url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'}

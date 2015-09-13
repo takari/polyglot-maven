@@ -7,6 +7,7 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -48,6 +49,18 @@ class ModelRepresenter extends Representer {
     if (propertyValue instanceof List) {
       List map = (List) propertyValue;
       if (map.isEmpty()) return null;
+    }
+    if (javaBean instanceof Dependency) {
+      //skip optional if it is false
+      if ("optional".equals(property.getName())) {
+        Boolean v = (Boolean) propertyValue;
+        if (!v) return null;
+      }
+      //skip type if it is jar
+      if ("type".equals(property.getName())) {
+        String v = (String) propertyValue;
+        if ("jar".equals(v)) return null;
+      }
     }
     return super.representJavaBeanProperty(javaBean, property, propertyValue, customTag);
   }
@@ -149,5 +162,4 @@ class ModelRepresenter extends Representer {
       return 0;// compare further
     }
   }
-
 }
