@@ -8,6 +8,8 @@
 package org.sonatype.maven.polyglot.groovy.builder;
 
 import groovy.lang.Closure;
+import groovy.lang.GroovyObject;
+import groovy.lang.GroovyObjectSupport;
 import groovy.util.Factory;
 import groovy.util.FactoryBuilderSupport;
 
@@ -39,7 +41,6 @@ import org.apache.maven.model.ReportSet;
 import org.apache.maven.model.Reporting;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.Resource;
-import org.codehaus.groovy.runtime.InvokerHelper;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
@@ -93,15 +94,21 @@ public class ModelBuilder extends FactoryBuilderSupport {
     registerFactories();
   }
 
-  @Override
-  protected void setClosureDelegate(final Closure c, final Object o) {
-    c.setDelegate(this);
-    c.setResolveStrategy(Closure.DELEGATE_FIRST);
-  }
+  /**
+   * Delegate to force use of invokeMethod when building the model.
+   */
+  private final GroovyObject invokeDelegate = new GroovyObjectSupport()
+  {
+    @Override
+    public Object invokeMethod(final String name, final Object args) {
+      return ModelBuilder.this.invokeMethod(name, args);
+    }
+  };
 
   @Override
-  public void setVariable(final String name, final Object value) {
-    InvokerHelper.setProperty(getCurrent(), name, value);
+  protected void setClosureDelegate(final Closure c, final Object o) {
+    c.setDelegate(invokeDelegate);
+    c.setResolveStrategy(Closure.DELEGATE_FIRST);
   }
 
   public ExecuteManager getExecuteManager() {
