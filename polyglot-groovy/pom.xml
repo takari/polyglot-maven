@@ -18,6 +18,7 @@
 
   <properties>
     <groovy.compiler.version>2.9.2-01</groovy.compiler.version>
+    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
 
   <dependencies>
