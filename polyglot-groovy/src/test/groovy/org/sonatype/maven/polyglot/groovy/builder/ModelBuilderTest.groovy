@@ -7,9 +7,10 @@
  */
 package org.sonatype.maven.polyglot.groovy.builder
 
+import static org.junit.Assert.*
+
 import org.junit.Before
 import org.junit.Test
-import static org.junit.Assert.*
 import org.sonatype.maven.polyglot.groovy.GroovyModelTestSupport
 
 /**
@@ -262,4 +263,129 @@ public class ModelBuilderTest
         assertEquals("a", e[1].groupId)
         assertEquals("b", e[1].artifactId)
     }
+	
+	@Test
+	void testBuildWithScopeBlocks() {
+		def model = builder.project {
+			dependencies {
+				$test {
+					dependency 't:a:1'
+					dependency 't:b:2:compile'
+				}
+				$provided {
+					dependency 'p:a:1'
+					dependency 'p:b:2:system'
+				}
+				$runtime {
+					dependency 'r:a:1'
+					dependency 'r:b:2:test'
+				}
+				$compile {
+					dependency 'c:a:1'
+					dependency 'c:b:2:test'
+				}
+				dependency 'a:b:c'
+				$system {
+					dependency 's:a:1'
+					dependency 's:b:2'
+				}
+				$import {
+					dependency 'i:a:1'
+					dependency 'i:b:2'
+				}
+			}
+		}
+
+		assertNotNull(model)
+		assertNotNull(model.dependencies)
+		assertEquals(13, model.dependencies.size())
+
+		def d 
+		int i = 0
+		//From test block
+		d = model.dependencies[i++]
+		assertEquals('t', d.groupId)
+		assertEquals('a', d.artifactId)
+		assertEquals('1', d.version)
+		assertEquals('test', d.scope)
+		
+		d = model.dependencies[i++]
+		assertEquals('t', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('2', d.version)
+		assertEquals('compile', d.scope)
+		
+		//From provided block
+		d = model.dependencies[i++]
+		assertEquals('p', d.groupId)
+		assertEquals('a', d.artifactId)
+		assertEquals('1', d.version)
+		assertEquals('provided', d.scope)
+		
+		d = model.dependencies[i++]
+		assertEquals('p', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('2', d.version)
+		assertEquals('system', d.scope)
+		
+		//From runtime block
+		d = model.dependencies[i++]
+		assertEquals('r', d.groupId)
+		assertEquals('a', d.artifactId)
+		assertEquals('1', d.version)
+		assertEquals('runtime', d.scope)
+		
+		d = model.dependencies[i++]
+		assertEquals('r', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('2', d.version)
+		assertEquals('test', d.scope)
+		
+		//From compile block
+		d = model.dependencies[i++]
+		assertEquals('c', d.groupId)
+		assertEquals('a', d.artifactId)
+		assertEquals('1', d.version)
+		assertNull(d.scope)
+		
+		d = model.dependencies[i++]
+		assertEquals('c', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('2', d.version)
+		assertEquals('test', d.scope)
+		
+		//No block
+		d = model.dependencies[i++]
+		assertEquals('a', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('c', d.version)
+		assertNull(d.scope)
+		
+		
+		//From system block
+		d = model.dependencies[i++]
+		assertEquals('s', d.groupId)
+		assertEquals('a', d.artifactId)
+		assertEquals('1', d.version)
+		assertEquals('system', d.scope)
+		
+		d = model.dependencies[i++]
+		assertEquals('s', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('2', d.version)
+		assertEquals('system', d.scope)
+		
+		//From import block
+		d = model.dependencies[i++]
+		assertEquals('i', d.groupId)
+		assertEquals('a', d.artifactId)
+		assertEquals('1', d.version)
+		assertEquals('import', d.scope)
+		
+		d = model.dependencies[i++]
+		assertEquals('i', d.groupId)
+		assertEquals('b', d.artifactId)
+		assertEquals('2', d.version)
+		assertEquals('import', d.scope)
+	}
 }

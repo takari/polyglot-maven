@@ -1,17 +1,11 @@
 /**
- * Copyright (c) 2012 to original author or authors
+ * Copyright (c) 2012-2015 to original author or authors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
 package org.sonatype.maven.polyglot.groovy.builder;
-
-import groovy.lang.Closure;
-import groovy.lang.GroovyObject;
-import groovy.lang.GroovyObjectSupport;
-import groovy.util.Factory;
-import groovy.util.FactoryBuilderSupport;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,6 +16,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Activation;
 import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Dependency;
@@ -68,7 +63,14 @@ import org.sonatype.maven.polyglot.groovy.builder.factory.PropertiesFactory;
 import org.sonatype.maven.polyglot.groovy.builder.factory.ReportSetsFactory;
 import org.sonatype.maven.polyglot.groovy.builder.factory.ReportingFactory;
 import org.sonatype.maven.polyglot.groovy.builder.factory.ReportsFactory;
+import org.sonatype.maven.polyglot.groovy.builder.factory.ScopeFactory;
 import org.sonatype.maven.polyglot.groovy.builder.factory.StringFactory;
+
+import groovy.lang.Closure;
+import groovy.lang.GroovyObject;
+import groovy.lang.GroovyObjectSupport;
+import groovy.util.Factory;
+import groovy.util.FactoryBuilderSupport;
 
 /**
  * Builds Maven {@link Model} instances.
@@ -81,11 +83,11 @@ import org.sonatype.maven.polyglot.groovy.builder.factory.StringFactory;
 public class ModelBuilder extends FactoryBuilderSupport {
   protected Logger log = LoggerFactory.getLogger(ModelBuilder.class);
 
-  private final Set<String> factoryNames = new HashSet<String>();
+  private final Set<String> factoryNames = new HashSet<>();
 
-  private final Set<Class> factoryTypes = new HashSet<Class>();
+  private final Set<Class> factoryTypes = new HashSet<>();
 
-  private final List<ExecuteTask> tasks = new ArrayList<ExecuteTask>();
+  private final List<ExecuteTask> tasks = new ArrayList<>();
 
   @Requirement
   private ExecuteManager executeManager;
@@ -142,7 +144,7 @@ public class ModelBuilder extends FactoryBuilderSupport {
     registerFactory(new ExecuteFactory());
     registerFactory(new ReportSetsFactory());
     registerFactory(new ReportsFactory());
-
+    
     registerFactory(new ReportingFactory());
     registerFactoriesFor(Reporting.class);
 
@@ -151,7 +153,12 @@ public class ModelBuilder extends FactoryBuilderSupport {
 
     registerFactory(new ModelFactory());
     registerFactoriesFor(Model.class);
-
+    registerFactory(new ScopeFactory(Artifact.SCOPE_COMPILE));
+    registerFactory(new ScopeFactory(Artifact.SCOPE_PROVIDED));
+    registerFactory(new ScopeFactory(Artifact.SCOPE_TEST));
+    registerFactory(new ScopeFactory(Artifact.SCOPE_RUNTIME));
+    registerFactory(new ScopeFactory(Artifact.SCOPE_SYSTEM));
+    registerFactory(new ScopeFactory(Artifact.SCOPE_IMPORT));
     registerChildFactory("dependency", Dependency.class);
     registerChildFactory("exclusion", Exclusion.class);
     registerChildFactory("extension", Extension.class);

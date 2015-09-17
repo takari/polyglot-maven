@@ -7,23 +7,23 @@
  */
 package org.sonatype.maven.polyglot.groovy
 
+import static org.junit.Assert.*
+
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
+
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.DefaultModelWriter
-import org.sonatype.maven.polyglot.groovy.Dom2Groovy
+import org.codehaus.plexus.PlexusTestCase
 import org.w3c.dom.Document
 import org.xml.sax.InputSource
-import static org.junit.Assert.*
-import org.sonatype.maven.polyglot.groovy.Dom2Groovy
-import org.codehaus.plexus.PlexusTestCase
 
 /**
  * Support for model tests.
  *
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
  */
-public class GroovyModelTestSupport
+public abstract class GroovyModelTestSupport
     extends PlexusTestCase
 {
     protected String load(final String name) {
