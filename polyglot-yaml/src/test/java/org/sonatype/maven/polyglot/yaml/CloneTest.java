@@ -18,36 +18,32 @@ import java.util.Properties;
 
 import static org.junit.Assert.assertNotNull;
 
-public class CloneTest
-{
-    @Test
-    public void testModelCloning()
-        throws Exception
-    {
-        getModel().clone();
-    }
+public class CloneTest {
+  @Test
+  public void testModelCloning()
+          throws Exception {
+    getModel().clone();
+  }
 
-    @Test
-    public void testModelWriter()
-        throws Exception
-    {
-        StringWriter sw = new StringWriter();
-        ModelWriter writer = new YamlModelWriter();
-        Model model = getModel();
-        Properties p = new Properties();
-        p.setProperty( "FOO", "BAR" );
-        model.setProperties( p );
-        writer.write( sw, null, model );
-        System.out.println( sw.toString() );
-    }
+  @Test
+  public void testModelWriter()
+          throws Exception {
+    StringWriter sw = new StringWriter();
+    ModelWriter writer = new YamlModelWriter();
+    Model model = getModel();
+    Properties p = new Properties();
+    p.setProperty("FOO", "BAR");
+    model.setProperties(p);
+    writer.write(sw, null, model);
+    System.out.println(sw.toString());
+  }
 
-    protected Model getModel()
-        throws Exception
-    {
-        YamlModelReader modelReader = new YamlModelReader();
-        URL url = getClass().getResource("test2.yml");
-        assertNotNull(url);
-        InputStream reader = url.openStream();
-        return modelReader.read( reader, null );
-    }
+  protected Model getModel()
+          throws Exception {
+    YamlModelReader modelReader = new YamlModelReader();
+    URL url = getClass().getResource("test2.yml");
+    assertNotNull(url);
+    InputStream reader = url.openStream();
+    return modelReader.read(reader, null);
+  }
 }

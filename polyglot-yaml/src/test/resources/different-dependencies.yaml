@@ -1,0 +1,26 @@
+modelVersion: 4.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.17-SNAPSHOT
+name: SnakeYAML
+dependencies:
+- {artifactId: junit, groupId: junit, scope: test, version: 4.12}
+- {groupId: org.springframework, artifactId: spring, scope: compile, version: 2.5.6}
+- {artifactId: velocity, groupId: org.apache.velocity, version: 1.6.2}
+- artifactId: package1
+  groupId: org.mega
+  version: 1.0b
+  exclusions:
+  - groupId: generic1,
+    artifactId: generic1
+  - groupId: generic2,
+    artifactId: generic2
+- joda-time:joda-time:test:1.6
+- commons-io:commons-io:2.4-SNAPSHOT
+- id: org.apache.httpcomponents:httpclient:4.2.5
+  scope: runtime
+  exclusions: [{groupId: log4j, artifactId: log4j}, {groupId: javax.servlet, artifactId: servlet-api}]
+- id: jumbo:humbo:system:0.1
+  exclusions: [{groupId: log4j, artifactId: log4j}]
+- id: org.jumbo:humo:0.1alpha # redundant id
+- log:log4me

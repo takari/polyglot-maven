@@ -1,0 +1,5 @@
+modelVersion: 4.0.0
+id: org.yaml:snakeyaml:1.17
+name: SnakeYAML
+
+

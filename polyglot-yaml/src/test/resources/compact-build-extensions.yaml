@@ -1,0 +1,10 @@
+modelVersion: 4.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.18
+name: SnakeYAML
+build:
+ extensions:
+ - org.apache.maven.wagon:wagon-ssh-external:1.0-beta-2
+
+

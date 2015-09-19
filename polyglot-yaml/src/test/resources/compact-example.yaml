@@ -1,0 +1,35 @@
+modelVersion: 4.0.0
+parent: org.apache:apache:17
+id: org.yaml:snakeyaml:1.18
+name: SnakeYAML
+properties:
+    project.build.sourceEncoding: UTF-8
+    sonar.junit.reportsPath: ${project.build.directory}/surefire-reports
+prerequisites:
+    maven: 3.3.1
+dependencies:
+  - joda-time:joda-time:test:1.6
+  - commons-io:commons-io:2.4-SNAPSHOT
+build:
+    pluginManagement:
+        plugins:
+        - joda-time:joda-time
+        - commons-io:commons-io:2.4-SNAPSHOT
+    plugins:
+    - org.apache.maven.plugins:maven-compiler-plugin:2.3
+    - id: org.apache.maven.plugins:maven-surefire-report-plugin:2.18.1
+      configuration: {showSuccess: true}
+    - groupId: org.apache.maven.plugins
+      artifactId: maven-checkstyle-plugin
+      version: 2.4.3
+      configuration:
+          source: 1.6
+          target: 1.6
+    extensions:
+    - org.apache.maven.wagon:wagon-ssh-external:1.0-beta-2
+reporting:
+    plugins:
+    - id: org.apache.maven.plugins:maven-surefire-report-plugin:2.18.1
+      configuration: {showSuccess: true}
+
+
