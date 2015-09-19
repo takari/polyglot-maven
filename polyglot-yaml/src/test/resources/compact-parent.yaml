@@ -1,0 +1,8 @@
+modelVersion: 4.0.0
+parent: org.apache:father:1.0.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.17-SNAPSHOT
+name: SnakeYAML
+
+

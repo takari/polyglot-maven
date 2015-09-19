@@ -21,7 +21,7 @@ developers:
 - {email: jordanangold@gmail.com, id: Jordan, name: Jordan Angold}
 prerequisites: {maven: 3.3.1}
 dependencies:
-- {artifactId: junit, groupId: junit, optional: false, scope: test, type: jar, version: 4.12}
+- junit:junit:test:4.12
 - {artifactId: spring, groupId: org.springframework, optional: false, scope: test,
   type: jar, version: 2.5.6}
 - {artifactId: velocity, groupId: org.apache.velocity, optional: false, scope: test,

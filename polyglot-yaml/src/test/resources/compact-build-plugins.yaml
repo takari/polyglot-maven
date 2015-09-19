@@ -1,0 +1,23 @@
+modelVersion: 4.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.18
+name: SnakeYAML
+build:
+  plugins:
+  - org.apache.maven.plugins:maven-compiler-plugin:2.3
+  - groupId: org.apache.maven.plugins
+    artifactId: maven-checkstyle-plugin
+    version: 2.4.3
+    configuration:
+      source: 1.6
+      target: 1.6
+  - id: org.apache.maven.plugins:maven-site-plugin:2.3.2
+    configuration:
+      locales: nl
+  - id: org.apache.maven.plugins:maven-moon-plugin
+    configuration:
+      path: nowhere
+  - org.apache.maven.plugins:maven-checkstyle-plugin # no version
+
+

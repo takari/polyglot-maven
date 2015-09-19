@@ -1,0 +1,10 @@
+modelVersion: 4.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.17-SNAPSHOT
+name: SnakeYAML
+dependencies:
+- id: jumbo:humbo:system:0.1
+  # Please check http://pyyaml.org/wiki/YAMLColonInFlowContext for details.
+  exclusions: [{groupId:log4j, artifactId:log4j}]
+

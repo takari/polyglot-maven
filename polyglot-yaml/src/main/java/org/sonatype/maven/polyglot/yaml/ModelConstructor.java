@@ -7,45 +7,18 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
-import org.apache.maven.model.Build;
-import org.apache.maven.model.BuildBase;
-import org.apache.maven.model.CiManagement;
-import org.apache.maven.model.Contributor;
-import org.apache.maven.model.Dependency;
-import org.apache.maven.model.DependencyManagement;
-import org.apache.maven.model.Developer;
-import org.apache.maven.model.DistributionManagement;
-import org.apache.maven.model.Exclusion;
-import org.apache.maven.model.Extension;
-import org.apache.maven.model.IssueManagement;
-import org.apache.maven.model.License;
-import org.apache.maven.model.MailingList;
-import org.apache.maven.model.Model;
-import org.apache.maven.model.Notifier;
-import org.apache.maven.model.Organization;
-import org.apache.maven.model.Parent;
-import org.apache.maven.model.Plugin;
-import org.apache.maven.model.PluginExecution;
-import org.apache.maven.model.PluginManagement;
-import org.apache.maven.model.Profile;
-import org.apache.maven.model.ReportPlugin;
-import org.apache.maven.model.ReportSet;
-import org.apache.maven.model.Reporting;
-import org.apache.maven.model.Repository;
-import org.apache.maven.model.Resource;
-import org.apache.maven.model.Scm;
+import org.apache.maven.model.*;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.constructor.Construct;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
-import org.yaml.snakeyaml.nodes.MappingNode;
-import org.yaml.snakeyaml.nodes.Node;
-import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.nodes.*;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * YAML model constructor.
@@ -53,14 +26,25 @@ import java.util.Properties;
  * @author jvanzyl
  * @author bentmann
  * @author <a href="mailto:jason@planet57.com">Jason Dillon</a>
- *
  * @since 0.7
  */
-public class ModelConstructor extends Constructor {
+public final class ModelConstructor extends Constructor {
+
+  /**
+   * It maps the runtime class to its Construct implementation.
+   */
+  private final Map<Class<?>, Construct> pomConstructors = new HashMap<>();
+
   public ModelConstructor() {
     super(Model.class);
 
     yamlConstructors.put(Tag.MAP, new ConstructXpp3Dom());
+    yamlClassConstructors.put(NodeId.mapping, new MavenObjectConstruct());
+    pomConstructors.put(Dependency.class, new ConstructDependency());
+    pomConstructors.put(Parent.class, new ConstructParent());
+    pomConstructors.put(Extension.class, new ConstructExtension());
+    pomConstructors.put(Plugin.class, new ConstructPlugin());
+    pomConstructors.put(ReportPlugin.class, new ConstructReportPlugin());
 
     TypeDescription desc;
 
@@ -148,10 +132,13 @@ public class ModelConstructor extends Constructor {
   }
 
   @Override
-  protected Map<Object, Object> constructMapping(MappingNode node) {
-    Map<Object, Object> mapping = createDefaultMap();
-    constructMapping2ndStep(node, mapping);
-    return mapping;
+  protected Construct getConstructor(Node node) {
+    if (pomConstructors.containsKey(node.getType()) && node instanceof ScalarNode) {
+      //construct compact form from scalar
+      return pomConstructors.get(node.getType());
+    } else {
+      return super.getConstructor(node);
+    }
   }
 
   private class ConstructXpp3Dom implements Construct {
@@ -168,7 +155,6 @@ public class ModelConstructor extends Constructor {
           dom.addChild(child);
         }
       }
-
       return dom;
     }
 
@@ -179,5 +165,65 @@ public class ModelConstructor extends Constructor {
     public void construct2ndStep(Node node, Object object) {
       throw new YAMLException("Unexpected recursive mapping structure. Node: " + node);
     }
+  }
+
+  class MavenObjectConstruct extends Constructor.ConstructMapping {
+    @Override
+    protected Object constructJavaBean2ndStep(MappingNode node, Object object) {
+      Class<?> type = node.getType();
+      List<Class> specialCases = new ArrayList<Class>();
+      specialCases.add(Dependency.class);
+      specialCases.add(Model.class);
+      specialCases.add(Plugin.class);
+      specialCases.add(ReportPlugin.class);
+      if (specialCases.contains(type)) {
+        String coordinate = removeId(node);
+        if (coordinate == null) {
+          return super.constructJavaBean2ndStep(node, object);
+        }
+        if (type.equals(Dependency.class)) {
+          Dependency dep = (Dependency) super.constructJavaBean2ndStep(node, object);
+          return ConstructDependency.createDependency(coordinate, dep);
+        } else if (type.equals(Model.class)) {
+          Coordinate coord = Coordinate.createCoordinate(coordinate);
+          Model model = (Model) super.constructJavaBean2ndStep(node, object);
+          return coord.mergeModel(model);
+        } else if (type.equals(Plugin.class)) {
+          Coordinate coord = Coordinate.createCoordinate(coordinate);
+          Plugin plugin = (Plugin) super.constructJavaBean2ndStep(node, object);
+          return coord.mergePlugin(plugin);
+        } else if (type.equals(ReportPlugin.class)) {
+          Coordinate coord = Coordinate.createCoordinate(coordinate);
+          ReportPlugin plugin = (ReportPlugin) super.constructJavaBean2ndStep(node, object);
+          return coord.mergeReportPlugin(plugin);
+        }
+      }
+      // create JavaBean
+      return super.constructJavaBean2ndStep(node, object);
+    }
+  }
+
+  /**
+   * Dirty hack - remove 'id' if it is present.
+   *
+   * @param node - the node to remove the coordinate from
+   * @return removed coordinate if it was removed
+   */
+  private String removeId(MappingNode node) {
+    NodeTuple id = null;
+    String scalar = null;
+    for (NodeTuple tuple : node.getValue()) {
+      ScalarNode keyNode = (ScalarNode) tuple.getKeyNode();
+      String key = keyNode.getValue();
+      if ("id".equals(key)) {
+        id = tuple;
+        ScalarNode valueNode = (ScalarNode) tuple.getValueNode();
+        scalar = valueNode.getValue();
+      }
+    }
+    if (id != null) {
+      node.getValue().remove(id);
+    }
+    return scalar;
   }
 }

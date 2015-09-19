@@ -17,7 +17,6 @@ import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
-import org.yaml.snakeyaml.resolver.Resolver;
 import org.yaml.snakeyaml.serializer.Serializer;
 
 import java.io.IOException;
@@ -33,20 +32,20 @@ import java.util.Map;
  */
 @Component(role = ModelWriter.class, hint = "yaml")
 public class YamlModelWriter extends ModelWriterSupport {
-    public void write(Writer output, Map<String, Object> o, Model model) throws IOException {
-        //TODO improve SnakeYAML API
-        DumperOptions dumperOptions = new DumperOptions();
-        dumperOptions.setIndent(2);
-        dumperOptions.setWidth(80);
-        Serializer serializer = new Serializer(new Emitter(output, dumperOptions), new ModelResolver(), dumperOptions, Tag.MAP);
-        Representer representer = new ModelRepresenter();
-        try {
-            serializer.open();
-            Node node = representer.represent(model);
-            serializer.serialize(node);
-            serializer.close();
-        } catch (IOException e) {
-            throw new YAMLException(e);
-        }
+  public void write(Writer output, Map<String, Object> o, Model model) throws IOException {
+    //TODO improve SnakeYAML API (A. Somov)
+    DumperOptions dumperOptions = new DumperOptions();
+    dumperOptions.setIndent(2);
+    dumperOptions.setWidth(80);
+    Serializer serializer = new Serializer(new Emitter(output, dumperOptions), new ModelResolver(), dumperOptions, Tag.MAP);
+    Representer representer = new ModelRepresenter();
+    try {
+      serializer.open();
+      Node node = representer.represent(model);
+      serializer.serialize(node);
+      serializer.close();
+    } catch (IOException e) {
+      throw new YAMLException(e);
     }
+  }
 }

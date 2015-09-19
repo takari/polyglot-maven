@@ -1,0 +1,9 @@
+modelVersion: 4.0.0
+groupId: org.yaml
+artifactId: snakeyaml
+version: 1.18
+name: SnakeYAML
+prerequisites:
+ maven: 3.3.1
+
+
