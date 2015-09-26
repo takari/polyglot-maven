@@ -113,7 +113,7 @@ public class SnakeYamlModelReaderTest {
     model.setProperties(p);
     writer.write(sw, null, model);
     String output = sw.toString();
-    System.out.println(output);
+    //System.out.println(output);
     assertTrue(output, output.contains("\nproperties: {FOO: BAR}\n"));
     assertFalse("Null values should be printed.", output.contains("reporting: null"));
     assertFalse("Empty maps should be printed.", output.contains("properties: {}"));

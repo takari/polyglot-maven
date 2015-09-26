@@ -35,7 +35,7 @@ public class CloneTest {
     p.setProperty("FOO", "BAR");
     model.setProperties(p);
     writer.write(sw, null, model);
-    System.out.println(sw.toString());
+    //System.out.println(sw.toString());
   }
 
   protected Model getModel()
