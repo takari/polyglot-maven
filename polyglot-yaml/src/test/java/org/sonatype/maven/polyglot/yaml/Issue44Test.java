@@ -23,7 +23,7 @@ public class Issue44Test {
     assertNotNull(input);
     YamlModelReader modelReader = new YamlModelReader();
     Model model = modelReader.read(input, null);
-
+    assertNotNull(model);
     Plugin plugin = model.getBuild().getPlugins().get(0);
     assertEquals("proguard-maven-plugin", plugin.getArtifactId());
     assertEquals("2.0.11", plugin.getVersion());

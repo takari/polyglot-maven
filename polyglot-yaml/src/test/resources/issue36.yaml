@@ -1,0 +1,29 @@
+modelVersion: 4.0.0
+groupId: org.marchev
+artifactId: groovy-playground
+name: groovy-playground project
+version: 1.0-SNAPSHOT
+
+dependencies:
+  - { groupId: junit, artifactId: junit, version: 4.12, scope: test }
+  - { groupId: org.codehaus.groovy, artifactId: groovy-all, version: 2.4.3 }
+
+build:
+  plugins:
+    - groupId: org.codehaus.groovy
+      artifactId: groovy-eclipse-compiler
+      version: 2.9.2-01
+      extensions: true
+    - artifactId: maven-compiler-plugin
+      version: 3.3
+      configuration:
+        compilerId: groovy-eclipse-compiler
+        source: 1.8
+        target: 1.8
+      dependencies:
+        - groupId: org.codehaus.groovy
+          artifactId: groovy-eclipse-compiler
+          version: 2.9.2-01
+        - groupId: org.codehaus.groovy
+          artifactId: groovy-eclipse-batch
+          version: 2.4.3-01

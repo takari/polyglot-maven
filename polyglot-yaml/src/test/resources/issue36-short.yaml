@@ -1,0 +1,21 @@
+modelVersion: 4.0.0
+id: org.marchev:groovy-playground:1.0-SNAPSHOT
+name: groovy-playground project
+
+dependencies:
+  - junit:junit:test:4.12
+  - org.codehaus.groovy:groovy-all:2.4.3
+
+build:
+  plugins:
+    - id: org.codehaus.groovy:groovy-eclipse-compiler:2.9.2-01
+      extensions: true
+    - artifactId: maven-compiler-plugin
+      version: 3.3
+      configuration:
+        compilerId: groovy-eclipse-compiler
+        source: 1.8
+        target: 1.8
+      dependencies:
+        - org.codehaus.groovy:groovy-eclipse-compiler:2.9.2-01
+        - org.codehaus.groovy:groovy-eclipse-batch:2.4.3-01
