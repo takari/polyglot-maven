@@ -1,0 +1,12 @@
+---
+modelVersion: 4.0.0
+groupId: dmos:raudondvaris:1.0
+packaging: war
+prerequisites: {maven: 3.3.3}
+build:
+  plugins:
+    - id: com.github.wvengen:proguard-maven-plugin:2.0.11
+      configuration:
+        libs:
+          - ${java.home}/lib/rt.jar
+          - ${java.home}/lib/jsse.jar

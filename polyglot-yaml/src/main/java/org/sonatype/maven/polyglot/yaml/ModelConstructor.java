@@ -150,6 +150,7 @@ public final class ModelConstructor extends Constructor {
           Xpp3Dom child = new Xpp3Dom((Xpp3Dom) entry.getValue(), entry.getKey().toString());
           dom.addChild(child);
         } else {
+          //TODO issue 44 - what to do if it is a list of Strings
           Xpp3Dom child = new Xpp3Dom(entry.getKey().toString());
           child.setValue(entry.getValue().toString());
           dom.addChild(child);
