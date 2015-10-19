@@ -12,8 +12,8 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
 
   /*
    
-  This test is pulling in: rubygems-provided/gems/maven-tools-1.0.8/spec/pom_with_execute/pom.xml
-  which is hardcoded to the old groupId/artifactId. Should either be encapsulated here and vary with
+  This test is pulling in: rubygems-provided/gems/maven-tools-x.y.z/spec/pom_with_execute/pom.xml
+  which has hardcoded version. Should either be encapsulated here and vary with
   any changes here or be removed.
    
   public void testPomWithExecute() throws Exception {
@@ -37,4 +37,147 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   public void testMavenfile() throws Exception {
       assertModels( "mavenfile/Mavenfile", false );
   }
+
+  // cd maven-tools
+  // find spec/*/* -name pom.xml | sed -e s/spec.// -e s/.pom.xml// -e "s/\(.*\)/  public void test_\1() throws Exception {\n      assertModels( \"\1\/Mavenfile\", false );\n  }/"
+  public void test_gemfile() throws Exception {
+      assertModels( "gemfile/Mavenfile", false );
+  }
+  public void test_gemfile_include_jars() throws Exception {
+      assertModels( "gemfile_include_jars/Mavenfile", false );
+  }
+  public void test_gemfile_with_access_to_model() throws Exception {
+      assertModels( "gemfile_with_access_to_model/Mavenfile", false );
+  }
+  public void test_gemfile_with_custom_source() throws Exception {
+      assertModels( "gemfile_with_custom_source/Mavenfile", false );
+  }
+  public void test_gemfile_with_custom_source_and_custom_jarname() throws Exception {
+      assertModels( "gemfile_with_custom_source_and_custom_jarname/Mavenfile", false );
+  }
+  public void test_gemfile_with_extras() throws Exception {
+      assertModels( "gemfile_with_extras/Mavenfile", false );
+  }
+  public void test_gemfile_with_groups() throws Exception {
+      assertModels( "gemfile_with_groups/Mavenfile", false );
+  }
+    //public void test_gemfile_with_groups_and_lockfile() throws Exception {
+    //  assertModels( "gemfile_with_groups_and_lockfile/Mavenfile", false );
+    //}
+  public void test_gemfile_with_jars_lock() throws Exception {
+      assertModels( "gemfile_with_jars_lock/Mavenfile", false );
+  }
+  // public void test_gemfile_with_lock() throws Exception {
+  //     assertModels( "gemfile_with_lock/Mavenfile", true );
+  // }
+  public void test_gemfile_with_path() throws Exception {
+      assertModels( "gemfile_with_path/Mavenfile", false );
+  }
+  public void test_gemfile_with_platforms() throws Exception {
+      assertModels( "gemfile_with_platforms/Mavenfile", false );
+  }
+  public void test_gemfile_with_source() throws Exception {
+      assertModels( "gemfile_with_source/Mavenfile", false );
+  }
+  public void test_gemfile_with_source_and_custom_jarname() throws Exception {
+      assertModels( "gemfile_with_source_and_custom_jarname/Mavenfile", false );
+  }
+  public void test_gemfile_with_source_and_no_jar() throws Exception {
+      assertModels( "gemfile_with_source_and_no_jar/Mavenfile", false );
+  }
+    //public void test_gemfile_with_test_group() throws Exception {
+    //assertModels( "gemfile_with_test_group/Mavenfile", false );
+    //}
+  public void test_gemfile_without_gemspec() throws Exception {
+      assertModels( "gemfile_without_gemspec/Mavenfile", false );
+  }
+  public void test_gemspec() throws Exception {
+      assertModels( "gemspec/Mavenfile", false );
+  }
+  public void test_gemspec_in_profile() throws Exception {
+      assertModels( "gemspec_in_profile/Mavenfile", false );
+  }
+  public void test_gemspec_include_jars() throws Exception {
+      assertModels( "gemspec_include_jars/Mavenfile", false );
+  }
+  public void test_gemspec_no_rubygems_repo() throws Exception {
+      assertModels( "gemspec_no_rubygems_repo/Mavenfile", false );
+  }
+  public void test_gemspec_prerelease() throws Exception {
+      assertModels( "gemspec_prerelease/Mavenfile", false );
+  }
+  public void test_gemspec_prerelease_snapshot() throws Exception {
+      assertModels( "gemspec_prerelease_snapshot/Mavenfile", false );
+  }
+  public void test_gemspec_with_access_to_model() throws Exception {
+      assertModels( "gemspec_with_access_to_model/Mavenfile", false );
+  }
+  public void test_gemspec_with_custom_source() throws Exception {
+      assertModels( "gemspec_with_custom_source/Mavenfile", false );
+  }
+  public void test_gemspec_with_custom_source_and_custom_jarname() throws Exception {
+      assertModels( "gemspec_with_custom_source_and_custom_jarname/Mavenfile", false );
+  }
+  public void test_gemspec_with_extras() throws Exception {
+      assertModels( "gemspec_with_extras/Mavenfile", false );
+  }
+  public void test_gemspec_with_jar_dependencies() throws Exception {
+      assertModels( "gemspec_with_jar_dependencies/Mavenfile", false );
+  }
+  public void test_gemspec_with_jars_lock() throws Exception {
+      assertModels( "gemspec_with_jars_lock/Mavenfile", false );
+  }
+  public void test_gemspec_with_prereleased_dependency() throws Exception {
+      assertModels( "gemspec_with_prereleased_dependency/Mavenfile", false );
+  }
+  public void test_gemspec_with_prereleased_dependency_and_no_repo() throws Exception {
+      assertModels( "gemspec_with_prereleased_dependency_and_no_repo/Mavenfile", false );
+  }
+  public void test_gemspec_with_source() throws Exception {
+      assertModels( "gemspec_with_source/Mavenfile", false );
+  }
+  public void test_gemspec_with_source_and_custom_jarname() throws Exception {
+      assertModels( "gemspec_with_source_and_custom_jarname/Mavenfile", false );
+  }
+  public void test_gemspec_with_source_and_no_jar() throws Exception {
+      assertModels( "gemspec_with_source_and_no_jar/Mavenfile", false );
+  }
+  public void test_mavenfile_jrubyJar() throws Exception {
+      assertModels( "mavenfile_jrubyJar/Mavenfile", false );
+  }
+  public void test_mavenfile_jrubyWar() throws Exception {
+      assertModels( "mavenfile_jrubyWar/Mavenfile", false );
+  }
+    // TODO has absolute path instead of relative
+    //public void test_pom_from_jarfile() throws Exception {
+    //  assertModels( "pom_from_jarfile/pom.rb", false );
+    //}
+
+  public void test_pom_from_jarfile_and_empty_lock() throws Exception {
+      assertModels( "pom_from_jarfile_and_empty_lock/pom.rb", false );
+  }
+  public void test_pom_from_jarfile_and_lock() throws Exception {
+      assertModels( "pom_from_jarfile_and_lock/pom.rb", false );
+  }
+  public void test_pom_from_jarfile_and_skip_lock() throws Exception {
+      assertModels( "pom_from_jarfile_and_skip_lock/pom.rb", false );
+  }
+  public void test_pom_from_jarfile_help_only() throws Exception {
+      assertModels( "pom_from_jarfile_help_only/pom.rb", false );
+  }
+
+    // TODO has argument error
+    //public void test_pom_from_jarfile_with_exclusions() throws Exception {
+    //  assertModels( "pom_from_jarfile_with_exclusions/pom.rb", false );
+    //}
+  public void test_pom_from_jarfile_with_jruby() throws Exception {
+      assertModels( "pom_from_jarfile_with_jruby/pom.rb", false );
+  }
+  public void test_pom_from_jarfile_with_repos() throws Exception {
+      assertModels( "pom_from_jarfile_with_repos/pom.rb", false );
+  }
+    // TODO harded versions
+    //public void test_pom_with_execute() throws Exception {
+    //  assertModels( "pom_with_execute/Mavenfile", false );
+    //}
 }

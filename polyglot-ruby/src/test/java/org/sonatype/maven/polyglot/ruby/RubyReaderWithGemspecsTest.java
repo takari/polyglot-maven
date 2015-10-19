@@ -11,7 +11,7 @@ package org.sonatype.maven.polyglot.ruby;
 public class RubyReaderWithGemspecsTest extends AbstractInjectedTestCase {
 
   public void testGemspec() throws Exception {
-	  assertModels( "gemspec/Mavenfile", false );
+      assertModels( "gemspec/Mavenfile", false );
   }
 
   public void testGemspecInProfile() throws Exception {
