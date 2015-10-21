@@ -42,7 +42,7 @@
   </dependencies>
 
   <properties>
-    <maven-tools.version>1.0.12</maven-tools.version>
+    <maven-tools.version>1.0.13</maven-tools.version>
   </properties>
 
   <build>
