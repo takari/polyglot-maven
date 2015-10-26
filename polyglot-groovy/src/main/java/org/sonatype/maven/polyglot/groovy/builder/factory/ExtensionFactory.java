@@ -14,7 +14,7 @@ import java.util.Map;
 import org.apache.maven.model.Extension;
 
 /**
- * Builds {@link org.apache.maven.model.Extension nodes.
+ * Builds {@link org.apache.maven.model.Extension} nodes.
  *
  * @author <a href="mailto:tobrien@discursive.com">Tim O'Brien</a>
  *
