@@ -25,6 +25,6 @@ public class GroovyMapping extends MappingSupport {
     setPomNames("pom.groovy", "pom.gy");
     setAcceptLocationExtensions(".groovy", ".gy");
     setAcceptOptionKeys("groovy:4.0.0");
-    setPriority(-1);
+    setPriority(1);
   }
 }

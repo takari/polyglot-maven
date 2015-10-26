@@ -28,5 +28,6 @@ public class ClojureMapping
         setPomNames("pom.clj", "projwct.clj");
         setAcceptLocationExtensions(".clj");
         setAcceptOptionKeys("clojure:4.0.0");
+        setPriority(1);
     }
 }

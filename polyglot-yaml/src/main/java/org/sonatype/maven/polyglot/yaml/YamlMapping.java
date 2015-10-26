@@ -25,6 +25,6 @@ public class YamlMapping extends MappingSupport {
     setPomNames("pom.yaml", "pom.yml");
     setAcceptLocationExtensions(".yaml", ".yml");
     setAcceptOptionKeys("yaml:4.0.0");
-    setPriority(-2);
+    setPriority(1);
   }
 }

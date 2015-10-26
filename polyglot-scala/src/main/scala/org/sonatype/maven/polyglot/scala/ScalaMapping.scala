@@ -18,5 +18,5 @@ class ScalaMapping extends MappingSupport("scala") {
   setPomNames("pom.scala")
   setAcceptLocationExtensions(".scala")
   setAcceptOptionKeys("scala:4.0.0")
-  setPriority(-1)
+  setPriority(1)
 }
