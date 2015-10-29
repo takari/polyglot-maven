@@ -123,7 +123,8 @@ public class Dom2Groovy {
     NodeList list = element.getChildNodes();
     int length = list.getLength();
     if (length == 0) {
-      printEnd("", endWithComma);
+      // empty xml <element/> translates to groovy 'element {}'
+      printEnd(" {}", endWithComma);
     } else {
       print(" ");
       Node node = list.item(0);
