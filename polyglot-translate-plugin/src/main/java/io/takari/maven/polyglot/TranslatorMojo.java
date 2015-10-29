@@ -48,18 +48,10 @@ public class TranslatorMojo extends AbstractMojo {
         File inputFile = new File(project.getBasedir(), input);
         File outputFile = new File(project.getBasedir(), output);
         getLog().info(String.format("Translating %s -> %s", inputFile, outputFile));
-        translate(inputFile, outputFile);
+        translator.translate(inputFile, outputFile);
       }
     } catch (IOException e) {
       throw new MojoExecutionException(String.format("Error translating %s -> %s", input, output), e);
     }
-  }
-
-  public void translate(final File input, final File output) throws IOException {
-    translate(input.toURI().toURL(), output.toURI().toURL());
-  }
-
-  public void translate(final URL input, final URL output) throws IOException {
-    translator.translate(input, output);
   }
 }
