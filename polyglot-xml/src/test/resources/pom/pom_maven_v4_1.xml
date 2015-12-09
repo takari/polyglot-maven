@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd" xmlns="http://maven.apache.org/POM/4.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent groupId="org.apache.maven" artifactId="maven-parent" version="26" relativePath="../pom/maven/pom.xml" />
+  <artifactId>maven</artifactId>
+  <version>3.3.7-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>Apache Maven</name>
+  <description>Maven is a software build management and
+    comprehension tool. Based on the concept of a project object model:
+    builds, dependency management, documentation creation, site
+    publication, and distribution publication are all controlled from
+    the declarative file. Maven can be extended by plugins to utilise a
+    number of other development tools for reporting or the build
+    process.</description>
+  <url>http://maven.apache.org/ref/${project.version}/</url>
+  <inceptionYear>2001</inceptionYear>
+  <contributors>
+    <contributor>
+      <name>Stuart McCulloch</name>
+    </contributor>
+    <contributor>
+      <name>Christian Schulte (MNG-2199)</name>
+    </contributor>
+    <contributor>
+      <name>Christopher Tubbs (MNG-4226)</name>
+    </contributor>
+    <contributor>
+      <name>Konstantin Perikov (MNG-4565)</name>
+    </contributor>
+    <contributor>
+      <name>Sébastian Le Merdy (MNG-5613)</name>
+    </contributor>
+    <contributor>
+      <name>Mark Ingram (MNG-5639)</name>
+    </contributor>
+    <contributor>
+      <name>Phil Pratt-Szeliga (MNG-5645)</name>
+    </contributor>
+    <contributor>
+      <name>Florencia Tarditti (PR 41)</name>
+    </contributor>
+    <contributor>
+      <name>Anton Tanasenko</name>
+    </contributor>
+    <contributor>
+      <name>Joseph Walton (MNG-5297)</name>
+    </contributor>
+  </contributors>
+  <prerequisites>
+    <maven>2.2.1</maven>
+  </prerequisites>
+  <modules>
+    <module>maven-plugin-api</module>
+    <module>maven-builder-support</module>
+    <module>maven-model</module>
+    <module>maven-model-builder</module>
+    <module>maven-core</module>
+    <module>maven-settings</module>
+    <module>maven-settings-builder</module>
+    <module>maven-artifact</module>
+    <module>maven-aether-provider</module>
+    <module>maven-repository-metadata</module>
+    <module>maven-embedder</module>
+    <module>maven-compat</module>
+    <module>apache-maven</module>
+  </modules>
+  <scm>
+    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/maven.git</connection>
+    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/maven.git</developerConnection>
+    <tag>master</tag>
+    <url>https://github.com/apache/maven/tree/${project.scm.tag}</url>
+  </scm>
+  <issueManagement>
+    <system>jira</system>
+    <url>https://issues.apache.org/jira/browse/MNG</url>
+  </issueManagement>
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://builds.apache.org/job/maven-3.x/</url>
+  </ciManagement>
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/components/${maven.site.path}</url>
+    </site>
+    <downloadUrl>http://maven.apache.org/download.html</downloadUrl>
+  </distributionManagement>
+  <properties>
+    <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,JavadocType,MagicNumber,InnerAssignment,MethodName</checkstyle.violation.ignore>
+    <checkstyle.excludes>**/package-info.java</checkstyle.excludes>
+    <aetherVersion>1.0.2.v20150114</aetherVersion>
+    <guavaVersion>18.0</guavaVersion>
+    <junitVersion>4.11</junitVersion>
+    <plexusUtilsVersion>3.0.22</plexusUtilsVersion>
+    <classWorldsVersion>2.5.2</classWorldsVersion>
+    <guiceVersion>4.0</guiceVersion>
+    <sisuInjectVersion>0.3.2</sisuInjectVersion>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <modelloVersion>1.8.3</modelloVersion>
+    <distributionName>Apache Maven</distributionName>
+    <plexusVersion>1.6</plexusVersion>
+    <jxpathVersion>1.3</jxpathVersion>
+    <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
+    <commonsCliVersion>1.2</commonsCliVersion>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <plexusInterpolationVersion>1.21</plexusInterpolationVersion>
+    <distributionShortName>Maven</distributionShortName>
+    <wagonVersion>2.9</wagonVersion>
+    <maven.site.path>ref/3-LATEST</maven.site.path>
+    <securityDispatcherVersion>1.3</securityDispatcherVersion>
+    <distributionId>apache-maven</distributionId>
+    <slf4jVersion>1.7.5</slf4jVersion>
+    <cipherVersion>1.7</cipherVersion>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency groupId="org.apache.maven" artifactId="maven-model" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-settings" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-settings-builder" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-plugin-api" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-embedder" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-core" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-model-builder" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-compat" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-artifact" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-aether-provider" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-repository-metadata" version="${project.version}" />
+      <dependency groupId="org.apache.maven" artifactId="maven-builder-support" version="${project.version}" />
+      <dependency groupId="org.codehaus.plexus" artifactId="plexus-utils" version="${plexusUtilsVersion}" />
+      <dependency groupId="com.google.guava" artifactId="guava" version="${guavaVersion}" />
+      <dependency groupId="com.google.inject" artifactId="guice" version="${guiceVersion}" />
+      <dependency groupId="com.google.inject" artifactId="guice" version="${guiceVersion}" classifier="no_aop" />
+      <dependency groupId="org.eclipse.sisu" artifactId="org.eclipse.sisu.plexus" version="${sisuInjectVersion}" />
+      <dependency groupId="org.codehaus.plexus" artifactId="plexus-component-annotations" version="${plexusVersion}">
+        <exclusions>
+          <exclusion artifactId="junit" groupId="junit" />
+        </exclusions>
+      </dependency>
+      <dependency groupId="org.codehaus.plexus" artifactId="plexus-classworlds" version="${classWorldsVersion}" />
+      <dependency groupId="org.codehaus.plexus" artifactId="plexus-interpolation" version="${plexusInterpolationVersion}" />
+      <dependency groupId="org.slf4j" artifactId="slf4j-api" version="${slf4jVersion}" />
+      <dependency groupId="org.slf4j" artifactId="slf4j-simple" version="${slf4jVersion}" optional="true" />
+      <dependency groupId="ch.qos.logback" artifactId="logback-classic" version="1.0.7" optional="true" />
+      <dependency groupId="org.apache.maven.wagon" artifactId="wagon-provider-api" version="${wagonVersion}" />
+      <dependency groupId="org.apache.maven.wagon" artifactId="wagon-file" version="${wagonVersion}" />
+      <dependency groupId="org.apache.maven.wagon" artifactId="wagon-http" version="${wagonVersion}" classifier="shaded">
+        <exclusions>
+          <exclusion artifactId="commons-logging" groupId="commons-logging" />
+        </exclusions>
+      </dependency>
+      <dependency groupId="org.eclipse.aether" artifactId="aether-api" version="${aetherVersion}" />
+      <dependency groupId="org.eclipse.aether" artifactId="aether-spi" version="${aetherVersion}" />
+      <dependency groupId="org.eclipse.aether" artifactId="aether-impl" version="${aetherVersion}" />
+      <dependency groupId="org.eclipse.aether" artifactId="aether-util" version="${aetherVersion}" />
+      <dependency groupId="org.eclipse.aether" artifactId="aether-connector-basic" version="${aetherVersion}" />
+      <dependency groupId="org.eclipse.aether" artifactId="aether-transport-wagon" version="${aetherVersion}" />
+      <dependency groupId="commons-cli" artifactId="commons-cli" version="${commonsCliVersion}">
+        <exclusions>
+          <exclusion artifactId="commons-lang" groupId="commons-lang" />
+          <exclusion artifactId="commons-logging" groupId="commons-logging" />
+        </exclusions>
+      </dependency>
+      <dependency groupId="commons-jxpath" artifactId="commons-jxpath" version="${jxpathVersion}" />
+      <dependency groupId="org.sonatype.plexus" artifactId="plexus-sec-dispatcher" version="${securityDispatcherVersion}" />
+      <dependency groupId="org.sonatype.plexus" artifactId="plexus-cipher" version="${cipherVersion}" />
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency groupId="junit" artifactId="junit" version="${junitVersion}" scope="test" />
+  </dependencies>
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin groupId="org.codehaus.plexus" artifactId="plexus-component-metadata" version="${plexusVersion}">
+          <executions>
+            <execution>
+              <goals>
+                <goal>generate-metadata</goal>
+                <goal>generate-test-metadata</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin groupId="org.eclipse.sisu" artifactId="sisu-maven-plugin" version="${sisuInjectVersion}">
+          <executions>
+            <execution>
+              <goals>
+                <goal>main-index</goal>
+                <goal>test-index</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin artifactId="maven-release-plugin">
+          <configuration>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+          </configuration>
+        </plugin>
+        <plugin artifactId="maven-surefire-plugin">
+          <configuration>
+            <argLine>-Xmx256m</argLine>
+          </configuration>
+        </plugin>
+        <plugin groupId="org.codehaus.modello" artifactId="modello-maven-plugin" version="${modelloVersion}">
+          <executions>
+            <execution id="site-docs" phase="pre-site">
+              <goals>
+                <goal>xdoc</goal>
+                <goal>xsd</goal>
+              </goals>
+            </execution>
+            <execution id="standard">
+              <goals>
+                <goal>java</goal>
+                <goal>xpp3-reader</goal>
+                <goal>xpp3-writer</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin groupId="org.apache.felix" artifactId="maven-bundle-plugin" version="1.0.0" />
+        <plugin groupId="org.codehaus.mojo" artifactId="buildnumber-maven-plugin" version="1.2" />
+        <plugin artifactId="maven-site-plugin">
+          <configuration>
+            <topSiteURL>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/components/${maven.site.path}</topSiteURL>
+          </configuration>
+        </plugin>
+        <plugin artifactId="maven-scm-publish-plugin" version="1.1" />
+        <plugin groupId="org.apache.rat" artifactId="apache-rat-plugin">
+          <configuration>
+            <excludes>
+              <exclude>src/test/resources*/**</exclude>
+              <exclude>src/test/projects/**</exclude>
+              <exclude>src/test/remote-repo/**</exclude>
+              <exclude>**/*.odg</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
+        <plugin groupId="org.eclipse.m2e" artifactId="lifecycle-mapping" version="1.0.0">
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>org.apache.rat</groupId>
+                    <artifactId>apache-rat-plugin</artifactId>
+                    <versionRange>[0.10,)</versionRange>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+        <plugin artifactId="maven-checkstyle-plugin" version="2.14" />
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin groupId="org.codehaus.mojo" artifactId="animal-sniffer-maven-plugin" version="1.14">
+        <executions>
+          <execution id="check-java-1.6-compat" phase="process-classes">
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <signature>
+            <groupId>org.codehaus.mojo.signature</groupId>
+            <artifactId>java17</artifactId>
+            <version>1.0</version>
+          </signature>
+        </configuration>
+      </plugin>
+      <plugin artifactId="maven-doap-plugin" version="1.1">
+        <configuration>
+          <asfExtOptions>
+            <charter>The mission of the Apache Maven project is to create and maintain software
+            libraries that provide a widely-used project build tool, targeting mainly Java
+            development. Apache Maven promotes the use of dependencies via a
+            standardized coordinate system, binary plugins, and a standard build
+            lifecycle.</charter>
+          </asfExtOptions>
+        </configuration>
+      </plugin>
+      <plugin groupId="org.apache.rat" artifactId="apache-rat-plugin">
+        <configuration>
+          <excludes combine.children="append">
+            <exclude>bootstrap/**</exclude>
+            <exclude>README.bootstrap.txt</exclude>
+            <exclude>.repository/**</exclude>
+            <exclude>.maven/spy.log</exclude>
+            <exclude>.java-version</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>apache-release</id>
+      <build>
+        <plugins>
+          <plugin artifactId="maven-assembly-plugin">
+            <executions>
+              <execution id="source-release-assembly">
+                <configuration>
+                  <skipAssembly>true</skipAssembly>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>reporting</id>
+      <reporting>
+        <plugins>
+          <plugin artifactId="maven-project-info-reports-plugin" version="2.8.1" />
+          <plugin artifactId="maven-javadoc-plugin">
+            <reportSets>
+              <reportSet>
+                <id>aggregate</id>
+                <reports>
+                  <report>aggregate</report>
+                </reports>
+                <inherited>false</inherited>
+              </reportSet>
+            </reportSets>
+            <configuration>
+              <linksource>true</linksource>
+              <notimestamp>true</notimestamp>
+              <quiet>true</quiet>
+              <links combine.children="append">
+                <link>http://download.eclipse.org/aether/aether-core/${aetherVersion}/apidocs/</link>
+                <link>http://plexus.codehaus.org/plexus-containers/plexus-container-default/apidocs/</link>
+              </links>
+            </configuration>
+          </plugin>
+          <plugin artifactId="maven-jxr-plugin">
+            <reportSets>
+              <reportSet>
+                <id>aggregate</id>
+                <reports>
+                  <report>aggregate</report>
+                </reports>
+                <inherited>false</inherited>
+              </reportSet>
+            </reportSets>
+          </plugin>
+          <plugin artifactId="maven-checkstyle-plugin" version="2.13" />
+        </plugins>
+      </reporting>
+    </profile>
+    <profile>
+      <id>maven-repo-local</id>
+      <activation>
+        <property>
+          <name>maven.repo.local</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin artifactId="maven-surefire-plugin">
+            <configuration>
+              <systemProperties combine.children="append">
+                <property>
+                  <name>maven.repo.local</name>
+                  <value>${maven.repo.local}</value>
+                </property>
+              </systemProperties>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>

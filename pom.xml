@@ -47,6 +47,7 @@
     <module>polyglot-groovy</module>
     <module>polyglot-yaml</module>
     <module>polyglot-clojure</module>
+    <module>polyglot-xml</module>
     <module>polyglot-maven-plugin</module>    
     <module>polyglot-translate-plugin</module>    
   </modules>
@@ -81,6 +82,11 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-yaml</artifactId>
+        <version>0.1.16-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-xml</artifactId>
         <version>0.1.16-SNAPSHOT</version>
       </dependency>      
       <!-- We inline Maven's dependency management section to align dependency 
