@@ -50,7 +50,10 @@ public class SetupClassRealm {
     }
     
     private void setup( String gav, ClassRealm realm ) throws MalformedURLException
-    {        
+    {
+	// looking into another JRUBY_HOME is for jruby itself only to allow
+	// jruby build to use itself for bootstraping
+
         // see if we have shall use jruby from somewhere else
         String jrubyHome = System.getenv( "POLYGLOT_JRUBY_HOME" );
         if ( jrubyHome == null ){
