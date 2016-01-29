@@ -28,8 +28,8 @@
     </dependency>    
     <dependency>
       <groupId>org.jruby</groupId>
-      <artifactId>jruby-noasm</artifactId>
-      <version>1.7.22</version>
+      <artifactId>jruby</artifactId>
+      <version>9.0.5.0</version>
       <type>pom</type>
     </dependency>
     <!-- Test -->
@@ -42,10 +42,17 @@
   </dependencies>
 
   <properties>
-    <maven-tools.version>1.0.13</maven-tools.version>
+    <maven-tools.version>1.1.0</maven-tools.version>
   </properties>
 
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.torquebox.mojo</groupId>
+        <artifactId>mavengem-wagon</artifactId>
+        <version>0.2.0</version>
+      </extension>
+    </extensions>
     <plugins>
       <plugin>
         <artifactId>maven-invoker-plugin</artifactId>
@@ -120,9 +127,9 @@
       </activation>
 
       <repositories>
-        <repository>
-          <id>rubygems-releases</id>
-          <url>http://rubygems-proxy.torquebox.org/releases</url>
+	<repository>
+	  <id>mavengems</id>
+	  <url>mavengem:https://rubygems.org</url>
         </repository>
       </repositories>
       
