@@ -61,15 +61,15 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   public void test_gemfile_with_groups() throws Exception {
       assertModels( "gemfile_with_groups/Mavenfile", false );
   }
-    //public void test_gemfile_with_groups_and_lockfile() throws Exception {
-    //  assertModels( "gemfile_with_groups_and_lockfile/Mavenfile", false );
-    //}
+  public void test_gemfile_with_groups_and_lockfile() throws Exception {
+      assertModels( "gemfile_with_groups_and_lockfile/Mavenfile", false );
+  }
   public void test_gemfile_with_jars_lock() throws Exception {
       assertModels( "gemfile_with_jars_lock/Mavenfile", false );
   }
-  // public void test_gemfile_with_lock() throws Exception {
-  //     assertModels( "gemfile_with_lock/Mavenfile", true );
-  // }
+  public void test_gemfile_with_lock() throws Exception {
+      assertModels( "gemfile_with_lock/Mavenfile", false );
+  }
   public void test_gemfile_with_path() throws Exception {
       assertModels( "gemfile_with_path/Mavenfile", false );
   }
@@ -85,9 +85,9 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   public void test_gemfile_with_source_and_no_jar() throws Exception {
       assertModels( "gemfile_with_source_and_no_jar/Mavenfile", false );
   }
-    //public void test_gemfile_with_test_group() throws Exception {
-    //assertModels( "gemfile_with_test_group/Mavenfile", false );
-    //}
+  public void test_gemfile_with_test_group() throws Exception {
+      assertModels( "gemfile_with_test_group/Mavenfile", false );
+  }
   public void test_gemfile_without_gemspec() throws Exception {
       assertModels( "gemfile_without_gemspec/Mavenfile", false );
   }
@@ -165,19 +165,20 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   public void test_pom_from_jarfile_help_only() throws Exception {
       assertModels( "pom_from_jarfile_help_only/pom.rb", false );
   }
-
-    // TODO has argument error
-    //public void test_pom_from_jarfile_with_exclusions() throws Exception {
-    //  assertModels( "pom_from_jarfile_with_exclusions/pom.rb", false );
-    //}
+  public void test_pom_from_jarfile_with_exclusions() throws Exception {
+      assertModels( "pom_from_jarfile_with_exclusions/pom.rb", false );
+  }
   public void test_pom_from_jarfile_with_jruby() throws Exception {
       assertModels( "pom_from_jarfile_with_jruby/pom.rb", false );
   }
   public void test_pom_from_jarfile_with_repos() throws Exception {
       assertModels( "pom_from_jarfile_with_repos/pom.rb", false );
   }
-    // TODO harded versions
-    //public void test_pom_with_execute() throws Exception {
-    //  assertModels( "pom_with_execute/Mavenfile", false );
-    //}
+
+  // the maven-tools has a hard-coded version of this
+  // polyglot-ruby version. the test will remove the -SNAPSHOT
+  // of this version  
+  public void test_pom_with_execute() throws Exception {
+      assertModels( "pom_with_execute/pom.rb", false );
+  }
 }

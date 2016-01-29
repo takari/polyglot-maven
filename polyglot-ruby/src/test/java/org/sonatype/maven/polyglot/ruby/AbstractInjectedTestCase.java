@@ -188,6 +188,8 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 // the test cases still use the old groupIds and artifactIds
                 .replaceAll("io.tesla.polyglot", "io.takari.polyglot")
                 .replaceAll("tesla-polyglot", "polyglot")
+		// for the pom_with_execute test 
+                .replaceAll("-SNAPSHOT", "")
                 // some of the configuration tags are empty - unify them
                 .replaceAll( "></(arg|chmod)>", "/>" );
         if ( debug )
