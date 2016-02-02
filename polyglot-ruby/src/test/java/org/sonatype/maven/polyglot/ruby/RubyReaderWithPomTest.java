@@ -10,18 +10,6 @@ package org.sonatype.maven.polyglot.ruby;
 
 public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
 
-  /*
-   
-  This test is pulling in: rubygems-provided/gems/maven-tools-x.y.z/spec/pom_with_execute/pom.xml
-  which has hardcoded version. Should either be encapsulated here and vary with
-  any changes here or be removed.
-   
-  public void testPomWithExecute() throws Exception {
-      assertModels( "pom_with_execute/pom.rb", false );
-  }
-  
-  */
-
   public void testPomMavenStyle() throws Exception {
       assertModels( "pom_maven_style/pom.rb", false );
   }
@@ -38,7 +26,7 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
       assertModels( "mavenfile/Mavenfile", false );
   }
 
-  // cd maven-tools
+  // cd target/rubygems-provided/gems/maven-tools-1.1.0
   // find spec/*/* -name pom.xml | sed -e s/spec.// -e s/.pom.xml// -e "s/\(.*\)/  public void test_\1() throws Exception {\n      assertModels( \"\1\/Mavenfile\", false );\n  }/"
   public void test_gemfile() throws Exception {
       assertModels( "gemfile/Mavenfile", false );
@@ -87,6 +75,9 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   }
   public void test_gemfile_with_test_group() throws Exception {
       assertModels( "gemfile_with_test_group/Mavenfile", false );
+  }
+  public void test_gemfile_with_two_sources() throws Exception {
+      assertModels( "gemfile_with_two_sources/Mavenfile", false );
   }
   public void test_gemfile_without_gemspec() throws Exception {
       assertModels( "gemfile_without_gemspec/Mavenfile", false );
@@ -148,11 +139,9 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   public void test_mavenfile_jrubyWar() throws Exception {
       assertModels( "mavenfile_jrubyWar/Mavenfile", false );
   }
-    // TODO has absolute path instead of relative
-    //public void test_pom_from_jarfile() throws Exception {
-    //  assertModels( "pom_from_jarfile/pom.rb", false );
-    //}
-
+  public void test_pom_from_jarfile() throws Exception {
+      assertModels( "pom_from_jarfile/pom.rb", false );
+  }
   public void test_pom_from_jarfile_and_empty_lock() throws Exception {
       assertModels( "pom_from_jarfile_and_empty_lock/pom.rb", false );
   }
@@ -174,7 +163,6 @@ public class RubyReaderWithPomTest extends AbstractInjectedTestCase {
   public void test_pom_from_jarfile_with_repos() throws Exception {
       assertModels( "pom_from_jarfile_with_repos/pom.rb", false );
   }
-
   // the maven-tools has a hard-coded version of this
   // polyglot-ruby version. the test will remove the -SNAPSHOT
   // of this version  

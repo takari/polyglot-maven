@@ -37,37 +37,38 @@ import org.sonatype.maven.polyglot.mapping.Mapping;
 
 public abstract class AbstractInjectedTestCase extends InjectedTestCase {
     
-	@Inject
-	@Named("${basedir}/target/rubygems-provided/gems")
-	protected File gems;
+    @Inject
+    @Named("${basedir}/target/rubygems-provided/gems")
+    protected File gems;
 
     @Inject
     @Named("${basedir}/src/test/poms")
     protected File poms;
 
-	private File specs; 
-	private File specs()
+    private File specs; 
+    private File specs()
+    {
+	if( specs == null)
 	{
-	    if( specs == null)
-	    {
-	        File mavenTools = gems.listFiles( new FileFilter() {
-        
-                @Override
+	    File mavenTools = gems.listFiles( new FileFilter() {
+		@Override
                 public boolean accept( File f )
                 {
                     return f.getName().startsWith( "maven-tools-" );
                 }
-            } )[ 0 ];
-	        specs = new File( mavenTools, "spec" );
-	    }
-	    return specs;
+	    } )[ 0 ];
+	    specs = new File( mavenTools, "spec" );
 	}
+	return specs;
+    }
 	
-    protected void assertModels( String pomRuby, boolean debug ) throws Exception {
+    protected void assertModels( String pomRuby, boolean debug ) throws Exception
+    {
                 
         File dir = new File( specs(), pomRuby ).getParentFile();
         File pom = new File( dir, "pom.xml" );
-        if( !pom.exists() ){
+        if( !pom.exists() )
+	{
             pom = new File( dir.getParentFile(), "pom.xml" );
         }
 
@@ -158,7 +159,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	private void assertModels( Model xmlModel, Model rubyModel, boolean debug )
 			throws IOException
 	{
-		MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
+	    MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
 	    StringWriter ruby = new StringWriter();
 	    xmlWriter.write(ruby, rubyModel);
 	    StringWriter xml = new StringWriter();
@@ -168,7 +169,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	    {
 	    	// Let's take a look at see what's there
 	    	System.out.println(xml.toString());
-            System.out.println(ruby.toString());
+		System.out.println(ruby.toString());
 	    }
 	    
 	    assertEquals( simplify( xml, debug ), simplify( ruby, debug ) );
@@ -176,13 +177,13 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	
 	private String simplify( StringWriter xml, boolean debug )
 	{
-		String x = xml.toString()
-		        // no whitespace
-		        .replaceAll( "\\s", "")
-		        // no process instructions
-		        .replaceFirst("<\\?.*\\?>", "")
-		        // properties have different ordering
-		        .replaceAll("<properties>.*?</properties>", "")
+	    String x = xml.toString()
+		// no whitespace
+		.replaceAll( "\\s", "")
+		// no process instructions
+		.replaceFirst("<\\?.*\\?>", "")
+		// properties have different ordering
+		.replaceAll("<properties>.*?</properties>", "")
                 // allow old style plugin definition to match new one
                 .replaceAll("\\$\\{tesla.version\\}", Constants.getVersion())
                 // the test cases still use the old groupIds and artifactIds
@@ -190,12 +191,15 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 .replaceAll("tesla-polyglot", "polyglot")
 		// for the pom_with_execute test 
                 .replaceAll("-SNAPSHOT", "")
+		// fix absolute path for test_pom_from_jarfile
+		.replaceAll(System.getProperty("user.dir") + "/myfirst.jar", "/myfirst.jar")
+		.replaceAll("..basedir./myfirst.jar", "/myfirst.jar")
                 // some of the configuration tags are empty - unify them
                 .replaceAll( "></(arg|chmod)>", "/>" );
-        if ( debug )
-        {
-            System.out.println(x);
-        }
-		return x;
+	     if ( debug )
+	     {
+		 System.out.println(x);
+	     }
+	     return x;
 	}	
 }
