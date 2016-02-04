@@ -189,8 +189,10 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 // the test cases still use the old groupIds and artifactIds
                 .replaceAll("io.tesla.polyglot", "io.takari.polyglot")
                 .replaceAll("tesla-polyglot", "polyglot")
-		// for the pom_with_execute test 
-                .replaceAll("-SNAPSHOT", "")
+		// for the pom_with_execute test
+		// hardcoded version from maven-tools
+		// TODO needs better handling
+                .replaceAll("1[0-9]-SNAPSHOT", "15")
 		// fix absolute path for test_pom_from_jarfile
 		.replaceAll(System.getProperty("user.dir") + "/myfirst.jar", "/myfirst.jar")
 		.replaceAll("..basedir./myfirst.jar", "/myfirst.jar")
