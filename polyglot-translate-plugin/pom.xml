@@ -41,7 +41,11 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-yaml</artifactId>
-      </dependency>          
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-xml</artifactId>
+      </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
