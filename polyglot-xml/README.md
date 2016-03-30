@@ -10,7 +10,7 @@ Please note that not all properties of plugins are defined as attributes. Please
 In order to differentiate between default POM XML syntax and this custom dialect it is required to use some non-default file extension since *pom.xml* is already associated with default syntax. That is why filees processed by this extension should have `.xml41` file extension.
 
 Short example of supported format:
-```
+```xml
 <project>
   <modelVersion>4.0.0</modelVersion>
   <groupId>my.example</groupId>
@@ -47,7 +47,7 @@ and add the appropriate language extension.
 Edit the `extensions.xml` file and add the following, replacing VERSION with
 the latest stable version of current artifact.
 
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
   <extension>
