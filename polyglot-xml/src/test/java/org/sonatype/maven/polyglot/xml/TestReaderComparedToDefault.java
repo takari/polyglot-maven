@@ -23,6 +23,22 @@ public class TestReaderComparedToDefault {
 	}
 	
 	@Test
+	public void testModelEqualToReferenceByExample1() throws IOException, XmlPullParserException {
+		Model modelV4 = new org.apache.maven.model.io.xpp3.MavenXpp3Reader().read(getClass().getResourceAsStream("/pom/pom_build_properties_v4.xml"));
+		Model modelV41 = new org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Reader().read(getClass().getResourceAsStream("/pom/pom_build_properties_v4_1.xml"));
+
+		Assert.assertTrue(DeepEquals.deepEquals(modelV4, modelV41));
+	}
+	
+	@Test
+	public void testModelEqualToReferenceByExample2() throws IOException, XmlPullParserException {
+		Model modelV4 = new org.apache.maven.model.io.xpp3.MavenXpp3Reader().read(getClass().getResourceAsStream("/pom/pom_CiManagement_v4.xml"));
+		Model modelV41 = new org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Reader().read(getClass().getResourceAsStream("/pom/pom_CiManagement_v4_1.xml"));
+
+		Assert.assertTrue(DeepEquals.deepEquals(modelV4, modelV41));
+	}
+	
+	@Test
 	public void testAssertionIncludesDeepProperties() throws IOException, XmlPullParserException {
 		Model modelV4 = new org.apache.maven.model.io.xpp3.MavenXpp3Reader().read(getClass().getResourceAsStream(POM_MAVEN_V_4));
 		Model modelV41 = new org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Reader().read(getClass().getResourceAsStream(POM_MAVEN_V_4_1));

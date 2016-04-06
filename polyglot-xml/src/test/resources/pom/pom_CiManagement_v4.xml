@@ -1,0 +1,344 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.example</groupId>
+  <artifactId>jpademo</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>     
+  
+  <repositories>
+    <repository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+  
+  <profiles>
+  <profile>
+  	<id>myprofile</id>
+  	<modules>
+  		<module>s</module>
+  		<module>2</module>
+  	</modules>
+    <activation>
+      <os>
+        <name>Windows XP</name>
+        <family>Windows</family>
+        <arch>x86</arch>
+        <version>5.1.2600</version>
+      </os>
+      <file>
+        <missing>target/generated-sources/axistools/wsdl2java/org/apache/maven</missing>
+      </file>
+      <activeByDefault>false</activeByDefault>
+      <jdk>1.8</jdk>
+      <property>
+      	<name>a</name>
+      	<value>b</value>
+      </property>
+    </activation>    
+  </profile>
+</profiles>
+  
+    
+  
+  <reporting>
+    <excludeDefaults>true</excludeDefaults>
+    <outputDirectory>c://fl</outputDirectory>
+        
+    
+    <plugins>
+      <plugin>      	
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.19.1</version>
+      </plugin>
+      
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9</version>
+        <reportSets>
+          <reportSet><!-- by default, id = "default" -->
+          	<id>mid</id>
+          	<inherited>true</inherited>          	
+            <reports><!-- select non-aggregate reports -->
+              <report>javadoc</report>
+              <report>test-javadoc</report>
+            </reports>
+          </reportSet>
+          <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+            <id>aggregate</id>
+            <inherited>false</inherited><!-- don't run aggregate in child modules -->
+            <reports>
+              <report>aggregate</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      
+    </plugins>
+  </reporting>   
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <scm>
+      <connection>scm:git:ssh://my.git.server.internal/home/git/jpademo</connection>
+      <developerConnection>scm:git:ssh://my.git.server.internal/home/git/jpademo</developerConnection>
+      <tag>dev</tag>
+      <url>http://someurl</url>
+  </scm>
+  
+  <organization>
+  	<name>My Org</name>
+  	<url>URL</url>
+  </organization>
+    
+  <ciManagement>
+      <system>jenkins</system>
+      <url>https://my.jenkins.internal/jenkins</url>
+      <notifiers>
+    	<notifier>
+    		<type>mail</type>
+      		<address>admin@test.com</address>
+      		<sendOnError>false</sendOnError>
+      		<sendOnFailure>false</sendOnFailure>
+      		<sendOnSuccess>false</sendOnSuccess>
+      		<sendOnWarning>false</sendOnWarning>
+      		<configuration>      		
+      			<prop1>1.6</prop1>
+                <prop2>1.6</prop2>                               
+      		</configuration>
+    	</notifier>
+  	  </notifiers>
+  </ciManagement>
+  
+  <mailingLists>
+  	<mailingList>
+  		<archive>http://archive</archive>
+  		<name>The list</name>
+  		<otherArchives>
+  			<otherArchive>http://other1</otherArchive>
+  			<otherArchive>http://other2</otherArchive>
+  		</otherArchives>
+  		<post>some@email</post>
+  		<subscribe>subscribe@email</subscribe>
+  		<unsubscribe>unsub@email</unsubscribe>
+  	</mailingList>
+  </mailingLists>
+  
+  <licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+			<comments>Some comment.</comments>
+		</license>
+	</licenses>
+  
+  <issueManagement>
+  	<system>Jira</system>
+  	<url>http://myjira.url</url>
+  </issueManagement>
+  
+    <contributors>
+	    <contributor>	    
+	      <name>First Name Last Name</name>
+	      <email>test@test.email</email>
+	      <organization>MyOrg</organization>
+	      <organizationUrl>http://some.url</organizationUrl>
+	      <roles>
+	      	<role>Dev</role>
+	      	<role>Admin</role>
+	      </roles>
+	      <timezone>My TZ</timezone>
+	      <url>http://my.url</url>
+	    </contributor>
+    </contributors>
+  
+  
+  <name>jpademo</name>
+  <url>http://maven.apache.org</url>
+    <build>
+    
+    	<resources>
+    		<resource>
+    			<directory>c://foodir</directory>
+    			<filtering>true</filtering>
+    			<targetPath>c://bardir</targetPath>
+    			<includes>
+    				<include>*.a</include>
+    			</includes>
+    			<excludes>
+    				<exclude>*.b</exclude>
+    			</excludes>
+    		</resource>
+    	</resources>
+    
+    
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <id>jar</id>
+                    </execution>
+                </executions>
+                <configuration>
+                      <archive>
+                        <manifestFile>src/main/resources/Manifest.txt</manifestFile>
+                        <manifest>
+                          <addClasspath>true</addClasspath>
+                         
+                          <mainClass>com.footballradar.jpademo.App</mainClass>
+                          
+                        </manifest>
+                      </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <inherited>true</inherited>
+                <version>1.4</version>
+                    <executions>
+                        <execution>
+                                <phase>package</phase>
+                                <goals>
+                                        <goal>shade</goal>
+                                </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                            <finalName>${project.artifactId}-${project.version}</finalName>
+                    </configuration>
+            </plugin>
+            
+        </plugins>
+
+    </build>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>3.6.3.Final</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate</artifactId>
+      <version>3.2.5.ga</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>3.3.2.GA</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.sql</groupId>
+      <artifactId>jdbc-stdext</artifactId>
+      <version>2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.transaction</groupId>
+      <artifactId>jta</artifactId>
+      <version>1.0.1B</version>
+    </dependency>
+      <dependency>
+          <groupId>org.hibernate</groupId>
+          <artifactId>ejb3-persistence</artifactId>
+          <version>1.0.1.GA</version>
+      </dependency>
+      <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.14</version>
+      </dependency>
+      <dependency>
+          <artifactId>slf4j-api</artifactId>
+          <groupId>org.slf4j</groupId>
+          <type>jar</type>
+          <version>1.6.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>log4j-over-slf4j</artifactId>
+          <version>1.6.1</version>
+      </dependency>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+          <version>1.6.1</version>
+      </dependency>
+  </dependencies>
+  
+ <distributionManagement>
+ 	<downloadUrl>http://mydownload.url</downloadUrl>
+ 	<status>verified</status>
+ 	
+ 	<site>
+ 		<id>id1</id>
+ 		<name>nm1</name>
+ 		<url>url1</url>
+ 	</site> 	
+ 	 	
+    <repository>
+        <id>My_Artifactory_Releases</id>
+        <name>My_Artifactory-releases</name>
+        <url>http://my.maven.repository.internal/artifactory/release</url>
+    </repository>
+    
+    <snapshotRepository>
+        <id>My_Artifactory_Snapshots</id>
+        <name>My_Artifactory-snapshots</name>
+        <url>http://my.maven.repository.internal/artifactory/snapshot</url>
+    </snapshotRepository>
+
+</distributionManagement>
+
+</project>

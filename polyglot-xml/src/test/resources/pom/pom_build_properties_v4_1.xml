@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd" xmlns="http://maven.apache.org/POM/4.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <repositories>
+    <repository id="central" name="Central Repository" url="https://repo.maven.apache.org/maven2">
+      <snapshots enabled="false" />
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository id="central" name="Central Repository" url="https://repo.maven.apache.org/maven2">
+      <releases updatePolicy="never" />
+      <snapshots enabled="false" />
+    </pluginRepository>
+  </pluginRepositories>
+  <build sourceDirectory="${project.basedir}/src/main/java" scriptSourceDirectory="${project.basedir}/src/main/scripts" testSourceDirectory="${project.basedir}/src/test/java" outputDirectory="${project.build.directory}/classes" testOutputDirectory="${project.build.directory}/test-classes" directory="${project.basedir}/target" finalName="${project.artifactId}-${project.version}">
+    <resources>
+      <resource directory="${project.basedir}/src/main/resources" />
+    </resources>
+    <testResources>
+      <testResource directory="${project.basedir}/src/test/resources" />
+    </testResources>
+    <pluginManagement>
+      <plugins>
+        <plugin artifactId="maven-antrun-plugin" version="1.3" />
+        <plugin artifactId="maven-assembly-plugin" version="2.2-beta-5" />
+        <plugin artifactId="maven-dependency-plugin" version="2.8" />
+        <plugin artifactId="maven-release-plugin" version="2.3.2" />
+      </plugins>
+    </pluginManagement>
+  </build>
+  <reporting outputDirectory="${project.build.directory}/site" />
+  <profiles>
+    <profile id="release-profile">
+      <activation>
+        <property name="performRelease" value="true" />
+      </activation>
+      <build>
+        <plugins>
+          <plugin artifactId="maven-source-plugin" inherited="true">
+            <executions>
+              <execution id="attach-sources">
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin artifactId="maven-javadoc-plugin" inherited="true">
+            <executions>
+              <execution id="attach-javadocs">
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin artifactId="maven-deploy-plugin" inherited="true">
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
