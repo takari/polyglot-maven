@@ -7,6 +7,7 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import org.apache.maven.model.Contributor;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
@@ -106,6 +107,52 @@ class ModelRepresenter extends Representer {
     }
   }
 
+  // Model elements order {
+  //TODO move to polyglot-common, or to org.apache.maven:maven-model
+  private static List<String> ORDER_MODEL = new ArrayList<String>(Arrays.asList(
+		  "modelEncoding",
+          "modelVersion",
+          "parent",
+          "groupId",
+          "artifactId",
+          "version",
+          "packaging",
+          
+          "name",
+          "description",
+          "url",
+          "inceptionYear",
+          "organization",
+          "licenses",
+          "developers",
+          "contributers",
+          "mailingLists",
+          "scm",
+          "issueManagement",
+          "ciManagement",
+          
+          "properties",
+          "prerequisites",
+          "modules",
+          "dependencyManagement",
+          "dependencies",
+          "distributionManagement",
+          //"repositories",
+          //"pluginRepositories",
+          "build",
+          "profiles",
+          "reporting"
+          ));
+  private static List<String> ORDER_DEVELOPER = new ArrayList<String>(Arrays.asList(
+		  "name", "id", "email"));
+  private static List<String> ORDER_CONTRIBUTOR = new ArrayList<String>(Arrays.asList(
+		  "name", "id", "email"));
+  private static List<String> ORDER_DEPENDENCY = new ArrayList<String>(Arrays.asList(
+		  "groupId", "artifactId", "version", "type", "classifier", "scope"));
+  private static List<String> ORDER_PLUGIN = new ArrayList<String>(Arrays.asList(
+		  "groupId", "artifactId", "version", "inherited", "extensions", "configuration"));
+  //}
+
   /*
    * Change the default order. Important data goes first.
    */
@@ -113,48 +160,26 @@ class ModelRepresenter extends Representer {
   protected Set<Property> getProperties(Class<? extends Object> type)
           throws IntrospectionException {
     if (type.isAssignableFrom(Model.class)) {
-      Set<Property> standard = super.getProperties(type);
-      List<String> order = new ArrayList<String>(Arrays.asList(
-              "modelVersion",
-              "groupId",
-              "artifactId",
-              "version",
-              "packaging",
-              "properties",
-              "name",
-              "description",
-              "inceptionYear",
-              "url",
-              "issueManagement",
-              "ciManagement",
-              "mailingLists",
-              "scm",
-              "licenses",
-              "developers",
-              "contributers",
-              "prerequisites",
-              "dependencies",
-              "distributionManagement",
-              "build",
-              "reporting"));
-      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
-      sorted.addAll(standard);
-      return sorted;
+      return sortTypeWithOrder(type, ORDER_MODEL);
     } else if (type.isAssignableFrom(Developer.class)) {
-      Set<Property> standard = super.getProperties(type);
-      List<String> order = new ArrayList<String>(Arrays.asList("name", "id", "email"));
-      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
-      sorted.addAll(standard);
-      return sorted;
+      return sortTypeWithOrder(type, ORDER_DEVELOPER);
+    } else if (type.isAssignableFrom(Contributor.class)) {
+      return sortTypeWithOrder(type, ORDER_CONTRIBUTOR);
+    }  else if (type.isAssignableFrom(Dependency.class)) {
+      return sortTypeWithOrder(type, ORDER_DEPENDENCY);
     }  else if (type.isAssignableFrom(Plugin.class)) {
-      Set<Property> standard = super.getProperties(type);
-      List<String> order = new ArrayList<String>(Arrays.asList("groupId", "artifactId", "version", "inherited", "extensions", "configuration"));
-      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
-      sorted.addAll(standard);
-      return sorted;
+      return sortTypeWithOrder(type, ORDER_PLUGIN);
     } else {
       return super.getProperties(type);
     }
+  }
+
+  private Set<Property> sortTypeWithOrder(Class<? extends Object> type, List<String> order)
+          throws IntrospectionException {
+      Set<Property> standard = super.getProperties(type);
+      Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
+      sorted.addAll(standard);
+      return sorted;
   }
 
   private class ModelPropertyComparator implements Comparator<Property> {
