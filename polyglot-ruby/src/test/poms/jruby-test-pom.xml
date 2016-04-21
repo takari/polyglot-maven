@@ -160,6 +160,8 @@
         <groupId>de.saumya.mojo</groupId>
         <artifactId>gem-maven-plugin</artifactId>
         <version>${jruby.plugins.version}</version>
+        <inherited>false</inherited>
+        <extensions>true</extensions>
         <executions>
           <execution>
             <phase>initialize</phase>

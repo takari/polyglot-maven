@@ -144,7 +144,10 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
             }
         };
 		rubyModelReader.setupManager = new SetupClassRealm();
-		
+            if ( debug )
+            {
+                System.out.println(w.toString());
+            }
 	    StringReader reader = new StringReader( w.toString() );
 	    Model rubyModel = rubyModelReader.read( reader, new HashMap<String, Object>() );
 	    

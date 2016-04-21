@@ -680,6 +680,14 @@ public class RubyModelWriter extends ModelWriterSupport {
                     rplugin = (ReportPlugin) container;
                     pluginProlog( rplugin.getGroupId(), rplugin.getArtifactId(), rplugin.getVersion() );
                 }
+                if (!container.isInherited()) {
+                    p.append(", ");
+                    p.appendName("inherited").append(" => false");
+                }
+                if (plugin != null && plugin.isExtensions()) {
+                    p.append(", ");
+                    p.appendName("extensions").append(" => true");
+                }
                 p.printConfiguration( indent, container.getConfiguration() );
                 if ( plugin != null &&
                         ( !plugin.getExecutions().isEmpty() || !plugin.getDependencies().isEmpty() ) ){
