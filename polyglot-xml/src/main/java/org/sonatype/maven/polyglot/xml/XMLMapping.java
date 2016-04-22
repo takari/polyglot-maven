@@ -7,11 +7,13 @@
  */
 package org.sonatype.maven.polyglot.xml;
 
+import java.io.FileInputStream;
 import java.util.Map;
 
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.mapping.Mapping;
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
+import org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Reader;
 
 /**
  * XML model mapping.
@@ -19,11 +21,51 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  */
 @Component(role = Mapping.class, hint = "xml41")
 public class XMLMapping extends MappingSupport {
+	
 	public XMLMapping() {
 		super("xml41");
 		setPomNames("pom.xml41");
-		setAcceptLocationExtensions(".xml41");
+		setAcceptLocationExtensions(".xml41", ".xml");
 		setAcceptOptionKeys("xml41:4.0.0");
-		setPriority(2);
+		setPriority(-1);
+	}
+
+	@Override
+	public boolean accept(Map<String, ?> options) {
+		if (options != null) {			
+
+			String location = getLocation(options);
+			if (location != null) {
+				if (location.endsWith(".xml41")) {
+					return true;
+				} else if (location.endsWith(".xml")) {
+					return canParse(options);
+				}				
+			}
+		}
+
+		return false;
+	}
+	
+	private boolean canParse(Map<String, ?> options) {
+		boolean canParse = false;
+		FileInputStream in = null;
+		try {
+			in = new FileInputStream(getLocation(options));
+			MavenXpp3Reader reader = new MavenXpp3Reader();
+			reader.read(in);
+			canParse = true;
+		} catch (Exception ex) {
+			canParse = false;
+		} finally {
+			try {
+				if (in != null) {
+					in.close();
+				}
+			} catch (Exception e) {
+				canParse = false;
+			}
+		}
+		return canParse;
 	}
 }

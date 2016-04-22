@@ -7,7 +7,7 @@ This is achieved by mean of using xml attributes for:
 
 Please note that not all properties of plugins are defined as attributes. Please refer to  */polyglot-xml/src/test/resources/pom/pom_maven_v4_1.xml* for example and use XSD file from */polyglot-xml/src/main/resources/xsd/4.1.0* folder.
 
-In order to differentiate between default POM XML syntax and this custom dialect it is required to use some non-default file extension since *pom.xml* is already associated with default syntax. That is why filees processed by this extension should have `.xml41` file extension.
+Files processed by `polygloy-xml` can have `.xml41` or `.xml` file extensions. When working with `.xml` files `polyglot-xml` runs before standard xml systax to check whether file contains default syntax or not. For default syntax execution is delegated to default Maven parser. But when `polygloy-xml` detects that it can process file it does this instead of default Maven xml parser.
 
 Short example of supported format:
 ```xml
@@ -66,3 +66,4 @@ Use simple Maven Plugin that will help you convert any existing
 mvn io.takari.polyglot:polyglot-translate-plugin:translate \
   -Dinput=pom.xml -Doutput=pom.xml41
 ```
+Please note that in this case `pom.xml` uses default Maven xml syntax and `pom.xml41` will use syntax defined in `polyglot-xml`.

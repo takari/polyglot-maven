@@ -8,6 +8,9 @@
 package org.sonatype.maven.polyglot;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +41,22 @@ public class PolyglotModelManager implements ModelLocator {
     assert mapping != null;
     mappings.add(mapping);
   }
+  
+  public List<Mapping> getSortedMappings() {
+    List<Mapping> sortedMappings = new ArrayList<Mapping>(mappings);
+    
+    Collections.sort(sortedMappings, new Comparator<Mapping>() {
+	  @Override
+	  public int compare(Mapping o1, Mapping o2) {
+		return Float.compare(o1.getPriority(), o2.getPriority());
+	  }
+	});
+	
+	return sortedMappings;
+  }
 
-  public ModelReader getReaderFor(final Map<String, ?> options) {
-    for (Mapping mapping : mappings) {
+  public ModelReader getReaderFor(final Map<String, ?> options) {	 
+    for (Mapping mapping : getSortedMappings()) {
       if (mapping.accept(options)) {
         return mapping.getReader();
       }
@@ -50,7 +66,7 @@ public class PolyglotModelManager implements ModelLocator {
   }
 
   public ModelWriter getWriterFor(final Map<String, ?> options) {
-    for (Mapping mapping : mappings) {
+    for (Mapping mapping : getSortedMappings()) {
       if (mapping.accept(options)) {
         return mapping.getWriter();
       }
@@ -93,7 +109,7 @@ public class PolyglotModelManager implements ModelLocator {
   }
 
   public String getFlavourFor(final Map<String, ?> options) {
-    for (Mapping mapping : mappings) {
+    for (Mapping mapping : getSortedMappings()) {
       if (mapping.accept(options)) {
         return mapping.getFlavour();
       }
