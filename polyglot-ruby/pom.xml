@@ -26,13 +26,6 @@
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-common</artifactId>
     </dependency>
-    <!-- have this mavengem-wagon extension to avoid certain
-	 wagon warnings/error of mavengem: protocol unkown -->
-    <dependency>
-      <groupId>org.torquebox.mojo</groupId>
-      <artifactId>mavengem-wagon</artifactId>
-      <version>${mavengem-wagon.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
