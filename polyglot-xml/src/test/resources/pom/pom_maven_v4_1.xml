@@ -17,40 +17,18 @@
   <url>http://maven.apache.org/ref/${project.version}/</url>
   <inceptionYear>2001</inceptionYear>
   <contributors>
-    <contributor>
-      <name>Stuart McCulloch</name>
-    </contributor>
-    <contributor>
-      <name>Christian Schulte (MNG-2199)</name>
-    </contributor>
-    <contributor>
-      <name>Christopher Tubbs (MNG-4226)</name>
-    </contributor>
-    <contributor>
-      <name>Konstantin Perikov (MNG-4565)</name>
-    </contributor>
-    <contributor>
-      <name>Sébastian Le Merdy (MNG-5613)</name>
-    </contributor>
-    <contributor>
-      <name>Mark Ingram (MNG-5639)</name>
-    </contributor>
-    <contributor>
-      <name>Phil Pratt-Szeliga (MNG-5645)</name>
-    </contributor>
-    <contributor>
-      <name>Florencia Tarditti (PR 41)</name>
-    </contributor>
-    <contributor>
-      <name>Anton Tanasenko</name>
-    </contributor>
-    <contributor>
-      <name>Joseph Walton (MNG-5297)</name>
-    </contributor>
+    <contributor name="Stuart McCulloch" />
+    <contributor name="Christian Schulte (MNG-2199)" />
+    <contributor name="Christopher Tubbs (MNG-4226)" />
+    <contributor name="Konstantin Perikov (MNG-4565)" />
+    <contributor name="Sébastian Le Merdy (MNG-5613)" />
+    <contributor name="Mark Ingram (MNG-5639)" />
+    <contributor name="Phil Pratt-Szeliga (MNG-5645)" />
+    <contributor name="Florencia Tarditti (PR 41)" />
+    <contributor name="Anton Tanasenko" />
+    <contributor name="Joseph Walton (MNG-5297)" />
   </contributors>
-  <prerequisites>
-    <maven>2.2.1</maven>
-  </prerequisites>
+  <prerequisites maven="2.2.1" />
   <modules>
     <module>maven-plugin-api</module>
     <module>maven-builder-support</module>
@@ -66,26 +44,11 @@
     <module>maven-compat</module>
     <module>apache-maven</module>
   </modules>
-  <scm>
-    <connection>scm:git:https://git-wip-us.apache.org/repos/asf/maven.git</connection>
-    <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/maven.git</developerConnection>
-    <tag>master</tag>
-    <url>https://github.com/apache/maven/tree/${project.scm.tag}</url>
-  </scm>
-  <issueManagement>
-    <system>jira</system>
-    <url>https://issues.apache.org/jira/browse/MNG</url>
-  </issueManagement>
-  <ciManagement>
-    <system>Jenkins</system>
-    <url>https://builds.apache.org/job/maven-3.x/</url>
-  </ciManagement>
-  <distributionManagement>
-    <site>
-      <id>apache.website</id>
-      <url>scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/components/${maven.site.path}</url>
-    </site>
-    <downloadUrl>http://maven.apache.org/download.html</downloadUrl>
+  <scm connection="scm:git:https://git-wip-us.apache.org/repos/asf/maven.git" developerConnection="scm:git:https://git-wip-us.apache.org/repos/asf/maven.git" tag="master" url="https://github.com/apache/maven/tree/${project.scm.tag}" />
+  <issueManagement system="jira" url="https://issues.apache.org/jira/browse/MNG" />
+  <ciManagement system="Jenkins" url="https://builds.apache.org/job/maven-3.x/" />
+  <distributionManagement downloadUrl="http://maven.apache.org/download.html">
+    <site id="apache.website" url="scm:svn:https://svn.apache.org/repos/infra/websites/production/maven/components/${maven.site.path}" />
   </distributionManagement>
   <properties>
     <checkstyle.violation.ignore>RedundantThrows,NewlineAtEndOfFile,ParameterNumber,MethodLength,FileLength,JavadocType,MagicNumber,InnerAssignment,MethodName</checkstyle.violation.ignore>
@@ -304,8 +267,7 @@
     </plugins>
   </build>
   <profiles>
-    <profile>
-      <id>apache-release</id>
+    <profile id="apache-release">
       <build>
         <plugins>
           <plugin artifactId="maven-assembly-plugin">
@@ -320,19 +282,16 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>reporting</id>
+    <profile id="reporting">
       <reporting>
         <plugins>
           <plugin artifactId="maven-project-info-reports-plugin" version="2.8.1" />
           <plugin artifactId="maven-javadoc-plugin">
             <reportSets>
-              <reportSet>
-                <id>aggregate</id>
+              <reportSet id="aggregate" inherited="false">
                 <reports>
                   <report>aggregate</report>
                 </reports>
-                <inherited>false</inherited>
               </reportSet>
             </reportSets>
             <configuration>
@@ -347,12 +306,10 @@
           </plugin>
           <plugin artifactId="maven-jxr-plugin">
             <reportSets>
-              <reportSet>
-                <id>aggregate</id>
+              <reportSet id="aggregate" inherited="false">
                 <reports>
                   <report>aggregate</report>
                 </reports>
-                <inherited>false</inherited>
               </reportSet>
             </reportSets>
           </plugin>
@@ -360,12 +317,9 @@
         </plugins>
       </reporting>
     </profile>
-    <profile>
-      <id>maven-repo-local</id>
+    <profile id="maven-repo-local">
       <activation>
-        <property>
-          <name>maven.repo.local</name>
-        </property>
+        <property name="maven.repo.local" />
       </activation>
       <build>
         <plugins>
