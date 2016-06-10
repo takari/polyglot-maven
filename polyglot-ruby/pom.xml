@@ -29,7 +29,7 @@
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
-      <version>9.0.5.0</version>
+      <version>9.1.2.0</version>
       <type>pom</type>
     </dependency>
     <!-- Test -->
@@ -137,14 +137,14 @@
         <dependency>
           <groupId>rubygems</groupId>
           <artifactId>maven-tools</artifactId>
-          <version>1.1.4</version>
+          <version>1.1.5</version>
           <type>gem</type>
           <scope>provided</scope>
         </dependency>
       </dependencies>
 
       <properties>
-        <jruby.plugins.version>1.1.1</jruby.plugins.version>
+        <jruby.plugins.version>1.1.5</jruby.plugins.version>
       </properties>
 
       <build>

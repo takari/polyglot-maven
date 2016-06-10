@@ -197,8 +197,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 		// TODO needs better handling
                 .replaceAll("1[0-9]-SNAPSHOT", "15")
 		// fix absolute path for test_pom_from_jarfile
-		.replaceAll(System.getProperty("user.dir") + "/myfirst.jar", "/myfirst.jar")
-		.replaceAll("..basedir./myfirst.jar", "/myfirst.jar")
+		.replaceAll("..basedir./myfirst.jar", "uri:classloader://myfirst.jar")
                 // some of the configuration tags are empty - unify them
                 .replaceAll( "></(arg|chmod)>", "/>" );
 	     if ( debug )

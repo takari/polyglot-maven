@@ -14,8 +14,9 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
-import org.jruby.CompatVersion;
-import org.jruby.embed.ScriptingContainer;
+import org.jruby.embed.IsolatedScriptingContainer;
+import org.jruby.embed.PathType;
+
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
 import org.sonatype.maven.polyglot.ruby.execute.RubyExecuteTaskFactory;
 
@@ -26,7 +27,7 @@ import org.sonatype.maven.polyglot.ruby.execute.RubyExecuteTaskFactory;
  */
 public class RubyParser {
 
-    private final ScriptingContainer jruby;
+    private final IsolatedScriptingContainer jruby;
 
     private final Object parser;
 
@@ -37,23 +38,9 @@ public class RubyParser {
     public RubyParser( ExecuteManager executeManager ) throws IOException
     {
         this.executeManager = executeManager;
-        this.jruby = new ScriptingContainer();
-        this.jruby.setCompatVersion( CompatVersion.RUBY1_9 );
-        this.jruby.setClassLoader(getClass().getClassLoader());
-        this.parser = runScript( "parser.rb" );
+        this.jruby = new IsolatedScriptingContainer();
+        this.parser = jruby.runScriptlet( PathType.CLASSPATH, "parser.rb" );
         this.factory = new RubyExecuteTaskFactory( jruby );
-    }
-
-    private Object runScript( String script ) throws IOException
-    {
-        InputStream stream = getClass().getClassLoader()
-                .getResourceAsStream( script );
-        if ( stream == null )
-        {
-            throw new FileNotFoundException( "not found in classloader: "
-                    + script );
-        }
-        return this.jruby.runScriptlet( stream, script );
     }
 
     // synchronize it since it is not clear how threadsafe everything is

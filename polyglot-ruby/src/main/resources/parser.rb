@@ -155,23 +155,33 @@ module Maven
         end
       end
 
+      def to_hash_key(key)
+        case key
+        when Symbol
+          parts = key.to_s.split('_')
+          parts[0] + parts[1..-1].collect(&:capitalize).join
+        else
+          key.to_s
+        end
+      end
+
       def fill_dom(parent, map = {})
         # sort attributes to stay consistent
         map.keys.select { |k| k.to_s =~ /^@/ }.sort{ |m,n| m.to_s <=> n.to_s }.each do |k|
-          parent.setAttribute( k.to_s[ 1..-1 ], map[ k ] )
+          parent.setAttribute( to_hash_key(k)[ 1..-1 ], map[ k ] )
         end
         map.each do |k, v|
           case v
           when Hash
-            child = Xpp3Dom.new(k.to_s)
+            child = Xpp3Dom.new(to_hash_key(k))
             fill_dom(child, v)
           when Array
             if k.to_s.match( /s$/ )
-              node = Xpp3Dom.new( k.to_s )
+              node = Xpp3Dom.new(to_hash_key(k))
               name = k.to_s.sub( /s$/, '' )
             else
               node = parent
-              name = k.to_s
+              name = to_hash_key(k)
             end
             v.each do |val|
               child = Xpp3Dom.new( name )
@@ -189,11 +199,8 @@ module Maven
             parent.addChild( node ) if node != parent
             child = nil
           else
-            case k.to_s
-            when /^@/
-        #      parent.setAttribute( k.to_s[ 1..-1 ], v.to_s )
-            else
-              child = Xpp3Dom.new(k.to_s)
+            unless k.to_s =~ /^@/
+              child = Xpp3Dom.new(to_hash_key(k))
               child.setValue(v.to_s) unless v.nil?
             end
           end
