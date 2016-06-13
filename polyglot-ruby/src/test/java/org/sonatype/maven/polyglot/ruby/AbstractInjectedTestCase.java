@@ -36,7 +36,9 @@ import org.sonatype.maven.polyglot.execute.ExecuteManagerImpl;
 import org.sonatype.maven.polyglot.mapping.Mapping;
 
 public abstract class AbstractInjectedTestCase extends InjectedTestCase {
-    
+
+    private final String VERSION_PATTERN = Constants.getVersion().replaceAll("^.+\\.|-SNAPSHOT$", "");
+
     @Inject
     @Named("${basedir}/target/rubygems-provided/gems")
     protected File gems;
@@ -177,7 +179,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
 	    
 	    assertEquals( simplify( xml, debug ), simplify( ruby, debug ) );
 	}
-	
+
 	private String simplify( StringWriter xml, boolean debug )
 	{
 	    String x = xml.toString()
@@ -193,13 +195,13 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 .replaceAll("io.tesla.polyglot", "io.takari.polyglot")
                 .replaceAll("tesla-polyglot", "polyglot")
 		// for the pom_with_execute test
-		// hardcoded version from maven-tools
-		// TODO needs better handling
-                .replaceAll("1[0-9]-SNAPSHOT", "15")
+		// hardcoded version from maven-tools, could change more versions then
+                // the one from this plugin
+                .replaceAll("[0-9]+(-SNAPSHOT)?", VERSION_PATTERN)
 		// fix absolute path for test_pom_from_jarfile
 		.replaceAll("..basedir./myfirst.jar", "uri:classloader://myfirst.jar")
                 // some of the configuration tags are empty - unify them
-                .replaceAll( "></(arg|chmod)>", "/>" );
+                .replaceAll("></(arg|chmod)>", "/>");
 	     if ( debug )
 	     {
 		 System.out.println(x);
