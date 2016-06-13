@@ -155,6 +155,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   }
 
   def read(input: File, options: util.Map[String, _]): Model = {
+    val source = PolyglotModelUtil.getLocation(options)
     val evalPomFile = locateEvalPomFile(options)
     val sm = eval(evalPomFile, input, options).copy(pomFile = Some(input))
     val m = sm.asJava
@@ -169,9 +170,24 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     new File(evalTarget, "pom.scala")
   }
 
+  class MvnEval(target: Option[File], includeBaseDir: File) extends Eval(target) {
+    /**
+     * Preprocessors to run the code through before it is passed to the Scala compiler.
+     */
+    override protected lazy val preprocessors: Seq[Preprocessor] =
+      Seq(
+        new IncludePreprocessor(
+          Seq(
+            new ClassScopedResolver(getClass),
+            new FilesystemResolver(includeBaseDir)
+          )
+        )
+      )
+  }
+
   private def eval(evalPomFile: File, sourcePomFile: File, options: util.Map[String, _]): ScalaModel = {
     val sourceFile = new File(PolyglotModelUtil.getLocation(options))
-    val eval = new Eval(Some(evalPomFile.getParentFile))
+    val eval = new MvnEval(Some(evalPomFile.getParentFile), sourceFile.getParentFile())
     try {
       eval.apply[ScalaModel](sourcePomFile)
     } catch {
