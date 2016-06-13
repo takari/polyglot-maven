@@ -21,6 +21,7 @@ import org.codehaus.plexus.util.io.RawInputStreamFacade
 import org.sonatype.maven.polyglot.PolyglotModelUtil
 import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
 import javax.inject.{Named, Inject}
+import org.apache.maven.model.io.ModelParseException
 
 /**
  * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
@@ -138,7 +139,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   def read(reader: Reader, options: util.Map[String, _]): Model = {
     val evalPomFile = locateEvalPomFile(options)
     IOUtil.copy(reader, new FileOutputStream(evalPomFile))
-    val sm = eval(evalPomFile, evalPomFile)
+    val sm = eval(evalPomFile, evalPomFile, options)
     val m = sm.asJava
     sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
@@ -147,7 +148,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   def read(input: InputStream, options: util.Map[String, _]): Model = {
     val evalPomFile = locateEvalPomFile(options)
     FileUtils.copyStreamToFile(new RawInputStreamFacade(input), evalPomFile)
-    val sm = eval(evalPomFile, evalPomFile)
+    val sm = eval(evalPomFile, evalPomFile, options)
     val m = sm.asJava
     sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
@@ -155,7 +156,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
 
   def read(input: File, options: util.Map[String, _]): Model = {
     val evalPomFile = locateEvalPomFile(options)
-    val sm = eval(evalPomFile, input).copy(pomFile = Some(input))
+    val sm = eval(evalPomFile, input, options).copy(pomFile = Some(input))
     val m = sm.asJava
     sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
@@ -168,8 +169,18 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     new File(evalTarget, "pom.scala")
   }
 
-  private def eval(evalPomFile: File, sourcePomFile: File): ScalaModel = {
-    new Eval(Some(evalPomFile.getParentFile)).apply[ScalaModel](sourcePomFile)
+  private def eval(evalPomFile: File, sourcePomFile: File, options: util.Map[String, _]): ScalaModel = {
+    val sourceFile = new File(PolyglotModelUtil.getLocation(options))
+    val eval = new Eval(Some(evalPomFile.getParentFile))
+    try {
+      eval.apply[ScalaModel](sourcePomFile)
+    } catch {
+      case e: eval.CompilerException =>
+        // TODO: parse line nr etc
+        throw new ModelParseException("Cannot compile pom file: " + sourceFile, 0, 0, e)
+      case e: Throwable =>
+        throw new ModelParseException("Could not process pom file: " + sourceFile, 0, 0, e)
+    }
   }
 
   private def registerExecutors(m: Model, options: util.Map[String, _], tasks: immutable.Seq[Task]): Unit = {
