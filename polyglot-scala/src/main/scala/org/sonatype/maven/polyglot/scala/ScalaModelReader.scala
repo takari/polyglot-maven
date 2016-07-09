@@ -170,6 +170,13 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     new File(evalTarget, "pom.scala")
   }
 
+  /**
+   * We subclass the [[Eval]] class to customize the otherwise immutable prepocessors property.
+   *
+   * We provide an [[IncludePreprocessor]] that resolves files and classes from an (externally) defined directory
+   * and the the current classloader.
+   *
+   */
   class MvnEval(target: Option[File], includeBaseDir: File) extends Eval(target) {
     /**
      * Preprocessors to run the code through before it is passed to the Scala compiler.
@@ -187,12 +194,17 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
 
   private def eval(evalPomFile: File, sourcePomFile: File, options: util.Map[String, _]): ScalaModel = {
     val sourceFile = new File(PolyglotModelUtil.getLocation(options))
-    val eval = new MvnEval(Some(evalPomFile.getParentFile), sourceFile.getParentFile())
+    // ensure, we always use the project base directory to resolve includes
+    val includeBaseDir = sourceFile.getParentFile()
+    val eval = new MvnEval(Some(evalPomFile.getParentFile), includeBaseDir)
     try {
       eval.apply[ScalaModel](sourcePomFile)
     } catch {
       case e: eval.CompilerException =>
-        // TODO: parse line nr etc
+        // ModuleParseException is able to provide exact position (line nr., column nr.), so if later
+        // versions of CompilerException make those information available, we should map them here (instead of zeros).
+        // Currently, the information is only available as text in the exeception message.
+        // Parsing it would be wasteful and possibly unstable.
         throw new ModelParseException("Cannot compile pom file: " + sourceFile, 0, 0, e)
       case e: Throwable =>
         throw new ModelParseException("Could not process pom file: " + sourceFile, 0, 0, e)
