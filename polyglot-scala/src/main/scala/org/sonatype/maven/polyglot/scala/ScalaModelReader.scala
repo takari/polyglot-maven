@@ -21,6 +21,7 @@ import org.codehaus.plexus.util.io.RawInputStreamFacade
 import org.sonatype.maven.polyglot.PolyglotModelUtil
 import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
 import javax.inject.{Named, Inject}
+import org.apache.maven.model.io.ModelParseException
 
 /**
  * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
@@ -138,7 +139,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   def read(reader: Reader, options: util.Map[String, _]): Model = {
     val evalPomFile = locateEvalPomFile(options)
     IOUtil.copy(reader, new FileOutputStream(evalPomFile))
-    val sm = eval(evalPomFile, evalPomFile)
+    val sm = eval(evalPomFile, evalPomFile, options)
     val m = sm.asJava
     sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
@@ -147,15 +148,16 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   def read(input: InputStream, options: util.Map[String, _]): Model = {
     val evalPomFile = locateEvalPomFile(options)
     FileUtils.copyStreamToFile(new RawInputStreamFacade(input), evalPomFile)
-    val sm = eval(evalPomFile, evalPomFile)
+    val sm = eval(evalPomFile, evalPomFile, options)
     val m = sm.asJava
     sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
   }
 
   def read(input: File, options: util.Map[String, _]): Model = {
+    val source = PolyglotModelUtil.getLocation(options)
     val evalPomFile = locateEvalPomFile(options)
-    val sm = eval(evalPomFile, input).copy(pomFile = Some(input))
+    val sm = eval(evalPomFile, input, options).copy(pomFile = Some(input))
     val m = sm.asJava
     sm.build.map(b => registerExecutors(m, options, b.tasks))
     m
@@ -168,8 +170,45 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     new File(evalTarget, "pom.scala")
   }
 
-  private def eval(evalPomFile: File, sourcePomFile: File): ScalaModel = {
-    new Eval(Some(evalPomFile.getParentFile)).apply[ScalaModel](sourcePomFile)
+  /**
+   * We subclass the [[Eval]] class to customize the otherwise immutable prepocessors property.
+   *
+   * We provide an [[IncludePreprocessor]] that resolves files and classes from an (externally) defined directory
+   * and the the current classloader.
+   *
+   */
+  class MvnEval(target: Option[File], includeBaseDir: File) extends Eval(target) {
+    /**
+     * Preprocessors to run the code through before it is passed to the Scala compiler.
+     */
+    override protected lazy val preprocessors: Seq[Preprocessor] =
+      Seq(
+        new IncludePreprocessor(
+          Seq(
+            new ClassScopedResolver(getClass),
+            new FilesystemResolver(includeBaseDir)
+          )
+        )
+      )
+  }
+
+  private def eval(evalPomFile: File, sourcePomFile: File, options: util.Map[String, _]): ScalaModel = {
+    val sourceFile = new File(PolyglotModelUtil.getLocation(options))
+    // ensure, we always use the project base directory to resolve includes
+    val includeBaseDir = sourceFile.getParentFile()
+    val eval = new MvnEval(Some(evalPomFile.getParentFile), includeBaseDir)
+    try {
+      eval.apply[ScalaModel](sourcePomFile)
+    } catch {
+      case e: eval.CompilerException =>
+        // ModuleParseException is able to provide exact position (line nr., column nr.), so if later
+        // versions of CompilerException make those information available, we should map them here (instead of zeros).
+        // Currently, the information is only available as text in the exeception message.
+        // Parsing it would be wasteful and possibly unstable.
+        throw new ModelParseException("Cannot compile pom file: " + sourceFile, 0, 0, e)
+      case e: Throwable =>
+        throw new ModelParseException("Could not process pom file: " + sourceFile, 0, 0, e)
+    }
   }
 
   private def registerExecutors(m: Model, options: util.Map[String, _], tasks: immutable.Seq[Task]): Unit = {
