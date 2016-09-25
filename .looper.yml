@@ -1,0 +1,13 @@
+language: workflow
+
+tools:
+  jdk:
+    - 1.8.0_91-b14
+  maven:
+    - 3.3.9
+
+flows:
+  master:
+  - (on master, name mvn clean install) mvn clean install -B 
+  pr:
+  - call: master
