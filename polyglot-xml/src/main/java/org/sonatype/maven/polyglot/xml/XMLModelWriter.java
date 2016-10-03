@@ -15,7 +15,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
-import org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Writer;
+import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Writer;
 
 /**
  * XML model writer.
@@ -24,10 +24,10 @@ import org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Writer;
 @Component(role = ModelWriter.class, hint = "xml41")
 public class XMLModelWriter extends ModelWriterSupport {
 	
-	MavenXpp3Writer writer;
+	PolyglotMavenXpp3Writer writer;
 	
 	public XMLModelWriter() {
-		writer = new MavenXpp3Writer();
+		writer = new PolyglotMavenXpp3Writer();
 	}
 
 	public void write(Writer output, Map<String, Object> o, Model model) throws IOException {

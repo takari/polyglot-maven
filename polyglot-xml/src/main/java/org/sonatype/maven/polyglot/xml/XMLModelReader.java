@@ -17,7 +17,7 @@ import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
-import org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Reader;
+import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Reader;
 
 /**
  * XML model reader.
@@ -26,10 +26,10 @@ import org.sonatype.maven.polyglot.xml.xpp3.MavenXpp3Reader;
 @Component(role = ModelReader.class, hint = "xml41")
 public class XMLModelReader extends ModelReaderSupport {
 	
-	MavenXpp3Reader reader;
+	PolyglotMavenXpp3Reader reader;
 
 	public XMLModelReader() {
-		reader = new MavenXpp3Reader();
+		reader = new PolyglotMavenXpp3Reader();
 	}
 
 	public Model read(Reader input, Map<String, ?> options) throws IOException, ModelParseException {
