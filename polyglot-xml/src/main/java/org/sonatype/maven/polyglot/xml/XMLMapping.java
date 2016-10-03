@@ -10,10 +10,10 @@ package org.sonatype.maven.polyglot.xml;
 import java.io.FileInputStream;
 import java.util.Map;
 
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.mapping.Mapping;
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
+import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Reader;
 
 /**
  * XML model mapping.
@@ -52,18 +52,18 @@ public class XMLMapping extends MappingSupport {
 		FileInputStream in = null;
 		try {
 			in = new FileInputStream(getLocation(options));
-			MavenXpp3Reader reader = new MavenXpp3Reader();
+			PolyglotMavenXpp3Reader reader = new PolyglotMavenXpp3Reader();
 			reader.read(in);
-			canParse = false;
-		} catch (Exception ex) {
 			canParse = true;
+		} catch (Exception ex) {
+			canParse = false;
 		} finally {
 			try {
 				if (in != null) {
 					in.close();
 				}
 			} catch (Exception e) {
-				canParse = true;
+				canParse = false;
 			}
 		}
 		return canParse;
