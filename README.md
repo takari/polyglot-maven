@@ -63,18 +63,18 @@ and add the appropriate language extension.
 
 The available languages, in alphabetical order, with their artifact id are:
 
-| Language | Artifact Id        |
-|:--------:|:------------------:|
-| Atom     | `polyglot-atom`    |
-| Groovy   | `polyglot-groovy`  |
-| Clojure  | `polyglot-clojure` |
-| Ruby     | `polyglot-ruby`    |
-| Scala    | `polyglot-scala`   |
-| YAML     | `polyglot-yaml`    |
+| Language | Artifact Id        | Language reference |
+|:--------:|:------------------:|:------------------:|
+| Atom     | `polyglot-atom`    | [atom](http://hackage.haskell.org/package/atom |
+  Groovy   | `polyglot-groovy`  |                    |
+| Clojure  | `polyglot-clojure` |                    |
+| Ruby     | `polyglot-ruby`    |                    |
+| Scala    | `polyglot-scala`   |                    |
+| YAML     | `polyglot-yaml`    | [yaml.org](http://yaml.org/) |
 
 ## Update extensions.xml
 
-Edit the `extensions.xml` file and add the following, replacing ARTIFACTID with
+Edit the `.mvn/extensions.xml` file and add the following, replacing ARTIFACTID with
 the artifact id for your chosen language.
 
 ```
@@ -94,8 +94,7 @@ We have created a simple Maven Plugin that will help you convert any existing
 `pom.xml` files:
 
 ```
-mvn io.takari.polyglot:polyglot-translate-plugin:translate \
-  -Dinput=pom.xml -Doutput=pom.{format}
+mvn io.takari.polyglot:polyglot-translate-plugin:translate -Dinput=pom.xml -Doutput=pom.{format}
 ```
 
 Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom` and of course `xml`.
@@ -107,3 +106,8 @@ You can even convert back to `xml` or cross-convert between all supported format
 The whole interoperability story has not been worked out but we expect to sort this out very quickly now that Polyglot for Maven can be used easily.
 
 A `pom.xml` will currently not be installed or deployed except for the Ruby DSL but we will add this feature very shortly.
+
+# Links
+ 
+ - https://github.com/takari/polyglot-maven-examples
+ - https://github.com/jbosstools/m2e-polyglot-poc
