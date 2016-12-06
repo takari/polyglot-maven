@@ -107,3 +107,12 @@ You can even convert back to `xml` or cross-convert between all supported format
 The whole interoperability story has not been worked out but we expect to sort this out very quickly now that Polyglot for Maven can be used easily.
 
 A `pom.xml` will currently not be installed or deployed except for the Ruby DSL but we will add this feature very shortly.
+
+# Polyglot in Real Life / Show Case
+
+Despite the warning above, Polyglot Maven is pretty stable right now, at least the Scala version.
+
+As a show case, have a look at the following two projects, which use polyglot scala.
+
+* https://github.com/domino-osgi/domino - A simple project using Polyglot Scala.
+* https://github.com/woq-blended/blended - A complex mulit-project using Polyglot Scala. It's also an example where the `#include` feature is heavily used to share common configuration but avoid Maven parent poms, which are often problematic.
