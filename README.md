@@ -106,7 +106,7 @@ You can even convert back to `xml` or cross-convert between all supported format
 
 The whole interoperability story has not been worked out but we expect to sort this out very quickly now that Polyglot for Maven can be used easily.
 
-A `pom.xml` will currently not be installed or deployed except for the Ruby DSL but we will add this feature very shortly.
+A `pom.xml` will currently not be installed or deployed except for the Ruby DSL and the Scala DSL but we will add this feature very shortly.
 
 # Polyglot in Real Life / Show Case
 
