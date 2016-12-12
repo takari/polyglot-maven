@@ -48,18 +48,16 @@ project 'Polyglot :: Aggregator' do
 end
 ```
 
-# Building
 
-## Requirements
+# Requirements
 
 * [Maven](http://maven.apache.org) 3.3.1+
 * [Java](http://java.sun.com/) 7+
 
-# Configuration
+# Usage
 
-To use Polyglot for Maven you need to edit 
-`${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` 
-and add the appropriate language extension. 
+To use Polyglot for Maven you need to edit `${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` and add the
+appropriate language extension.
 
 ## Available Languages
 
@@ -106,7 +104,7 @@ Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom` and of c
 See [here](http://takari.io/2015/03/21/polyglot-maven.html) for more info.
 You can even convert back to `xml` or cross-convert between all supported formats.
 
-# Note of caution
+# Note of Caution
 
 The whole interoperability story has not been worked out but you can create a XML-formatted POM from the Polyglot
 version. Currently mixing different dialects within a reactor is not supported.
