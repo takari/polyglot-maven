@@ -1,6 +1,8 @@
 # Overview
 
-[Polyglot for Maven](http://github.com/takari/polyglot-maven/) is a set of extensions for `Maven 3.3.1+` that allows the POM model to be written in dialects other than XML. Several of the dialects also allow inlined plugins: the Ruby, Groovy and Scala dialects allow this.
+[Polyglot for Maven](http://github.com/takari/polyglot-maven/) is a set of extensions for `Maven 3.3.1+` that
+allows the POM model to be written in dialects other than XML. Several of the dialects also allow inlined plugins:
+the Ruby, Groovy and Scala dialects allow this.
 
 Here's an example POM written in the Ruby dialect:
 
@@ -48,7 +50,7 @@ end
 
 # Building
 
-### Requirements
+## Requirements
 
 * [Maven](http://maven.apache.org) 3.3.1+
 * [Java](http://java.sun.com/) 7+
@@ -57,7 +59,7 @@ end
 
 To use Polyglot for Maven you need to edit 
 `${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` 
-and add the appropriate language extension.
+and add the appropriate language extension. 
 
 ## Available Languages
 
@@ -72,10 +74,12 @@ The available languages, in alphabetical order, with their artifact id are:
 | Scala    | `polyglot-scala`   |
 | YAML     | `polyglot-yaml`    |
 
+The groupId value is `io.takari.polyglot`.
+
 ## Update extensions.xml
 
 Edit the `extensions.xml` file and add the following, replacing ARTIFACTID with
-the artifact id for your chosen language.
+the artifactId for your chosen language.
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -83,14 +87,14 @@ the artifact id for your chosen language.
   <extension>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>ARTIFACTID</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.19</version>
   </extension>
 </extensions>
 ```
 
 ## Convert existing POM
 
-We have created a simple Maven Plugin that will help you convert any existing 
+We have created a simple Maven plugin that will help you convert any existing 
 `pom.xml` files:
 
 ```
@@ -104,15 +108,34 @@ You can even convert back to `xml` or cross-convert between all supported format
 
 # Note of caution
 
-The whole interoperability story has not been worked out but we expect to sort this out very quickly now that Polyglot for Maven can be used easily.
+The whole interoperability story has not been worked out but you can create a XML-formatted POM from the Polyglot
+version. Currently mixing different dialects within a reactor is not supported.
 
-A `pom.xml` will currently not be installed or deployed except for the Ruby DSL and the Scala DSL but we will add this feature very shortly.
+A `pom.xml` will currently not be installed or deployed except for the Ruby DSL and the Scala DSL but we are working
+towards this feature for all DSLs.
 
-# Polyglot in Real Life / Show Case
+# Polyglot Maven in Real Life
 
-Despite the warning above, Polyglot Maven is pretty stable right now, at least the Scala version.
+Despite the warning above, Polyglot Maven is pretty stable right now. Have a look at the integration tests for
+each dialect in this repository for some examples as well as our dedicated
+[polyglot-maven-examples project](https://github.com/takari/polyglot-maven-examples).
 
-As a show case, have a look at the following two projects, which use polyglot scala.
+The following projects are real world usage examples that use Polyglot Maven in their regular development
+and release work:
+
+## Ruby
+
+* https://github.com/jruby - Extensive usage of Polyglot Ruby and contributions to the project from the team.
+
+## YAML
+
+* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to the projeect from the team.
+
+## Scala
 
 * https://github.com/domino-osgi/domino - A simple project using Polyglot Scala.
-* https://github.com/woq-blended/blended - A complex mulit-project using Polyglot Scala. It's also an example where the `#include` feature is heavily used to share common configuration but avoid Maven parent poms, which are often problematic.
+* https://github.com/woq-blended/blended - A complex mulit-project using Polyglot Scala. It's also an example
+  where the `#include` feature is heavily used to share common configuration but avoid Maven parent poms, which
+  are often problematic.
+
+Please let us know of your usage by filing an issue so we can add it here.
