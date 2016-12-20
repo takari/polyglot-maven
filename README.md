@@ -127,7 +127,7 @@ and release work:
 
 ## YAML
 
-* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to the projeect from the team.
+* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to the project from the team.
 
 ## Scala
 
