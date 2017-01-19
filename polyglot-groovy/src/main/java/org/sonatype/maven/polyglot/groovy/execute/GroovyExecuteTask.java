@@ -52,7 +52,7 @@ public class GroovyExecuteTask extends ExecuteTaskSupport {
 
   public void execute(final ExecuteContext context) throws Exception {
     try {
-      getClosure().call();
+      getClosure().call(context);
     } catch (Throwable t) {
       t = StackTraceUtils.sanitize(t);
 
