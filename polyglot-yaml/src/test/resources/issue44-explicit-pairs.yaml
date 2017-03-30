@@ -1,0 +1,23 @@
+---
+modelVersion: 4.0.0
+groupId: dmos:raudondvaris:1.0
+packaging: war
+prerequisites: {maven: 3.3.3}
+build:
+  plugins:
+    - artifactId: test-plugin
+      version: 3.4
+      configuration:
+        parentKey: !!pairs
+          - childKey:
+              artifactId: maven-project-info-reports-plugin
+              version: 2.4
+              configuration:
+                dependencyLocationsEnabled: false
+                dependencyDetailsEnabled: false
+          - childKey:
+              artifactId: maven-javadoc-plugin
+              version: 2.10.3
+        scalarParent: !!pairs
+          - scalarChild: 36
+          - scalarChild: 45

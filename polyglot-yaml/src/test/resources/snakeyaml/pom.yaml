@@ -48,8 +48,8 @@ build:
   - artifactId: maven-surefire-plugin
     configuration:
       argLine: -Xmx512m
-      includes: {include: '**/*Test.java'}
-      excludes: {exclude: '**/ParallelTest.java'}
+      includes: ['**/*Test.java', '**/*IT.java']
+      excludes: ['**/StressTest.java', '**/ParallelTest.java']
     extensions: false
     groupId: org.apache.maven.plugins
     inherited: true
@@ -209,7 +209,7 @@ profiles:
         sourceEncoding: utf-8
         minimumTokens: 100
         targetJdk: 1.5
-        excludes: {exclude: '**/external/*.java'}
+        excludes: ['**/external/*.java', '**/generated/*.java']
       groupId: org.apache.maven.plugins
       inherited: true
       version: 3.4
@@ -221,10 +221,12 @@ profiles:
       - configuration:
           outputDirectory: ${android.src}
           resources:
-            resource:
-              directory: ${basedir}/src/main/java
+            - directory: ${basedir}/src/main/java
               filtering: false
-              excludes: {exclude: org/yaml/snakeyaml/introspector/MethodProperty.java}
+              excludes: [org/yaml/snakeyaml/introspector/MethodProperty.java]
+            - directory: ${basedir}/src/main/kotlin
+              filtering: true
+              includes: ['**/*.kt']
         goals: [copy-resources]
         id: copy-src-for-android
         inherited: true

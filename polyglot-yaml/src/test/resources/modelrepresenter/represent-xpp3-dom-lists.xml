@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <argLine>-Xmx512m</argLine>
+    <includes>
+        <include>**/*Test.java</include>
+        <include>**/*IT.java</include>
+    </includes>
+    <excludes>
+        <exclude>**/StressTest.java</exclude>
+        <exclude>**/ParallelTest.java</exclude>
+    </excludes>
+    <instructions>
+        <_nouses>true</_nouses>
+        <Bundle-RequiredExecutionEnvironment>J2SE-1.5</Bundle-RequiredExecutionEnvironment>
+    </instructions>
+    <resources>
+        <resource>
+            <directory>${basedir}/src/main/java</directory>
+            <filtering>false</filtering>
+            <excludes>
+                <exclude>org/yaml/snakeyaml/introspector/FieldProperty.java</exclude>
+                <exclude>org/yaml/snakeyaml/introspector/MethodProperty.java</exclude>
+            </excludes>
+        </resource>
+        <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <filtering>true</filtering>
+            <includes>
+                <include>**/*.md</include>
+                <include>**/*.txt</include>
+            </includes>
+        </resource>
+    </resources>
+</configuration>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <reportPlugins>
+    <plugin>
+      <artifactId>maven-project-info-reports-plugin</artifactId>
+      <version>2.4</version>
+      <configuration>
+        <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+        <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+      </configuration>
+    </plugin>
+    <plugin>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.10.3</version>
+    </plugin>
+  </reportPlugins>
+</configuration>

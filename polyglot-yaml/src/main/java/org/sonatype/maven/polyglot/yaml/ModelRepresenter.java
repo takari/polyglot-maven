@@ -12,6 +12,7 @@ import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
@@ -21,6 +22,8 @@ import org.yaml.snakeyaml.representer.Representer;
 
 import java.beans.IntrospectionException;
 import java.util.*;
+
+import static java.lang.String.format;
 
 /**
  * YAML model representer.
@@ -89,20 +92,65 @@ class ModelRepresenter extends Representer {
       return representMapping(Tag.MAP, toMap((Xpp3Dom) data), null);
     }
 
-    private Map<String, Object> toMap(Xpp3Dom dom) {
-      Map<String, Object> map = new LinkedHashMap<String, Object>();
+    private Map<String, Object> toMap(Xpp3Dom node) {
+      Map<String, Object> map = new LinkedHashMap<>();
 
-      int n = dom.getChildCount();
+      int n = node.getChildCount();
       for (int i = 0; i < n; i++) {
-        Xpp3Dom child = dom.getChild(i);
-        if (child.getValue() != null) {
-          map.put(child.getName(), child.getValue());
-        } else {
-          map.put(child.getName(), toMap(child));
+        Xpp3Dom child = node.getChild(i);
+        String childName = child.getName();
+
+        String singularName = null;
+        int childNameLength = childName.length();
+        if ("reportPlugins".equals(childName)) {
+          singularName = "plugin";
+        } else if (childNameLength > 3 && childName.endsWith("ies")) {
+          singularName = childName.substring(0, childNameLength - 3);
+        } else if (childNameLength > 1 && childName.endsWith("s")) {
+          singularName = childName.substring(0, childNameLength - 1);
         }
+
+        Object childValue = child.getValue();
+        if (childValue == null) {
+          boolean isList = singularName != null;
+          if (isList) { // check for eventual list construction
+            for (int j = 0, grandChildCount = child.getChildCount(); j < grandChildCount; j++) {
+              String grandChildName = child.getChild(j).getName();
+              isList &= grandChildName.equals(singularName);
+            }
+          }
+          if (isList) {
+            childValue = toList(child, singularName);
+          } else {
+            childValue = toMap(child);
+          }
+        }
+        map.put(childName, childValue);
       }
 
       return map;
+    }
+
+    private List<Object> toList(Xpp3Dom node, String childName) {
+      List<Object> list = new ArrayList<>();
+
+      int n = node.getChildCount();
+      for (int i = 0; i < n; i++) {
+        Xpp3Dom child = node.getChild(i);
+
+        if (!childName.equals(child.getName())) {
+          throw new YAMLException(format("child name: '%s' does not match expected name: '%s' at node %s",
+              child.getName(), childName, node));
+        }
+
+        Object childValue = child.getValue();
+        if (childValue == null) {
+          childValue = toMap(child);
+        }
+        list.add(childValue);
+      }
+
+      return list;
     }
   }
 

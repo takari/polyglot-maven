@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <parentKey>
+    <childKey>
+      <artifactId>maven-project-info-reports-plugin</artifactId>
+      <version>2.4</version>
+      <configuration>
+        <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+        <dependencyDetailsEnabled>false</dependencyDetailsEnabled>
+      </configuration>
+    </childKey>
+    <childKey>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.10.3</version>
+    </childKey>
+  </parentKey>
+  <scalarParent>
+    <scalarChild>36</scalarChild>
+    <scalarChild>45</scalarChild>
+  </scalarParent>
+</configuration>

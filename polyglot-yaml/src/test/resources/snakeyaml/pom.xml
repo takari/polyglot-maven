@@ -126,6 +126,7 @@
                     <argLine>-Xmx512m</argLine>
                     <includes>
                         <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
                     </includes>
                     <excludes>
                         <exclude>**/StressTest.java</exclude>
@@ -431,6 +432,7 @@
                             <targetJdk>1.5</targetJdk>
                             <excludes>
                                 <exclude>**/external/*.java</exclude>
+                                <exclude>**/generated/*.java</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
@@ -465,6 +467,13 @@
                                             <excludes>
                                                 <exclude>org/yaml/snakeyaml/introspector/MethodProperty.java</exclude>
                                             </excludes>
+                                        </resource>
+                                        <resource>
+                                            <directory>${basedir}/src/main/kotlin</directory>
+                                            <filtering>true</filtering>
+                                            <includes>
+                                                <include>**/*.kt</include>
+                                            </includes>
                                         </resource>
                                     </resources>
                                 </configuration>
