@@ -33,9 +33,9 @@
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:tesla/tesla-polyglot.git</connection>
-    <developerConnection>scm:git:git@github.com:tesla/tesla-polyglot.git</developerConnection>
-    <url>https://github.com/tesla/tesla-polyglot</url>
+    <connection>scm:git:git@github.com:takari/polyglot-maven.git</connection>
+    <developerConnection>scm:git:git@github.com:takari/polyglot-maven.git</developerConnection>
+    <url>https://github.com/takari/polyglot-maven</url>
     <tag>HEAD</tag>
   </scm>
 
