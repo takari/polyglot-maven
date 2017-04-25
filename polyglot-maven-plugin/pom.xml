@@ -15,7 +15,7 @@
 
   <artifactId>polyglot-maven-plugin</artifactId>
   <name>Polyglot :: Maven Plugin</name>
-  <packaging>maven-plugin</packaging>
+  <packaging>takari-maven-plugin</packaging>
 
   <dependencies>
     <dependency>
@@ -35,6 +35,17 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>io.takari.maven.plugins</groupId>
+          <artifactId>takari-lifecycle-plugin</artifactId>
+          <configuration>
+            <proc>proc</proc>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
