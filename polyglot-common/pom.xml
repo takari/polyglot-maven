@@ -20,7 +20,6 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.0.20</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
