@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>14</version>
+    <version>25</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -28,7 +28,7 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.3.1</mavenVersion>
+    <mavenVersion>3.5.0</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
   </properties>
 
@@ -171,6 +171,7 @@
       <plugin>
         <groupId>org.codehaus.plexus</groupId>
         <artifactId>plexus-component-metadata</artifactId>
+        <version>1.7.1</version>
         <executions>
           <execution>
             <goals>
