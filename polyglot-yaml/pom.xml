@@ -17,6 +17,7 @@
     <version>0.1.20-SNAPSHOT</version>
   </parent>
   <artifactId>polyglot-yaml</artifactId>
+  <packaging>takari-jar</packaging>
   <name>Polyglot :: YAML</name>
 
   <dependencies>

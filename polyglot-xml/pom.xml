@@ -12,6 +12,7 @@
 		<version>0.1.20-SNAPSHOT</version>
 	</parent>
 	<artifactId>polyglot-xml</artifactId>
+  <packaging>takari-jar</packaging>
 	<name>Polyglot :: XML</name>
 
 	<dependencies>
