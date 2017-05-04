@@ -19,6 +19,7 @@
   </parent>
 
   <artifactId>polyglot-atom</artifactId>
+  <packaging>takari-jar</packaging>
   <name>Polyglot :: Atom</name>
 
   <dependencies>

@@ -16,6 +16,7 @@
     <version>0.1.20-SNAPSHOT</version>
   </parent>
   <artifactId>polyglot-scala</artifactId>
+  <packaging>takari-jar</packaging>
   <name>Polyglot :: Scala</name>
 
   <contributors>
