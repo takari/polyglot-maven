@@ -30,6 +30,8 @@
   <properties>
     <mavenVersion>3.5.0</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
+<!--     <takari.privatePackageReference>ignore</takari.privatePackageReference> -->
+    <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
   </properties>
 
   <scm>

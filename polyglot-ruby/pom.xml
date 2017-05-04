@@ -19,6 +19,7 @@
   </parent>
 
   <artifactId>polyglot-ruby</artifactId>
+  <packaging>takari-jar</packaging>
   <name>Polyglot :: Ruby</name>
 
   <dependencies>
