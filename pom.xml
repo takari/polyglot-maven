@@ -30,7 +30,6 @@
   <properties>
     <mavenVersion>3.5.0</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
-<!--     <takari.privatePackageReference>ignore</takari.privatePackageReference> -->
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
   </properties>
 
@@ -103,12 +102,6 @@
       <!-- I'd like to remove these two and place them in Maven's depMan 
         section. We want to be a complete superset as much as possible -->
       <dependency>
-        <groupId>org.eclipse.sisu</groupId>
-        <artifactId>org.eclipse.sisu.inject.tests</artifactId>
-        <version>0.0.0.M3</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>4.11</version>
@@ -159,11 +152,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.inject.tests</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
