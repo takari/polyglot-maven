@@ -164,6 +164,8 @@ class ModelRepresenter extends Representer {
       Set<Property> standard = super.getProperties(type);
       List<String> order = new ArrayList<String>(Arrays.asList(
               "modelVersion",
+              "modelEncoding",
+              "parent",
               "groupId",
               "artifactId",
               "version",
