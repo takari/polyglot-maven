@@ -15,10 +15,12 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.*;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.String.format;
 
 /**
  * YAML model constructor.
@@ -30,6 +32,8 @@ import java.util.Map;
  */
 public final class ModelConstructor extends Constructor {
 
+  private static final Tag XPP3DOM_TAG = new Tag("!!" + Xpp3Dom.class.getName());
+
   /**
    * It maps the runtime class to its Construct implementation.
    */
@@ -38,7 +42,7 @@ public final class ModelConstructor extends Constructor {
   public ModelConstructor() {
     super(Model.class);
 
-    yamlConstructors.put(Tag.MAP, new ConstructXpp3Dom());
+    yamlConstructors.put(XPP3DOM_TAG, new ConstructXpp3Dom());
     yamlClassConstructors.put(NodeId.mapping, new MavenObjectConstruct());
     pomConstructors.put(Dependency.class, new ConstructDependency());
     pomConstructors.put(Parent.class, new ConstructParent());
@@ -142,25 +146,76 @@ public final class ModelConstructor extends Constructor {
   }
 
   private class ConstructXpp3Dom implements Construct {
-    private Xpp3Dom toDom(Map<Object, Object> map) {
-      Xpp3Dom dom = new Xpp3Dom("configuration");
+    private Xpp3Dom toDom(Xpp3Dom parent, Map<Object, Object> map) {
 
       for (Map.Entry<Object, Object> entry : map.entrySet()) {
-        if (entry.getValue() instanceof Xpp3Dom) {
-          Xpp3Dom child = new Xpp3Dom((Xpp3Dom) entry.getValue(), entry.getKey().toString());
-          dom.addChild(child);
+        String key = entry.getKey().toString();
+        Object entryValue = entry.getValue();
+        Xpp3Dom child = new Xpp3Dom(key);
+
+        // lists need the insertion of intermediate XML DOM nodes which hold the actual values
+        if (entryValue instanceof List && !((List) entryValue).isEmpty()) {
+          toDom(child, key, (List) entryValue);
+        } else if (entryValue instanceof Map) {
+          //noinspection unchecked
+          child = toDom(child, (Map) entryValue);
+        } else { // if not a list or map then copy the string value
+          child.setValue(entryValue.toString());
+        }
+        parent.addChild(child);
+      }
+      return parent;
+    }
+
+    private void toDom(Xpp3Dom parent, String parentKey, List list) {
+      Object firstItem = list.get(0);
+
+      String childKey;
+
+      // deal with YAML explicit pairs which are mapped to Object[] by SnakeYAML
+      if (firstItem.getClass().isArray()) {
+        for (Object item : list) {
+          Object[] pair = (Object[]) item;
+          childKey = "" + pair[0];
+          Xpp3Dom itemNode = new Xpp3Dom(childKey);
+          if (pair[1] != null && pair[1] instanceof Map)
+            //noinspection unchecked
+            toDom(itemNode, (Map) pair[1]);
+          else
+            itemNode.setValue("" + pair[1]);
+          parent.addChild(itemNode);
+        }
+      } else { // automagically determine the node's child key using the collection node's name
+        if (!parentKey.endsWith("s")) {
+          throw new RuntimeException(format("collection key '%s' does not end in 's'. Please resort to the " +
+              "documentation on how to use explicit pairs for specifying child node names", parentKey));
+        }
+
+        if ("reportPlugins".equals(parentKey)) {
+          childKey = "plugin";
         } else {
-          //TODO issue 44 - what to do if it is a list of Strings
-          Xpp3Dom child = new Xpp3Dom(entry.getKey().toString());
-          child.setValue(entry.getValue().toString());
-          dom.addChild(child);
+          childKey = parentKey.substring(0, parentKey.length() - 1);
+          if (childKey.endsWith("ie")) {
+            childKey = childKey.substring(0, childKey.length() - 2) + "y";
+          }
+        }
+
+        for (Object item : list) {
+          Xpp3Dom itemNode = new Xpp3Dom(childKey);
+          if (item instanceof Map)
+            //noinspection unchecked
+            toDom(itemNode, (Map) item);
+          else
+            itemNode.setValue(item.toString());
+          parent.addChild(itemNode);
         }
       }
-      return dom;
     }
 
     public Object construct(Node node) {
-      return toDom(constructMapping((MappingNode) node));
+      Map<Object, Object> mapping = constructMapping((MappingNode) node);
+      Xpp3Dom parent = new Xpp3Dom("configuration");
+      return toDom(parent, mapping);
     }
 
     public void construct2ndStep(Node node, Object object) {
@@ -172,11 +227,21 @@ public final class ModelConstructor extends Constructor {
     @Override
     protected Object constructJavaBean2ndStep(MappingNode node, Object object) {
       Class<?> type = node.getType();
-      List<Class> specialCases = new ArrayList<Class>();
-      specialCases.add(Dependency.class);
-      specialCases.add(Model.class);
-      specialCases.add(Plugin.class);
-      specialCases.add(ReportPlugin.class);
+
+      List<Class> specialCases = Arrays.<Class>asList(Dependency.class, Model.class, Plugin.class, ReportPlugin.class);
+      List<Class> configurationContainers = Arrays.<Class>asList(Plugin.class, PluginExecution.class,
+          ReportPlugin.class, ReportSet.class);
+
+      if (configurationContainers.contains(type)) {
+        for (NodeTuple valueNode : node.getValue()) {
+          Node keyNode = valueNode.getKeyNode();
+          Node childValueNode = valueNode.getValueNode();
+          if (keyNode instanceof ScalarNode && "configuration".equals(((ScalarNode) keyNode).getValue())) {
+            childValueNode.setTag(XPP3DOM_TAG);
+          }
+        }
+      }
+
       if (specialCases.contains(type)) {
         String coordinate = removeId(node);
         if (coordinate == null) {

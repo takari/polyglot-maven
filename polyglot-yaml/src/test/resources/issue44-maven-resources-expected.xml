@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <outputDirectory>${android.src}</outputDirectory>
+  <resources>
+    <resource>
+      <directory>${basedir}/src/main/java</directory>
+      <filtering>false</filtering>
+      <excludes>
+        <exclude>org/yaml/snakeyaml/introspector/FieldProperty.java</exclude>
+        <exclude>org/yaml/snakeyaml/introspector/MethodProperty.java</exclude>
+      </excludes>
+    </resource>
+    <resource>
+      <directory>${basedir}/src/main/resources</directory>
+      <filtering>true</filtering>
+      <includes>
+        <include>**/*.md</include>
+        <include>**/*.txt</include>
+      </includes>
+    </resource>
+  </resources>
+</configuration>

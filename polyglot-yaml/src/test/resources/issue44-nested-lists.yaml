@@ -10,3 +10,4 @@ build:
         libs:
           - ${java.home}/lib/rt.jar
           - ${java.home}/lib/jsse.jar
+        anotherKey: anotherValue

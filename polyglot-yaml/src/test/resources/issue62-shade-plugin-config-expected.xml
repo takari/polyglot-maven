@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <artifactSet>
+    <includes>
+      <include>com.example.foo</include>
+      <include>org.example.bar</include>
+    </includes>
+  </artifactSet>
+  <shadedArtifactAttached>true</shadedArtifactAttached>
+</configuration>

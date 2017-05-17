@@ -1,0 +1,36 @@
+---
+modelVersion: 4.0.0
+groupId: dmos:raudondvaris:1.0
+packaging: war
+prerequisites: {maven: 3.3.3}
+build:
+  plugins:
+  - artifactId: maven-resources-plugin
+    executions:
+    - configuration:
+        outputDirectory: ${android.src}
+        resources:
+          - directory: ${basedir}/src/main/java
+            filtering: false
+            excludes: [org/yaml/snakeyaml/introspector/FieldProperty.java, org/yaml/snakeyaml/introspector/MethodProperty.java]
+          - directory: ${basedir}/src/main/resources
+            filtering: true
+            includes: ['**/*.md', '**/*.txt']
+      goals: [copy-resources]
+      id: copy-src-for-android
+      inherited: true
+      phase: generate-sources
+      priority: 0
+    - configuration:
+        outputDirectory: ${android.test.classes}
+        resources:
+          resource: {directory: '${basedir}/src/test/resources'}
+      goals: [copy-resources]
+      id: copy-test-resources-for-android
+      inherited: true
+      phase: process-test-resources
+      priority: 0
+    extensions: false
+    groupId: org.apache.maven.plugins
+    inherited: true
+    version: 2.7

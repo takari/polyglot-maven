@@ -1,0 +1,19 @@
+---
+modelVersion: 4.0.0
+groupId: dmos:raudondvaris:1.0
+packaging: war
+prerequisites: {maven: 3.3.3}
+build:
+  plugins:
+    - artifactId: maven-shade-plugin
+      groupId: org.apache.maven.plugins
+      version: 2.4.3
+      executions:
+        - phase: package
+          goals: [shade]
+          configuration:
+            artifactSet:
+              includes:
+                - 'com.example.foo'
+                - 'org.example.bar'
+            shadedArtifactAttached: true

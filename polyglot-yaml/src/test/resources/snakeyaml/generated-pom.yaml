@@ -44,8 +44,8 @@ build:
     version: 2.18.1
     configuration:
       argLine: -Xmx512m
-      includes: {include: '**/*Test.java'}
-      excludes: {exclude: '**/ParallelTest.java'}
+      includes: ['**/*Test.java', '**/*IT.java']
+      excludes: ['**/StressTest.java', '**/ParallelTest.java']
   - groupId: org.apache.maven.plugins
     artifactId: maven-eclipse-plugin
     version: 2.10
@@ -55,9 +55,9 @@ build:
     version: 2.7
     configuration:
       check: {totalBranchRate: 80, totalLineRate: 95}
-      formats: {format: xml}
+      formats: [xml]
       instrumentation:
-        excludes: {exclude: org/yaml/snakeyaml/external/**}
+        excludes: [org/yaml/snakeyaml/external/**]
     executions:
     - goals: [clean, check]
       id: default
@@ -85,7 +85,7 @@ build:
     artifactId: maven-javadoc-plugin
     version: 2.10.3
     configuration:
-      links: {link: 'http://java.sun.com/javase/6/docs/api/'}
+      links: ['http://java.sun.com/javase/6/docs/api/']
     executions:
     - goals: [jar]
       id: attach-javadocs
@@ -99,8 +99,8 @@ build:
       quiet: false
       failIfMissing: true
       aggregate: false
-      includes: {include: src/**/*.java}
-      excludes: {exclude: src/main/java/org/yaml/snakeyaml/external/**}
+      includes: [src/**/*.java]
+      excludes: [src/main/java/org/yaml/snakeyaml/external/**]
       useDefaultExcludes: true
       useDefaultMapping: true
       strictCheck: true
@@ -149,7 +149,7 @@ reporting:
     version: 2.18.1
   - artifactId: cobertura-maven-plugin
     configuration:
-      formats: {format: xml}
+      formats: [xml]
     groupId: org.codehaus.mojo
     inherited: true
     version: 2.6
@@ -176,10 +176,9 @@ profiles:
       artifactId: maven-site-plugin
       configuration:
         reportPlugins:
-          plugin:
-            groupId: org.apache.maven.plugins
-            artifactId: maven-javadoc-plugin
-            configuration: {additionalparam: '-Xdoclint:none'}
+        - groupId: org.apache.maven.plugins
+          artifactId: maven-javadoc-plugin
+          configuration: {additionalparam: '-Xdoclint:none'}
   id: jdk8
   source: pom
 - activation:
@@ -216,7 +215,7 @@ profiles:
         sourceEncoding: utf-8
         minimumTokens: 100
         targetJdk: 1.5
-        excludes: {exclude: '**/external/*.java'}
+        excludes: ['**/external/*.java', '**/generated/*.java']
       groupId: org.apache.maven.plugins
       inherited: true
       version: 3.4
@@ -230,10 +229,12 @@ profiles:
       - configuration:
           outputDirectory: ${android.src}
           resources:
-            resource:
-              directory: ${basedir}/src/main/java
-              filtering: false
-              excludes: {exclude: org/yaml/snakeyaml/introspector/MethodProperty.java}
+          - directory: ${basedir}/src/main/java
+            filtering: false
+            excludes: [org/yaml/snakeyaml/introspector/MethodProperty.java]
+          - directory: ${basedir}/src/main/kotlin
+            filtering: true
+            includes: ['**/*.kt']
         goals: [copy-resources]
         id: copy-src-for-android
         inherited: true
@@ -242,7 +243,7 @@ profiles:
       - configuration:
           outputDirectory: ${android.test.classes}
           resources:
-            resource: {directory: '${basedir}/src/test/resources'}
+          - {directory: '${basedir}/src/test/resources'}
         goals: [copy-resources]
         id: copy-test-resources-for-android
         inherited: true

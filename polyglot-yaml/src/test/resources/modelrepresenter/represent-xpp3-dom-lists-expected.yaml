@@ -1,0 +1,12 @@
+configuration:
+  argLine: -Xmx512m
+  includes: ['**/*Test.java', '**/*IT.java']
+  excludes: ['**/StressTest.java', '**/ParallelTest.java']
+  instructions: {_nouses: true, Bundle-RequiredExecutionEnvironment: J2SE-1.5}
+  resources:
+  - directory: ${basedir}/src/main/java
+    filtering: false
+    excludes: [org/yaml/snakeyaml/introspector/FieldProperty.java, org/yaml/snakeyaml/introspector/MethodProperty.java]
+  - directory: ${basedir}/src/main/resources
+    filtering: true
+    includes: ['**/*.md', '**/*.txt']
