@@ -18,6 +18,9 @@ The following provides most information at an easier glance.
 - New translate-project goal in maven plugin
   - see https://github.com/takari/polyglot-maven/pull/101
   - contributed by Tobias Roeser https://github.com/lefou
+- Extended YAML model to full model
+  - see https://github.com/takari/polyglot-maven/pull/81
+  - contributed by Paul Verest https://github.com/paulvi
 - Documentation updates
 
 Release performed by Manfred Moser - http://www.simpligility.com
