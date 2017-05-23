@@ -3,7 +3,12 @@
 The [git commit history](https://github.com/takari/polyglot-maven/commits/master) is the detailed source of all changes.
 The following provides most information at an easier glance.
 
-## Version 0.2.0 - Upcoming
+## Version 0.2.1 or higher - Upcoming
+
+Your contributions could be here.
+
+
+## Version 0.2.0 - 2017-05-23
 
 - Upgrade to Maven 3.5.0, parent pom and plugin updates, Maven wrapper upgrade, Takari lifecycle usage
   - see https://github.com/takari/polyglot-maven/pull/124
