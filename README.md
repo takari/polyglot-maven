@@ -124,7 +124,7 @@ and release work:
 ## Ruby
 
 * https://github.com/jruby - Extensive usage of Polyglot Ruby and contributions to the project from the team, and is recommended when creating [java extensions for jruby](https://github.com/jruby/jruby-examples/tree/master/extensions/basic).
-* The [ruby-processing project](http://ruby-processing.github.io/building/building/) has examples of creating java extensions for jruby (see JRubyArt and propane builds) as well as simpler projects where the polyglot maven is used in creating gem wrappers for processing.org java libraries (eg toxicgem and geomerative gems). 
+* The [ruby-processing project](http://ruby-processing.github.io/building/building/) has examples of creating java extensions for jruby (see [JRubyArt](https://github.com/ruby-processing/JRubyArt) and [propane](https://github.com/ruby-processing/propane) builds) as well as simpler projects where the polyglot maven is used in creating gem wrappers for processing.org java libraries (eg toxicgem and geomerative gems). 
 
 ## YAML
 
