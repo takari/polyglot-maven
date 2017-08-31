@@ -288,6 +288,13 @@ class ScalaModelWriter extends ModelWriterSupport {
     import MavenConverters._
     import ScalaPrettyPrinter._
 
+    if (mm.getModelEncoding() == null) {
+      // A null-value might be the result of parsing the model from a file with a missing '<?xml version="1.0" encoding="UTF-8"?>' header
+      // But in this case we will trigger a NPE inside of PrettyPrinter, which is really bad
+      // Thus, we restore to non-null default value
+      mm.setModelEncoding("UTF-8")
+    }
+
     val d = "import" <+> "org.sonatype.maven.polyglot.scala.model._" <@>
       "import" <+> "scala.collection.immutable.Seq" <@>
       empty <@>
