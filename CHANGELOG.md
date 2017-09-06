@@ -16,6 +16,7 @@ The following provides most information at an easier glance.
   - contributed by Tobias Roeser https://github.com/lefou
 - Added missing dependency to translate plugin
   - see https://github.com/takari/polyglot-maven/pull/129
+  - fixed https://github.com/takari/polyglot-maven/issues/96
   - contributed by Tobias Roeser https://github.com/lefou
 - Ruby examples usages in documentation
   - see https://github.com/takari/polyglot-maven/pull/126
