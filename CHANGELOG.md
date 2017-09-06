@@ -5,8 +5,14 @@ The following provides most information at an easier glance.
 
 ## Version 0.2.1 - 2017-09-06
 
+- Improved handling of string with special characters in Scala dialect
+  - see https://github.com/takari/polyglot-maven/pull/131
+  - fixed https://github.com/takari/polyglot-maven/issues/100
+  - contributed by Tobias Roeser https://github.com/lefou
 - Fixed NPE on Maven model write in Scala dialect
   - see https://github.com/takari/polyglot-maven/pull/129
+  - fixes https://github.com/takari/polyglot-maven/issues/42
+  - fixes https://github.com/takari/polyglot-maven/issues/88
   - contributed by Tobias Roeser https://github.com/lefou
 - Added missing dependency to translate plugin
   - see https://github.com/takari/polyglot-maven/pull/129
@@ -14,6 +20,8 @@ The following provides most information at an easier glance.
 - Ruby examples usages in documentation
   - see https://github.com/takari/polyglot-maven/pull/126
   - contributed by Martin Prout https://github.com/monkstone
+
+Release performed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.2.0 - 2017-05-23
 
