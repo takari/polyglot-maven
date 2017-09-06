@@ -3,10 +3,17 @@
 The [git commit history](https://github.com/takari/polyglot-maven/commits/master) is the detailed source of all changes.
 The following provides most information at an easier glance.
 
-## Version 0.2.1 or higher - Upcoming
+## Version 0.2.1 - 2017-09-06
 
-Your contributions could be here.
-
+- Fixed NPE on Maven model write in Scala dialect
+  - see https://github.com/takari/polyglot-maven/pull/129
+  - contributed by Tobias Roeser https://github.com/lefou
+- Added missing dependency to translate plugin
+  - see https://github.com/takari/polyglot-maven/pull/129
+  - contributed by Tobias Roeser https://github.com/lefou
+- Ruby examples usages in documentation
+  - see https://github.com/takari/polyglot-maven/pull/126
+  - contributed by Martin Prout https://github.com/monkstone
 
 ## Version 0.2.0 - 2017-05-23
 
