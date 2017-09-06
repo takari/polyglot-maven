@@ -25,6 +25,14 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   // Various doc functions that enhance doc construction for our domain.
 
+  /**
+   * Surround `d` with a tripple-double-quote if it contains a '"' or '\n' or '\n', else with a double-quote.
+   * This is named `dquotes` to shadow `quotes(d: Doc): Doc` from PrettyPrinterBase.
+   */
+  def dquotes(d: String): Doc =
+    if (d.matches(".*[\"\\n\\r].*")) surround(d, dquote <> dquote <> dquote)
+    else surround(d, dquote)
+
   def assignString(label: String, value: String): Doc = label <+> equal <+> dquotes(value)
 
   def assign(label: String, value: Doc): Doc = label <+> equal <+> value

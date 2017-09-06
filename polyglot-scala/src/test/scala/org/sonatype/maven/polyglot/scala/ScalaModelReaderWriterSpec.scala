@@ -86,6 +86,9 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
     "read, write and compare a minimal pom" in {
       readWriteAndCompare("minimal-pom.scala")
     }
+    "read, write and compare a pom with multi-line strings" in {
+      readWriteAndCompare("pom-strings.scala")
+    }
     "read, write and compare a full pom" in {
       readWriteAndCompare("maximum-props-pom.scala")
     }
