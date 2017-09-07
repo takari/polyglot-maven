@@ -257,7 +257,10 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
         // versions of CompilerException make those information available, we should map them here (instead of zeros).
         // Currently, the information is only available as text in the exeception message.
         // Parsing it would be wasteful and possibly unstable.
-        throw new ModelParseException("Cannot compile pom file: " + sourceFile, 0, 0, e)
+        throw new ModelParseException(
+          "Cannot compile pom file: " + sourceFile +
+            "\nYou can run 'mvn -Deval.debug' to see the resolved scala file.",
+          0, 0, e)
       case e: Throwable =>
         throw new ModelParseException("Could not process pom file: " + sourceFile, 0, 0, e)
     }
