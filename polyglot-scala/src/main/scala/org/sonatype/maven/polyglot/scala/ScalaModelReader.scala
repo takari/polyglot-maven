@@ -7,21 +7,26 @@
  */
 package org.sonatype.maven.polyglot.scala
 
-import java.util
-import org.apache.maven.model.io.ModelReader
-import com.twitter.util.Eval
-import org.sonatype.maven.polyglot.scala.model.{Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Config => ScalaConfig, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Scm => ScalaScm, Site => ScalaSite, _}
-import org.codehaus.plexus.util.{FileUtils, IOUtil}
-import java.io._
 import scala.collection.immutable
 import scala.language.implicitConversions
-import java.io.File
-import org.apache.maven.model.Model
-import org.codehaus.plexus.util.io.RawInputStreamFacade
-import org.sonatype.maven.polyglot.PolyglotModelUtil
-import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
-import javax.inject.{Named, Inject}
+
+import com.twitter.io.StreamIO
+import com.twitter.util.Eval
+
+import java.io._
+import java.util
+
+import javax.inject.{ Named, Inject }
+
 import org.apache.maven.model.io.ModelParseException
+import org.apache.maven.model.io.ModelReader
+import org.apache.maven.model.Model
+import org.codehaus.plexus.util.FileUtils
+import org.codehaus.plexus.util.IOUtil
+import org.codehaus.plexus.util.io.RawInputStreamFacade
+import org.sonatype.maven.polyglot.execute.{ ExecuteContext, ExecuteTask, ExecuteManager }
+import org.sonatype.maven.polyglot.PolyglotModelUtil
+import org.sonatype.maven.polyglot.scala.model.{ Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Config => ScalaConfig, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Scm => ScalaScm, Site => ScalaSite, _ }
 
 /**
  * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
@@ -173,17 +178,64 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
   /**
    * We subclass the [[Eval]] class to customize the otherwise immutable prepocessors property.
    *
-   * We provide an [[IncludePreprocessor]] that resolves files and classes from an (externally) defined directory
+   * We provide an [[MvnIncludePreprocessor]] that resolves files and classes from an (externally) defined directory
    * and the the current classloader.
    *
    */
   class MvnEval(target: Option[File], includeBaseDir: File) extends Eval(target) {
+
+    /*
+   * This is a preprocesor that can include files by requesting them from the given resolvers.
+   * 
+   * This preprocessor support lines starting with: `#include` and `//#include`.
+   * The former is the legacy version.
+   * The latter variant is preferred, as it keeps the Scala source file syntactically correct 
+   * and this enables editors and IDEs to parse, format and highlight the file correctly.
+   * 
+   * @example #include file-name.scala
+   * @example //##include file-name.scala
+   *
+   * Note that it is *not* recursive. Included files cannot have includes
+   */
+    class MvnIncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
+      def maximumRecursionDepth = 100
+
+      def apply(code: String): String =
+        apply(code, maximumRecursionDepth)
+
+      def apply(code: String, maxDepth: Int): String = {
+        val lines = code.lines map { line: String =>
+          val tokens = line.trim.split(' ')
+          if (tokens.length == 2 && (tokens(0).equals("#include") || tokens(0).equals("//##include"))) {
+            val path = tokens(1)
+            resolvers find { resolver: Resolver =>
+              resolver.resolvable(path)
+            } match {
+              case Some(r: Resolver) => {
+                // recursively process includes
+                if (maxDepth == 0) {
+                  throw new IllegalStateException("Exceeded maximum recusion depth")
+                } else {
+                  apply(StreamIO.buffer(r.get(path)).toString, maxDepth - 1)
+                }
+              }
+              case _ =>
+                throw new IllegalStateException("No resolver could find '%s'".format(path))
+            }
+          } else {
+            line
+          }
+        }
+        lines.mkString("\n")
+      }
+    }
+
     /**
      * Preprocessors to run the code through before it is passed to the Scala compiler.
      */
     override protected lazy val preprocessors: Seq[Preprocessor] =
       Seq(
-        new IncludePreprocessor(
+        new MvnIncludePreprocessor(
           Seq(
             new ClassScopedResolver(getClass),
             new FilesystemResolver(includeBaseDir)
