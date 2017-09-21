@@ -35,26 +35,38 @@
 
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-eval_2.10</artifactId>
-      <version>6.23.0</version>
+      <artifactId>util-eval_2.11</artifactId>
+      <version>6.43.0</version>
     </dependency>
 
     <dependency>
       <groupId>com.googlecode.kiama</groupId>
-      <artifactId>kiama_2.10</artifactId>
+      <artifactId>kiama_2.11</artifactId>
       <version>1.8.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>2.10.5</version>
+      <version>2.11.11</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-reflect</artifactId>
+      <version>2.11.11</version>
     </dependency>
 
     <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-compiler</artifactId>
+      <version>2.11.11</version>
+    </dependency>
+    
+    <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2-junit_2.10</artifactId>
-      <version>2.4.17</version>
+      <artifactId>specs2-junit_2.11</artifactId>
+      <version>3.9.5</version>
       <scope>test</scope>
     </dependency>
 
@@ -82,7 +94,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <goals>
@@ -125,7 +137,7 @@
                   <pluginExecutionFilter>
                     <groupId>net.alchim31.maven</groupId>
                     <artifactId>scala-maven-plugin</artifactId>
-                    <versionRange>[3.2.0,)</versionRange>
+                    <versionRange>[3.3.0,)</versionRange>
                     <goals>
                       <goal>add-source</goal>
                       <goal>compile</goal>
