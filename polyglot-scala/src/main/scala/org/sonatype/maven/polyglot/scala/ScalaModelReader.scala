@@ -187,7 +187,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     /*
    * This is a preprocesor that can include files by requesting them from the given resolvers.
    * 
-   * This preprocessor support lines starting with: `#include` and `//#include`.
+   * This preprocessor support lines starting with: `#include` and `//##include`.
    * The former is the legacy version.
    * The latter variant is preferred, as it keeps the Scala source file syntactically correct 
    * and this enables editors and IDEs to parse, format and highlight the file correctly.
