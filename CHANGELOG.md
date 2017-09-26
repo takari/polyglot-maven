@@ -3,6 +3,13 @@
 The [git commit history](https://github.com/takari/polyglot-maven/commits/master) is the detailed source of all changes.
 The following provides most information at an easier glance.
 
+## Version 0.2.2 - Upcoming
+
+- Updated Scala version
+  - see https://github.com/takari/polyglot-maven/pull/135
+  - contributed by Tobias Roeser https://github.com/lefou
+- Added link to user of yml version
+
 ## Version 0.2.1 - 2017-09-06
 
 - Improved handling of string with special characters in Scala dialect

@@ -129,6 +129,7 @@ and release work:
 ## YAML
 
 * http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to the project from the team.
+* https://urbanise.com - Using Polyglot YAML for building next generation strata management platform.
 
 ## Scala
 
