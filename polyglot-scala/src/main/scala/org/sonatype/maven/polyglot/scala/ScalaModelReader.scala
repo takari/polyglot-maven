@@ -188,13 +188,9 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
     /*
    * This is a preprocesor that can include files by requesting them from the given resolvers.
    * 
-   * This preprocessor support lines starting with: `#include` and `//##include`.
-   * The former is the legacy version.
-   * The latter variant is preferred, as it keeps the Scala source file syntactically correct 
-   * and this enables editors and IDEs to parse, format and highlight the file correctly.
+   * This preprocessor support lines starting with: `//#include`.
    * 
-   * @example #include file-name.scala
-   * @example //##include file-name.scala
+   * @example //#include file-name.scala
    *
    * Note that it is *not* recursive. Included files cannot have includes
    */
@@ -207,7 +203,7 @@ class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelRe
       def apply(code: String, maxDepth: Int): String = {
         val lines = code.lines map { line: String =>
           val tokens = line.trim.split(' ')
-          if (tokens.length == 2 && (tokens(0).equals("#include") || tokens(0).equals("//##include"))) {
+          if (tokens.length == 2 && tokens(0).equals("//#include")) {
             val path = tokens(1)
             resolvers find { resolver: Resolver =>
               resolver.resolvable(path)
