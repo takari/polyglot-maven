@@ -217,5 +217,10 @@ class ScalaModelReaderWriterSpec extends Specification with AfterExample {
                    |  )
                    |)""".stripMargin
     }
+
+    "read a pom with include properly" in {
+      val model = readScalaModel("pom-with-include.scala")
+      model.getVersion must_== "1.0.0"
+    }
   }
 }
