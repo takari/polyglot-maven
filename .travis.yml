@@ -1,0 +1,15 @@
+sudo: false
+
+language: java
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+  - openjdk7
+
+before_script: 
+- mvn -N io.takari:maven:wrapper -Dmaven=3.5.0
+
+script: 
+- mvnw clean install
+
