@@ -2,14 +2,14 @@ sudo: false
 
 language: java
 
+# TODO: support also Java7, but current maven plugins do not like it
+# TODO: alternatively add java7 bootclasspath to compile
 jdk:
-  - oraclejdk7
   - oraclejdk8
-  - openjdk7
 
 before_script: 
 - mvn -N io.takari:maven:wrapper -Dmaven=3.5.0
 
 script: 
-- mvnw clean source:jar javadoc:jar install
+- ./mvnw clean source:jar javadoc:jar install
 
