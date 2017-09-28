@@ -12,8 +12,8 @@ import org.specs2.runner.JUnitRunner
 import org.junit.runner.RunWith
 import java.io.{StringWriter, InputStream, File}
 import scala.collection.JavaConverters._
-import org.apache.maven.model.building.{ModelSource, ModelProcessor}
-import org.specs2.specification.AfterExample
+import org.apache.maven.model.building.{ ModelSource2, ModelProcessor }
+import org.specs2.specification.AfterEach
 import org.apache.maven.model.Model
 import org.codehaus.plexus.util.IOUtil
 import java.util.Collections
@@ -24,15 +24,19 @@ import scala.collection.{immutable, mutable}
 import org.apache.maven.project.MavenProject
 
 @RunWith(classOf[JUnitRunner])
-class ScalaModelReaderWriterSpec extends Specification with AfterExample {
+class ScalaModelReaderWriterSpec extends Specification with AfterEach {
 
   val evalFile = File.createTempFile("ScalaModelReaderSpec", "")
   evalFile.createNewFile()
 
-  val modelSource = new ModelSource {
+  val modelSource = new ModelSource2 {
     def getInputStream: InputStream = null
 
     def getLocation: String = evalFile.getCanonicalPath
+
+    def getLocationURI(): java.net.URI = evalFile.getCanonicalFile().toURI()
+    
+    def getRelatedSource(relPath: String): ModelSource2 = ??? // ok for this test case
   }
 
   val options = Map(ModelProcessor.SOURCE -> modelSource).asJava
