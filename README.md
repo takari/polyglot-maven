@@ -137,8 +137,15 @@ and release work:
 
 ## Scala
 
-* https://github.com/domino-osgi/domino - A simple project using Polyglot Scala.
-* https://github.com/woq-blended/blended - A complex mulit-project using Polyglot Scala. It's also an example
+_Java Projects_
+
+* [LambdaTest](https://github.com/lefou/LambdaTest) - A simple Java project with a standalone [pom.xml](https://github.com/lefou/LambdaTest/blob/master/pom.scala)
+* [CmdOption](https://github.com/ToToTec/CmdOption) - A Java project with a top-level reactor project and an additional shared scala file included  into both `pom.scala`s
+
+_Scala Projects_
+
+* [Domino](https://github.com/domino-osgi/domino) - A simple project using Polyglot Scala.
+* [Blended](https://github.com/woq-blended/blended) - A complex mulit-project using Polyglot Scala. It's also an example
   where the `#include` feature is heavily used to share common configuration but avoid Maven parent poms, which
   are often problematic.
 
