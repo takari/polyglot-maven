@@ -8,7 +8,7 @@ jdk:
 - oraclejdk8
 
 before_script: 
-- mvn -N io.takari:maven:wrapper -Dmaven=3.5.0
+- mvn -N io.takari:maven:0.4.3:wrapper -Dmaven=3.5.0
 
 script: 
 - ./mvnw clean package source:jar javadoc:jar install
