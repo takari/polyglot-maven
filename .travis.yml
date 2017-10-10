@@ -5,11 +5,10 @@ language: java
 # TODO: support also Java7, but current maven plugins do not like it
 # TODO: alternatively add java7 bootclasspath to compile
 jdk:
-  - oraclejdk8
+- oraclejdk8
 
 before_script: 
 - mvn -N io.takari:maven:wrapper -Dmaven=3.5.0
 
 script: 
-- ./mvnw clean source:jar javadoc:jar install
-
+- ./mvnw clean package source:jar javadoc:jar install
