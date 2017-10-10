@@ -3,10 +3,9 @@
 [Polyglot for Maven](http://github.com/takari/polyglot-maven/) is a set of extensions for `Maven 3.3.1+` that
 allows the POM model to be written in dialects other than XML. Several of the dialects also allow inlined plugins:
 the Ruby, Groovy and Scala dialects allow this.
-
 [![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
-
 [![Maven Central](https://img.shields.io/maven-central/v/io.takari.polyglot/polyglot.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.takari.polyglot%22%20AND%20a%3A%22polyglot%22)
+[![Build Status](https://travis-ci.org/takari/polyglot-maven.svg?branch=master)](https://travis-ci.org/takari/polyglot-maven)
 
 Here's an example POM written in the Ruby dialect:
 
