@@ -8,7 +8,7 @@ the Ruby, Groovy and Scala dialects allow this.
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.takari.polyglot/polyglot.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.takari.polyglot%22%20AND%20a%3A%22polyglot%22)
 
-[![Gitter chat](https://badges.gitter.im/takari/gitter.png)](https://gitter.im/takari/)
+[![Gitter chat](https://badges.gitter.im/takari/gitter.png)](https://gitter.im/takari/AllThingsTakari)
 
 Here's an example POM written in the Ruby dialect:
 
