@@ -103,5 +103,29 @@ class ConfigSpec extends Specification {
       e(2)._1 must_== "@key4"
       e(2)._2.get.asInstanceOf[String] must_== "attrValue4"
     }
+
+
+    // the attribute marker
+    s"should permit `@` char in element name via dynamic apply" in {
+      Config(`@Key@` = "value").elements.head._1 must_== "@Key$at"
+    }
+
+    // this one should always work, as _ is also valid in scala
+    s"should permit `_` char in element name via dynamic apply" in {
+      Config(`_Key_` = "value").elements.head._1 must_== "_Key_"
+    }
+
+    s"should permit `:` char in element name via dynamic apply" in {
+      Config(`:Key:` = "value").elements.head._1 must_== ":Key:"
+    }
+
+    s"should permit `.` char in element name via dynamic apply" in {
+      Config(`.Key.` = "value").elements.head._1 must_== "$u002EKey."
+    }
+
+    s"should permit `-` char in element name via dynamic apply" in {
+      Config(`-Key-` = "value").elements.head._1 must_== "$minusKey-"
+    }
+
   }
 }
