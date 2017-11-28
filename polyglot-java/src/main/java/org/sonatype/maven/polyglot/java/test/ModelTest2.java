@@ -12,9 +12,9 @@ public class ModelTest2 extends ModelTemplate {
 		artifactId = "project1";
 		packaging = "jar";
 		version = "1.0-SNAPSHOT";
-
+		
 		dependencies(
 			dependency(groupId -> "junit", artifactId -> "junit", version -> "3.8.1", scope -> "test")
-		);
+		);		
 	}
 }

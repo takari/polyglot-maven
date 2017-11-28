@@ -19,7 +19,7 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  */
 @Component(role = Mapping.class, hint = "java")
 public class JavaMapping extends MappingSupport {
-	
+
 	public JavaMapping() {
 		super("java");
 		setPomNames("pom.java");
