@@ -2,14 +2,21 @@ package org.sonatype.maven.polyglot.java.dsl;
 
 import static java.util.Arrays.asList;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
+import org.apache.maven.model.Build;
 import org.apache.maven.model.Dependency;
-import org.apache.maven.model.Exclusion;
+import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 
-public class ModelTemplate implements DependencyTemplate, PropertyTemplate, BuildTemplate {
+public class ModelFactory implements DependencyFactory, PropertyFactory, BuildFactory {
 
 	private Model model = new Model();
 
@@ -23,7 +30,7 @@ public class ModelTemplate implements DependencyTemplate, PropertyTemplate, Buil
 	protected String url;
 	protected String inceptionYear;
 	protected String modelEncoding;
-	// ------------
+
 	// Field descriptor #98 Lorg/apache/maven/model/Organization;
 	private org.apache.maven.model.Organization organization;
 
@@ -55,20 +62,8 @@ public class ModelTemplate implements DependencyTemplate, PropertyTemplate, Buil
 	// Field descriptor #116 Lorg/apache/maven/model/CiManagement;
 	private org.apache.maven.model.CiManagement ciManagement;
 
-	// Field descriptor #118 Lorg/apache/maven/model/Build;
-	private org.apache.maven.model.Build build;
-
-	// Field descriptor #100 Ljava/util/List;
-	// Signature: Ljava/util/List<Lorg/apache/maven/model/Profile;>;
-	private java.util.List profiles;
-
-	private java.util.List modules;
-
 	// Field descriptor #68 Lorg/apache/maven/model/DistributionManagement;
 	private org.apache.maven.model.DistributionManagement distributionManagement;
-
-	// Field descriptor #72 Lorg/apache/maven/model/DependencyManagement;
-	private org.apache.maven.model.DependencyManagement dependencyManagement;
 
 	// Field descriptor #64 Ljava/util/List;
 	// Signature: Ljava/util/List<Lorg/apache/maven/model/Repository;>;
@@ -84,120 +79,104 @@ public class ModelTemplate implements DependencyTemplate, PropertyTemplate, Buil
 	// Field descriptor #81 Lorg/apache/maven/model/Reporting;
 	private org.apache.maven.model.Reporting reporting;
 
-	// Field descriptor #83 Ljava/util/Map;
-	// Signature:
-	// Ljava/util/Map<Ljava/lang/Object;Lorg/apache/maven/model/InputLocation;>;
-	private java.util.Map locations;
-
-	// ------------
-
-	public void parent(NamedValue<String>... keyValuePairs) {
+	public void parent(NamedValue... keyValuePairs) {
 		Parent parent = new Parent();
 		parent = NamedValueProcessor.namedToObject(parent, keyValuePairs);
-		System.out.println("Parent->" + parent);
 		model.setParent(parent);
 	}
 
 	public void dependencies(Dependency... dependencies) {
 		asList(dependencies).forEach(dep -> {
-			System.out.println("Dependency->" + dep);
-
-			for (Exclusion excl : dep.getExclusions()) {
-				System.out.println("excl gr=" + excl.getGroupId() + ":art=" + excl.getArtifactId());
-			}
-			
 			model.addDependency(dep);
-
 		});
 	}
-	
+
+	public void dependencies(Consumer<DependencyDTO>... dependencies) {
+    	if (dependencies != null) {
+    		for (Consumer<DependencyDTO> consumer : Arrays.asList(dependencies)) {
+    			DependencyDTO dto = new DependencyDTO();
+    			consumer.accept(dto);
+    			model.addDependency(dto.getDependency());
+    		}    		
+    	}
+    }
+
+	public void dependencyManagement(Dependency... dependencies) {
+		if (model.getDependencyManagement() == null) {
+			DependencyManagement dependencyManagement = new DependencyManagement();
+			dependencyManagement.setDependencies(new ArrayList<Dependency>());
+			model.setDependencyManagement(dependencyManagement);
+		}
+		asList(dependencies).forEach(dep -> {
+			model.getDependencyManagement().addDependency(dep);
+		});
+	}
+
+	public void dependencyManagement(Consumer<DependencyDTO>... dependencies) {
+		if (model.getDependencyManagement() == null) {
+			DependencyManagement dependencyManagement = new DependencyManagement();
+			dependencyManagement.setDependencies(new ArrayList<Dependency>());
+			model.setDependencyManagement(dependencyManagement);
+		}
+    	if (dependencies != null) {
+    		for (Consumer<DependencyDTO> consumer : Arrays.asList(dependencies)) {
+    			DependencyDTO dto = new DependencyDTO();
+    			consumer.accept(dto);
+    			model.getDependencyManagement().addDependency(dto.getDependency());
+    		}    		
+    	}
+    }
+		
 	public BuildBuilder build() {
 		return new BuildBuilder(model);
 	}
 
+	public void modules(String... modules) {
+		if (modules != null) {
+			Arrays.asList(modules).forEach(module -> model.addModule(module));
+		}
+	}
 	
-//	build(
-//	artifactId -> "artf_id",
-//	version -> "v1",
-//	plugins(
-//			plugin(
-//					artifactId -> "org.apache.maven.plugins",
-//					groupId -> "maven-jar-plugin",
-//					version -> "2.6",
-//					configuration(
-//							xml().startConfig()
-//								.tag("classifier", tag -> tag.content("pre-process"))						
-//							.endConfig()
-//					),
-//					executions(
-//						execution(
-//							id -> "pre-process-classes",
-//							phase -> "pre-process",
-//							configuration(
-//									xml().startConfig()
-//										.tag("classifier", tag -> tag.content("pre-process"))						
-//									.endConfig()
-//							)
-//						)
-//					),
-//					pluginDependencies(
-//						dependency(
-//							artifactId -> "org.apache.maven.plugins",
-//							groupId -> "maven-jar-plugin",
-//							version -> "2.6"
-//						)
-//					)
-//			)			
-//	),
-//	resources(
-//			resource(
-//				targetPath -> "d:/",
-//				filtering -> "true"
-//			)
-//	),
-//	testResources(null)
-//);
-//	public void build(BuildNamedValue... namedValues) {
-//		Build build = new Build();
-//		
-//		Map<String, String> map = new HashMap<>();
-//		asList(namedValues).stream().filter(kvp -> kvp != null).filter(kvp -> !(kvp instanceof BuildComplexTypeNamedValue))
-//			.forEach(kvp -> map.put(kvp.name(), kvp.value()));
-//		NamedValueProcessor.mapToObject(build, map);
-//		
-//		for (BuildNamedValue namedvalue : asList(namedValues)) {
-//			if (namedvalue instanceof BuildPluginsNamedValue) {
-//				build.setPlugins(((BuildPluginsNamedValue)namedvalue).getPlugins());				
-//			}
-//			
-//			if (namedvalue instanceof PluginManagementNamedValue) {
-//				build.setPluginManagement(((PluginManagementNamedValue)namedvalue).getPluginManagement());				
-//			}
-//			
-//			if (namedvalue instanceof BuildExtensionNamedValue) {
-//				build.setExtensions(((BuildExtensionNamedValue)namedvalue).getExtensions());				
-//			}
-//			
-//			if (namedvalue instanceof BuildFiltersNamedValue) {
-//				build.setFilters(((BuildFiltersNamedValue)namedvalue).getFilters());				
-//			}
-//			
-//			if (namedvalue instanceof BuildResourcesNamedValue) {
-//				build.setResources(((BuildResourcesNamedValue)namedvalue).getResources());				
-//			}
-//			
-//			if (namedvalue instanceof BuildTestResourcesNamedValue) {
-//				build.setTestResources(((BuildTestResourcesNamedValue)namedvalue).getResources());				
-//			}					
-//		}			
-//		
-//		this.build = build;
-//	}
+	public void build(BuildNamedValue... namedValues) {
+		Build build = new Build();
+		
+		Map<String, String> map = new HashMap<>();
+		asList(namedValues).stream().filter(kvp -> kvp != null).filter(kvp -> !(kvp instanceof BuildComplexTypeNamedValue))
+			.forEach(kvp -> map.put(kvp.name(), kvp.value()));
+		NamedValueProcessor.mapToObject(build, map);
+		
+		for (BuildNamedValue namedvalue : asList(namedValues)) {
+			if (namedvalue instanceof BuildPluginsNamedValue) {
+				build.setPlugins(((BuildPluginsNamedValue)namedvalue).getPlugins());				
+			}
+			
+			if (namedvalue instanceof PluginManagementNamedValue) {
+				build.setPluginManagement(((PluginManagementNamedValue)namedvalue).getPluginManagement());				
+			}
+			
+			if (namedvalue instanceof BuildExtensionNamedValue) {
+				build.setExtensions(((BuildExtensionNamedValue)namedvalue).getExtensions());				
+			}
+			
+			if (namedvalue instanceof BuildFiltersNamedValue) {
+				build.setFilters(((BuildFiltersNamedValue)namedvalue).getFilters());				
+			}
+			
+			if (namedvalue instanceof BuildResourcesNamedValue) {
+				build.setResources(((BuildResourcesNamedValue)namedvalue).getResources());				
+			}
+			
+			if (namedvalue instanceof BuildTestResourcesNamedValue) {
+				build.setTestResources(((BuildTestResourcesNamedValue)namedvalue).getResources());				
+			}					
+		}			
+		
+		model.setBuild(build);
+	}
 	
-	public void properties(PropertyTemplate.Property... properties) {
+	public void properties(PropertyFactory.Property... properties) {
 		asList(properties).forEach(prop -> {
 			model.addProperty(prop.getName(), prop.getValue());
-			System.out.println("Added property " + prop.getName() + ":" + prop.getValue());
 		});
 	}
 	

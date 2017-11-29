@@ -1,8 +1,10 @@
 package org.sonatype.maven.polyglot.java.test;
 
-import org.sonatype.maven.polyglot.java.dsl.ModelTemplate;
+import java.util.Arrays;
 
-public class ModelTest extends ModelTemplate {
+import org.sonatype.maven.polyglot.java.dsl.ModelFactory;
+
+public class ModelTest extends ModelFactory {
 	
 	
 	@SuppressWarnings({ "unchecked"})
@@ -22,6 +24,11 @@ public class ModelTest extends ModelTemplate {
 		);
 		
 		dependencies(
+			dep -> {dep.groupId = "grpid1"; dep.artifactId = "art1";},
+			dep -> {dep.groupId = "grpid2"; dep.artifactId = "art2"; dep.version = "1.0"; dep.exclusions = Arrays.asList("exclgr1:artifact1", "exclgr2:art2"); }
+		);
+		
+		dependencies(
 				dependency(
 						groupId -> "dep1grp",
 						artifactId -> "art2",
@@ -31,14 +38,63 @@ public class ModelTest extends ModelTemplate {
 						),
 						version -> "v2"
 				),
-				dependency(groupId -> "gr2", artifactId -> "art3")
-//				test(groupId -> "org.junit", artifactId -> "junit") // already specifies scope
-		);		
+				dependency(groupId -> "gr2", artifactId -> "art3"),
+				test("org.junit:junit")				
+		);
+		
+		
+		
+		build(
+			artifactId -> "artf_id",
+			version -> "v1",
+			plugins(
+					plugin(
+							artifactId -> "org.apache.maven.plugins",
+							groupId -> "maven-jar-plugin",
+							version -> "2.6",
+							
+							configuration(
+									xml().startConfig()
+										.tag("classifier", tag -> tag.content("pre-process"))						
+									.endConfig()
+						    ),
+							
+							executions(
+								execution(
+										id -> "pre-process-classes",
+										phase -> "pre-process",
+										configuration(
+												xml().startConfig()
+													.tag("classifier", tag -> tag.content("pre-process"))						
+										.endConfig()
+										)
+								).get()
+							),
+							
+							pluginDependencies(
+									dependency(
+											artifactId -> "org.apache.maven.plugins",
+											groupId -> "maven-jar-plugin",
+											version -> "2.6"
+									)
+							)
+					).get()
+			),
+			resources(
+				resource(
+					targetPath -> "d:/",
+					filtering -> "true"
+				)
+			),
+			testResources(null)
+	    );
+		
+		
 		
 		build()
 			.resources(
-				resource -> {resource.directory="c://foodir"; resource.filtering=true; resource.targetPath="c://bardir"; resource.includes="*.a"; resource.excludes="*.b";},
-				resource -> {resource.directory="src/main/resources"; resource.filtering=true; resource.targetPath="target ";}
+				res -> {res.directory="c://foodir"; res.filtering=true; res.targetPath="c://bardir"; res.includes="*.a"; res.excludes="*.b";},
+				res -> {res.directory="src/main/resources"; res.filtering=true; res.targetPath="target ";}
 			)
 			.resources(
 					resource(
@@ -86,7 +142,7 @@ public class ModelTest extends ModelTemplate {
 							phase -> "process-classes",
 							goals("check")
 						)
-	//					,execution("check-java-1.6-compat").phase("process-classes").goals("check")
+						,execution("check-java-1.6-compat").phase("process-classes").goals("check")
 					)
 			);
 		

@@ -2,8 +2,16 @@ package org.sonatype.maven.polyglot.java.dsl;
 
 import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 
-public interface PropertyTemplate {
-	public default Property property(NamedValue<String> keyValuePair) {
+public interface PropertyFactory {
+	
+	public default Property property(String name, String value) {
+		Property property = new Property();
+		property.name = name;
+		property.value = value;
+		return property;
+	}	
+	
+	public default Property property(NamedValue keyValuePair) {
 		Property property = new Property();
 		property.name = keyValuePair.name();
 		property.value = keyValuePair.value();

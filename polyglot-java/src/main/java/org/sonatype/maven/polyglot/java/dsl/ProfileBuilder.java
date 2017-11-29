@@ -72,7 +72,7 @@ public class ProfileBuilder {
 		return this;
 	}
 
-	public ProfileBuilder properties(PropertyTemplate.Property... properties) {
+	public ProfileBuilder properties(PropertyFactory.Property... properties) {
 		if (properties != null) {
 			asList(properties).forEach(prop -> {
 				getProfile().addProperty(prop.getName(), prop.getValue());

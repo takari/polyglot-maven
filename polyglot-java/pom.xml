@@ -30,11 +30,6 @@
 			<artifactId>polyglot-common</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-model</artifactId>
-			<version>3.5.0</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
@@ -51,7 +46,6 @@
 			<version>1.19.3</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 </project>

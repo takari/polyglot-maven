@@ -3,7 +3,7 @@ package org.sonatype.maven.polyglot.java.namedval;
 import java.util.Objects;
 import java.util.function.Function;
 
-public interface NamedValue<T> extends MethodFinder, Function<String, T> {
+public interface NamedValue extends MethodFinder, Function<String, String> {
     default String name() {
         checkParametersEnabled();
         return parameter(0).getName();
@@ -14,7 +14,7 @@ public interface NamedValue<T> extends MethodFinder, Function<String, T> {
         }
     }
 
-    default T value() {
+    default String value() {
         return apply(name());
     }
 }

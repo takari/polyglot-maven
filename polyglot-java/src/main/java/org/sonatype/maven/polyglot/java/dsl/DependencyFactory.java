@@ -11,8 +11,8 @@ import org.apache.maven.model.Exclusion;
 import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 
-public interface DependencyTemplate {
-	public default Dependency dependency(NamedValue<String>... keyValuePairs) {
+public interface DependencyFactory {
+	public default Dependency dependency(NamedValue... keyValuePairs) {
 		
 		Dependency dependency = new Dependency();
 		
@@ -25,9 +25,50 @@ public interface DependencyTemplate {
 		.forEach(excl -> ((DependencyExclusions)excl).getExclusions().forEach(exclusion -> dependency.addExclusion(exclusion)));
 
 		return dependency;
+	}		
+	
+	public default Dependency dependency(String definition) {
+		return dependency(definition, null);
 	}
 	
-	public default NamedValue<String> exclusions(Exclusion... exclusions) {
+	public default Dependency compile(String definition) {
+		return dependency(definition, "compile");
+	}
+	
+	public default Dependency provided(String definition) {
+		return dependency(definition, "provided");
+	}
+	
+	public default Dependency runtime(String definition) {
+		return dependency(definition, "runtime");
+	}
+	
+	public default Dependency test(String definition) {
+		return dependency(definition, "test");
+	}
+	
+	public default Dependency dependency(String definition, String scope) {
+		
+		Dependency dependency = new Dependency();
+		
+		String[] parts = definition.split(":");
+		dependency.setGroupId(parts[0]);
+		dependency.setArtifactId(parts[1]);
+		
+		if (parts.length > 2) {
+			dependency.setVersion(parts[3]);
+		}
+		
+		if (scope != null) {
+			dependency.setScope(scope);
+		}
+
+		return dependency;
+	}
+	
+	
+	
+	public default NamedValue exclusions(Exclusion... exclusions) {
 		
 		DependencyExclusions depExclusions = new DependencyExclusions();
 		depExclusions.setExclusions(exclusions);
@@ -35,13 +76,13 @@ public interface DependencyTemplate {
 		return depExclusions;
 	}
 	
-	public default Exclusion exclusion(NamedValue<String>... keyValuePairs) {
+	public default Exclusion exclusion(NamedValue... keyValuePairs) {
 		Exclusion exclusion = new Exclusion();
 		return NamedValueProcessor.namedToObject(exclusion, keyValuePairs);
 	}
 
 
-	public class DependencyExclusions implements NamedValue<String> {
+	public class DependencyExclusions implements NamedValue {
 		
 		private Exclusion[] exclusions;
 

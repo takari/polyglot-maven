@@ -17,7 +17,7 @@ import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 import org.sonatype.maven.polyglot.java.xml.ConfiugrationXmlBuilder;
 
-public interface PluginMethods extends DependencyTemplate {
+public interface PluginFactory extends DependencyFactory {
 	
 	public default PluginExecutionBuilder execution(String id) {			
 		return new PluginExecutionBuilder(id);
@@ -76,11 +76,11 @@ public interface PluginMethods extends DependencyTemplate {
 		return new WrapperPluginBuilder(plugin);
 	}
 
-	public interface PluginNamedValue extends NamedValue<String> {
+	public interface PluginNamedValue extends NamedValue {
 
 	}
 	
-	public interface PluginExecutionNamedValue extends NamedValue<String> {
+	public interface PluginExecutionNamedValue extends NamedValue {
 
 	}
 

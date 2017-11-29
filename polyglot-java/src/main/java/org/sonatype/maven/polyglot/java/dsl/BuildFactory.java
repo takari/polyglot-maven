@@ -16,7 +16,7 @@ import org.apache.maven.model.Resource;
 import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 
-public interface BuildTemplate extends PluginMethods {
+public interface BuildFactory extends PluginFactory {
 	
 	public default BuildBaseBuilder profileBuild() {
 		return new BuildBaseBuilder();
@@ -64,7 +64,7 @@ public interface BuildTemplate extends PluginMethods {
 		return null;
 	}
 
-	public default Extension extension(NamedValue<String>... keyValuePairs) {
+	public default Extension extension(NamedValue... keyValuePairs) {
 		return NamedValueProcessor.namedToObject(new Extension(), keyValuePairs);
 	}
 	
@@ -171,7 +171,7 @@ public interface BuildTemplate extends PluginMethods {
 		return namedValue;
 	}
 	
-	public interface ResourcesNamedValue extends NamedValue<String> {
+	public interface ResourcesNamedValue extends NamedValue {
 	}
 	
 	public class ResourcesIncludesNamedValue implements ResourcesNamedValue {
@@ -210,7 +210,7 @@ public interface BuildTemplate extends PluginMethods {
 		}		
 	}
 	
-	public interface BuildNamedValue extends NamedValue<String> {
+	public interface BuildNamedValue extends NamedValue {
 	}
 	
 	public interface BuildComplexTypeNamedValue extends BuildNamedValue {

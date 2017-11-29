@@ -31,7 +31,7 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
-import org.sonatype.maven.polyglot.java.dsl.ModelTemplate;
+import org.sonatype.maven.polyglot.java.dsl.ModelFactory;
 
 import com.google.common.io.Files;
 
@@ -123,7 +123,7 @@ public class JavaModelReader extends ModelReaderSupport {
 						
 			log.debug("Added URL " + comiledClassFolderURL + " to Maven class loader to load class dynamically");
 
-			Class<ModelTemplate> pomClass = (Class<ModelTemplate>)Class.forName(randomClassName, false, systemClassLoader);			
+			Class<ModelFactory> pomClass = (Class<ModelFactory>)Class.forName(randomClassName, false, systemClassLoader);			
 			
 			model = pomClass.newInstance().getModel();
 

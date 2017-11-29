@@ -1,2 +1,19 @@
 Experiment to see how Maven Java DSl could look like
-Please note that dynamic compilation is still not working when running from command line. For now you need run all experiments from IDE. 
+Main goal is to explore possible syntax options and get feedback on pom.java syntax.
+
+Currently not supported:
+* 	polyglot-translate-plugin to convert from in-memory POM object model to pom.java file
+* 	Convenience methods for private org.apache.maven.model.Organization organization;
+*	Convenience methods for private java.util.List licenses;
+*	Convenience methods for private java.util.List developers;
+*	Convenience methods for private java.util.List contributors;
+*	Convenience methods for private java.util.List mailingLists;
+*	Convenience methods for private org.apache.maven.model.Prerequisites prerequisites;
+*	Convenience methods for private org.apache.maven.model.Scm scm;
+*	Convenience methods for private org.apache.maven.model.IssueManagement issueManagement;
+*	Convenience methods for private org.apache.maven.model.CiManagement ciManagement;
+*	Convenience methods for private org.apache.maven.model.DistributionManagement distributionManagement;
+*	Convenience methods for private java.util.List repositories;
+*	Convenience methods for private java.util.List pluginRepositories;
+*	Convenience methods for private java.lang.Object reports;
+*	Convenience methods for private org.apache.maven.model.Reporting reporting;
