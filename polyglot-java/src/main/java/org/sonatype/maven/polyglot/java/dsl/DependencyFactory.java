@@ -74,10 +74,19 @@ public interface DependencyFactory {
 	
 	/**
 	 * Factory method to create repository. Used for both - "repositories" and "pluginRepositories"
-	 * Each key-value pair is a construct 
-	 * 	key -> "value"
-	 * Where 'key' is the name of the property to set and "value" it's string value.
-	 * @param keyValuePairs - array of key -> "value" pairs.
+	 * <br>
+	 * Each key-value pair is a construct <br> 
+	 * 	key -> "value" <br>
+	 * Where 'key' is the name of the property to set and "value" is it's string value. <br>
+	 * 
+	 * All possible keys are:<br>
+	 * <ul>
+	 * <li>id - A unique identifier for a repository. This is used to match the repository to configuration in the <code>settings.xml</code> file, for example. Furthermore, the identifier is used during POM inheritance and profile injection to detect repositories that should be merged.</li>
+	 * <li>name - Human readable name of the repository.</li>
+	 * <li>url - The url of the repository, in the form <code>protocol://hostname/path</code> </li>
+	 * <li>layout - The type of layout this repository uses for locating and storing artifacts - can be <code>legacy</code> or <code>default</code></li>
+	 * </ul>
+	 * @param keyValuePairs - array of key -> "value" pairs. Example: <code>repository(id -> "my-repo", url -> "http://myserver/repo") </code>
 	 * @return	defined Repository
 	 */
 	public default Repository repository(NamedValue... keyValuePairs) {		
