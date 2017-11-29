@@ -42,7 +42,9 @@ public class ModelTest extends ModelFactory {
 				test("org.junit:junit")				
 		);
 		
-		
+		repositories(
+				repository(id -> "my-repo", url -> "http://myserver/repo")
+		);
 		
 		build(
 			artifactId -> "artf_id",

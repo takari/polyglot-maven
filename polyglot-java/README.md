@@ -1,4 +1,4 @@
-Experiment to see how Maven Java DSl could look like
+Experiment to see how Maven Java DSl could look like.
 Main goal is to explore possible syntax options and get feedback on pom.java syntax.
 
 Currently not supported:
@@ -13,7 +13,5 @@ Currently not supported:
 *	Convenience methods for private org.apache.maven.model.IssueManagement issueManagement;
 *	Convenience methods for private org.apache.maven.model.CiManagement ciManagement;
 *	Convenience methods for private org.apache.maven.model.DistributionManagement distributionManagement;
-*	Convenience methods for private java.util.List repositories;
-*	Convenience methods for private java.util.List pluginRepositories;
 *	Convenience methods for private java.lang.Object reports;
 *	Convenience methods for private org.apache.maven.model.Reporting reporting;

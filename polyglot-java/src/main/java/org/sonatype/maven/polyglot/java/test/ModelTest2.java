@@ -4,7 +4,6 @@ import org.sonatype.maven.polyglot.java.dsl.ModelFactory;
 
 public class ModelTest2 extends ModelFactory {
 
-	@SuppressWarnings({ "unchecked" })
 	public void project() {
 
 		modelVersion = "4.0.0";

@@ -13,6 +13,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
+import org.apache.maven.model.Repository;
 import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 
@@ -65,14 +66,6 @@ public class ModelFactory implements DependencyFactory, PropertyFactory, BuildFa
 	// Field descriptor #68 Lorg/apache/maven/model/DistributionManagement;
 	private org.apache.maven.model.DistributionManagement distributionManagement;
 
-	// Field descriptor #64 Ljava/util/List;
-	// Signature: Ljava/util/List<Lorg/apache/maven/model/Repository;>;
-	private java.util.List repositories;
-
-	// Field descriptor #64 Ljava/util/List;
-	// Signature: Ljava/util/List<Lorg/apache/maven/model/Repository;>;
-	private java.util.List pluginRepositories;
-
 	// Field descriptor #79 Ljava/lang/Object;
 	private java.lang.Object reports;
 
@@ -84,6 +77,18 @@ public class ModelFactory implements DependencyFactory, PropertyFactory, BuildFa
 		parent = NamedValueProcessor.namedToObject(parent, keyValuePairs);
 		model.setParent(parent);
 	}
+		
+	public void repositories(Repository... repositories) {
+		asList(repositories).forEach(repo -> {
+			model.addRepository(repo);
+		});
+	}
+	
+	public void pluginRepositories(Repository... repositories) {
+		asList(repositories).forEach(repo -> {
+			model.addPluginRepository(repo);
+		});
+	}	
 
 	public void dependencies(Dependency... dependencies) {
 		asList(dependencies).forEach(dep -> {

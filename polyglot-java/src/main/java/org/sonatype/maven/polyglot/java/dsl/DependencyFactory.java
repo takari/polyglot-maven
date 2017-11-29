@@ -8,6 +8,8 @@ import java.util.stream.Stream;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Exclusion;
+import org.apache.maven.model.Repository;
+import org.apache.maven.model.RepositoryPolicy;
 import org.sonatype.maven.polyglot.java.namedval.NamedValue;
 import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 
@@ -66,7 +68,50 @@ public interface DependencyFactory {
 		return dependency;
 	}
 	
+	public default Repository repository(String id, String name, String url) {		
+		return repository(id, name, url, null, null, null);
+	}
 	
+	public default Repository repository(NamedValue... keyValuePairs) {		
+		Repository repository = new Repository();
+		NamedValueProcessor.namedToObject(repository, keyValuePairs);
+		return repository;
+	}
+	
+	public default Repository repository(String id, String name, String url, String layout, RepositoryPolicy releases, RepositoryPolicy snapshots) {
+		Repository repository = new Repository();
+		if (id != null) {
+			repository.setId(id);
+		}
+		if (name != null) {
+			repository.setName(name);
+		}
+		if (url != null) {
+			repository.setUrl(url);
+		}
+		if (layout != null) {
+			repository.setLayout(layout);
+		}
+		if (releases != null) {
+			repository.setReleases(releases);
+		}
+		if (snapshots != null) {
+			repository.setSnapshots(snapshots);
+		}
+		return repository;
+	}
+	
+	public default RepositoryPolicy repositoryPolicy(boolean enabled, String updatePolicy, String checksumPolicy) {
+		RepositoryPolicy policy = new RepositoryPolicy();
+		policy.setEnabled(enabled);
+		if (updatePolicy != null) {
+			policy.setUpdatePolicy(updatePolicy);
+		}
+		if (checksumPolicy != null) {
+			policy.setChecksumPolicy(checksumPolicy);
+		}
+		return policy;
+	}
 	
 	public default NamedValue exclusions(Exclusion... exclusions) {
 		

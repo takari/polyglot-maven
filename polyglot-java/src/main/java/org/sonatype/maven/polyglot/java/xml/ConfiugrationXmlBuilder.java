@@ -15,23 +15,6 @@ import org.codehaus.plexus.util.xml.Xpp3DomBuilder;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 public class ConfiugrationXmlBuilder {
-	
-	public static void main(String[] args) {
-		
-		
-		 ConfiugrationXmlBuilder xml = new ConfiugrationXmlBuilder();
-		 Xpp3Dom xmldata = xml.startConfig()
-		    .tag("version", versionTag -> versionTag.content("pojo.getVersion()"))
-//		    .tag("time", timeTag -> timeTag.content("pojo.getTime()"))
-		    .tag("data", dataTag -> {
-		        dataTag.child("item", itemTag -> itemTag.attribute("id", "pojo.getId()"));
-		        dataTag.child("time", timeTag -> timeTag.content("pojo.getId()"));
-		    }).endConfig();
-		  
-		  System.out.println("=====");
-		  System.out.println(xmldata);
-		  System.out.println("=====");
-	}
 
     XMLOutputFactory factory = createFactory();
     ByteArrayOutputStream outputStream;
