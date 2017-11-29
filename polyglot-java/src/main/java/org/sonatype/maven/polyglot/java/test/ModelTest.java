@@ -33,8 +33,7 @@ public class ModelTest extends ModelFactory {
 						groupId -> "dep1grp",
 						artifactId -> "art2",
 						exclusions(
-							exclusion(groupId -> "grpToExclude"),
-							exclusion(groupId -> "grp2ToExclude")
+							exclusion(groupId -> "grpToExclude", artifactId -> "artifactToExclue")
 						),
 						version -> "v2"
 				),
