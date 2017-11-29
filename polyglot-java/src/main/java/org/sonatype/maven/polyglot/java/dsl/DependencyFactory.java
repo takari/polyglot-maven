@@ -72,6 +72,14 @@ public interface DependencyFactory {
 		return repository(id, name, url, null, null, null);
 	}
 	
+	/**
+	 * Factory method to create repository. Used for both - "repositories" and "pluginRepositories"
+	 * Each key-value pair is a construct 
+	 * 	key -> "value"
+	 * Where 'key' is the name of the property to set and "value" it's string value.
+	 * @param keyValuePairs - array of key -> "value" pairs.
+	 * @return	defined Repository
+	 */
 	public default Repository repository(NamedValue... keyValuePairs) {		
 		Repository repository = new Repository();
 		NamedValueProcessor.namedToObject(repository, keyValuePairs);
