@@ -77,7 +77,7 @@ public class BuildBaseBuilder {
     			getBuild().setResources(new ArrayList<>());
     		}
     		for (ResourceBuilder resourceBuilder : Arrays.asList(resourceBuilders)) {
-    			getBuild().addResource(resourceBuilder.buildResource());
+    			getBuild().addResource(resourceBuilder.endResource());
     		}    		
     	}
     	return this;
@@ -89,7 +89,7 @@ public class BuildBaseBuilder {
     			getBuild().setTestResources(new ArrayList<>());
     		}
     		for (ResourceBuilder resourceBuilder : Arrays.asList(resourceBuilders)) {
-    			getBuild().addTestResource(resourceBuilder.buildResource());
+    			getBuild().addTestResource(resourceBuilder.endResource());
     		}    		
     	}
     	return this;
@@ -127,6 +127,10 @@ public class BuildBaseBuilder {
     		
     		Arrays.asList(builders).stream().forEach(builder -> getBuild().getPluginManagement().addPlugin(builder.get()));
     	}
+    	return this;
+    }
+    
+    public BuildBaseBuilder endBuild() {    	
     	return this;
     }
 

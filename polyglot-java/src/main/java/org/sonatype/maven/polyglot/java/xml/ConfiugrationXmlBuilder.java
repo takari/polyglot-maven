@@ -36,27 +36,21 @@ public class ConfiugrationXmlBuilder {
         return XMLOutputFactory.newInstance();
     }
 
-    public ConfiugrationXmlBuilder startConfig() {
+    public ConfiugrationXmlBuilder startXML() {
     	
     	this.outputStream = new ByteArrayOutputStream();
         this.writer = createWriter(outputStream);	
     	
         try {
-            writer.writeStartDocument();
-            
-            writer.writeStartElement("configuration");
-            
+            writer.writeStartDocument();            
             return this;
         } catch (XMLStreamException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Xpp3Dom endConfig() {
-        try {
-        	
-        	writer.writeEndElement();
-        	
+    public Xpp3Dom endXML() {
+        try {        	
             writer.writeEndDocument();
             writer.flush();
             writer.close();         

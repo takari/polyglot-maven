@@ -46,6 +46,11 @@ public class PluginBuilder {
     	plugin.setExtensions(extensions);
     	return this;
     }
+    
+    public PluginBuilder inherited(boolean inherited) {
+    	plugin.setInherited(inherited);
+    	return this;
+    }
 
     public PluginBuilder dependencies(Dependency... dependencies) {
 		if (dependencies != null) {			
@@ -65,6 +70,10 @@ public class PluginBuilder {
 		}
 		return this;
 	}
+    
+    public PluginBuilder endPlugin() {
+    	return this;
+    }
     
 	public Plugin get() {		
 		return plugin;

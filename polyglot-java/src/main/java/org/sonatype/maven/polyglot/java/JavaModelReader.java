@@ -152,6 +152,7 @@ public class JavaModelReader extends ModelReaderSupport {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				content.append(line);
+				content.append(System.lineSeparator());
 			}
 			reader.close();
 			return content.toString();

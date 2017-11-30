@@ -15,6 +15,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
+import org.sonatype.maven.polyglot.java.writer.ModelToJavaWriter;
 
 /**
  * Java model writer.
@@ -23,14 +24,12 @@ import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 @Component(role = ModelWriter.class, hint = "java")
 public class JavaModelWriter extends ModelWriterSupport {
 	
-//	JavaWrite writer;
-	
 	public JavaModelWriter() {
-//		writer = new PolyglotMavenXpp3Writer();
 	}
 
 	public void write(Writer output, Map<String, Object> o, Model model) throws IOException {
-
-//		writer.write(output, model);
+		
+		ModelToJavaWriter toJavaWriter = new ModelToJavaWriter(output, model);
+		toJavaWriter.write();
 	}
 }

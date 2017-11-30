@@ -43,7 +43,7 @@ public class ResourceBuilder {
     	return this;
     }
     
-    public Resource buildResource() {
+    public Resource endResource() {
     	return resource;
     }
 }

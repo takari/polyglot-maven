@@ -116,8 +116,8 @@ public interface PluginFactory extends DependencyFactory {
 		return new WrapperPluginExecutionBuilder(execution);
 	}
 	
-	public default ConfiugrationXmlBuilder xml() {
-		return new ConfiugrationXmlBuilder();
+	public default ConfiugrationXmlBuilder startXML() {
+		return new ConfiugrationXmlBuilder().startXML();
 	}
 	
 	public default ConfigurationNamedValue configuration(Xpp3Dom configuration) {

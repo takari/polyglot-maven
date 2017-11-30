@@ -13,15 +13,14 @@ public class ModelTest extends ModelFactory {
 		modelVersion = "4.0";
 		groupId = "my-grp";
 		artifactId = "my-art";
-		version = "1.0";
-	
+		version = "1.0";		
 		
 		parent( 
 				artifactId -> "artf_id",
 				version -> "v1",
 				relativePath -> "../..",
 				groupId -> "grp-id-1"
-		);
+		);				
 		
 		dependencies(
 			dep -> {dep.groupId = "grpid1"; dep.artifactId = "art1";},
@@ -55,9 +54,9 @@ public class ModelTest extends ModelFactory {
 							version -> "2.6",
 							
 							configuration(
-									xml().startConfig()
+									startXML()
 										.tag("classifier", tag -> tag.content("pre-process"))						
-									.endConfig()
+									.endXML()
 						    ),
 							
 							executions(
@@ -65,9 +64,9 @@ public class ModelTest extends ModelFactory {
 										id -> "pre-process-classes",
 										phase -> "pre-process",
 										configuration(
-												xml().startConfig()
-													.tag("classifier", tag -> tag.content("pre-process"))						
-										.endConfig()
+											startXML()
+														.tag("classifier", tag -> tag.content("pre-process"))						
+											.endXML()
 										)
 								).get()
 							),
@@ -93,6 +92,7 @@ public class ModelTest extends ModelFactory {
 		
 		
 		build()
+		
 			.resources(
 				res -> {res.directory="c://foodir"; res.filtering=true; res.targetPath="c://bardir"; res.includes="*.a"; res.excludes="*.b";},
 				res -> {res.directory="src/main/resources"; res.filtering=true; res.targetPath="target ";}
@@ -107,36 +107,34 @@ public class ModelTest extends ModelFactory {
 					),
 					resource()
 						.directory("c://foodir").filtering(true).targetPath("c://bardir").includes("*.a").excludes("*.b")
-					.buildResource(),
+					.endResource(),
 					resource(r -> {r.directory="c://foodir"; r.filtering=true; r.targetPath="c://bardir"; r.includes="*.a"; r.excludes="*.b";}) 
 			)
 			.pluginManagement(
 					plugin("org.apache.rat:apache-rat-plugin")
-						.configuration(
-							xml()
-							.startConfig()
+						.configuration(							
+							startXML()
 								.tag("excludes", excludes -> {
 									excludes.child("exclude", exclude -> exclude.content("src/test/resources*/**"));
 									excludes.child("exclude", exclude -> exclude.content("src/test/projects/**"));
 									excludes.child("exclude", exclude -> exclude.content("src/test/remote-repo/**"));
 									excludes.child("exclude", exclude -> exclude.content("**/*.odg"));
 								})
-							.endConfig()
+							.endXML()
 						),
 					plugin(groupId -> "org.apache.maven.plugins", artifactId -> "maven-checkstyle-plugin", version -> "2.14")
 			)
 			.plugins(
 					plugin("org.codehaus.mojo", "animal-sniffer-maven-plugin", "1.14")
-					.configuration(
-						xml()
-						.startConfig()
-							.tag("signature", signature -> {
-								signature.child("groupId", groupId -> groupId.content("org.codehaus.mojo.signature"));
+					.configuration(						
+						startXML()
+							.tag("signature", signature -> {								
+								signature.child("groupId", groupId -> groupId.content("org.codehaus.mojo.signature"));								
 								signature.child("artifactId", artifactId -> artifactId.content("java17"));
 								signature.child("version", version -> version.content("1.0"));
 							})
-						.endConfig()
-					)
+						.endXML()
+					)					
 					.executions(
 						execution(
 							id -> "check-java-1.6-compat",
@@ -167,11 +165,10 @@ public class ModelTest extends ModelFactory {
 					profileBuild()
 					.plugins(
 							plugin("")
-							.configuration(
-								xml()
-								.startConfig()
+							.configuration(								
+								startXML()
 									.tag("classifier", tag -> tag.content("pre-process"))
-								.endConfig()
+								.endXML()
 							)
 					)
 					.resources(
@@ -185,5 +182,4 @@ public class ModelTest extends ModelFactory {
 			property(name2 -> "property_2")
 		);
 	}
-	
 }
