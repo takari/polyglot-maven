@@ -2,7 +2,6 @@ Experiment to see how Maven Java DSl could look like.
 Main goal is to explore possible syntax options and get feedback on pom.java syntax.
 
 Currently not supported:
-* 	polyglot-translate-plugin to convert from in-memory POM object model to pom.java file
 * 	Convenience methods for private org.apache.maven.model.Organization organization;
 *	Convenience methods for private java.util.List licenses;
 *	Convenience methods for private java.util.List developers;

@@ -124,6 +124,10 @@ public class ProfileBuilder {
 		}
 		return getProfile().getActivation();
 	}
+	
+	public ProfileBuilder endProfile() {
+		return this;
+	}
 
 	private Profile getProfile() {
 		if (model.getProfiles() != null) {
