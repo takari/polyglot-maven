@@ -17,7 +17,7 @@ Currently not supported:
 *	Convenience methods for private java.lang.Object reports;
 *	Convenience methods for private org.apache.maven.model.Reporting reporting;
 
-To deal with these temporary limitations you have an access to `model` variable from parent class. And you can use it's methods to add configuration for any entities. For example: 
+To deal with these temporary limitations you have access to `model` variable from parent class. And you can use it's methods to add configuration for any entities. For example: 
 
 ```java
 Contributor contributor = new Contributor();
