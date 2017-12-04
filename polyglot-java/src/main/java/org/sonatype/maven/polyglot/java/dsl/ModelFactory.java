@@ -19,7 +19,7 @@ import org.sonatype.maven.polyglot.java.namedval.NamedValueProcessor;
 
 public class ModelFactory implements DependencyFactory, PropertyFactory, BuildFactory {
 
-	private Model model = new Model();
+	protected Model model = new Model();
 
 	protected String modelVersion;
 	protected String groupId;

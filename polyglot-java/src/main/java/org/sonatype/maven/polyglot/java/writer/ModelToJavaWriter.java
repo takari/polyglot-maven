@@ -7,7 +7,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-
+import org.apache.maven.model.Activation;
 import org.apache.maven.model.Build;
 import org.apache.maven.model.BuildBase;
 import org.apache.maven.model.Dependency;
@@ -16,6 +16,8 @@ import org.apache.maven.model.Extension;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
+import org.apache.maven.model.Profile;
+import org.apache.maven.model.Repository;
 import org.apache.maven.model.Resource;
 
 public class ModelToJavaWriter {
@@ -38,19 +40,19 @@ public class ModelToJavaWriter {
 		}
 	}
 
-	public void writeFileStar() throws IOException {
+	private void writeFileStar() throws IOException {
 		out.write("public class pom extends org.sonatype.maven.polyglot.java.dsl.ModelFactory {" + br);
 		out.write("    public void project() {" + br);
 		
 		writeHeader();
 	}	
 	
-	public void writeFileEnd() throws IOException {
+	private void writeFileEnd() throws IOException {
 		out.write("    }" + br);
 		out.write("}");
 	}
 	
-	public void writeHeader() throws IOException {
+	private void writeHeader() throws IOException {
 		out.write("        modelVersion = \"" + model.getModelVersion() + "\";" + br);
 		out.write("        groupId = \"" + model.getGroupId() + "\";" + br);
 		out.write("        artifactId = \"" + model.getArtifactId() + "\";" + br);
@@ -60,43 +62,81 @@ public class ModelToJavaWriter {
 		writeParent();
 	}
 	
-	public void writeParent() throws IOException {
+	private void writeParent() throws IOException {
 		Parent parent = model.getParent();
 		if (parent != null) {
 			out.write("        parent(" + br);
-			out.write("            groupId -> \"" + parent.getGroupId() + "\"" + br);
-			out.write("            artifactId -> \"" + parent.getArtifactId() + "\"" + br);
+			out.write("            groupId -> \"" + parent.getGroupId() + "\"," + br);
+			out.write("            artifactId -> \"" + parent.getArtifactId() + "\"");
 			if (parent.getVersion() != null) {
-				out.write("            version -> \"" + parent.getVersion()+ "\"" + br);
+				out.write("," + br);
+				out.write("            version -> \"" + parent.getVersion()+ "\"");
 			}
 			if (parent.getRelativePath() != null) {
+				out.write("," + br);
 				out.write("            relativePath -> \"" + parent.getRelativePath()+ "\"" + br);
 			}
-			out.write(");");
+			out.write("        );" + br);
 		}
 		
 		writeProperties();
 	}
 	
-	public void writeProperties() throws IOException {
+	private void writeProperties() throws IOException {
 		Properties props = model.getProperties();
 		if (props != null && !props.isEmpty()) {
 			out.write("        properties(" + br);
 			int propertyNumber = 1;			
 			for (Object prop : props.keySet()) {
-				out.write("            property(\"" + prop.toString() + "\", \"" + props.get(prop) + "\")" + br);
+				out.write("            property(\"" + prop.toString() + "\", \"" + props.get(prop) + "\")");
 				if (propertyNumber < props.size()) {
 					out.write("," + br);
+				} else {
+					out.write(br);
 				}
 				propertyNumber++;
 			}
 			out.write("        );" + br);
 		}
 		
+		writeRepositories();		
+	}
+	
+	private void writeRepositories() throws IOException {
+		
+		if (model.getRepositories() != null && !model.getRepositories().isEmpty()) {			
+			out.write("        " + "repositories(" + br);
+			
+			int repositoryOrderNum = 1;
+			for (Repository repository : model.getRepositories()) {
+				
+				out.write("        " + "    " + "repository(");
+				if (repository.getUrl() != null) {
+					out.write("url -> \"" + repository.getUrl() + "\"");
+				}
+				if (repository.getName() != null) {
+					out.write(", name -> \"" + repository.getName() + "\"");
+				}
+				if (repository.getId() != null) {
+					out.write(", id -> \"" + repository.getId() + "\"");
+				}
+				
+				out.write(")" + br);
+				
+				if (repositoryOrderNum < model.getRepositories().size()) {
+					out.write("        " + "," + br);
+				}
+				repositoryOrderNum++;				
+			}
+			
+			out.write("        " +");" + br);
+		}
+		
 		writeDependencies();
 	}
 	
-	public void writeDependencies() throws IOException {
+	private void writeDependencies() throws IOException {
+		
 		if (model.getDependencyManagement() != null && model.getDependencyManagement().getDependencies() != null && !model.getDependencyManagement().getDependencies().isEmpty()) {
 			writeDependencies(model.getDependencies(), "dependencyManagement");			
 		}		
@@ -104,7 +144,7 @@ public class ModelToJavaWriter {
 		writeBuild();
 	}
 	
-	public void writeDependencies(List<Dependency> dependencies, String methodName) throws IOException {
+	private void writeDependencies(List<Dependency> dependencies, String methodName) throws IOException {
 		if (dependencies != null && !dependencies.isEmpty()) {
 			out.write("        " + methodName + "(" + br);
 			int dependencyNumber = 1;			
@@ -204,7 +244,7 @@ public class ModelToJavaWriter {
 			out.write("        .endBuild();" + br);
 		}
 		
-		writeFileEnd();
+		writeProfiles();
 	}
 	
 	private void writeBuildBase(BuildBase build, String indent) throws IOException {
@@ -283,7 +323,7 @@ public class ModelToJavaWriter {
 				}
 				pluginOrderNum++;
 			}			
-			out.write(indent + ")"+ br);			
+			out.write(indent + ") //end of plugins section"+ br);			
 		}
 	}
 	
@@ -321,7 +361,7 @@ public class ModelToJavaWriter {
 			out.write(sb.toString());			
 			
 			out.write(indent + "        " + ".endXML()" + br);
-			out.write(indent + "    " + ")" + br);
+			out.write(indent + "    " + ") // end of configuration section" + br);
 		}
 	}
 	
@@ -338,12 +378,12 @@ public class ModelToJavaWriter {
 		String[] attributeNames = node.getAttributeNames();
 		for (int i = 0; i < attributeNames.length; i++) {
 			String attributeName = attributeNames[i];
-			sb.append(indent + calculateXMLIndent(node) + tagName + ".attribute(\"" + attributeName + "\", \"" + node.getAttribute(attributeName) + "\");" + br);
+			sb.append(indent + calculateXMLIndent(node) + "    " + tagName + ".attribute(\"" + attributeName + "\", \"" + node.getAttribute(attributeName) + "\");" + br);
 		}
 		Xpp3Dom[] children = node.getChildren();
 		for (int i = 0; i < children.length; i++) {
 			Xpp3Dom child = children[i];
-			sb.append(indent + calculateXMLIndent(child) +  child.getParent().getName() + ".child(\"" + child.getName() + "\"," + child.getName() + "-> {" + br);			
+			sb.append(indent + calculateXMLIndent(child) +  child.getParent().getName() + ".child(\"" + child.getName() + "\"," + child.getName() + " -> {" + br);			
 			
 			generateConfig(child, sb, indent);
 			
@@ -381,5 +421,42 @@ public class ModelToJavaWriter {
 			}
 			dependencyNumber++;
 		}
+	}
+	
+	private void writeProfiles() throws IOException {		
+		if (model.getProfiles() != null) {
+			for (Profile profile : model.getProfiles()) {
+				out.write("        " + "profile(\"" + profile.getId() + "\")" + br);
+				Activation activation = profile.getActivation();
+				if (activation != null) {
+					out.write("        " + "    " + ".activeByDefault(" + activation.isActiveByDefault() + ")" + br);
+					
+					if (activation.getJdk() != null) {
+						out.write("        " + "    " + ".activeByDefault(" + activation.isActiveByDefault() + ")" + br);
+					}					
+					if (activation.getProperty() != null) {
+						String propertyValue = activation.getProperty().getValue() == null ? "null" : "\"" + activation.getProperty().getValue() + "\""; 
+						out.write("        " + "    " + ".activeForPropertyValue(\"" + activation.getProperty().getName() + "\"," + propertyValue + ")" + br);
+					}
+					if (activation.getFile() != null) {
+						String exists = activation.getFile().getExists() == null ? "null" : "\"" + activation.getFile().getExists() + "\"";
+						String missing = activation.getFile().getMissing() == null ? "null" : "\"" + activation.getFile().getMissing() + "\"";
+						out.write("        " + "    " + ".activeForFile(" + exists + "," + missing + ")" + br);
+					}
+				}
+				
+				if (profile.getBuild() != null) {
+					out.write("        " + "    " + ".build(" + br);
+					out.write("        " + "        " + "profileBuild()" + br);
+					writeBuildBase(profile.getBuild(), "        " + "            ");
+					out.write("        " + "        " + ".endBuild()" + br);
+					out.write("        " + "    " + ") //end of profile build section" + br);
+				}				
+				
+				out.write("        " + ".endProfile();" + br);
+			}
+		}
+		
+		writeFileEnd();
 	}
 }

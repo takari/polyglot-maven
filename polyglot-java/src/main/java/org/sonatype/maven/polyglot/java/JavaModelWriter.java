@@ -31,5 +31,6 @@ public class JavaModelWriter extends ModelWriterSupport {
 		
 		ModelToJavaWriter toJavaWriter = new ModelToJavaWriter(output, model);
 		toJavaWriter.write();
+		output.flush();
 	}
 }

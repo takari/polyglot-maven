@@ -1,4 +1,4 @@
-public class POM extends org.sonatype.maven.polyglot.java.dsl.ModelFactory {
+public class pom extends org.sonatype.maven.polyglot.java.dsl.ModelFactory {
 
 	@SuppressWarnings({ "unchecked" })
 	public void project() {

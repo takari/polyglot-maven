@@ -2,6 +2,7 @@ package org.sonatype.maven.polyglot.java.test;
 
 import java.util.Arrays;
 
+import org.apache.maven.model.Contributor;
 import org.sonatype.maven.polyglot.java.dsl.ModelFactory;
 
 public class ModelTest extends ModelFactory {
@@ -143,11 +144,11 @@ public class ModelTest extends ModelFactory {
 						)
 						,execution("check-java-1.6-compat").phase("process-classes").goals("check")
 					)
-			);
-		
+			);		
 		
 		profile("jboss")		
 				.activeByDefault(true)
+				.activeForFile("exists", "missing")				
 		
 				.dependencies(
 					dependency(groupId -> "gr1", artifactId -> "art1"),
@@ -174,8 +175,7 @@ public class ModelTest extends ModelFactory {
 					.resources(
 						resource("directory", "targetPath", true, new String[]{"*"}, null)
 					)
-				);	
-		
+				); 
 		
 		properties(
 			property(name1 -> "property_1"),
