@@ -30,6 +30,8 @@ project 'Polyglot :: Aggregator' do
             'tesla-polyglot-yaml',
             'tesla-polyglot-clojure',
             'tesla-polyglot-scala',
+            'tesla-polyglot-java',
+            'tesla-polyglot-xml',
             'tesla-polyglot-cli',
             'tesla-polyglot-maven-plugin' ]
 
@@ -77,6 +79,8 @@ The available languages, in alphabetical order, with their artifact id are:
 | Ruby     | `polyglot-ruby`    |
 | Scala    | `polyglot-scala`   |
 | YAML     | `polyglot-yaml`    |
+| Java     | `polyglot-java`    |
+| XML      | `polyglot-xml`     |
 
 The groupId value is `io.takari.polyglot`.
 
@@ -106,7 +110,7 @@ mvn io.takari.polyglot:polyglot-translate-plugin:translate \
   -Dinput=pom.xml -Doutput=pom.{format}
 ```
 
-Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom` and of course `xml`.
+Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom`, `java`  and of course `xml`.
 See [here](http://takari.io/2015/03/21/polyglot-maven.html) for more info.
 You can even convert back to `xml` or cross-convert between all supported formats.
 
