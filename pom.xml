@@ -51,7 +51,8 @@
     <module>polyglot-xml</module>
     <module>polyglot-java</module>
     <module>polyglot-maven-plugin</module>    
-    <module>polyglot-translate-plugin</module>    
+    <module>polyglot-translate-plugin</module>
+    <module>polyglot-kotlin</module>
   </modules>
 
   <dependencyManagement>
