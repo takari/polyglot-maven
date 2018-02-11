@@ -1,26 +1,28 @@
-Project(name = "Polyglot :: Kotlin",
-    parent = "polyglot:io.takari.polyglot:0.2.2-SNAPSHOT",
-    artifactId = "polyglot-kotlin",
-    packaging = jar,
+project {
+    name = "Polyglot :: Kotlin"
+    parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT"
+    groupId = "io.takari.polyglot"
+    artifactId = "polyglot-kotlin"
+    version = "0.2.2-SNAPSHOT"
+    packaging = jar
 
-    properties = { those(
-        "project.build.sourceEncoding" to "UTF-8",
-        "junit.version" to 4.12,
-        "kotlin.version" to "1.1.61"
-    )},
+    val junitVersion = 4.12
 
-    dependencies = {
-        compile {those(
-            "org.jetbrains.kotlin:kotlin-stdlib:" + it["kotlin.version"],
-            "${it.groupId}:polyglot-common" + it["kotlin.version"] exclude "org.slf4j:jul-logger:LATEST"
-        )}
-
-        test { "junit:junit:${it["junit.version"]}" }
-        test { "org.jetbrains.kotlin:kotlin-test-junit:${it["kotlin.version"]}" }
-
-        provided { this[
-            "org.apache.maven.plugin-tools:maven-plugin-annotations:${it[""]}",
-            "org.apache.maven.plugin-tools:maven-plugin-annotations"
-        ]}
+    properties {
+        "project.build.sourceEncoding" sameAs "UTF-8"
+        "junit.version" += 4.12
+        "kotlin.version" sameAs "1.1.61"
     }
-)
+
+    dependencies {
+        compile("org.jetbrains.kotlin:kotlin-stdlib:" + it["kotlin.version"])
+        compile("$groupId:polyglot-common:$version")
+                .exclusions("org.slf4j:jul-logger")
+
+        test(
+                "junit:junit:$junitVersion" exclusions "org.hamcrest:hamcrest-core",
+                "org.jetbrains.kotlin:kotlin-test-junit:${it["kotlin.version"]}"
+        )
+        provided("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST")
+    }
+}

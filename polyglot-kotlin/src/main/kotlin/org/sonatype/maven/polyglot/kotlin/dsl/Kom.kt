@@ -1,53 +1,101 @@
-//package of
-data class Project(
-        val artifactId: String,
-        val groupId: String? = null,
-        val version: String? = null,
+open class Project() {
+    lateinit var artifactId: String
+    var groupId: String? = null //default = parent.groupId
+    var version: String? = null //default = parent.version
 
-        val parent: String,
+    lateinit var parent: String
 
-        val packaging: String = jar,
-        val properties: ()->Array<out Pair<String, Any>>,
-//        val properties: () -> Unit,
-        val dependencies: (project: Project) -> Unit,
+    var packaging: String = jar
 
-        var name: String,
-        val modelVersion: String = "4.0.0",
-        val description: String? = null,
-        val url: String? = null,
-        val inceptionYear: String? = null
-) {
-    companion object {
-        val props: MutableMap<String, Any> = mutableMapOf<String, Any>()
+    lateinit var name: String
+    var modelVersion: String = "4.0.0"
+    var description: String? = null
+    var url: String? = null
+    var inceptionYear: String? = null
+
+    protected var props: MutableMap<String, Any> = mutableMapOf<String, Any>()
+
+    fun properties(function: () -> Unit) = function()
+
+    infix fun String.sameAs(value: Any) {
+        props.put(this, value)
+    }
+
+    operator fun String.plusAssign(value: Any) {
+        props.put(this, value)
     }
 
     operator fun get(property: String): Any {
-        return props[property]?: throw IllegalArgumentException()
+        return props[property] ?: throw IllegalArgumentException()
+    }
+
+    protected var deps: MutableList<Dependency> = mutableListOf()
+
+    fun dependencies(function: () -> Unit) = function()
+
+    fun compile(vararg list: String) = dependenciesOn(list, "compile")
+    fun compile(name: String): Dependency = dependencyOn(name, "compile")
+
+    fun test(vararg list: String) = dependenciesOn(list, "test")
+    fun test(name: String) = dependencyOn(name, "test")
+
+    fun provided(vararg list: String) = dependenciesOn(list, "provided")
+    fun provided(name: String) = dependencyOn(name, "provided")
+
+    private fun dependencyOn(name: String, scope: String): Dependency {
+        val dependency: Dependency
+
+        val exclusionsIdx = name.indexOf("-=")
+        if (exclusionsIdx != -1) {
+            val exclusionLine = name.substring(exclusionsIdx + 2)
+            dependency = Dependency(name.substring(0, exclusionsIdx), scope, exclusionLine.split(","))
+        } else dependency = Dependency(name, scope)
+
+        deps.add(dependency)
+        return dependency
+    }
+
+    private fun dependenciesOn(list: Array<out String>, scope: String)
+            = list.forEach { dependencyOn(it, scope) }
+
+    class Dependency(protected val dependency: String,
+                          protected val scope: String = "compile",
+                          exclusions: List<String> =  emptyList<String>()) {
+        protected var excludes: MutableList<String> = mutableListOf()
+        init {
+            this.excludes.addAll(exclusions)
+        }
+        
+        fun exclusions(vararg exclusions: String) {
+            this.excludes.addAll(exclusions)
+        }
+
+        operator fun component1(): String = dependency
+        operator fun component2(): String = scope
+        operator fun component3(): List<String> = excludes
+    }
+
+    infix fun String.exclusions(name: String): String {
+        return this + "-=" + name
+    }
+    infix fun String.exclusions(names: Array<String>): String {
+        return this + "-=" + names.joinToString(",")
+    }
+    
+    protected constructor(project: Project):this(){
+        props = project.props
+        deps = project.deps
     }
 }
 
 val jar = "jar"
-typealias project = Project
+val war = "war"
+val ear = "ear"
+val pom = "pom"
 
-val compile = fun(list: () -> Any) {}
-val test = fun(list: () -> Any) {}
-val provided = fun(list: () -> Any) {}
-
-fun compile(vararg list: String) {}
-fun test(vararg list: String) {}
-fun provided(vararg list: String) {}
-
-
-infix fun String.equalTo(that: Any) {
-    Project.props.put(this, that)
+inline fun project(block: Project.(Project) -> Unit): Project {
+    val project = Project()
+    block(project, project)
+    return project
 }
-//operator fun String.plusAssign(that: Any): Unit {
-//    Project.props.put(this, that)
-//}
-
-//fun dependency(groupId: String, artifactId: String, version: Any? = "LATEST") {}
-//fun test(groupId: String, artifactId: String, version: String = "LATEST") {}
-operator fun Any.get(vararg lines: String): Array<out String> = lines
-fun <T> those(vararg lines: T): Array<out T> = lines
-
-class ChainOfProperties(val value: Pair<String, Any>, val next: ChainOfProperties)
+//operator fun Any.get(vararg lines: String): Array<out String> = lines

@@ -1,6 +1,6 @@
-//package org.sonatype.maven.polyglot.kotlin.dsl
-//
-//import of.Project
+
+import org.apache.maven.model.Dependency
+import org.apache.maven.model.Exclusion
 import org.apache.maven.model.Model
 import org.apache.maven.model.Parent
 
@@ -20,23 +20,57 @@ object KomConverter {
         model.version = project.version ?: model.parent.version
         model.packaging = project.packaging
 
-
         model.url = project.url
-
         model.inceptionYear = project.inceptionYear
 
-//        model.properties = project.properties
+        val metaProject = MetaProject(project)
+        model.properties.putAll(metaProject.properties())
+        model.dependencies = dependenciesOf(metaProject.dependencies())
+
         return model
+    }
+
+    private fun dependenciesOf(projectDeps: List<Project.Dependency>): MutableList<Dependency> {
+        val dependencies = mutableListOf<Dependency>()
+        projectDeps.forEach {
+            val (dependency, scope, exclusions) = it
+            val dependencySegments = dependency.split(":")
+            check(dependencySegments.size == 3, { "Wrong dependency format. Expected: groupId:artifactId:version" })
+
+            dependencies.add(Dependency().apply {
+                groupId = dependencySegments[0]
+                artifactId = dependencySegments[1]
+                version = dependencySegments[2]
+                this.scope = scope
+
+                exclusionsOf(exclusions).forEach { addExclusion(it) }
+            })
+        }
+        return dependencies
+    }
+
+    private fun exclusionsOf(exclusions: List<String>): List<Exclusion> {
+        val excludes = mutableListOf<Exclusion>()
+        exclusions.forEach {
+            val exclusionSegments = it.split(":")
+            check(exclusionSegments.size == 2, { "Wrong exclusion format. Expected: groupId:artifactId" })
+
+            excludes.add(Exclusion().apply {
+                groupId = exclusionSegments[0]
+                artifactId = exclusionSegments[1]
+            })
+        }
+        return excludes
     }
 
     private fun parentOf(project: Project): Parent {
         val parentSegments = project.parent.split(":")
         check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
 
-        val parent = Parent()
-        parent.groupId = parentSegments[0]
-        parent.artifactId = parentSegments[1]
-        parent.version = parentSegments[2]
-        return parent
+        return Parent().apply {
+            groupId = parentSegments[0]
+            artifactId = parentSegments[1]
+            version = parentSegments[2]
+        }
     }
 }
