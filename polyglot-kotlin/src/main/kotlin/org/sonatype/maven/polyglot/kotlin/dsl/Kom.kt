@@ -1,11 +1,32 @@
 open class Project() {
     lateinit var artifactId: String
     var groupId: String? = null //default = parent.groupId
-        get() = field?: parentSegments[0]
+        get() = field ?: superParent.groupId
     var version: String? = null //default = parent.version
-        get() = field?: parentSegments[2]
+        get() = field ?: superParent.version
 
-    lateinit var parent: String
+    var parent: String? = null
+        set(value) {
+            checkNotNull(value)
+            val parentSegments = value!!.split(":")
+            check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
+
+            this.Parent().apply {
+                groupId = parentSegments[0]
+                artifactId = parentSegments[1]
+                version = parentSegments[2]
+                relativePath = this@Project.relativePath
+            }
+        }
+
+    private lateinit var relativePath: String
+    infix fun String.relativePath(path: String): String {
+        check(!this@Project::relativePath.isInitialized, { "relativePath was already defined" })
+        check(!this@Project::superParent.isInitialized, { "Please define relativePath inside parent {\n}" })
+
+        relativePath = path
+        return this
+    }
 
     var packaging: String = jar
 
@@ -48,26 +69,26 @@ open class Project() {
         val dependency: Dependency
 
         val exclusionsIdx = name.indexOf("-=")
-        if (exclusionsIdx != -1) {
+        dependency = if (exclusionsIdx != -1) {
             val exclusionLine = name.substring(exclusionsIdx + 2)
-            dependency = Dependency(name.substring(0, exclusionsIdx), scope, exclusionLine.split(","))
-        } else dependency = Dependency(name, scope)
+            Dependency(name.substring(0, exclusionsIdx), scope, exclusionLine.split(","))
+        } else Dependency(name, scope)
 
         deps.add(dependency)
         return dependency
     }
 
-    private fun dependenciesOn(list: Array<out String>, scope: String)
-            = list.forEach { dependencyOn(it, scope) }
+    private fun dependenciesOn(list: Array<out String>, scope: String) = list.forEach { dependencyOn(it, scope) }
 
     class Dependency(protected val dependency: String,
-                          protected val scope: String = "compile",
-                          exclusions: List<String> =  emptyList<String>()) {
+                     protected val scope: String = "compile",
+                     exclusions: List<String> = emptyList<String>()) {
         protected var excludes: MutableList<String> = mutableListOf()
+
         init {
             this.excludes.addAll(exclusions)
         }
-        
+
         fun exclusions(vararg exclusions: String) {
             this.excludes.addAll(exclusions)
         }
@@ -80,20 +101,35 @@ open class Project() {
     infix fun String.exclusions(name: String): String {
         return this + "-=" + name
     }
+
     infix fun String.exclusions(names: Array<String>): String {
         return this + "-=" + names.joinToString(",")
     }
 
-    protected val parentSegments by lazy {
-        val parentSegments = parent.split(":")
-        check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
-        return@lazy parentSegments
-    }
-
-    protected constructor(project: Project):this(){
+    protected constructor(project: Project) : this() {
         props = project.props
         deps = project.deps
-        parent = project.parent
+        superParent = project.superParent
+    }
+
+    protected lateinit var superParent: Parent
+
+    inner class Parent() {
+        lateinit var groupId: String
+        lateinit var artifactId: String
+        lateinit var version: String
+        var relativePath: String = "../pom.kts"
+
+        init {
+            check(!::superParent.isInitialized, { "Parent defined several times" })
+            superParent = this
+        }
+    }
+
+    inline fun parent(block: Project.Parent.(Project.Parent) -> Unit): Project.Parent {
+        val parent = this.Parent()
+        block(parent, parent)
+        return parent
     }
 }
 
@@ -108,3 +144,4 @@ inline fun project(block: Project.(Project) -> Unit): Project {
     return project
 }
 //operator fun Any.get(vararg lines: String): Array<out String> = lines
+

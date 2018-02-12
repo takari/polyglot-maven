@@ -1,5 +1,3 @@
-//package org.sonatype.maven.polyglot.kotlin
-
 import org.hamcrest.CoreMatchers.anyOf
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -8,6 +6,51 @@ import kotlin.test.assertTrue
 
 class KotlinModelReaderTest {
     val modelReader = KotlinModelReader()
+
+    @Test fun readOneLinerParentInKotlinObjectModel() {
+        //GIVEN
+        val komReader = """
+        project {
+            name = "simple parent example kom"
+            parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT" relativePath "../../pom.kts"
+            artifactId = "simpleId"
+        }
+        """.trimIndent().reader()
+
+        //WHEN
+        val poModel = modelReader.read(komReader, mutableMapOf<String, Any>())
+
+        //THEN
+        assertThat(poModel.parent.artifactId, equalTo("polyglot"))
+        assertThat(poModel.parent.groupId, equalTo("io.takari.polyglot"))
+        assertThat(poModel.parent.version, equalTo("0.2.2-SNAPSHOT"))
+        assertThat(poModel.parent.relativePath, equalTo("../../pom.kts"))
+    }
+
+    @Test fun readFullyQualifiedParentInKotlinObjectModel() {
+        //GIVEN
+        val komReader = """
+        project {
+            name = "simple parent example kom"
+            parent {
+                groupId = "io.takari.polyglot"
+                artifactId = "polyglot"
+                version = "0.2.2-SNAPSHOT"
+                relativePath = "../../pom.kts"
+            }
+            artifactId = "simpleId"
+        }
+        """.trimIndent().reader()
+
+        //WHEN
+        val poModel = modelReader.read(komReader, mutableMapOf<String, Any>())
+
+        //THEN
+        assertThat(poModel.parent.artifactId, equalTo("polyglot"))
+        assertThat(poModel.parent.groupId, equalTo("io.takari.polyglot"))
+        assertThat(poModel.parent.version, equalTo("0.2.2-SNAPSHOT"))
+        assertThat(poModel.parent.relativePath, equalTo("../../pom.kts"))
+    }
 
     @Test fun readBasicKotlinObjectModel() {
         //GIVEN
@@ -23,6 +66,7 @@ class KotlinModelReaderTest {
         assertThat(poModel.parent.artifactId, equalTo("polyglot"))
         assertThat(poModel.parent.groupId, equalTo("io.takari.polyglot"))
         assertThat(poModel.parent.version, equalTo("0.2.2-SNAPSHOT"))
+        assertThat(poModel.parent.relativePath, equalTo("../../pom.kts"))
 
         assertThat(poModel.packaging, equalTo("jar"))
     }

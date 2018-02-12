@@ -65,11 +65,12 @@ object KomConverter {
     }
 
     private fun parentOf(metaProject: MetaProject): Parent {
-        val parentSegments = metaProject.parentTokens()
+        val parent = metaProject.parent()
         return Parent().apply {
-            groupId = parentSegments[0]
-            artifactId = parentSegments[1]
-            version = parentSegments[2]
+            groupId = parent.groupId
+            artifactId = parent.artifactId
+            version = parent.version
+            relativePath = parent.relativePath
         }
     }
 }

@@ -1,6 +1,6 @@
 project {
     name = "Polyglot :: Kotlin"
-    parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT"
+    parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT" relativePath "../../pom.kts"
     artifactId = "polyglot-kotlin"
     packaging = jar
 
