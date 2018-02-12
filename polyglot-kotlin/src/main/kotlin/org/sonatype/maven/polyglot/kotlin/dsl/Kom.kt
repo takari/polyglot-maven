@@ -1,7 +1,9 @@
 open class Project() {
     lateinit var artifactId: String
     var groupId: String? = null //default = parent.groupId
+        get() = field?: parentSegments[0]
     var version: String? = null //default = parent.version
+        get() = field?: parentSegments[2]
 
     lateinit var parent: String
 
@@ -81,10 +83,17 @@ open class Project() {
     infix fun String.exclusions(names: Array<String>): String {
         return this + "-=" + names.joinToString(",")
     }
-    
+
+    protected val parentSegments by lazy {
+        val parentSegments = parent.split(":")
+        check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
+        return@lazy parentSegments
+    }
+
     protected constructor(project: Project):this(){
         props = project.props
         deps = project.deps
+        parent = project.parent
     }
 }
 

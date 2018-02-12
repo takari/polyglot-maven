@@ -13,7 +13,9 @@ object KomConverter {
         model.description = project.description
 
         model.modelVersion = project.modelVersion
-        model.parent = parentOf(project)
+
+        val metaProject = MetaProject(project)
+        model.parent = parentOf(metaProject)
 
         model.artifactId = project.artifactId
         model.groupId = project.groupId ?: model.parent.groupId
@@ -23,7 +25,6 @@ object KomConverter {
         model.url = project.url
         model.inceptionYear = project.inceptionYear
 
-        val metaProject = MetaProject(project)
         model.properties.putAll(metaProject.properties())
         model.dependencies = dependenciesOf(metaProject.dependencies())
 
@@ -63,10 +64,8 @@ object KomConverter {
         return excludes
     }
 
-    private fun parentOf(project: Project): Parent {
-        val parentSegments = project.parent.split(":")
-        check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
-
+    private fun parentOf(metaProject: MetaProject): Parent {
+        val parentSegments = metaProject.parentTokens()
         return Parent().apply {
             groupId = parentSegments[0]
             artifactId = parentSegments[1]

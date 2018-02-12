@@ -1,9 +1,7 @@
 project {
     name = "Polyglot :: Kotlin"
     parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT"
-    groupId = "io.takari.polyglot"
     artifactId = "polyglot-kotlin"
-    version = "0.2.2-SNAPSHOT"
     packaging = jar
 
     val junitVersion = 4.12
