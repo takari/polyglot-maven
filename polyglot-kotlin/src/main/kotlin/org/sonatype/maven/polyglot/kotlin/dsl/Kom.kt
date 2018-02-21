@@ -7,15 +7,14 @@ open class Project() {
 
     var parent: String? = null
         set(value) {
-            checkNotNull(value)
-            val parentSegments = value!!.split(":")
+            val parentSegments = requireNotNull(value).split(":")
             check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
-
+            val path = if (::relativePath.isInitialized) relativePath else "../pom.kts"
             this.Parent().apply {
                 groupId = parentSegments[0]
                 artifactId = parentSegments[1]
                 version = parentSegments[2]
-                relativePath = this@Project.relativePath
+                relativePath = path
             }
         }
 

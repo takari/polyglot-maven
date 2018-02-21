@@ -1,4 +1,3 @@
-
 import org.apache.maven.model.Dependency
 import org.apache.maven.model.Exclusion
 import org.apache.maven.model.Model
@@ -25,7 +24,7 @@ object KomConverter {
         model.url = project.url
         model.inceptionYear = project.inceptionYear
 
-        model.properties.putAll(metaProject.properties())
+        model.properties.putAll(metaProject.properties().mapValues { it.value.toString() })
         model.dependencies = dependenciesOf(metaProject.dependencies())
 
         return model

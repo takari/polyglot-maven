@@ -79,7 +79,7 @@ class KotlinModelReaderTest {
         val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
 
         //THEN
-        assertThat(poModel.properties["junit.version"] as Double, equalTo(4.12))
+        assertThat(poModel.properties["junit.version"] as String, equalTo("4.12"))
         assertThat(poModel.properties["kotlin.version"] as String, equalTo("1.1.61"))
     }
 
