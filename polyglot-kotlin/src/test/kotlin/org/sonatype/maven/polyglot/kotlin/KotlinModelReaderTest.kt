@@ -1,8 +1,8 @@
-import org.hamcrest.CoreMatchers.anyOf
+
+import assertk.assert
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
-import kotlin.test.assertTrue
 
 class KotlinModelReaderTest {
     val modelReader = KotlinModelReader()
@@ -91,34 +91,15 @@ class KotlinModelReaderTest {
         val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
 
         //THEN
-        assertTrue(poModel.dependencies.size > 0)
-        poModel.dependencies.forEach {
-            assertThat(it.artifactId, anyOf(
-                    equalTo("kotlin-stdlib"),
-                    equalTo("polyglot-common"),
-                    equalTo("junit"),
-                    equalTo("kotlin-test-junit"),
-                    equalTo("maven-plugin-annotations")
-            ))
-            assertThat(it.groupId, anyOf(
-                    equalTo("org.jetbrains.kotlin"),
-                    equalTo("junit"),
-                    equalTo("io.takari.polyglot"),
-                    equalTo("org.jetbrains.kotlin"),
-                    equalTo("org.apache.maven.plugin-tools")
-            ))
-            assertThat(it.version, anyOf(
-                    equalTo("1.1.61"),
-                    equalTo("0.2.2-SNAPSHOT"),
-                    equalTo("4.12"),
-                    equalTo("1.1.61"),
-                    equalTo("LATEST")
-            ))
-            assertThat(it.scope, anyOf(
-                    equalTo("compile"),
-                    equalTo("provided"),
-                    equalTo("test")
-            ))
+        assert(poModel.dependencies) {
+            containsArtifact("org.jetbrains.kotlin:kotlin-stdlib:1.1.61", "compile")
+            containsArtifact("io.takari.polyglot:polyglot-common:0.2.2-SNAPSHOT", "compile")
+
+            containsArtifact("junit:junit:4.12", "test")
+            containsArtifact("org.jetbrains.kotlin:kotlin-test-junit:1.1.61", "test")
+
+            containsArtifact("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST", "provided")
+            containsArtifact("org.projectlombok:lombok:1.16.20", "provided")
         }
     }
 }

@@ -4,23 +4,26 @@ project {
     artifactId = "polyglot-kotlin"
     packaging = jar
 
-    val junitVersion = 4.12
+    val kotlinVersion = "1.1.61"
 
     properties {
         "project.build.sourceEncoding" sameAs "UTF-8"
         "junit.version" += 4.12
-        "kotlin.version" sameAs "1.1.61"
     }
 
     dependencies {
-        compile("org.jetbrains.kotlin:kotlin-stdlib:" + it["kotlin.version"])
-        compile("$groupId:polyglot-common:$version")
-                .exclusions("org.slf4j:jul-logger")
+        compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
+        compile("$groupId:polyglot-common:$version").
+                exclusions("org.slf4j:jul-logger")
 
         test(
-                "junit:junit:$junitVersion" exclusions "org.hamcrest:hamcrest-core",
-                "org.jetbrains.kotlin:kotlin-test-junit:${it["kotlin.version"]}"
+                "junit:junit:${it["junit.version"]}" exclusions "org.hamcrest:hamcrest-core",
+                "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
         )
+
         provided("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST")
+        provided(groupId = "org.projectlombok",
+                 artifactId = "lombok",
+                 version = "1.16.20")
     }
 }

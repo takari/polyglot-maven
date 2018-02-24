@@ -35,6 +35,7 @@ open class Project() {
     var url: String? = null
     var inceptionYear: String? = null
 
+    //properties
     protected var props: MutableMap<String, Any> = mutableMapOf<String, Any>()
 
     fun properties(function: () -> Unit) = function()
@@ -51,45 +52,64 @@ open class Project() {
         return props[property] ?: throw IllegalArgumentException()
     }
 
+    //dependencies
     protected var deps: MutableList<Dependency> = mutableListOf()
 
-    fun dependencies(function: () -> Unit) = function()
+    inline fun dependencies(function: () -> Unit) = function()
 
-    fun compile(vararg list: String) = dependenciesOn(list, "compile")
-    fun compile(name: String): Dependency = dependencyOn(name, "compile")
+    fun compile(vararg artifacts: String) = dependenciesOn(artifacts, "compile")
+    fun compile(artifact: String): Dependency = dependencyOn(artifact, "compile")
+    fun compile(groupId: String, artifactId: String, version: String): Dependency
+            = Dependency(groupId, artifactId, version, "compile")
 
-    fun test(vararg list: String) = dependenciesOn(list, "test")
-    fun test(name: String) = dependencyOn(name, "test")
+    fun test(vararg artifacts: String) = dependenciesOn(artifacts, "test")
+    fun test(artifact: String) = dependencyOn(artifact, "test")
+    fun test(groupId: String, artifactId: String, version: String): Dependency
+            = Dependency(groupId, artifactId, version, "test")
 
-    fun provided(vararg list: String) = dependenciesOn(list, "provided")
-    fun provided(name: String) = dependencyOn(name, "provided")
+    fun provided(vararg artifacts: String) = dependenciesOn(artifacts, "provided")
+    fun provided(artifact: String) = dependencyOn(artifact, "provided")
+    fun provided(groupId: String, artifactId: String, version: String): Dependency
+            = Dependency(groupId, artifactId, version, "provided")
 
-    private fun dependencyOn(name: String, scope: String): Dependency {
+    fun runtime(vararg artifacts: String) = dependenciesOn(artifacts, "runtime")
+    fun runtime(artifact: String) = dependencyOn(artifact, "runtime")
+    fun runtime(groupId: String, artifactId: String, version: String): Dependency
+            = Dependency(groupId, artifactId, version, "runtime")
+
+    fun system(vararg artifacts: String) = dependenciesOn(artifacts, "system")
+    fun system(artifact: String) = dependencyOn(artifact, "system")
+    fun system(groupId: String, artifactId: String, version: String): Dependency
+            = Dependency(groupId, artifactId, version, "system")
+
+    private fun dependencyOn(artifact: String, scope: String): Dependency {
         val dependency: Dependency
 
-        val exclusionsIdx = name.indexOf("-=")
+        val exclusionsIdx = artifact.indexOf("-=")
         dependency = if (exclusionsIdx != -1) {
-            val exclusionLine = name.substring(exclusionsIdx + 2)
-            Dependency(name.substring(0, exclusionsIdx), scope, exclusionLine.split(","))
-        } else Dependency(name, scope)
+            val exclusionLine = artifact.substring(exclusionsIdx + 2)
+            Dependency(artifact.substring(0, exclusionsIdx), scope, exclusionLine.split(","))
+        } else Dependency(artifact, scope)
 
-        deps.add(dependency)
         return dependency
     }
 
-    private fun dependenciesOn(list: Array<out String>, scope: String) = list.forEach { dependencyOn(it, scope) }
+    private fun dependenciesOn(artifacts: Array<out String>, scope: String) = artifacts.forEach { dependencyOn(it, scope) }
 
-    class Dependency(protected val dependency: String,
-                     protected val scope: String = "compile",
-                     exclusions: List<String> = emptyList<String>()) {
-        protected var excludes: MutableList<String> = mutableListOf()
-
+    inner class Dependency(private val dependency: String,
+                     private val scope: String = "compile",
+                     exclusions: List<String> = emptyList()) {
+        private var excludes: MutableList<String> = mutableListOf()
         init {
             this.excludes.addAll(exclusions)
+            deps.add(this)
         }
+        //TODO: replace dependency with 3 fields: groupId, artifactId, version
+        constructor(groupId: String, artifactId: String, version: String, scope: String)
+                :this("$groupId:$artifactId:$version", scope)
 
-        fun exclusions(vararg exclusions: String) {
-            this.excludes.addAll(exclusions)
+        fun exclusions(vararg artifacts: String) {
+            this.excludes.addAll(artifacts)
         }
 
         operator fun component1(): String = dependency
@@ -97,12 +117,12 @@ open class Project() {
         operator fun component3(): List<String> = excludes
     }
 
-    infix fun String.exclusions(name: String): String {
-        return this + "-=" + name
+    infix fun String.exclusions(artifact: String): String {
+        return this + "-=" + artifact
     }
 
-    infix fun String.exclusions(names: Array<String>): String {
-        return this + "-=" + names.joinToString(",")
+    infix fun String.exclusions(artifacts: Array<String>): String {
+        return this + "-=" + artifacts.joinToString(",")
     }
 
     protected constructor(project: Project) : this() {
@@ -132,6 +152,7 @@ open class Project() {
     }
 }
 
+//artifacts
 val jar = "jar"
 val war = "war"
 val ear = "ear"
