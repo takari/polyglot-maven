@@ -7,14 +7,13 @@ object DependencyConverter {
     internal fun dependenciesOf(projectDependencies: List<Project.Dependency>): MutableList<Dependency> {
         val dependencies = mutableListOf<Dependency>()
         projectDependencies.forEach {
-            val (dependency, scope, exclusions) = it
-            val dependencySegments = dependency.split(":")
-            check(dependencySegments.size == 3, { "Wrong dependency format. Expected: groupId:artifactId:version" })
+            val (groupId, artifactId, version, scope, type, exclusions) = it
 
             dependencies.add(Dependency().apply {
-                groupId = dependencySegments[0]
-                artifactId = dependencySegments[1]
-                version = dependencySegments[2]
+                this.groupId = groupId
+                this.artifactId = artifactId
+                this.version = version
+                this.type = type
                 this.scope = scope
 
                 exclusionsOf(exclusions).forEach { addExclusion(it) }

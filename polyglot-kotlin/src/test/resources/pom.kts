@@ -18,12 +18,15 @@ project {
 
         test(
                 "junit:junit:${it["junit.version"]}" exclusions "org.hamcrest:hamcrest-core",
-                "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion"
+                "org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion" type jar
         )
 
         provided("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST")
-        provided(groupId = "org.projectlombok",
-                 artifactId = "lombok",
-                 version = "1.16.20")
+        provided(artifactId = "lombok",
+                 groupId = "org.projectlombok",
+                 version = "1.16.20",
+                 type = pom)
     }
 }
+
+

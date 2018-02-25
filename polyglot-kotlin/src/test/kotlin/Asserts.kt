@@ -4,7 +4,7 @@ import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import org.apache.maven.model.Dependency
 
-fun Assert<List<Dependency>>.containsArtifact(artifact: String, scope: String = "compile") {
+fun Assert<List<Dependency>>.containsArtifact(artifact: String, scope: String = "compile", type: String = "jar") {
     val segments = artifact.split(":")
     val groupId = segments[0]
     val artifactId = segments[1]
@@ -14,4 +14,5 @@ fun Assert<List<Dependency>>.containsArtifact(artifact: String, scope: String = 
 
     if (element == null) expected("to contain the artifact:${show(artifact)} but was:${show(actual)}")
     else if (element.scope != scope) expected("to contain the artifact:${show(artifact)} in scope:${show(scope)} but was in scope:${show(element.scope)}")
+    else if (element.type != type) expected("to contain the artifact:${show(artifact)} has type:${show(type)} but was:${show(element.type)}")
 }
