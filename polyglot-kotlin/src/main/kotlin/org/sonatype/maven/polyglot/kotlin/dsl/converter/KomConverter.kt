@@ -25,7 +25,7 @@ object KomConverter {
         model.inceptionYear = project.inceptionYear
 
         model.properties.putAll(metaProject.properties().mapValues { it.value.toString() })
-        model.dependencies = dependenciesOf(metaProject.dependencies())
+        model.dependencies = dependenciesOf(metaProject)
 
         return model
     }

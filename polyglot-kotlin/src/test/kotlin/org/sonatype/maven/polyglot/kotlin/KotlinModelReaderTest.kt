@@ -80,7 +80,7 @@ class KotlinModelReaderTest {
 
         //THEN
         assertThat(poModel.properties["junit.version"] as String, equalTo("4.12"))
-        assertThat(poModel.properties["kotlin.version"] as String, equalTo("1.1.61"))
+        assertThat(poModel.properties["project.build.sourceEncoding"] as String, equalTo("UTF-8"))
     }
 
     @Test fun readKomDependencies() {
@@ -93,13 +93,13 @@ class KotlinModelReaderTest {
         //THEN
         assert(poModel.dependencies) {
             containsArtifact("org.jetbrains.kotlin:kotlin-stdlib:1.1.61", "compile")
-            containsArtifact("io.takari.polyglot:polyglot-common:0.2.2-SNAPSHOT", "compile")
+            containsArtifact("io.takari.polyglot:polyglot-common:0.2.2-SNAPSHOT", "compile", classifier = "jdk6", optional = true)
 
             containsArtifact("junit:junit:4.12", "test")
             containsArtifact("org.jetbrains.kotlin:kotlin-test-junit:1.1.61", "test", jar)
 
             containsArtifact("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST", "provided")
-            containsArtifact("org.projectlombok:lombok:1.16.20", "provided", pom)
+            containsArtifact("org.projectlombok:lombok:1.16.20", "system", pom, "jdk8", "../libs/", true)
         }
     }
 }
