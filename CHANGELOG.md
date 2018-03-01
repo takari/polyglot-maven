@@ -1,14 +1,15 @@
 # Changelog
 
-The [git commit history](https://github.com/takari/polyglot-maven/commits/master) is the detailed source of all changes.
-The following provides most information at an easier glance.
+The [git commit history](https://github.com/takari/polyglot-maven/commits/master)
+is the detailed source of all changes. The following provides most information
+at an easier glance.
 
 ## Version 0.3.0 - Upcoming
 
 - Updated Scala version
   - see https://github.com/takari/polyglot-maven/pull/135
   - contributed by Tobias Roeser https://github.com/lefou
-- Scalal warning fixes
+- Scala warning fixes
   - see https://github.com/takari/polyglot-maven/pull/141
   - fixes https://github.com/takari/polyglot-maven/issues/140
   - contributed by Tobias Roeser https://github.com/lefou
@@ -18,6 +19,16 @@ The following provides most information at an easier glance.
 - Added link to user of yml version
 - License and Central Repository badges
   - contributed by Manfred Moser - - http://www.simpligility.com
+- polyglot-scala: Use Zinc server for Scala module
+  - see https://github.com/takari/polyglot-maven/pull/144
+  - contributed by Tobias Roeser https://github.com/lefou
+- polyglot-scala: Support more valid XML element name chars in dynamic Config
+  - see https://github.com/takari/polyglot-maven/pull/145
+  - contributed by Tobias Roeser https://github.com/lefou
+- Experimental addition of Java as polyglot language:
+  - see https://github.com/takari/polyglot-maven/pull/149
+  - see https://github.com/takari/polyglot-maven/pull/150
+  - contributed by https://github.com/sveryovka
 
 ## Version 0.2.1 - 2017-09-06
 
