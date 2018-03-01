@@ -108,6 +108,7 @@
               </args>
               <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
               <recompileMode>incremental</recompileMode>
+              <useZincServer>true</useZincServer>
             </configuration>
           </execution>
         </executions>
