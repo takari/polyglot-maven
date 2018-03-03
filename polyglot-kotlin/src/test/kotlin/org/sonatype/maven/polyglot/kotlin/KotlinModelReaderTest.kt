@@ -1,5 +1,6 @@
 
 import assertk.assert
+import assertk.assertions.isEqualTo
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -21,10 +22,12 @@ class KotlinModelReaderTest {
         val poModel = modelReader.read(komReader, mutableMapOf<String, Any>())
 
         //THEN
-        assertThat(poModel.parent.artifactId, equalTo("polyglot"))
-        assertThat(poModel.parent.groupId, equalTo("io.takari.polyglot"))
-        assertThat(poModel.parent.version, equalTo("0.2.2-SNAPSHOT"))
-        assertThat(poModel.parent.relativePath, equalTo("../../pom.kts"))
+        with(poModel.parent) {
+            assertThat(artifactId, equalTo("polyglot"))
+            assertThat(groupId, equalTo("io.takari.polyglot"))
+            assertThat(version, equalTo("0.2.2-SNAPSHOT"))
+            assertThat(relativePath, equalTo("../../pom.kts"))
+        }
     }
 
     @Test fun readFullyQualifiedParentInKotlinObjectModel() {
@@ -46,10 +49,12 @@ class KotlinModelReaderTest {
         val poModel = modelReader.read(komReader, mutableMapOf<String, Any>())
 
         //THEN
-        assertThat(poModel.parent.artifactId, equalTo("polyglot"))
-        assertThat(poModel.parent.groupId, equalTo("io.takari.polyglot"))
-        assertThat(poModel.parent.version, equalTo("0.2.2-SNAPSHOT"))
-        assertThat(poModel.parent.relativePath, equalTo("../../pom.kts"))
+        with(poModel.parent) {
+            assertThat(artifactId, equalTo("polyglot"))
+            assertThat(groupId, equalTo("io.takari.polyglot"))
+            assertThat(version, equalTo("0.2.2-SNAPSHOT"))
+            assertThat(relativePath, equalTo("../../pom.kts"))
+        }
     }
 
     @Test fun readBasicKotlinObjectModel() {
@@ -60,15 +65,17 @@ class KotlinModelReaderTest {
         val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
 
         //THEN
-        assertThat(poModel.name, equalTo("Polyglot :: Kotlin"))
-        assertThat(poModel.artifactId, equalTo("polyglot-kotlin"))
+        with(poModel) {
+            assertThat(name, equalTo("Polyglot :: Kotlin"))
+            assertThat(artifactId, equalTo("polyglot-kotlin"))
 
-        assertThat(poModel.parent.artifactId, equalTo("polyglot"))
-        assertThat(poModel.parent.groupId, equalTo("io.takari.polyglot"))
-        assertThat(poModel.parent.version, equalTo("0.2.2-SNAPSHOT"))
-        assertThat(poModel.parent.relativePath, equalTo("../../pom.kts"))
+            assertThat(parent.artifactId, equalTo("polyglot"))
+            assertThat(parent.groupId, equalTo("io.takari.polyglot"))
+            assertThat(parent.version, equalTo("0.2.2-SNAPSHOT"))
+            assertThat(parent.relativePath, equalTo("../../pom.kts"))
 
-        assertThat(poModel.packaging, equalTo("jar"))
+            assertThat(packaging, equalTo("jar"))
+        }
     }
 
     @Test fun readKomProperties() {
@@ -79,8 +86,10 @@ class KotlinModelReaderTest {
         val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
 
         //THEN
-        assertThat(poModel.properties["junit.version"] as String, equalTo("4.12"))
-        assertThat(poModel.properties["project.build.sourceEncoding"] as String, equalTo("UTF-8"))
+        with(poModel.properties) {
+            assert(this["junit.version"] as String).isEqualTo("4.12")
+            assert(this["project.build.sourceEncoding"] as String).isEqualTo("UTF-8")
+        }
     }
 
     @Test fun readKomDependencies() {
@@ -100,6 +109,50 @@ class KotlinModelReaderTest {
 
             containsArtifact("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST", "provided")
             containsArtifact("org.projectlombok:lombok:1.16.20", "system", pom, "jdk8", "../libs/", true)
+        }
+    }
+
+    @Test fun readKomBuild() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        with(poModel.build){
+            assert(sourceDirectory).isEqualTo("src/main/kotlin")
+            assert(testSourceDirectory).isEqualTo("src/test/kotlin")
+            assert(finalName).isEqualTo("polyglot-kotlin")
+        }
+    }
+
+    @Test fun readKomPlugins() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        with(poModel.build.plugins.first()) {
+            assert(groupId).isEqualTo("org.hetbrains.kotlin")
+            assert(artifactId).isEqualTo("kotlin-maven-plugin")
+            assert(version).isEqualTo("1.1.61")
+        }
+    }
+
+    @Test fun readKomPluginExecutions() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assert(poModel.build.plugins.first().executions) {
+            hasExecution(id = "compile", phase = "compile", goal = "compile")
+            hasExecution(id = "test-compile", phase = "test-compile", goal = "test-compile")
         }
     }
 }

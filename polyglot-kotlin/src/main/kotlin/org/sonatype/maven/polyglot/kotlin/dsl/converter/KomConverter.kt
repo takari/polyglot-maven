@@ -1,4 +1,5 @@
 
+import BuildConverter.buildOf
 import DependencyConverter.dependenciesOf
 import org.apache.maven.model.Model
 import org.apache.maven.model.Parent
@@ -6,6 +7,8 @@ import org.apache.maven.model.Parent
 object KomConverter {
 
     fun toModel(project: Project): Model {
+        val metaProject = MetaProject(project)
+
         val model = Model()
 
         model.name = project.name
@@ -13,7 +16,6 @@ object KomConverter {
 
         model.modelVersion = project.modelVersion
 
-        val metaProject = MetaProject(project)
         model.parent = parentOf(metaProject)
 
         model.artifactId = project.artifactId
@@ -27,6 +29,8 @@ object KomConverter {
         model.properties.putAll(metaProject.properties().mapValues { it.value.toString() })
         model.dependencies = dependenciesOf(metaProject)
 
+        val projectBuild = metaProject.build()
+        if (projectBuild != null) model.build = buildOf(projectBuild)
         return model
     }
 

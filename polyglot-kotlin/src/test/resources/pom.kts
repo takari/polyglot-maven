@@ -13,7 +13,7 @@ project {
 
     dependencies {
         compile("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
-        compile("$groupId:polyglot-common:$version").type(jar).optional().classifier("jdk6")
+        compile(it.groupId + ":polyglot-common:" + it.version).type(jar).optional().classifier("jdk6")
                 .exclusions("org.slf4j:jul-logger")
 
         test(
@@ -31,6 +31,19 @@ project {
                systemPath = "../libs/"
         )
     }
+
+    build {
+        sourceDirectory = "src/main/kotlin"
+        testSourceDirectory = "src/test/kotlin"
+        finalName = "polyglot-kotlin"
+
+        plugins {
+            plugin("org.hetbrains.kotlin", "kotlin-maven-plugin", kotlinVersion) {
+                executions {
+                    execution(id = compile, phase = compile, goal = compile)
+                    execution(id = test_compile, phase = test_compile, goal = test_compile)
+                }
+            }
+        }
+    }
 }
-
-
