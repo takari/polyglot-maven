@@ -28,6 +28,7 @@ at an easier glance.
 - Experimental addition of Java as polyglot language:
   - see https://github.com/takari/polyglot-maven/pull/149
   - see https://github.com/takari/polyglot-maven/pull/150
+  - resolves https://github.com/takari/polyglot-maven/issues/28
   - contributed by https://github.com/sveryovka
 
 ## Version 0.2.1 - 2017-09-06

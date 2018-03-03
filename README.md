@@ -1,8 +1,9 @@
 # Overview
 
-[Polyglot for Maven](http://github.com/takari/polyglot-maven/) is a set of extensions for `Maven 3.3.1+` that
-allows the POM model to be written in dialects other than XML. Several of the dialects also allow inlined plugins:
-the Ruby, Groovy and Scala dialects allow this.
+[Polyglot for Maven](http://github.com/takari/polyglot-maven/) is a set of
+extensions for `Maven 3.3.1+` that allows the POM model to be written in
+dialects other than XML. Several of the dialects also allow inlined plugins: the
+Ruby, Groovy and Scala dialects allow this.
 
 [![License](https://img.shields.io/badge/License-EPL%201.0-red.svg)](https://opensource.org/licenses/EPL-1.0)
 
@@ -64,7 +65,8 @@ end
 
 # Usage
 
-To use Polyglot for Maven you need to edit `${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` and add the
+To use Polyglot for Maven you need to edit
+`${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` and add the
 appropriate language extension.
 
 ## Available Languages
@@ -102,7 +104,7 @@ the artifactId for your chosen language.
 
 ## Convert existing POM
 
-We have created a simple Maven plugin that will help you convert any existing 
+We have created a simple Maven plugin that will help you convert any existing
 `pom.xml` files:
 
 ```
@@ -110,49 +112,74 @@ mvn io.takari.polyglot:polyglot-translate-plugin:translate \
   -Dinput=pom.xml -Doutput=pom.{format}
 ```
 
-Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom`, `java`  and of course `xml`.
-See [here](http://takari.io/2015/03/21/polyglot-maven.html) for more info.
-You can even convert back to `xml` or cross-convert between all supported formats.
+Where the supported formats are `rb`, `groovy`, `scala`, `yaml`, `atom`, `java`
+and of course `xml`.  See
+[here](http://takari.io/2015/03/21/polyglot-maven.html) for more info.  You can
+even convert back to `xml` or cross-convert between all supported formats.
 
 # Note of Caution
 
-The whole interoperability story has not been worked out but you can create a XML-formatted POM from the Polyglot
-version. Currently mixing different dialects within a reactor is not supported.
+The whole interoperability story has not been worked out but you can create a
+XML-formatted POM from the Polyglot version. Currently mixing different dialects
+within a reactor is not supported.
 
-A `pom.xml` will currently not be installed or deployed except for the Ruby DSL and the Scala DSL but we are working
-towards this feature for all DSLs.
+A `pom.xml` will currently not be installed or deployed except for the Ruby DSL
+and the Scala DSL but we are working towards this feature for all DSLs.
 
 # Polyglot Maven in Real Life
 
-Despite the warning above, Polyglot Maven is pretty stable right now. Have a look at the integration tests for
-each dialect in this repository for some examples as well as our dedicated
+Despite the warning above, Polyglot Maven is pretty stable right now. Have a
+look at the integration tests for each dialect in this repository for some
+examples as well as our dedicated
 [polyglot-maven-examples project](https://github.com/takari/polyglot-maven-examples).
 
-The following projects are real world usage examples that use Polyglot Maven in their regular development
-and release work:
+The following projects are real world usage examples that use Polyglot Maven in
+their regular development and release work:
 
 ## Ruby
 
-* https://github.com/jruby - Extensive usage of Polyglot Ruby and contributions to the project from the team, and is recommended when creating [java extensions for jruby](https://github.com/jruby/jruby-examples/tree/master/extensions/basic).
-* The [ruby-processing project](http://ruby-processing.github.io/building/building/) has examples of creating java extensions for jruby (see [JRubyArt](https://github.com/ruby-processing/JRubyArt) and [propane](https://github.com/ruby-processing/propane) builds) as well as simpler projects where the polyglot maven is used in creating gem wrappers for processing.org java libraries (eg [toxicgem](https://github.com/ruby-processing/toxicgem) and [geomerative](https://github.com/ruby-processing/propane) gems). 
+* https://github.com/jruby - Extensive usage of Polyglot Ruby and contributions
+  to the project from the team, and is recommended when creating
+  [java extensions for jruby](https://github.com/jruby/jruby-examples/tree/master/extensions/basic).
+  
+* The
+  [ruby-processing project](http://ruby-processing.github.io/building/building/)
+  has examples of creating java extensions for jruby (see
+  [JRubyArt](https://github.com/ruby-processing/JRubyArt) and
+  [propane](https://github.com/ruby-processing/propane) builds) as well as
+  simpler projects where the polyglot maven is used in creating gem wrappers for
+  processing.org java libraries (eg
+  [toxicgem](https://github.com/ruby-processing/toxicgem) and
+  [geomerative](https://github.com/ruby-processing/propane) gems).
 
 ## YAML
 
-* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to the project from the team.
-* https://urbanise.com - Using Polyglot YAML for building next generation strata management platform.
+* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to
+  the project from the team.
+
+* https://urbanise.com - Using Polyglot YAML for building next generation strata
+  management platform.
 
 ## Scala
 
 _Java Projects_
 
-* [LambdaTest](https://github.com/lefou/LambdaTest) - A simple Java project with a standalone [pom.xml](https://github.com/lefou/LambdaTest/blob/master/pom.scala)
-* [CmdOption](https://github.com/ToToTec/CmdOption) - A Java project with a top-level reactor project and an additional shared scala file included  into both `pom.scala`s
+* [LambdaTest](https://github.com/lefou/LambdaTest) - A simple Java project with
+  a standalone
+  [pom.xml](https://github.com/lefou/LambdaTest/blob/master/pom.scala)
+
+* [CmdOption](https://github.com/ToToTec/CmdOption) - A Java project with a
+  top-level reactor project and an additional shared scala file included into
+  both `pom.scala`s
 
 _Scala Projects_
 
-* [Domino](https://github.com/domino-osgi/domino) - A simple project using Polyglot Scala.
-* [Blended](https://github.com/woq-blended/blended) - A complex mulit-project using Polyglot Scala. It's also an example
-  where the `#include` feature is heavily used to share common configuration but avoid Maven parent poms, which
+* [Domino](https://github.com/domino-osgi/domino) - A simple project using
+  Polyglot Scala.
+
+* [Blended](https://github.com/woq-blended/blended) - A complex multi-project
+  using Polyglot Scala. It's also an example where the `#include` feature is
+  heavily used to share common configuration but avoid Maven parent poms, which
   are often problematic.
 
 Please let us know of your usage by filing an issue so we can add it here.
