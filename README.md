@@ -117,7 +117,9 @@ and of course `xml`.  See
 [here](http://takari.io/2015/03/21/polyglot-maven.html) for more info.  You can
 even convert back to `xml` or cross-convert between all supported formats.
 
-# Note of Caution
+# Known Limitations and Issues
+
+## Interoperability
 
 The whole interoperability story has not been worked out but you can create a
 XML-formatted POM from the Polyglot version. Currently mixing different dialects
@@ -125,6 +127,25 @@ within a reactor is not supported.
 
 A `pom.xml` will currently not be installed or deployed except for the Ruby DSL
 and the Scala DSL but we are working towards this feature for all DSLs.
+
+## Tooling
+
+Some support in IDE's like IntelliJ IDEA and Eclipse exist and the different
+markup languages are understood by various syntax highlighters. However, full
+integration of the markup syntax and the specific Maven-related aspects is not
+available.
+
+## Limited Plugin Support
+
+Maven plugins or Maven plugin goals that rely on the XML format are not
+supported, since they are either attempting to parse the XML directly or modify
+it in automated fashion do not work with Polyglot Maven. Examples are:
+
+- Maven Relase Plugin
+- Maven Versions Plugin
+
+Fixes would have to be implemented in these plugins. Workarounds or replacement
+workflows for most usecases exist.
 
 # Polyglot Maven in Real Life
 
