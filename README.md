@@ -187,7 +187,7 @@ _Java Projects_
 
 * [LambdaTest](https://github.com/lefou/LambdaTest) - A simple Java project with
   a standalone
-  [pom.xml](https://github.com/lefou/LambdaTest/blob/master/pom.scala)
+  [pom.scala](https://github.com/lefou/LambdaTest/blob/master/pom.scala)
 
 * [CmdOption](https://github.com/ToToTec/CmdOption) - A Java project with a
   top-level reactor project and an additional shared scala file included into
