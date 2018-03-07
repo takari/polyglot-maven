@@ -4,7 +4,11 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.3.0 - Upcoming
+## Version 0.3.1 or higher - Upcoming
+
+User community contriubtions welcome...
+
+## Version 0.3.0 - 2018-03-07
 
 - Updated Scala version
   - see https://github.com/takari/polyglot-maven/pull/135
@@ -30,7 +34,9 @@ at an easier glance.
   - see https://github.com/takari/polyglot-maven/pull/150
   - resolves https://github.com/takari/polyglot-maven/issues/28
   - contributed by https://github.com/sveryovka
-
+- Release performed by Manfred Moser - http://www.simpligility.com
+  - https://github.com/takari/polyglot-maven/issues/139
+  
 ## Version 0.2.1 - 2017-09-06
 
 - Improved handling of string with special characters in Scala dialect
@@ -51,6 +57,7 @@ at an easier glance.
   - contributed by Martin Prout https://github.com/monkstone
 
 Release performed by Manfred Moser - http://www.simpligility.com
+
 
 ## Version 0.2.0 - 2017-05-23
 
