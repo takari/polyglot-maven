@@ -13,7 +13,7 @@
   <parent>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>polyglot</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.3.1-SNAPSHOT</version>
   </parent>
   <artifactId>polyglot-scala</artifactId>
   <packaging>takari-jar</packaging>
@@ -108,6 +108,7 @@
               </args>
               <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
               <recompileMode>incremental</recompileMode>
+              <useZincServer>true</useZincServer>
             </configuration>
           </execution>
         </executions>

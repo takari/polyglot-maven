@@ -34,13 +34,35 @@ object Config extends Dynamic {
 
   def applyDynamicNamed(method: String)(params: (String, Any)*): Config =
     if (method == "apply") new Config(params map {
-      case (k, Optional(v)) if k.startsWith("$at") && k.size > 3 => s"@${k.substring(3)}" -> v
-      case (k, Optional(v)) => k -> v
+      case (k, Optional(v)) if k.startsWith("$at") && k.size > 3 => s"@${sanitizeElementName(k.substring(3))}" -> v
+      case (k, Optional(v)) => sanitizeElementName(k) -> v
     } toList)
     else throw new UnsupportedOperationException
 
-}
 
+  val elementStartCharMapping = Seq(
+    "\\Q$colon\\E".r -> ":"
+  )
+
+  val elementCharMapping = Seq(
+    "\\Q$minus\\E".r -> "-",
+    "\\Q$u002E\\E".r -> "."
+  )
+
+  /**
+   *  Handle the missmatch of legal characters in scala method names vs. XML elements
+   */
+  // TODO: Handle more chars, see https://www.w3.org/TR/REC-xml/#NT-Name
+  // NameStartChar	   ::=   	":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] | [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] | [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] | [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] | [#x10000-#xEFFFF]
+  // NameChar	   ::=   	NameStartChar | "-" | "." | [0-9] | #xB7 | [#x0300-#x036F] | [#x203F-#x2040]
+  // Name	   ::=   	NameStartChar (NameChar)*
+  def sanitizeElementName(k: String): String = {
+    val r = elementStartCharMapping.foldLeft(k)((k, m) => m._1.replaceAllIn(k, found => m._2))
+    if (r.length() > 1) {
+      r(0) + elementCharMapping.foldLeft(r.substring(1))((k, m) => m._1.replaceAllIn(k, found => m._2))
+    } else r
+  }
+}
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
@@ -60,7 +82,6 @@ class PrettiedConfig(c: Config) {
     `object`("Config", args.toList)
   }
 }
-
 
 class ConvertibleMavenConfig(mc: Object) {
 
