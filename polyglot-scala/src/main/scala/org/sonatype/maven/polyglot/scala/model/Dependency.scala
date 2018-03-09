@@ -18,6 +18,9 @@ class Dependency(
     val exclusions: immutable.Seq[GroupArtifactId],
     val optional: Boolean) {
 
+  /**
+   * Returns a derived dependency with the given new properties.
+   */
   def copy(
     gav: Gav = gav,
     `type`: String = `type`,
@@ -28,8 +31,20 @@ class Dependency(
     optional: Boolean = optional): Dependency =
     new Dependency(gav, `type`, Option(classifier), Option(scope), Option(systemPath), exclusions, optional)
 
+  /**
+   * Returns a derived dependencies with the given classifier.
+   */
   def classifier(classifier: String): Dependency = copy(classifier = classifier)
 
+  /**
+   * Returns a derived dependency without it's transitive dependencies.
+   * This is internally done by setting an universal exclusion (`"*" % "*"`).
+   */
+  def intransitive: Dependency = copy(exclusions = immutable.Seq("*" % "*"))
+  
+  /**
+   * Returns a derived dependency with the given scope.
+   */
   def %(scope: String): Dependency = copy(scope = Option(scope).filter(s => !s.trim().isEmpty()).orNull)
 
 }
