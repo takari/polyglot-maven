@@ -1,4 +1,5 @@
 
+import PomGenerator.pluginWithConfiguration
 import assertk.assert
 import assertk.assertions.isEqualTo
 import org.hamcrest.CoreMatchers.equalTo
@@ -127,7 +128,7 @@ class KotlinModelReaderTest {
         }
     }
 
-    @Test fun readKomPlugins() {
+    @Test fun readBuildPlugins() {
         //GIVEN
         val resource = this.javaClass.getResourceAsStream("/pom.kts")
 
@@ -142,7 +143,7 @@ class KotlinModelReaderTest {
         }
     }
 
-    @Test fun readKomPluginExecutions() {
+    @Test fun readBuildPluginExecutions() {
         //GIVEN
         val resource = this.javaClass.getResourceAsStream("/pom.kts")
 
@@ -153,6 +154,57 @@ class KotlinModelReaderTest {
         assert(poModel.build.plugins.first().executions) {
             hasExecution(id = "compile", phase = "compile", goal = "compile")
             hasExecution(id = "test-compile", phase = "test-compile", goal = "test-compile")
+        }
+    }
+
+    @Test fun readBuildPluginConfigurationValues() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assert(poModel.build.plugins.find {  it.groupId == "org.apache.maven.plugins" }!!) {
+            hasConfiguration(pluginWithConfiguration("""
+                <includes>
+                    <include>%regex[.*Spec.*]</include>
+                    <include>%regex[.*Test.*]</include>
+                </includes>
+            """))
+        }
+    }
+
+    @Test fun readBuildPluginComplexConfigurationValues() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assert(poModel.build.plugins.find {  it.artifactId == "lifecycle-mapping" }!!) {
+            hasConfiguration(pluginWithConfiguration("""
+                <lifecycleMappingMetadata>
+                  <pluginExecutions>
+                    <pluginExecution>
+                      <pluginExecutionFilter>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>scala-maven-plugin</artifactId>
+                        <versionRange>[3.3.0,)</versionRange>
+                        <goals>
+                          <goal>add-source</goal>
+                          <goal>compile</goal>
+                          <goal>testCompile</goal>
+                        </goals>
+                      </pluginExecutionFilter>
+                      <action>
+                        <ignore />
+                      </action>
+                    </pluginExecution>
+                  </pluginExecutions>
+                </lifecycleMappingMetadata>
+            """))
         }
     }
 }

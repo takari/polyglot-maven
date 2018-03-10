@@ -38,10 +38,42 @@ project {
         finalName = "polyglot-kotlin"
 
         plugins {
-            plugin("org.hetbrains.kotlin", "kotlin-maven-plugin", kotlinVersion) {
+            plugin("org.jetbrains.kotlin:kotlin-maven-plugin:$kotlinVersion") {
                 executions {
                     execution(id = compile, phase = compile, goal = compile)
                     execution(id = test_compile, phase = test_compile, goal = test_compile)
+                }
+            }
+
+            plugin(groupId = "org.apache.maven.plugins", artifactId = "maven-surefire-plugin", version = "2.20.1") {
+                configuration {
+                    "includes" [
+                        "%regex[.*Spec.*]",
+                        "%regex[.*Test.*]"
+                    ]
+                    "argLine" += "-Xmx256m"
+                }
+            }
+
+            plugin(groupId = "org.eclipse.m2e", artifactId = "lifecycle-mapping", version = "1.0.0") {
+                configuration {
+                    "lifecycleMappingMetadata" {
+                        "pluginExecutions" {
+                            "pluginExecution" {
+                                "pluginExecutionFilter" {
+                                    "groupId" += "net.alchim31.maven"
+                                    "artifactId" += "scala-maven-plugin"
+                                    "versionRange" += "[3.3.0,)"
+                                    "goals" [
+                                        "add-source",
+                                        "compile",
+                                        "testCompile"
+                                    ]
+                                }
+                                "action" { +"ignore" }
+                            }
+                        }
+                    }
                 }
             }
         }

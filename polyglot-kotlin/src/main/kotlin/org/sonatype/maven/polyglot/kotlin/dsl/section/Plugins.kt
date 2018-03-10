@@ -2,8 +2,22 @@
     protected val plugins = mutableListOf<Plugin>()
     operator fun component1():List<Plugin> = plugins
 
-    fun plugin(groupId: String, artifactId: String, version: String) {
-        plugins.add(Plugin(groupId, artifactId, version))
+    fun plugin(artifact: String) {
+        val artifactSegments = artifact.split(":")
+        check(artifactSegments.size == 3, { "Wrong plugin format. Expected: groupId:artifactId:version" })
+        plugin(artifactSegments[0], artifactSegments[1], artifactSegments[2])
+    }
+
+    fun plugin(groupId: String, artifactId: String, version: String): Plugin {
+        val plugin = Plugin(groupId, artifactId, version)
+        plugins.add(plugin)
+        return plugin
+    }
+
+    fun plugin(artifact: String, block: (@Scope Plugin).() -> Unit) {
+        val artifactSegments = artifact.split(":")
+        check(artifactSegments.size == 3, { "Wrong plugin format. Expected: groupId:artifactId:version" })
+        plugin(artifactSegments[0], artifactSegments[1], artifactSegments[2], block)
     }
 
     fun plugin(groupId: String, artifactId: String, version: String, block: (@Scope Plugin).() -> Unit) {
@@ -13,13 +27,26 @@
     }
 
     @Scope class Plugin(val groupId: String, val artifactId: String, val version: String) {
+        var inherited: Boolean = true
         protected var pluginExecutions: Executions? = null
         operator fun component1() = pluginExecutions
+        protected var configuration: Configuration? = null
+        operator fun component2() = configuration
 
         fun executions(block: (@Scope Executions).() -> Unit) {
             check(pluginExecutions == null, { "Executions are already defined" })
             pluginExecutions = Executions()
             block(pluginExecutions!!)
+        }
+
+        fun nonInherited(): Plugin {
+            inherited = false
+            return this
+        }
+
+        fun configuration(block: (@Scope Configuration).() -> Unit) {
+            configuration = Configuration()
+            block(configuration!!)
         }
     }
 }

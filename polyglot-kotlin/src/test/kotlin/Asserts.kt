@@ -3,7 +3,10 @@ import assertk.Assert
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
 import org.apache.maven.model.Dependency
+import org.apache.maven.model.Plugin
 import org.apache.maven.model.PluginExecution
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader
+import java.io.StringReader
 
 fun Assert<List<Dependency>>.containsArtifact(artifact: String, scope: String = "compile", type: String = "jar",
                                               classifier: String? = null, systemPath: String? = null, optional: Boolean = false) {
@@ -28,4 +31,14 @@ fun Assert<List<PluginExecution>>.hasExecution(id: String, phase: String, goal: 
     if (actualExecution == null) expected("an execution item with id = $id but was:${show(actual)}")
     else if (actualExecution.phase != phase || !actualExecution.goals.contains(goal))
         expected("an execution item ${show("$id:$phase:$goal")} but was:${show(actual)}")
+}
+
+fun Assert<Plugin>.hasConfiguration(xmlProjectWithSinglePluginConfig: String) {
+    val model = MavenXpp3Reader().read(StringReader(xmlProjectWithSinglePluginConfig))
+    val expectedConfiguration = model.build.plugins[0].configuration
+
+    val actualConfiguration = actual.configuration
+
+    if (expectedConfiguration != actualConfiguration)
+        expected("the configuration:\n$expectedConfiguration\nbut was:\n$actualConfiguration")
 }

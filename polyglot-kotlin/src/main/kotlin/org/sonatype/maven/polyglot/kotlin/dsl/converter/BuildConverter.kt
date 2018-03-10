@@ -1,5 +1,4 @@
-import org.apache.maven.model.Plugin
-import org.apache.maven.model.PluginExecution
+import org.sonatype.maven.polyglot.kotlin.dsl.converter.PluginConverter.pluginsOf
 
 object BuildConverter {
 
@@ -11,26 +10,6 @@ object BuildConverter {
 
             val (plugs) = projectBuild
             if (plugs != null) plugins = pluginsOf(plugs.component1())
-        }
-    }
-
-    private fun pluginsOf(projectPlugins: List<Plugins.Plugin>):List<Plugin> {
-        return projectPlugins.map {
-            Plugin().apply {
-                artifactId = it.artifactId
-                groupId = it.groupId
-                version = it.version
-
-                val (execs) = it
-                execs?.component1()?.forEach {
-                    executions.add(PluginExecution().apply {
-                        id = it.id
-                        phase = it.phase
-                        goals = it.goals.toList()
-
-                    })
-                }
-            }
         }
     }
 }

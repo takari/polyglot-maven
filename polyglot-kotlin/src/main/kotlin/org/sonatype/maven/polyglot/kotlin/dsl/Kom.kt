@@ -7,24 +7,15 @@
 
     protected lateinit var superParent: Parent
 
-    class Parent {
-        lateinit var groupId: String
-        lateinit var artifactId: String
-        lateinit var version: String
-        var relativePath: String = "../pom.kts"
-    }
-
-    fun parent(block: Project.Parent.(Project.Parent) -> Unit): Project.Parent {
-        check(!this@Project::superParent.isInitialized, { "Parent defined several times" })
-        val parent = Parent()
-        block(parent, parent)
-        superParent = parent
-        return parent
+    fun parent(block: Parent.(Parent) -> Unit) {
+        check(!this@Project::superParent.isInitialized, { "Parent is defined several times" })
+        superParent = Parent()
+        block(superParent, superParent)
     }
 
     var parent: String? = null
         set(value) {
-            check(!this@Project::superParent.isInitialized, { "Parent defined several times" })
+            check(!this@Project::superParent.isInitialized, { "Parent is defined several times" })
 
             val parentSegments = requireNotNull(value).split(":")
             check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
@@ -41,7 +32,7 @@
 
     private lateinit var relativePath: String
     infix fun String.relativePath(path: String): String {
-        check(!this@Project::relativePath.isInitialized, { "relativePath was already defined" })
+        check(!this@Project::relativePath.isInitialized, { "relativePath was already is defined" })
         check(!this@Project::superParent.isInitialized, { "Please define relativePath inside parent {\n}" })
 
         relativePath = path
@@ -75,7 +66,7 @@
 
     protected var deps: Dependencies? = null
         set(value) {
-            check(deps == null, { "Dependencies defined several times" })
+            check(deps == null, { "Dependencies is defined several times" })
             field = value
         }
 
@@ -86,7 +77,7 @@
 
     protected var thisBuild: Build? = null
         set(value) {
-            check(thisBuild == null, { "Build defined several times" })
+            check(thisBuild == null, { "Build is defined several times" })
             field = value
         }
 
