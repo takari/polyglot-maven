@@ -8,6 +8,10 @@ at an easier glance.
 
 User community contriubtions welcome...
 
+- polyglot-scala: Added default value for pom property modelversion (4.0.0)
+  - see https://github.com/takari/polyglot-maven/pull/158
+  - contributed by Tobias Roeser https://github.com/lefou
+
 ## Version 0.3.0 - 2018-03-07
 
 - Updated Scala version
