@@ -6,6 +6,10 @@ at an easier glance.
 
 ## Version 0.3.1 or higher - Upcoming
 
+- polyglot-scala: Convenience methods for `Dependency` (`classifier`, `intransitive`, `%` (scope))
+  - see https://github.com/takari/polyglot-maven/pull/156
+  - contributed by Tobias Roeser https://github.com/lefou
+
 User community contriubtions welcome...
 
 ## Version 0.3.0 - 2018-03-07
