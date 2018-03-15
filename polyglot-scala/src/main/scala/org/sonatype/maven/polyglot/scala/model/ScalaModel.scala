@@ -106,7 +106,7 @@ object ScalaModel {
              licenses: immutable.Seq[License] = Nil,
              mailingLists: immutable.Seq[MailingList] = Nil,
              modelEncoding: String = "UTF-8",
-             modelVersion: String = null,
+             modelVersion: String = "4.0.0",
              modules: immutable.Seq[String] = Nil,
              name: String = null,
              organization: Organization = null,
