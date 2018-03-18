@@ -30,6 +30,8 @@ object KomConverter {
 
         val projectBuild = metaProject.build()
         if (projectBuild != null) model.build = buildOf(projectBuild)
+
+        model.modules.addAll(project.modules)
         return model
     }
 

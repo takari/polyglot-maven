@@ -7,7 +7,7 @@
 
     protected lateinit var superParent: Parent
 
-    fun parent(block: Parent.(Parent) -> Unit) {
+    fun parent(block: (@Scope Parent).(Parent) -> Unit) {
         check(!this@Project::superParent.isInitialized, { "Parent is defined several times" })
         superParent = Parent()
         block(superParent, superParent)
@@ -80,6 +80,12 @@
             check(thisBuild == null, { "Build is defined several times" })
             field = value
         }
+
+    var modules = arrayOf<String>()
+    operator fun Array<String>.get(vararg moduleNames: String) {
+        assert(modules === this, { "Unexpected DSL usage" })
+        modules = moduleNames as Array<String>
+    }
 
     fun build(block: Build.() -> Unit) {
         val build = Build()

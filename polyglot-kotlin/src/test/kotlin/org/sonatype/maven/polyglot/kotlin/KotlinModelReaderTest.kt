@@ -3,8 +3,10 @@ import PomGenerator.pluginWithConfiguration
 import assertk.assert
 import assertk.assertions.isEqualTo
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.hasItems
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
+import kotlin.test.assertFalse
 
 class KotlinModelReaderTest {
     val modelReader = KotlinModelReader()
@@ -219,5 +221,30 @@ class KotlinModelReaderTest {
         assert(poModel.build.plugins.find {  it.artifactId == "kotlin-maven-plugin" }!!.dependencies) {
             containsArtifact("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5", "compile")
         }
+    }
+
+    @Test fun readModules() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/multi-module/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assertFalse("Modules expected to be defined") { poModel.modules.isEmpty() }
+        assertThat(poModel.modules, hasItems(
+            "polyglot - common",
+            "polyglot - atom",
+            "polyglot - ruby",
+            "polyglot - scala",
+            "polyglot - groovy",
+            "polyglot - yaml",
+            "polyglot - clojure",
+            "polyglot - xml",
+            "polyglot - java",
+            "polyglot - kotlin",
+            "polyglot - maven - plugin",
+            "polyglot - translate - plugin"
+        ))
     }
 }
