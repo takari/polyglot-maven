@@ -106,7 +106,7 @@ class KotlinModelReaderTest {
             containsArtifact("io.takari.polyglot:polyglot-common:0.2.2-SNAPSHOT", "compile", classifier = "jdk6", optional = true)
 
             containsArtifact("junit:junit:4.12", "test")
-            containsArtifact("org.jetbrains.kotlin:kotlin-test-junit:1.1.61", "test", jar)
+            containsArtifact("org.jetbrains.kotlin:kotlin-test-junit:1.1.61", "test", jar, "jdk7", optional = true)
 
             containsArtifact("org.apache.maven.plugin-tools:maven-plugin-annotations:LATEST", "provided")
             containsArtifact("org.projectlombok:lombok:1.16.20", "system", pom, "jdk8", "../libs/", true)

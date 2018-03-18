@@ -8,34 +8,36 @@ abstract class DependenciesUnderTheHood {
     infix fun String.type(artifactType: String): String = this + "|type=" + artifactType
     infix fun String.optional(optional: Boolean): String = this + "|optional=" + optional
     infix fun String.classifier(classifier: String?): String = this + "|classifier=" + classifier
-    infix fun String.systemPath(path: String?): String = this + "|classifier=" + path
+    infix fun String.systemPath(path: String?): String = this + "|systemPath=" + path
 
     protected fun dependenciesOn(artifacts: Array<out String>, scope: String) = artifacts.forEach { dependencyOn(it, scope) }
 
     protected fun dependencyOn(artifact: String, scope: String): Dependency {
-        var dependency: String = artifact
-        val exclusions: MutableList<String> = mutableListOf()
+        var dependency = artifact
+        val exclusions = mutableListOf<String>()
         val details = HashMap<String, String>()
 
-        //TODO: other details, classifier?
-        val detailsIdx = artifact.indexOf("|")
+        val detailsIdx = artifact.indexOf('|')
         if (detailsIdx != -1) {
             dependency = artifact.substring(0, detailsIdx)
-            artifact.substring(detailsIdx + 1).split("|").forEach({
-                val (key, value) = it.split("=")
+            artifact.substring(detailsIdx + 1).split('|').forEach {
+                val (key, value) = it.split('=')
                 details[key] = value
-            })
-            exclusions.addAll(details.remove("exclusions")?.split(",")?: mutableListOf<String>())
+            }
+            exclusions.addAll(details.remove("exclusions")?.split(',')?: mutableListOf<String>())
         }
 
-        val dependencySegments = dependency.split(":")
+        val dependencySegments = dependency.split(':')
         check(dependencySegments.size == 3, { "Wrong dependency format. Expected: groupId:artifactId:version" })
 
         return dependencyOn(groupId = dependencySegments[0],
                 artifactId = dependencySegments[1],
                 version = dependencySegments[2],
                 scope = scope,
-                type = if (dependencySegments.size == 4) dependencySegments[3] else jar,
+                type = details["type"]?: if (dependencySegments.size == 4) dependencySegments[3] else jar,
+                optional = "true" == details["optional"],
+                classifier = details["classifier"],
+                systemPath = details["systemPath"],
                 exclusions = exclusions)
     }
 
