@@ -7,4 +7,5 @@ class MetaProject(project: Project): Project(project) {
     fun properties(): Map<String, Any> = props
     fun parent(): Parent = superParent
     fun build(): Build? = thisBuild
+    fun dependencyManagement(): DependencyManagement? = dependencyManagement
 }

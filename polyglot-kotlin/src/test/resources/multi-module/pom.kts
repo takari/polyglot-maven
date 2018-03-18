@@ -34,4 +34,37 @@ project {
             test(groupId = "junit", artifactId = "junit", version = "4.11")
         }
     }
+
+    build {
+        pluginManagement {
+            plugins {
+                plugin(artifactId = "maven-release-plugin", version = "2.5.2") {
+                    configuration {
+                        "preparationGoals" += "clean install"
+                        "mavenExecutorId" += "forked - path"
+                    }
+                }
+
+                plugin(groupId = "org.eclipse.m2e", artifactId = "lifecycle-mapping", version = "1.0.0") {
+                    configuration {
+                        "lifecycleMappingMetadata" {
+                            "pluginExecutions" {
+                                "pluginExecution" {
+                                    "pluginExecutionFilter" {
+                                        "groupId" += "io.tesla.maven.plugins"
+                                        "artifactId" += "tesla-license-plugin"
+                                        "versionRange" += "[0.0.1-SNAPSHOT,)"
+                                        "goals"[
+                                            "check"
+                                        ]
+                                    }
+                                    "action" { +"ignore" }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

@@ -8,7 +8,7 @@
         plugin(artifactSegments[0], artifactSegments[1], artifactSegments[2])
     }
 
-    fun plugin(groupId: String, artifactId: String, version: String): Plugin {
+    fun plugin(groupId: String = "org.apache.maven.plugins", artifactId: String, version: String): Plugin {
         val plugin = Plugin(groupId, artifactId, version)
         plugins.add(plugin)
         return plugin
@@ -20,7 +20,7 @@
         plugin(artifactSegments[0], artifactSegments[1], artifactSegments[2], block)
     }
 
-    fun plugin(groupId: String, artifactId: String, version: String, block: (@Scope Plugin).() -> Unit) {
+    fun plugin(groupId: String = "org.apache.maven.plugins", artifactId: String, version: String, block: (@Scope Plugin).() -> Unit) {
         val plugin = Plugin(groupId, artifactId, version)
         block(plugin)
         plugins.add(plugin)

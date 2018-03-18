@@ -91,12 +91,13 @@
 
     fun build(block: Build.() -> Unit) {
         val build = Build()
+        build.finalName = "${artifactId}-${version}"
         thisBuild = build
         block(build)
     }
 
-    var dependencyManagement: DependencyManagement? = null
-    fun dependencyManagement(block: DependencyManagement.() -> Unit) {
+    protected var dependencyManagement: DependencyManagement? = null
+    fun dependencyManagement(block: (@Scope DependencyManagement).() -> Unit) {
         dependencyManagement = DependencyManagement(Dependencies())
         block(dependencyManagement!!)
     }
@@ -106,6 +107,7 @@
         deps = project.deps
         superParent = project.superParent
         thisBuild = project.thisBuild
+        dependencyManagement = project.dependencyManagement
     }
 }
 

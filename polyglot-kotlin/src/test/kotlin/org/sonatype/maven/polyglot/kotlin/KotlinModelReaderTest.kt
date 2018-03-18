@@ -272,4 +272,18 @@ class KotlinModelReaderTest {
             containsArtifact("junit:junit:4.11", scope = "test")
         }
     }
+
+    @Test fun readPluginManagement() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/multi-module/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assert(poModel.build.pluginManagement.plugins) {
+            containsPlugin("org.apache.maven.plugins:maven-release-plugin:2.5.2")
+            containsPlugin("org.eclipse.m2e:lifecycle-mapping:1.0.0")
+        }
+    }
 }

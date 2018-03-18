@@ -10,10 +10,7 @@ import java.io.StringReader
 
 fun Assert<List<Dependency>>.containsArtifact(artifact: String, scope: String = "compile", type: String = "jar",
                                               classifier: String? = null, systemPath: String? = null, optional: Boolean = false) {
-    val segments = artifact.split(":")
-    val groupId = segments[0]
-    val artifactId = segments[1]
-    val version = segments[2]
+    val (groupId, artifactId, version) = artifact.split(':')
 
     val element = actual.find { it.artifactId == artifactId && it.groupId == groupId && it.version == version }
 
@@ -41,4 +38,12 @@ fun Assert<Plugin>.hasConfiguration(xmlProjectWithSinglePluginConfig: String) {
 
     if (expectedConfiguration != actualConfiguration)
         expected("the configuration:\n$expectedConfiguration\nbut was:\n$actualConfiguration")
+}
+
+
+fun Assert<List<Plugin>>.containsPlugin(artifact: String) {
+    val (groupId, artifactId, version) = artifact.split(':')
+
+    actual.find { it.artifactId == artifactId && it.groupId == groupId && it.version == version }
+            ?: expected("to contain the plugin:${show(artifact)} but was:${show(actual)}")
 }

@@ -33,7 +33,7 @@ object KomConverter {
         if (projectBuild != null) model.build = buildOf(projectBuild)
 
         model.modules.addAll(project.modules)
-        project.dependencyManagement?.let {
+        metaProject.dependencyManagement()?.let {
             val (deps) = it.component1()
             model.dependencyManagement = DependencyManagement().apply {
                 dependencies = dependenciesOf(deps.map { MetaDependency(it) })
