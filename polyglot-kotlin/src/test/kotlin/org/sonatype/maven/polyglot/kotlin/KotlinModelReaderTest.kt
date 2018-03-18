@@ -139,7 +139,7 @@ class KotlinModelReaderTest {
 
         //THEN
         with(poModel.build.plugins.first()) {
-            assert(groupId).isEqualTo("org.hetbrains.kotlin")
+            assert(groupId).isEqualTo("org.jetbrains.kotlin")
             assert(artifactId).isEqualTo("kotlin-maven-plugin")
             assert(version).isEqualTo("1.1.61")
         }
@@ -169,6 +169,7 @@ class KotlinModelReaderTest {
         //THEN
         assert(poModel.build.plugins.find {  it.groupId == "org.apache.maven.plugins" }!!) {
             hasConfiguration(pluginWithConfiguration("""
+                <argLine>-Xmx256m</argLine>
                 <includes>
                     <include>%regex[.*Spec.*]</include>
                     <include>%regex[.*Test.*]</include>
@@ -246,5 +247,29 @@ class KotlinModelReaderTest {
             "polyglot - maven - plugin",
             "polyglot - translate - plugin"
         ))
+    }
+
+    @Test fun readDependencyManagement() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/multi-module/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assert(poModel.dependencyManagement.dependencies) {
+            containsArtifact("io.takari.polyglot:polyglot-common:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-ruby:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-groovy:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-atom:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-scala:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-yaml:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-xml:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-java:0.2.2-SNAPSHOT")
+            containsArtifact("io.takari.polyglot:polyglot-kotlin:0.2.2-SNAPSHOT")
+
+            containsArtifact("org.apache.maven:maven:3.5.0", scope = "import", type = "pom")
+            containsArtifact("junit:junit:4.11", scope = "test")
+        }
     }
 }

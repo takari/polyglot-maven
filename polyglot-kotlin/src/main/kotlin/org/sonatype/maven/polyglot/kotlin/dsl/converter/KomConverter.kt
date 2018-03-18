@@ -1,5 +1,6 @@
 import BuildConverter.buildOf
 import DependencyConverter.dependenciesOf
+import org.apache.maven.model.DependencyManagement
 import org.apache.maven.model.Model
 import org.apache.maven.model.Parent
 
@@ -32,6 +33,12 @@ object KomConverter {
         if (projectBuild != null) model.build = buildOf(projectBuild)
 
         model.modules.addAll(project.modules)
+        project.dependencyManagement?.let {
+            val (deps) = it.component1()
+            model.dependencyManagement = DependencyManagement().apply {
+                dependencies = dependenciesOf(deps.map { MetaDependency(it) })
+            }
+        }
         return model
     }
 

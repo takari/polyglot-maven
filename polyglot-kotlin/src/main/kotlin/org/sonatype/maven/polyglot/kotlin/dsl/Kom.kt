@@ -1,4 +1,6 @@
 @Scope open class Project() {
+    val project = this
+
     lateinit var artifactId: String
     var groupId: String? = null //default = parent.groupId
         get() = field ?: superParent.groupId
@@ -91,6 +93,12 @@
         val build = Build()
         thisBuild = build
         block(build)
+    }
+
+    var dependencyManagement: DependencyManagement? = null
+    fun dependencyManagement(block: DependencyManagement.() -> Unit) {
+        dependencyManagement = DependencyManagement(Dependencies())
+        block(dependencyManagement!!)
     }
 
     protected constructor(project: Project) : this() {
