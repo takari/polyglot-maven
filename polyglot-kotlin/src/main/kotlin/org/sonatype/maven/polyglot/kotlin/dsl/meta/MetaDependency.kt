@@ -1,4 +1,4 @@
-class MetaDependency(dependency: Dependencies.Dependency) : Dependencies.Dependency(dependency) {
+class MetaDependency(dependency: DependenciesUnderTheHood.Dependency) : DependenciesUnderTheHood.Dependency(dependency) {
     fun groupId() = super.groupId
     fun artifactId() = super.artifactId
     fun version() = super.version

@@ -207,4 +207,17 @@ class KotlinModelReaderTest {
             """))
         }
     }
+
+    @Test fun readPluginDependencies(){
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        assert(poModel.build.plugins.find {  it.artifactId == "kotlin-maven-plugin" }!!.dependencies) {
+            containsArtifact("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5", "compile")
+        }
+    }
 }

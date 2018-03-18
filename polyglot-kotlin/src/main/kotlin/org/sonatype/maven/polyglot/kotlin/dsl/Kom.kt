@@ -70,7 +70,7 @@
             field = value
         }
 
-    fun dependencies(block: Dependencies.() -> Unit) {
+    fun dependencies(block: (@Scope Dependencies).() -> Unit) {
         deps = Dependencies()
         block(deps!!)
     }

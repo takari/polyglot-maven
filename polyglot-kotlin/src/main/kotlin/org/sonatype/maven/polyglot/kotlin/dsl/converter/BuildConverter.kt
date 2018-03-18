@@ -1,4 +1,4 @@
-import org.sonatype.maven.polyglot.kotlin.dsl.converter.PluginConverter.pluginsOf
+import PluginConverter.pluginsOf
 
 object BuildConverter {
 

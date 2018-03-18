@@ -3,10 +3,10 @@ import org.apache.maven.model.Exclusion
 
 object DependencyConverter {
 
-    internal fun dependenciesOf(metaProject: MetaProject): MutableList<Dependency> {
+    internal fun dependenciesOf(metaDependencies: List<MetaDependency>): MutableList<Dependency> {
         val dependencies = mutableListOf<Dependency>()
-        metaProject.dependencies().forEach {
 
+        metaDependencies.forEach {
             dependencies.add(Dependency().apply {
                 groupId = it.groupId()
                 artifactId = it.artifactId()

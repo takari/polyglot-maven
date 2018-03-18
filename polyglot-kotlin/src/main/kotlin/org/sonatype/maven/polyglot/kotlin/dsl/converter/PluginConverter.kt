@@ -1,7 +1,4 @@
-package org.sonatype.maven.polyglot.kotlin.dsl.converter
-
 import ConfigurationConverter.configurationOf
-import Plugins
 import org.apache.maven.model.Plugin
 import org.apache.maven.model.PluginExecution
 
@@ -13,7 +10,7 @@ object PluginConverter {
                 groupId = it.groupId
                 version = it.version
 
-                val (execs, config) = it
+                val (execs, config, deps) = it
                 execs?.component1()?.forEach {
                     executions.add(PluginExecution().apply {
                         id = it.id
@@ -23,6 +20,10 @@ object PluginConverter {
                 }
 
                 configuration = config?.let { configurationOf(it) }
+
+                deps?.component1()?.map { MetaDependency(it) }?.let {
+                    dependencies = DependencyConverter.dependenciesOf(it)
+                }
             }
         }
     }

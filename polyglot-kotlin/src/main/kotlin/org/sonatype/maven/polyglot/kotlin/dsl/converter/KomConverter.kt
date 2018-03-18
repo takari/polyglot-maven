@@ -1,4 +1,3 @@
-
 import BuildConverter.buildOf
 import DependencyConverter.dependenciesOf
 import org.apache.maven.model.Model
@@ -27,7 +26,7 @@ object KomConverter {
         model.inceptionYear = project.inceptionYear
 
         model.properties.putAll(metaProject.properties().mapValues { it.value.toString() })
-        model.dependencies = dependenciesOf(metaProject)
+        model.dependencies = dependenciesOf(metaProject.dependencies())
 
         val projectBuild = metaProject.build()
         if (projectBuild != null) model.build = buildOf(projectBuild)

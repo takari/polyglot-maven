@@ -32,6 +32,8 @@
         operator fun component1() = pluginExecutions
         protected var configuration: Configuration? = null
         operator fun component2() = configuration
+        protected var dependencies: PluginDependencies? = null
+        operator fun component3() = dependencies
 
         fun executions(block: (@Scope Executions).() -> Unit) {
             check(pluginExecutions == null, { "Executions are already defined" })
@@ -47,6 +49,11 @@
         fun configuration(block: (@Scope Configuration).() -> Unit) {
             configuration = Configuration()
             block(configuration!!)
+        }
+
+        fun dependencies(block: (@Scope PluginDependencies).() -> Unit) {
+            dependencies = PluginDependencies()
+            block(dependencies!!)
         }
     }
 }

@@ -43,6 +43,9 @@ project {
                     execution(id = compile, phase = compile, goal = compile)
                     execution(id = test_compile, phase = test_compile, goal = test_compile)
                 }
+                dependencies {
+                    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5")
+                }
             }
 
             plugin(groupId = "org.apache.maven.plugins", artifactId = "maven-surefire-plugin", version = "2.20.1") {
