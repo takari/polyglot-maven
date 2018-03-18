@@ -8,6 +8,11 @@ object BuildConverter {
             sourceDirectory = projectBuild.sourceDirectory
             testSourceDirectory = projectBuild.testSourceDirectory
             finalName = projectBuild.finalName
+            scriptSourceDirectory = projectBuild.scriptSourceDirectory
+            outputDirectory = projectBuild.outputDirectory
+            testOutputDirectory = projectBuild.testOutputDirectory
+            directory = projectBuild.directory
+            filters.addAll(projectBuild.filters)
 
             val (plugs, pluginManagement) = projectBuild
             if (plugs != null) plugins = pluginsOf(plugs.component1())

@@ -1,7 +1,17 @@
 @Scope class Build {
-    var sourceDirectory: String = "src/main/java"
+    var sourceDirectory = "src/main/java"
+    var scriptSourceDirectory = "src/main/scripts"
     var testSourceDirectory: String = "src/test/java"
+    var outputDirectory = "target/classes"
+    var testOutputDirectory = "target/test-classes"
     lateinit var finalName: String
+    var directory = "target"
+
+    var filters = arrayOf<String>()
+    operator fun Array<String>.get(vararg filters: String) {
+        assert(this@Build.filters === this, {"Unexpected Build.filters DSL usage"})
+        this@Build.filters = filters as Array<String>
+    }
 
     protected var plugs: Plugins? = null
         set(value) {

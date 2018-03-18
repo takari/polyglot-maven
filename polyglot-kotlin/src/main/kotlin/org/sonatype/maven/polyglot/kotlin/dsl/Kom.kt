@@ -85,7 +85,7 @@
 
     var modules = arrayOf<String>()
     operator fun Array<String>.get(vararg moduleNames: String) {
-        assert(modules === this, { "Unexpected DSL usage" })
+        assert(modules === this, { "Unexpected Project.modules DSL usage" })
         modules = moduleNames as Array<String>
     }
 

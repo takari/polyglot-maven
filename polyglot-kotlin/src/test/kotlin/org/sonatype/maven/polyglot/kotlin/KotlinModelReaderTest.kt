@@ -117,16 +117,42 @@ class KotlinModelReaderTest {
 
     @Test fun readKomBuild() {
         //GIVEN
-        val resource = this.javaClass.getResourceAsStream("/pom.kts")
+        val komReader = """
+        project {
+            name = "simple parent example kom"
+            artifactId = "simpleId"
+            version = "0.1"
+            parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT"
+
+            build {
+                scriptSourceDirectory = "src/main/scripts"
+                outputDirectory = "target/classes"
+                testOutputDirectory = "target/test-classes"
+                directory = "node_modules"
+                sourceDirectory = "src/main/kotlin"
+                testSourceDirectory = "src/test/kotlin"
+                finalName = "polyglot-kotlin"
+                filters[
+                    ".jar",
+                    ".bin"
+                ]
+            }
+        }
+        """.trimIndent().reader()
 
         //WHEN
-        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+        val poModel = modelReader.read(komReader, mutableMapOf<String, Any>())
 
         //THEN
         with(poModel.build){
             assert(sourceDirectory).isEqualTo("src/main/kotlin")
             assert(testSourceDirectory).isEqualTo("src/test/kotlin")
             assert(finalName).isEqualTo("polyglot-kotlin")
+            assert(scriptSourceDirectory).isEqualTo("src/main/scripts")
+            assert(outputDirectory).isEqualTo("target/classes")
+            assert(testOutputDirectory).isEqualTo("target/test-classes")
+            assert(directory).isEqualTo("node_modules")
+            assertThat(filters, hasItems(".jar", ".bin"))
         }
     }
 
