@@ -43,7 +43,7 @@ build(outputDirectory -> "${project.build.directory}/classes_1");
 to you Java based POM definition.
 For more information about Model Interpolation please refer to http://maven.apache.org/ref/3.5.3/maven-model-builder/#Model_Interpolation
 
-Other way to get value of ${basedir} property are standard Java ways:
+Other ways to get value of ${basedir} property are standard Java ways:
 ```java
 String baseDir = System.getProperty("user.dir")
 ```
