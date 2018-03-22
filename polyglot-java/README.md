@@ -34,6 +34,11 @@ Use simple Maven Plugin that will help you convert any existing
 ```
 mvn io.takari.polyglot:polyglot-translate-plugin:translate -Dinput=pom.xml -Doutput=pom.java
 ```
+<<<<<<< 6bf7043fae63f68575f87d67a7c31e7ca4c5df42
+=======
+<<<<<<< d7c6235d7b46d4be001daacea9d2e4dd4782ccc2
+=======
+>>>>>>> Resolved conflict
 # Model Interpolation
 
 Model Interpolation consists in replacing ${...} with calculated value. This mechanism works for Java DSL as well. For example, if you can change output directory for compiled classes by adding
@@ -74,3 +79,7 @@ Contributor contributor = new Contributor();
 contributor.setName("John Smith");
 model.addContributor(contributor);
 ```
+<<<<<<< 6bf7043fae63f68575f87d67a7c31e7ca4c5df42
+=======
+>>>>>>> Update README.md
+>>>>>>> Resolved conflict
