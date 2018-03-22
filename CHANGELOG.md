@@ -12,6 +12,9 @@ at an easier glance.
 - polyglot-scala: Support `reporting`-section in pom
   - see https://github.com/takari/polyglot-maven/pull/157
   - contributed by Tobias Roeser https://github.com/lefou
+- polyglot-scala: Added default value for pom property modelversion (4.0.0)
+  - see https://github.com/takari/polyglot-maven/pull/158
+  - contributed by Tobias Roeser https://github.com/lefou
 
 User community contriubtions welcome...
 
