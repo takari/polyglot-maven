@@ -9,5 +9,6 @@ Model(
         ec => ec.getProject.setArtifactId("We executed!")
       }
     )
-  )
+  ),
+  modelVersion = "4.0.0"
 )

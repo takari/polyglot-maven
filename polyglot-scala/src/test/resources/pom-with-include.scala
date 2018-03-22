@@ -5,5 +5,6 @@ import scala.collection.immutable.Seq
 
 Model(
   "io.tesla.polyglot" % "tesla-polyglot" % includedVersion,
-  name = "Include Test"
+  name = "Include Test",
+  modelVersion = "4.0.0"
 )

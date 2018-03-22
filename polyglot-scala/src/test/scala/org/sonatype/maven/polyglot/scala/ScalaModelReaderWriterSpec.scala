@@ -125,7 +125,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
                    |        phase = "somePhase"
                    |      ) {compiled code}
                    |    )
-                   |  )
+                   |  ),
+                   |  modelVersion = "4.0.0"
                    |)""".stripMargin
     }
     "prettify a task with a profile" in {
@@ -155,7 +156,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
                    |        profileId = "someProfileId"
                    |      ) {compiled code}
                    |    )
-                   |  )
+                   |  ),
+                   |  modelVersion = "4.0.0"
                    |)""".stripMargin
     }
     "register a task properly and prove that it executes" in {
@@ -218,7 +220,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
                    |        )
                    |      )
                    |    )
-                   |  )
+                   |  ),
+                   |  modelVersion = "4.0.0"
                    |)""".stripMargin
     }
 
