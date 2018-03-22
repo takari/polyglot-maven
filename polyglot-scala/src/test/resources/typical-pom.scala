@@ -7,5 +7,6 @@ Model(
     "someGroupId" % "someArtifactId" % "someVersion",
     "someGroupId" % "someArtifactId" % "someVersion" % "test",
     "someGroupId" % "someArtifactId" % "" % "test"
-  )
+  ),
+  modelVersion = "4.0.0"
 )

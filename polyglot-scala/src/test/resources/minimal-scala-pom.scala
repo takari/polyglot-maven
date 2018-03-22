@@ -74,5 +74,6 @@ Model(
         )
       )
     )
-  )
+  ),
+  modelVersion = "4.0.0"
 )
