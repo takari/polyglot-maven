@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>polyglot</artifactId>
-    <version>0.2.2-SNAPSHOT</version>
+    <version>0.3.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyglot-translate-plugin</artifactId>
@@ -52,6 +52,10 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-xml</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-java</artifactId>
       </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>

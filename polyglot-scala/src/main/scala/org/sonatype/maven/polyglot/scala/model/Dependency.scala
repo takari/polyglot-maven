@@ -10,14 +10,44 @@ package org.sonatype.maven.polyglot.scala.model
 import scala.collection.immutable
 
 class Dependency(
-                  val gav: Gav,
-                  val `type`: String,
-                  val classifier: Option[String],
-                  val scope: Option[String],
-                  val systemPath: Option[String],
-                  val exclusions: immutable.Seq[GroupArtifactId],
-                  val optional: Boolean
-                  )
+    val gav: Gav,
+    val `type`: String,
+    val classifier: Option[String],
+    val scope: Option[String],
+    val systemPath: Option[String],
+    val exclusions: immutable.Seq[GroupArtifactId],
+    val optional: Boolean) {
+
+  /**
+   * Returns a derived dependency with the given new properties.
+   */
+  def copy(
+    gav: Gav = gav,
+    `type`: String = `type`,
+    classifier: String = this.classifier.orNull,
+    scope: String = this.scope.orNull,
+    systemPath: String = this.systemPath.orNull,
+    exclusions: immutable.Seq[GroupArtifactId] = exclusions,
+    optional: Boolean = optional): Dependency =
+    new Dependency(gav, `type`, Option(classifier), Option(scope), Option(systemPath), exclusions, optional)
+
+  /**
+   * Returns a derived dependencies with the given classifier.
+   */
+  def classifier(classifier: String): Dependency = copy(classifier = classifier)
+
+  /**
+   * Returns a derived dependency without it's transitive dependencies.
+   * This is internally done by setting an universal exclusion (`"*" % "*"`).
+   */
+  def intransitive: Dependency = copy(exclusions = immutable.Seq("*" % "*"))
+  
+  /**
+   * Returns a derived dependency with the given scope.
+   */
+  def %(scope: String): Dependency = copy(scope = Option(scope).filter(s => !s.trim().isEmpty()).orNull)
+
+}
 
 object Dependency {
   def apply(

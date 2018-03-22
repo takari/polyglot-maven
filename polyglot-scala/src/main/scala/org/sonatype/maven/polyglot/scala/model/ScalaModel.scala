@@ -106,7 +106,7 @@ object ScalaModel {
              licenses: immutable.Seq[License] = Nil,
              mailingLists: immutable.Seq[MailingList] = Nil,
              modelEncoding: String = "UTF-8",
-             modelVersion: String = null,
+             modelVersion: String = "4.0.0",
              modules: immutable.Seq[String] = Nil,
              name: String = null,
              organization: Organization = null,
@@ -117,6 +117,7 @@ object ScalaModel {
              prerequisites: Prerequisites = null,
              profiles: immutable.Seq[Profile] = Nil,
              properties: Map[String, String] = Map.empty,
+             reporting: Reporting = null,
              repositories: immutable.Seq[Repository] = Nil,
              scm: Scm = null,
              url: String = null
@@ -219,6 +220,7 @@ object ScalaModel {
       Option(prerequisites),
       profiles,
       properties,
+      Option(reporting),
       repositories,
       Option(scm),
       Option(url)

@@ -130,6 +130,16 @@ object ScalaConverters {
 
   implicit def enrichScalaSite(v: ScalaSite): ConvertibleScalaSite =
     new ConvertibleScalaSite(v)
+
+  implicit def enrichScalaReporting(v: Reporting): ConvertibleScalaReporting =
+    new ConvertibleScalaReporting(v)
+
+  implicit def enrichScalaReportPlugin(v: ReportPlugin): ConvertibleScalaReportPlugin =
+    new ConvertibleScalaReportPlugin(v)
+
+  implicit def enrichScalaReportSet(v: ReportSet): ConvertibleScalaReportSet =
+    new ConvertibleScalaReportSet(v)
+
 }
 
 /**
@@ -137,7 +147,7 @@ object ScalaConverters {
  * All Scala evaluation is done with files so that checks can be made to determine whether compilation occurs.
  */
 @Named("scala")
-class ScalaModelReader @Inject()(executeManager: ExecuteManager) extends ModelReader {
+class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelReader {
 
   import org.sonatype.maven.polyglot.scala.ScalaConverters._
 
