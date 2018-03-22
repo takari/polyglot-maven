@@ -11,7 +11,7 @@ import java.io.Writer
 import java.util
 import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.kiama.output.PrettyPrinter
-import org.apache.maven.model.{Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Scm => MavenScm, Site => MavenSite}
+import org.apache.maven.model.{ Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Scm => MavenScm, Site => MavenSite, Reporting => MavenReporting, ReportPlugin => MavenReportPlugin, ReportSet => MavenReportSet }
 import org.sonatype.maven.polyglot.scala.model._
 import scala.collection.immutable
 import scala.language.implicitConversions
@@ -88,7 +88,7 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   implicit def enrichPrettiedDependency(v: Dependency): PrettiedDependency =
     new PrettiedDependency(v)
 
-  implicit def enrichPrettiedDependencyManagement(v: DependencyManagement):PrettiedDependencyManagement =
+  implicit def enrichPrettiedDependencyManagement(v: DependencyManagement): PrettiedDependencyManagement =
     new PrettiedDependencyManagement(v)
 
   implicit def enrichPrettiedDeploymentRepository(v: DeploymentRepository): PrettiedDeploymentRepository =
@@ -103,7 +103,7 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   implicit def enrichPrettiedExecution(v: Execution): PrettiedExecution =
     new PrettiedExecution(v)
 
-  implicit def enrichPrettiedExtension(v: Extension):PrettiedExtension =
+  implicit def enrichPrettiedExtension(v: Extension): PrettiedExtension =
     new PrettiedExtension(v)
 
   implicit def enrichPrettiedGav(v: Gav): PrettiedGav =
@@ -174,6 +174,16 @@ object ScalaPrettyPrinter extends PrettyPrinter {
 
   implicit def enrichPrettiedTask(v: Task): PrettiedTask =
     new PrettiedTask(v)
+
+  implicit def enrichPrettiedReporting(v: Reporting): PrettiedReporting =
+    new PrettiedReporting(v)
+
+  implicit def enrichPrettiedReportPlugin(v: ReportPlugin): PrettiedReportPlugin =
+    new PrettiedReportPlugin(v)
+
+  implicit def enrichPrettiedReportSet(v: ReportSet): PrettiedReportSet =
+    new PrettiedReportSet(v)
+
 }
 
 /**
@@ -284,6 +294,15 @@ object MavenConverters {
 
   implicit def enrichConvertibleSite(v: MavenSite): ConvertibleMavenSite =
     new ConvertibleMavenSite(v)
+
+  implicit def enrichConvertibleReporting(v: MavenReporting): ConvertibleMavenReporting =
+    new ConvertibleMavenReporting(v)
+
+  implicit def enrichConvertibleReportPlugin(v: MavenReportPlugin): ConvertibleMavenReportPlugin =
+    new ConvertibleMavenReportPlugin(v)
+
+  implicit def enrichConvertibleReportSet(v: MavenReportSet): ConvertibleMavenReportSet =
+    new ConvertibleMavenReportSet(v)
 }
 
 /**

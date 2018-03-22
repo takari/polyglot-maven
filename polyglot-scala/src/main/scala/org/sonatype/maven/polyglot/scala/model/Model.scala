@@ -10,44 +10,43 @@ package org.sonatype.maven.polyglot.scala.model
 import scala.collection.immutable
 
 class Model(
-             val gav: Gav,
-             val build: Option[Build],
-             val ciManagement: Option[CiManagement],
-             val contributors: immutable.Seq[Contributor],
-             dependencyManagement: Option[DependencyManagement],
-             dependencies: immutable.Seq[Dependency],
-             val description: Option[String],
-             val developers: immutable.Seq[Developer],
-             distributionManagement: Option[DistributionManagement],
-             val inceptionYear: Option[String],
-             val issueManagement: Option[IssueManagement],
-             val licenses: immutable.Seq[License],
-             val mailingLists: immutable.Seq[MailingList],
-             val modelEncoding: String,
-             val modelVersion: Option[String],
-             modules: immutable.Seq[String],
-             val name: Option[String],
-             val organization: Option[Organization],
-             val packaging: String,
-             val parent: Option[Parent],
-             pluginRepositories: immutable.Seq[Repository],
-             val pomFile: Option[File],
-             val prerequisites: Option[Prerequisites],
-             val profiles: immutable.Seq[Profile],
-             val properties: Map[String, String],
-             repositories: immutable.Seq[Repository],
-             val scm: Option[Scm],
-             val url: Option[String]
-             )
-  extends
-  ModelBase(
-    dependencyManagement,
-    dependencies,
-    distributionManagement,
-    modules,
-    pluginRepositories,
-    repositories
-  ) {
+  val gav: Gav,
+  val build: Option[Build],
+  val ciManagement: Option[CiManagement],
+  val contributors: immutable.Seq[Contributor],
+  dependencyManagement: Option[DependencyManagement],
+  dependencies: immutable.Seq[Dependency],
+  val description: Option[String],
+  val developers: immutable.Seq[Developer],
+  distributionManagement: Option[DistributionManagement],
+  val inceptionYear: Option[String],
+  val issueManagement: Option[IssueManagement],
+  val licenses: immutable.Seq[License],
+  val mailingLists: immutable.Seq[MailingList],
+  val modelEncoding: String,
+  val modelVersion: Option[String],
+  modules: immutable.Seq[String],
+  val name: Option[String],
+  val organization: Option[Organization],
+  val packaging: String,
+  val parent: Option[Parent],
+  pluginRepositories: immutable.Seq[Repository],
+  val pomFile: Option[File],
+  val prerequisites: Option[Prerequisites],
+  val profiles: immutable.Seq[Profile],
+  val properties: Map[String, String],
+  val reporting: Option[Reporting],
+  repositories: immutable.Seq[Repository],
+  val scm: Option[Scm],
+  val url: Option[String])
+    extends ModelBase(
+      dependencyManagement,
+      dependencies,
+      distributionManagement,
+      modules,
+      pluginRepositories,
+      repositories
+    ) {
   def copy(pomFile: Option[File]): Model =
     new Model(
       gav,
@@ -75,6 +74,7 @@ class Model(
       prerequisites,
       profiles,
       properties,
+      reporting,
       repositories,
       scm,
       url
@@ -83,35 +83,35 @@ class Model(
 
 object Model {
   def apply(
-             gav: Gav,
-             build: Build = null,
-             ciManagement: CiManagement = null,
-             contributors: immutable.Seq[Contributor] = Nil,
-             dependencyManagement: DependencyManagement = null,
-             dependencies: immutable.Seq[Dependency] = Nil,
-             description: String = null,
-             developers: immutable.Seq[Developer] = Nil,
-             distributionManagement: DistributionManagement = null,
-             inceptionYear: String = null,
-             issueManagement: IssueManagement = null,
-             licenses: immutable.Seq[License] = Nil,
-             mailingLists: immutable.Seq[MailingList] = Nil,
-             modelEncoding: String = "UTF-8",
-             modelVersion: String = null,
-             modules: immutable.Seq[String] = Nil,
-             name: String = null,
-             organization: Organization = null,
-             packaging: String = "jar",
-             parent: Parent = null,
-             pluginRepositories: immutable.Seq[Repository] = Nil,
-             pomFile: File = null,
-             prerequisites: Prerequisites = null,
-             profiles: immutable.Seq[Profile] = Nil,
-             properties: Map[String, String] = Map.empty,
-             repositories: immutable.Seq[Repository] = Nil,
-             scm: Scm = null,
-             url: String = null
-             ) =
+    gav: Gav,
+    build: Build = null,
+    ciManagement: CiManagement = null,
+    contributors: immutable.Seq[Contributor] = Nil,
+    dependencyManagement: DependencyManagement = null,
+    dependencies: immutable.Seq[Dependency] = Nil,
+    description: String = null,
+    developers: immutable.Seq[Developer] = Nil,
+    distributionManagement: DistributionManagement = null,
+    inceptionYear: String = null,
+    issueManagement: IssueManagement = null,
+    licenses: immutable.Seq[License] = Nil,
+    mailingLists: immutable.Seq[MailingList] = Nil,
+    modelEncoding: String = "UTF-8",
+    modelVersion: String = null,
+    modules: immutable.Seq[String] = Nil,
+    name: String = null,
+    organization: Organization = null,
+    packaging: String = "jar",
+    parent: Parent = null,
+    pluginRepositories: immutable.Seq[Repository] = Nil,
+    pomFile: File = null,
+    prerequisites: Prerequisites = null,
+    profiles: immutable.Seq[Profile] = Nil,
+    properties: Map[String, String] = Map.empty,
+    reporting: Reporting = null,
+    repositories: immutable.Seq[Repository] = Nil,
+    scm: Scm = null,
+    url: String = null) =
     new Model(
       gav,
       Option(build),
@@ -138,12 +138,12 @@ object Model {
       Option(prerequisites),
       profiles,
       properties,
+      reporting = Option(reporting),
       repositories,
       Option(scm),
       Option(url)
     )
 }
-
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
@@ -168,6 +168,7 @@ class PrettiedModel(m: Model) {
     args ++= m.asDocArgs
     Some(m.properties).filterNot(_.isEmpty).foreach(ps => args += assign("properties", ps.asDoc))
     m.build.foreach(b => args += assign("build", b.asDoc))
+    m.reporting.foreach(r => args += assign("reporting", r.asDoc))
     Some(m.profiles).filterNot(_.isEmpty).foreach(ps => args += assign("profiles", seq(ps.map(_.asDoc))))
     Some(m.modelEncoding).filterNot(_ == "UTF-8").foreach(args += assignString("modelEncoding", _))
     m.modelVersion.foreach(args += assignString("modelVersion", _))
@@ -175,10 +176,9 @@ class PrettiedModel(m: Model) {
   }
 }
 
-
 import org.sonatype.maven.polyglot.scala.MavenConverters._
 import scala.collection.JavaConverters._
-import org.apache.maven.model.{Model => MavenModel}
+import org.apache.maven.model.{ Model => MavenModel }
 
 class ConvertibleMavenModel(mm: MavenModel) {
   def asScala: Model = {
@@ -208,6 +208,7 @@ class ConvertibleMavenModel(mm: MavenModel) {
       Option(mm.getPrerequisites).map(_.asScala).orNull,
       mm.getProfiles.asScala.map(_.asScala).toList,
       mm.getProperties.asScala.toMap,
+      reporting = Option(mm.getReporting()).map(_.asScala).orNull,
       mm.getRepositories.asScala.map(_.asScala).toList,
       Option(mm.getScm).map(_.asScala).orNull,
       mm.getUrl
@@ -252,6 +253,7 @@ class ConvertibleScalaModel(m: Model) {
         p.putAll(m.asJava)
         p
     }).orNull)
+    mm.setReporting(m.reporting.map(_.asJava).orNull)
     mm.setRepositories(m.repositories.map(_.asJava).asJava)
     mm.setScm(m.scm.map(_.asJava).orNull)
     mm.setUrl(m.url.orNull)
