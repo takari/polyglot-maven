@@ -16,7 +16,7 @@ at an easier glance.
   - see https://github.com/takari/polyglot-maven/pull/158
   - contributed by Tobias Roeser https://github.com/lefou
 
-User community contriubtions welcome...
+User community contributions welcome...
 
 ## Version 0.3.0 - 2018-03-07
 
