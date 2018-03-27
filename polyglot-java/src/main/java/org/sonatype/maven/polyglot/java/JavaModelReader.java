@@ -53,12 +53,14 @@ public class JavaModelReader extends ModelReaderSupport {
 
 	private String getClassPath() {
 
+		String pathSeparator = System.getProperty("path.separator", ":");
+
 		StringBuilder sb = new StringBuilder();
 		for (ClassRealm realm : container.getContainerRealm().getWorld().getRealms()) {
 			if (realm.getId().contains("io.takari.polyglot:polyglot-java")) {
 				for (URL jarURL : Arrays.asList(realm.getURLs())) {					
 					if (sb.length() > 0) {
-						sb.append(";");
+						sb.append(pathSeparator);
 					}
 					sb.append(jarURL.getPath());
 				}
@@ -67,7 +69,7 @@ public class JavaModelReader extends ModelReaderSupport {
 				for (URL jarURL : Arrays.asList(realm.getURLs())) {					
 					if (jarURL.getPath().contains("commons-lang3") || jarURL.getPath().contains("plexus-utils") || jarURL.getPath().contains("maven-model-3")) {
 						if (sb.length() > 0) {
-							sb.append(";");
+							sb.append(pathSeparator);
 						}
 						sb.append(jarURL.getPath().replaceAll("/bin/..", ""));
 					}
@@ -105,7 +107,7 @@ public class JavaModelReader extends ModelReaderSupport {
 
 		try {
 			Files.write(replaceClassNameInSrc(src, randomClassName), new File(filePath), Charset.defaultCharset());
-			log.debug("Created temp file" + filePath + " to compile POM.java");
+			log.debug("Created temp file " + filePath + " to compile POM.java");
 		} catch (IOException e) {
 			e.printStackTrace();
 			log.debug("Error writing file " + filePath, e);
@@ -116,7 +118,7 @@ public class JavaModelReader extends ModelReaderSupport {
 		log.debug("Dynamically compiled class " + filePath);
 
 		try {
-			URL comiledClassFolderURL = new URL("file:/" + tempDir.getAbsolutePath() + "/");
+			URL comiledClassFolderURL = new URL("file:" + tempDir.getAbsolutePath() + "/");
 			
 			ClassRealm systemClassLoader = (ClassRealm) getClass().getClassLoader();
 			systemClassLoader.addURL(comiledClassFolderURL);
