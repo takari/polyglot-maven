@@ -221,7 +221,7 @@ public final class ModelConstructor extends Constructor {
 
     private void toAttribute(Xpp3Dom parent, String key, Object value) {
       if (value instanceof List || value instanceof Map) {
-        throw new YAMLException("Attribute's value have to be a plain string. Node: " + parent);
+        throw new YAMLException("Attribute's value has to be a plain string. Node: " + parent);
       }
 
       parent.setAttribute(key, value.toString());
