@@ -7,6 +7,8 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import org.apache.maven.model.Model;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,5 +48,11 @@ public class Util {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static Model getModel(String fileName) throws Exception {
+    YamlModelReader modelReader = new YamlModelReader();
+    InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+    return modelReader.read(input, null);
   }
 }
