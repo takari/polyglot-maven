@@ -14,7 +14,7 @@ project {
 
     dependencies {
         compile("org.jetbrains.kotlin:kotlin-stdlib:" + it["kotlin.version"])
-        compile("$groupId:polyglot-common:$version")
+        compile(it.groupId+":polyglot-common:"+it.version)
                 .exclusions("org.slf4j:jul-logger")
 
         test(
