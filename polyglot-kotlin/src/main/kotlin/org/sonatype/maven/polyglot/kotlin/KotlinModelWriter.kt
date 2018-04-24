@@ -22,11 +22,11 @@ class KotlinModelWriter : ModelWriterSupport() {
         with(output) {
             with(model) {
                 appendln("project {")
-                if (name != null) appendln(tab("name" assign name))
+                appendlnIf(name, { tab("name" assign it) })
                 appendln(tab + if (parent == null) "groupId" assign groupId else "parent" assign parent.gav())
                 appendln(tab("artifactId" assign artifactId))
                 appendln(tab("packaging = $packaging"))
-                if(properties.isNotEmpty())
+                if (properties.isNotEmpty())
                     append(tab("properties {"))
                             .appendln(properties.lineByLine { name, value -> tab(name sameAs value, 2) })
                             .appendln(tab("}"))
@@ -38,6 +38,18 @@ class KotlinModelWriter : ModelWriterSupport() {
                             .append(provided(dependencies))
                             .append(system(dependencies))
                             .appendln(tab("}"))
+                if (build != null)
+                    appendln(tab("build {"))
+                            .appendlnIf(build.sourceDirectory, { tab("sourceDirectory" assign it, 2) })
+                            .appendlnIf(build.testSourceDirectory, { tab("testSourceDirectory" assign it, 2) })
+                            .appendlnIf(build.finalName, { tab("finalName" assign it, 2) })
+                            .appendlnIf(build.scriptSourceDirectory, { tab("scriptSourceDirectory" assign it, 2) })
+                            .appendlnIf(build.outputDirectory, { tab("outputDirectory" assign it, 2) })
+                            .appendlnIf(build.testOutputDirectory, { tab("testOutputDirectory" assign it, 2) })
+                            .appendlnIf(build.directory, { tab("directory" assign it, 2) })
+                            if (build.filters.isNotEmpty()) appendln(tab("filters[" + build.filters
+                                    .joinToString(prefix = "\"", postfix = "\"", separator = "\", \"") + "]", 2))
+                    .appendln(tab("}"))
                 append("}")
             }
         }
@@ -51,5 +63,8 @@ class KotlinModelWriter : ModelWriterSupport() {
         for (prop in this) lines.append(nextLine + expression(prop.key, prop.value))
         return lines.toString()
     }
+
+    inline fun Appendable.appendlnIf(value: Any?, block: (theValue: Any) -> String): Appendable =
+            if (value != null) this.appendln(block(value)) else this
 }
 

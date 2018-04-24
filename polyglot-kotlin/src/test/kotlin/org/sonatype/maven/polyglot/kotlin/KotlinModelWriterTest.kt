@@ -1,5 +1,6 @@
 package org.sonatype.maven.polyglot.kotlin
 
+import org.apache.maven.model.Build
 import org.apache.maven.model.Dependency
 import org.apache.maven.model.Model
 import org.apache.maven.model.Parent
@@ -11,7 +12,7 @@ import kotlin.test.assertEquals
 class KotlinModelWriterTest {
     val writer = KotlinModelWriter()
 
-    @Test fun shouldWriteProjectRequiredDetails() {
+    @Test fun writeProjectRequiredDetails() {
         //GIVEN
         val model = Model().apply {
             groupId = "io.takari.polyglot"
@@ -33,7 +34,7 @@ class KotlinModelWriterTest {
         """.trimIndent(), result.toString())
     }
 
-    @Test fun shouldWriteProjectDetails() {
+    @Test fun writeProjectDetails() {
         //GIVEN
         val model = Model().apply {
             name = "Polyglot :: Kotlin"
@@ -57,7 +58,7 @@ class KotlinModelWriterTest {
         """.trimIndent(), result.toString())
     }
 
-    @Test fun shouldWriteProjectParent() {
+    @Test fun writeProjectParent() {
         //GIVEN
         val model = Model().apply {
             name = "Polyglot :: Kotlin"
@@ -84,7 +85,7 @@ class KotlinModelWriterTest {
         """.trimIndent(), result.toString())
     }
 
-    @Test fun shouldWriteProjectProperties() {
+    @Test fun writeProjectProperties() {
         //GIVEN
         val model = Model().apply {
             name = "Polyglot :: Kotlin"
@@ -117,7 +118,7 @@ class KotlinModelWriterTest {
         """.trimIndent(), result.toString())
     }
 
-    @Test fun shouldWriteProjectDependencies() {
+    @Test fun writeProjectDependencies() {
         //GIVEN
         val model = Model().apply {
             groupId = "io.takari.polyglot"
@@ -168,6 +169,49 @@ class KotlinModelWriterTest {
                         "junit:junit:4.11",
                         "org.jetbrains.kotlin:kotlin-test-junit:1.1.61"
                     )
+                }
+            }
+        """.trimIndent(), result.toString())
+    }
+
+    @Test fun writeProjectBuildDetails() {
+        val model = Model().apply {
+            groupId = "io.takari.polyglot"
+            artifactId = "polyglot-kotlin"
+            version = "0.2.2-SNAPSHOT"
+
+            build = Build().apply {
+                sourceDirectory = "src/main/kotlin"
+                testSourceDirectory = "src/test/kotlin"
+                finalName = "polyglot-kotlin"
+                scriptSourceDirectory = "src/main/scripts"
+                outputDirectory = "target/classes"
+                testOutputDirectory = "target/test-classes"
+                directory = "target"
+
+                filters = listOf("*.java", "*.scala")
+            }
+        }
+        val result = StringWriter()
+
+        //WHEN
+        writer.write(result, mutableMapOf(), model)
+
+        //THEN
+        assertEquals("""
+            project {
+                groupId = "io.takari.polyglot"
+                artifactId = "polyglot-kotlin"
+                packaging = jar
+                build {
+                    sourceDirectory = "src/main/kotlin"
+                    testSourceDirectory = "src/test/kotlin"
+                    finalName = "polyglot-kotlin"
+                    scriptSourceDirectory = "src/main/scripts"
+                    outputDirectory = "target/classes"
+                    testOutputDirectory = "target/test-classes"
+                    directory = "target"
+                    filters["*.java", "*.scala"]
                 }
             }
         """.trimIndent(), result.toString())
