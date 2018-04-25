@@ -1,9 +1,6 @@
 package org.sonatype.maven.polyglot.kotlin
 
-import org.apache.maven.model.Build
-import org.apache.maven.model.Dependency
-import org.apache.maven.model.Model
-import org.apache.maven.model.Parent
+import org.apache.maven.model.*
 import org.junit.Test
 import java.io.StringWriter
 import java.util.*
@@ -142,12 +139,31 @@ class KotlinModelWriterTest {
                 groupId = "junit"
                 artifactId = "junit"
                 version = "4.11"
+
+                type = "ear"
+                classifier = "jdk1.4"
+                exclusions = listOf(Exclusion().apply {
+                    groupId = "org.hamcrest"
+                    artifactId = "hamcrest-core"
+                })
             },
             Dependency().apply {
                 scope = "test"
                 groupId = "org.jetbrains.kotlin"
                 artifactId = "kotlin-test-junit"
                 version = "1.1.61"
+
+                optional = "true"
+                exclusions = listOf(
+                        Exclusion().apply {
+                            groupId = "org.hamcrest"
+                            artifactId = "hamcrest-core"
+                        },
+                        Exclusion().apply {
+                            groupId = "junit"
+                            artifactId = "junit"
+                        }
+                )
             }
             )
         }
@@ -166,8 +182,8 @@ class KotlinModelWriterTest {
                     import("org.apache.maven:maven:3.0")
                     compile("io.takari.polyglot:polyglot-common:0.2.2-SNAPSHOT")
                     test(
-                        "junit:junit:4.11",
-                        "org.jetbrains.kotlin:kotlin-test-junit:1.1.61"
+                        "junit:junit:4.11" type ear classifier jdk1.4 exclusions "org.hamcrest:hamcrest-core",
+                        "org.jetbrains.kotlin:kotlin-test-junit:1.1.61" optional true exclusions arrayOf("org.hamcrest:hamcrest-core", "junit:junit")
                     )
                 }
             }

@@ -38,7 +38,7 @@ class KotlinModelWriter : ModelWriterSupport() {
                             .append(provided(dependencies))
                             .append(system(dependencies))
                             .appendln(tab("}"))
-                if (build != null)
+                if (build != null) {
                     appendln(tab("build {"))
                             .appendlnIf(build.sourceDirectory, { tab("sourceDirectory" assign it, 2) })
                             .appendlnIf(build.testSourceDirectory, { tab("testSourceDirectory" assign it, 2) })
@@ -47,9 +47,10 @@ class KotlinModelWriter : ModelWriterSupport() {
                             .appendlnIf(build.outputDirectory, { tab("outputDirectory" assign it, 2) })
                             .appendlnIf(build.testOutputDirectory, { tab("testOutputDirectory" assign it, 2) })
                             .appendlnIf(build.directory, { tab("directory" assign it, 2) })
-                            if (build.filters.isNotEmpty()) appendln(tab("filters[" + build.filters
-                                    .joinToString(prefix = "\"", postfix = "\"", separator = "\", \"") + "]", 2))
-                    .appendln(tab("}"))
+                    if (build.filters.isNotEmpty()) appendln(tab("filters[" + build.filters
+                            .joinToString(prefix = "\"", postfix = "\"", separator = "\", \"") + "]", 2))
+                    appendln(tab("}"))
+                }
                 append("}")
             }
         }
