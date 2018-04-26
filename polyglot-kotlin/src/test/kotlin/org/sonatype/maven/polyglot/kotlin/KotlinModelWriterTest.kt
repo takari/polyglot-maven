@@ -232,4 +232,61 @@ class KotlinModelWriterTest {
             }
         """.trimIndent(), result.toString())
     }
+
+    @Test fun writeProjectBuildPlugins() {
+        val model = Model().apply {
+            groupId = "io.takari.polyglot"
+            artifactId = "polyglot-kotlin"
+            version = "0.2.2-SNAPSHOT"
+
+            build = Build().apply {
+                plugins = listOf(Plugin().apply {
+                    groupId = "org.jetbrains.kotlin"
+                    artifactId = "kotlin-maven-plugin"
+                    version = "1.1.61"
+                    executions = listOf(PluginExecution().apply {
+                        id = "compile"
+                        phase = "compile"
+                        addGoal("compile")
+                    }, PluginExecution().apply {
+                        id = "test_compile"
+                        phase = "test_compile"
+                        addGoal("test_compile")
+                    })
+                    dependencies = listOf(Dependency().apply {
+                        groupId = "org.jetbrains.kotlinx"
+                        artifactId = "kotlinx-coroutines-core"
+                        version = "0.22.5"
+                        scope = "compile"
+                    })
+                })
+            }
+        }
+        val result = StringWriter()
+
+        //WHEN
+        writer.write(result, mutableMapOf(), model)
+
+        //THEN
+        assertEquals("""
+            project {
+                groupId = "io.takari.polyglot"
+                artifactId = "polyglot-kotlin"
+                packaging = jar
+                build {
+                    plugins {
+                        plugin("org.jetbrains.kotlin:kotlin-maven-plugin:1.1.61") {
+                            executions {
+                                execution(id = "compile", phase = "compile", goals = arrayOf("compile"))
+                                execution(id = "test_compile", phase = "test_compile", goals = arrayOf("test_compile"))
+                            }
+                            dependencies {
+                                compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5")
+                            }
+                        }
+                    }
+                }
+            }
+        """.trimIndent(), result.toString())
+    }
 }

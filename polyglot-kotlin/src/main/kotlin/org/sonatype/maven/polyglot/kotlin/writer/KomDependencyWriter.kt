@@ -1,31 +1,32 @@
-package org.sonatype.maven.polyglot.kotlin.generator
+package org.sonatype.maven.polyglot.kotlin.writer
 
 import jar
 import org.apache.maven.model.Dependency
 import org.apache.maven.model.Exclusion
 
-object KomDependencyGenerator {
-    fun import(dependencies: List<Dependency>): String = dependencyIn("import", dependencies)
-    fun compile(dependencies: List<Dependency>): String = dependencyIn("compile", dependencies)
-    fun test(dependencies: List<Dependency>): String = dependencyIn("test", dependencies)
-    fun provided(dependencies: List<Dependency>): String = dependencyIn("provided", dependencies)
-    fun system(dependencies: List<Dependency>): String = dependencyIn("system", dependencies)
+object KomDependencyWriter {
+    fun import(dependencies: List<Dependency>, marginSize: Int = 2): String = dependencyIn("import", dependencies, marginSize)
+    fun compile(dependencies: List<Dependency>, marginSize: Int = 2): String = dependencyIn("compile", dependencies, marginSize)
+    fun test(dependencies: List<Dependency>, marginSize: Int = 2): String = dependencyIn("test", dependencies, marginSize)
+    fun provided(dependencies: List<Dependency>, marginSize: Int = 2): String = dependencyIn("provided", dependencies, marginSize)
+    fun system(dependencies: List<Dependency>, marginSize: Int = 2): String = dependencyIn("system", dependencies, marginSize)
+    fun runtime(dependencies: List<Dependency>, marginSize: Int = 2): String = dependencyIn("runtime", dependencies, marginSize)
 
 
-    private fun dependencyIn(scope: String, dependencies: List<Dependency>): String {
+    private fun dependencyIn(scope: String, dependencies: List<Dependency>, marginSize: Int): String {
         val scopeDependencies = dependencies.filter { it.scope == scope }
         if (scopeDependencies.isEmpty()) return ""
 
         val multiline = scopeDependencies.size > 1
         val lnOrEmpty = if (multiline) nextLine else ""
-        val tabOrEmpty = if (multiline) tab(count = 3) else ""
+        val tabOrEmpty = if (multiline) tab(count = marginSize + 1) else ""
 
-        val codeText = StringBuilder(tab("$scope($lnOrEmpty", 2))
-        scopeDependencies.joinTo(codeText, prefix = tabOrEmpty, separator = ",$lnOrEmpty" + tab(count = 3)) {
+        val codeText = StringBuilder(tab("$scope($lnOrEmpty", marginSize))
+        scopeDependencies.joinTo(codeText, prefix = tabOrEmpty, separator = ",$lnOrEmpty" + tab(count = marginSize + 1)) {
             "\"${it.groupId}:${it.artifactId}:${it.version}\"" + detailsOf(it)
         }
 
-        if (multiline) codeText.append(lnOrEmpty).append(tab(count = 2))
+        if (multiline) codeText.append(lnOrEmpty).append(tab(count = marginSize))
 
         return codeText.appendln(")").toString()
     }

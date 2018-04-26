@@ -1,19 +1,17 @@
 package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
-import org.apache.maven.model.Parent
 import org.apache.maven.model.io.ModelWriter
 import org.codehaus.plexus.component.annotations.Component
 import org.sonatype.maven.polyglot.io.ModelWriterSupport
-import org.sonatype.maven.polyglot.kotlin.generator.KomDependencyGenerator.compile
-import org.sonatype.maven.polyglot.kotlin.generator.KomDependencyGenerator.import
-import org.sonatype.maven.polyglot.kotlin.generator.KomDependencyGenerator.provided
-import org.sonatype.maven.polyglot.kotlin.generator.KomDependencyGenerator.system
-import org.sonatype.maven.polyglot.kotlin.generator.KomDependencyGenerator.test
-import org.sonatype.maven.polyglot.kotlin.generator.nextLine
-import org.sonatype.maven.polyglot.kotlin.generator.tab
+import org.sonatype.maven.polyglot.kotlin.writer.*
+import org.sonatype.maven.polyglot.kotlin.writer.KomDependencyWriter.compile
+import org.sonatype.maven.polyglot.kotlin.writer.KomDependencyWriter.import
+import org.sonatype.maven.polyglot.kotlin.writer.KomDependencyWriter.provided
+import org.sonatype.maven.polyglot.kotlin.writer.KomDependencyWriter.runtime
+import org.sonatype.maven.polyglot.kotlin.writer.KomDependencyWriter.system
+import org.sonatype.maven.polyglot.kotlin.writer.KomDependencyWriter.test
 import java.io.Writer
-import java.util.*
 
 @Component(role = ModelWriter::class, hint = "kotlin")
 class KotlinModelWriter : ModelWriterSupport() {
@@ -36,36 +34,47 @@ class KotlinModelWriter : ModelWriterSupport() {
                             .append(compile(dependencies))
                             .append(test(dependencies))
                             .append(provided(dependencies))
+                            .append(runtime(dependencies))
                             .append(system(dependencies))
                             .appendln(tab("}"))
                 if (build != null) {
-                    appendln(tab("build {"))
-                            .appendlnIf(build.sourceDirectory, { tab("sourceDirectory" assign it, 2) })
-                            .appendlnIf(build.testSourceDirectory, { tab("testSourceDirectory" assign it, 2) })
-                            .appendlnIf(build.finalName, { tab("finalName" assign it, 2) })
-                            .appendlnIf(build.scriptSourceDirectory, { tab("scriptSourceDirectory" assign it, 2) })
-                            .appendlnIf(build.outputDirectory, { tab("outputDirectory" assign it, 2) })
-                            .appendlnIf(build.testOutputDirectory, { tab("testOutputDirectory" assign it, 2) })
-                            .appendlnIf(build.directory, { tab("directory" assign it, 2) })
-                    if (build.filters.isNotEmpty()) appendln(tab("filters[" + build.filters
-                            .joinToString(prefix = "\"", postfix = "\"", separator = "\", \"") + "]", 2))
-                    appendln(tab("}"))
+                    with(build) {
+                        appendln(tab("build {"))
+                                .appendlnIf(sourceDirectory, { tab("sourceDirectory" assign it, 2) })
+                                .appendlnIf(testSourceDirectory, { tab("testSourceDirectory" assign it, 2) })
+                                .appendlnIf(finalName, { tab("finalName" assign it, 2) })
+                                .appendlnIf(scriptSourceDirectory, { tab("scriptSourceDirectory" assign it, 2) })
+                                .appendlnIf(outputDirectory, { tab("outputDirectory" assign it, 2) })
+                                .appendlnIf(testOutputDirectory, { tab("testOutputDirectory" assign it, 2) })
+                                .appendlnIf(directory, { tab("directory" assign it, 2) })
+                                .appendlnIf(filters, { tab("filters[${filters.quoted()}]", 2) })
+                        if (plugins.isNotEmpty()) {
+                            appendln(tab("plugins {", 2))
+                                plugins.forEach {
+                                    appendln(tab("plugin(${it.id.quoted()}) {", 3))
+                                    if (it.executions.isNotEmpty()) {
+                                        appendln(tab("executions {", 4))
+                                        it.executions.forEach {
+                                            appendln(tab("execution(id = ${it.id.quoted()}, phase = ${it.phase.quoted()}, goals = arrayOf(${it.goals.quoted()}))", 5))
+                                        }
+                                        appendln(tab("}", 4))
+                                    }
+                                    if (it.dependencies.isNotEmpty())
+                                        appendln(tab("dependencies {", 4))
+                                                .append(compile(it.dependencies, 5))
+                                                .append(runtime(it.dependencies, 5))
+                                                .append(system(it.dependencies, 5))
+                                                .appendln(tab("}", 4))
+                                    appendln(tab("}", 3))
+                                }
+                            appendln(tab("}", 2))
+                        }
+                        appendln(tab("}"))
+                    }
                 }
                 append("}")
             }
         }
     }
-
-    fun Parent.gav(): String = "$groupId:$artifactId:$version"
-    infix fun String.assign(value: Any): String = "$this = \"$value\""
-    infix fun Any.sameAs(value: Any) = "\"$this\" sameAs \"$value\""
-    inline fun Properties.lineByLine(expression: (name: Any, value: Any) -> String): String {
-        val lines = StringBuilder(this.size * 13)
-        for (prop in this) lines.append(nextLine + expression(prop.key, prop.value))
-        return lines.toString()
-    }
-
-    inline fun Appendable.appendlnIf(value: Any?, block: (theValue: Any) -> String): Appendable =
-            if (value != null) this.appendln(block(value)) else this
 }
 
