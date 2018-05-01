@@ -1,6 +1,7 @@
 package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.*
+import org.apache.maven.shared.utils.xml.Xpp3Dom
 import org.junit.Test
 import java.io.StringWriter
 import java.util.*
@@ -282,6 +283,129 @@ class KotlinModelWriterTest {
                             }
                             dependencies {
                                 compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.5")
+                            }
+                        }
+                    }
+                }
+            }
+        """.trimIndent(), result.toString())
+    }
+
+    @Test fun writeProjectBuildPluginConfiguration() {
+        val model = Model().apply {
+            groupId = "io.takari.polyglot"
+            artifactId = "polyglot-kotlin"
+            version = "0.2.2-SNAPSHOT"
+
+            build = Build().apply {
+                plugins = listOf(Plugin().apply {
+                    groupId = "org.apache.maven.plugins"
+                    artifactId = "maven-surefire-plugin"
+                    version = "2.20.1"
+                    configuration = Xpp3Dom("configuration").apply {
+                        val includes = Xpp3Dom("includes")
+                        val spec = Xpp3Dom("include")
+                        spec.value = "%regex[.*Spec.*]"
+                        includes.addChild(spec)
+                        val test = Xpp3Dom("include")
+                        test.value = "%regex[.*Test.*]"
+                        includes.addChild(test)
+                        addChild(includes)
+
+                        val argLine = Xpp3Dom("argLine")
+                        argLine.value = "-Xmx256m"
+                        addChild(argLine)
+                    }
+                }, Plugin().apply {
+                    groupId = "org.eclipse.m2e"
+                    artifactId = "lifecycle-mapping"
+                    version = "1.0.0"
+                    configuration = Xpp3Dom("configuration").apply {
+                        val lifecycleMappingMetadata = Xpp3Dom("lifecycleMappingMetadata")
+                        val pluginExecutions = Xpp3Dom("pluginExecutions")
+                        val pluginExecution = Xpp3Dom("pluginExecution")
+
+                        val pluginExecutionFilter = Xpp3Dom("pluginExecutionFilter")
+
+                        val groupId = Xpp3Dom("groupId")
+                        groupId.value = "net.alchim31.maven"
+                        pluginExecutionFilter.addChild(groupId)
+
+                        val artifactId = Xpp3Dom("artifactId")
+                        artifactId.value = "scala-maven-plugin"
+                        pluginExecutionFilter.addChild(artifactId)
+
+                        val versionRange = Xpp3Dom("versionRange")
+                        versionRange.value = "[3.3.0,)"
+                        pluginExecutionFilter.addChild(versionRange)
+                        val goals = Xpp3Dom("goals")
+                        val addSource = Xpp3Dom("goal")
+                        addSource.value = "add-source"
+                        goals.addChild(addSource)
+                        val compile = Xpp3Dom("goal")
+                        compile.value = "compile"
+                        goals.addChild(compile)
+                        val testCompile = Xpp3Dom("goal")
+                        testCompile.value = "testCompile"
+                        goals.addChild(testCompile)
+                        pluginExecutionFilter.addChild(goals)
+
+
+                        val action = Xpp3Dom("action")
+                        action.addChild(Xpp3Dom("ignore"))
+
+                        pluginExecution.addChild(pluginExecutionFilter)
+                        pluginExecution.addChild(action)
+                        pluginExecutions.addChild(pluginExecution)
+                        lifecycleMappingMetadata.addChild(pluginExecutions)
+                        addChild(lifecycleMappingMetadata)
+                    }
+                })
+            }
+        }
+        val result = StringWriter()
+
+        //WHEN
+        writer.write(result, mutableMapOf(), model)
+
+        //THEN
+        assertEquals("""
+            project {
+                groupId = "io.takari.polyglot"
+                artifactId = "polyglot-kotlin"
+                packaging = jar
+                build {
+                    plugins {
+                        plugin("org.apache.maven.plugins:maven-surefire-plugin:2.20.1") {
+                            configuration {
+                                "includes" [
+                                    "%regex[.*Spec.*]",
+                                    "%regex[.*Test.*]"
+                                ]
+                                "argLine" += "-Xmx256m"
+                            }
+                        }
+                        plugin("org.eclipse.m2e:lifecycle-mapping:1.0.0") {
+                            configuration {
+                                "lifecycleMappingMetadata" {
+                                    "pluginExecutions" {
+                                        "pluginExecution" {
+                                            "pluginExecutionFilter" {
+                                                "groupId" += "net.alchim31.maven"
+                                                "artifactId" += "scala-maven-plugin"
+                                                "versionRange" += "[3.3.0,)"
+                                                "goals" [
+                                                    "add-source",
+                                                    "compile",
+                                                    "testCompile"
+                                                ]
+                                            }
+                                            "action" {
+                                                +"ignore"
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

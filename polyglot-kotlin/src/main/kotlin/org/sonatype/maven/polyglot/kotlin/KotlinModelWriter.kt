@@ -2,6 +2,7 @@ package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.ModelWriter
+import org.apache.maven.shared.utils.xml.Xpp3Dom
 import org.codehaus.plexus.component.annotations.Component
 import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.sonatype.maven.polyglot.kotlin.writer.*
@@ -64,6 +65,10 @@ class KotlinModelWriter : ModelWriterSupport() {
                                                 .append(compile(it.dependencies, 5))
                                                 .append(runtime(it.dependencies, 5))
                                                 .append(system(it.dependencies, 5))
+                                                .appendln(tab("}", 4))
+                                    if (it.configuration != null)
+                                        appendln(tab("configuration {", 4))
+                                                .append((it.configuration as Xpp3Dom).children.toKonfig())
                                                 .appendln(tab("}", 4))
                                     appendln(tab("}", 3))
                                 }
