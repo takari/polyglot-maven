@@ -10,6 +10,8 @@ fun tab(text: String = "", count: Int = 1): String = tab.repeat(count) + text
 
 fun String.quoted(): String = "\"$this\""
 fun List<String>.quoted(): String = joinToString(prefix = "\"", separator = "\", \"", postfix = "\"")
+fun List<String>.quotedln(margin: Int): String = joinToString(prefix = tab(count = margin) + "\"",
+        separator = "\",$nextLine${tab(count = margin)}\"", postfix = "\"")
 
 
 fun Parent.gav(): String = "$groupId:$artifactId:$version"

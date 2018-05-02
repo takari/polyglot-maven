@@ -413,4 +413,58 @@ class KotlinModelWriterTest {
             }
         """.trimIndent(), result.toString())
     }
+
+    @Test fun writeProjectModules() {
+        //GIVEN
+        val model = Model().apply {
+            name = "Polyglot :: Kotlin"
+            artifactId = "polyglot-kotlin"
+            parent = Parent().apply {
+                groupId = "io.takari.polyglot"
+                artifactId = "polyglot"
+                version = "0.2.2-SNAPSHOT"
+            }
+
+            modules = listOf("polyglot - common",
+                    "polyglot - atom",
+                    "polyglot - ruby",
+                    "polyglot - scala",
+                    "polyglot - groovy",
+                    "polyglot - yaml",
+                    "polyglot - clojure",
+                    "polyglot - xml",
+                    "polyglot - java",
+                    "polyglot - kotlin",
+                    "polyglot - maven - plugin",
+                    "polyglot - translate - plugin")
+        }
+        val result = StringWriter()
+
+        //WHEN
+        writer.write(result, mutableMapOf(), model)
+
+        //THEN
+        assertEquals("""
+            project {
+                name = "Polyglot :: Kotlin"
+                parent = "io.takari.polyglot:polyglot:0.2.2-SNAPSHOT"
+                artifactId = "polyglot-kotlin"
+                packaging = jar
+                modules [
+                    "polyglot - common",
+                    "polyglot - atom",
+                    "polyglot - ruby",
+                    "polyglot - scala",
+                    "polyglot - groovy",
+                    "polyglot - yaml",
+                    "polyglot - clojure",
+                    "polyglot - xml",
+                    "polyglot - java",
+                    "polyglot - kotlin",
+                    "polyglot - maven - plugin",
+                    "polyglot - translate - plugin"
+                ]
+            }
+        """.trimIndent(), result.toString())
+    }
 }
