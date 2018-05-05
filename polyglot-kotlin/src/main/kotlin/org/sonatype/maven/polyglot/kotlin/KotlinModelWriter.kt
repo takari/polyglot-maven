@@ -27,7 +27,7 @@ class KotlinModelWriter : ModelWriterSupport() {
                 appendln(tab("packaging = $packaging"))
                 if (properties.isNotEmpty())
                     append(tab("properties {"))
-                            .appendln(properties.lineByLine { name, value -> tab(name sameAs value, 2) })
+                            .appendln(properties.lineByLine { name, value -> tab(name assign value, 2) })
                             .appendln(tab("}"))
                 if (modules.isNotEmpty())
                     appendln(tab("modules ["))

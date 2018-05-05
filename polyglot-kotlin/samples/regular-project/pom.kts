@@ -7,9 +7,9 @@ project {
     val junitVersion = 4.12
 
     properties {
-        "project.build.sourceEncoding" sameAs "UTF-8"
+        "project.build.sourceEncoding" assign "UTF-8"
         "junit.version" += 4.12
-        "kotlin.version" sameAs "1.1.61"
+        "kotlin.version" assign "1.1.61"
     }
 
     dependencies {

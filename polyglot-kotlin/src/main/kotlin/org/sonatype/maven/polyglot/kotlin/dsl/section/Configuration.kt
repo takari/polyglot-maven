@@ -12,7 +12,7 @@ class Configuration {
         keyValue[this] = value
     }
 
-    @Scope infix fun String.sameAs(value: String) {
+    @Scope infix fun String.assign(value: String) {
         val (keyValue, _, _) = root
         keyValue[this] = value
     }
@@ -43,7 +43,7 @@ class Configuration {
             keyValue[this] = value
         }
 
-        @Scope infix fun String.sameAs(value: String) {
+        @Scope infix fun String.assign(value: String) {
             keyValue[this] = value
         }
 

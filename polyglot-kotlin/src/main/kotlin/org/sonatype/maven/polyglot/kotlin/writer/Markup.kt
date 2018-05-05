@@ -16,7 +16,7 @@ fun List<String>.quotedln(margin: Int): String = joinToString(prefix = tab(count
 
 fun Parent.gav(): String = "$groupId:$artifactId:$version"
 infix fun String.assign(value: Any): String = "$this = \"$value\""
-infix fun Any.sameAs(value: Any) = "\"$this\" sameAs \"$value\""
+infix fun Any.assign(value: Any) = "\"$this\" assign \"$value\""
 inline fun Properties.lineByLine(expression: (name: Any, value: Any) -> String): String {
     val lines = StringBuilder(this.size * 13)
     for (prop in this) lines.append(nextLine + expression(prop.key, prop.value))

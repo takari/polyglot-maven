@@ -109,8 +109,8 @@ class KotlinModelWriterTest {
                 artifactId = "polyglot-kotlin"
                 packaging = jar
                 properties {
-                    "project.build.sourceEncoding" sameAs "UTF-8"
-                    "kotlin.version" sameAs "1.2.30"
+                    "project.build.sourceEncoding" assign "UTF-8"
+                    "kotlin.version" assign "1.2.30"
                 }
             }
         """.trimIndent(), result.toString())

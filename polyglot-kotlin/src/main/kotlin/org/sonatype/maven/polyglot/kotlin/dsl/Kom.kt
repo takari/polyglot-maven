@@ -54,7 +54,7 @@
 
     inline fun properties(function: () -> Unit) = function()
 
-    infix fun String.sameAs(value: Any) {
+    infix fun String.assign(value: Any) {
         props.put(this, value)
     }
 

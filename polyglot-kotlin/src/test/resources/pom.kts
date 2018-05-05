@@ -7,7 +7,7 @@ project {
     val kotlinVersion = "1.1.61"
 
     properties {
-        "project.build.sourceEncoding" sameAs "UTF-8"
+        "project.build.sourceEncoding" assign "UTF-8"
         "junit.version" += 4.12
     }
 
