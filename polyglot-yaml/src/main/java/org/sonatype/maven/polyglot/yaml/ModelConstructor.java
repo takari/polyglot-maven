@@ -146,12 +146,19 @@ public final class ModelConstructor extends Constructor {
   }
 
   private class ConstructXpp3Dom implements Construct {
+    private static final String ATTRIBUTE_PREFIX = "attr/";
+
     private Xpp3Dom toDom(Xpp3Dom parent, Map<Object, Object> map) {
 
       for (Map.Entry<Object, Object> entry : map.entrySet()) {
         String key = entry.getKey().toString();
         Object entryValue = entry.getValue();
         Xpp3Dom child = new Xpp3Dom(key);
+
+        if (key.startsWith(ATTRIBUTE_PREFIX)) {
+          toAttribute(parent, key.replace(ATTRIBUTE_PREFIX, ""), entryValue);
+          continue;
+        }
 
         // lists need the insertion of intermediate XML DOM nodes which hold the actual values
         if (entryValue instanceof List && !((List) entryValue).isEmpty()) {
@@ -210,6 +217,14 @@ public final class ModelConstructor extends Constructor {
           parent.addChild(itemNode);
         }
       }
+    }
+
+    private void toAttribute(Xpp3Dom parent, String key, Object value) {
+      if (value instanceof List || value instanceof Map) {
+        throw new YAMLException("Attribute's value has to be a plain string. Node: " + parent);
+      }
+
+      parent.setAttribute(key, value.toString());
     }
 
     public Object construct(Node node) {

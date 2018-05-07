@@ -93,6 +93,7 @@ class ModelRepresenter extends Representer {
 
 
   private class RepresentXpp3Dom implements Represent {
+    private static final String ATTRIBUTE_PREFIX = "attr/";
 
     public Node representData(Object data) {
       return representMapping(Tag.MAP, toMap((Xpp3Dom) data), null);
@@ -134,6 +135,10 @@ class ModelRepresenter extends Representer {
         map.put(childName, childValue);
       }
 
+      for (String attrName : node.getAttributeNames()) {
+        map.put(ATTRIBUTE_PREFIX + attrName, node.getAttribute(attrName));
+      }
+
       return map;
     }
 
@@ -170,7 +175,7 @@ class ModelRepresenter extends Representer {
           "artifactId",
           "version",
           "packaging",
-          
+
           "name",
           "description",
           "url",
@@ -183,7 +188,7 @@ class ModelRepresenter extends Representer {
           "scm",
           "issueManagement",
           "ciManagement",
-          
+
           "properties",
           "prerequisites",
           "modules",

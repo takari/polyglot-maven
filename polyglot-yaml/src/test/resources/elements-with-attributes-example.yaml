@@ -1,0 +1,14 @@
+# AKA issue-118
+
+modelVersion: 4.0.0
+parent: org.apache:apache:17
+id: org.yaml:snakeyaml:1.30
+name: SnakeYAML
+
+build:
+    plugins:
+    - id: org.apache.maven.plugins:maven-antrun-plugin:1.8
+      executions:
+        - configuration:
+            target:
+              echo: {attr/message: Hello from polyglot-yaml}
