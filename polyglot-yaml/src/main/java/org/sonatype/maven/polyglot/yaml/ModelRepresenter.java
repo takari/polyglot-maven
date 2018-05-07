@@ -46,6 +46,11 @@ class ModelRepresenter extends Representer {
 
   protected NodeTuple representJavaBeanProperty(Object javaBean, Property property,
                                                 Object propertyValue, Tag customTag) {
+    if (property != null && property.getName().equals("pomFile")) {
+      // "pomFile" is not a part of POM http://maven.apache.org/xsd/maven-4.0.0.xsd
+      return null;
+    }
+
     if (propertyValue == null) return null;
     if (propertyValue instanceof Map) {
       Map map = (Map) propertyValue;
