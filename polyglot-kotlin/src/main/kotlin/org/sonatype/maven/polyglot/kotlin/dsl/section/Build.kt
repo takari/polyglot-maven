@@ -4,7 +4,7 @@
     var testSourceDirectory: String = "src/test/java"
     var outputDirectory = "target/classes"
     var testOutputDirectory = "target/test-classes"
-    lateinit var finalName: String
+    var finalName: String = "\${artifactId}-\${version}"
     var directory = "target"
 
     var filters = arrayOf<String>()

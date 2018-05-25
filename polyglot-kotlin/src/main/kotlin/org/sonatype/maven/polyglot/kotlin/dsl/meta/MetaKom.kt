@@ -5,7 +5,8 @@ class MetaProject(project: Project): Project(project) {
         return dependencies.map { MetaDependency(it) }
     }
     fun properties(): Map<String, Any> = props
-    fun parent(): Parent = superParent
+    fun parent(): Parent? = superParent
     fun build(): Build? = thisBuild
+    fun profiles(): Profiles? = thisProfiles
     fun dependencyManagement(): DependencyManagement? = dependencyManagement
 }

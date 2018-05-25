@@ -2,6 +2,7 @@
 import PomGenerator.pluginWithConfiguration
 import assertk.assert
 import assertk.assertions.isEqualTo
+import assertk.assertions.isTrue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.hasItems
 import org.hamcrest.MatcherAssert.assertThat
@@ -310,6 +311,35 @@ class KotlinModelReaderTest {
         assert(poModel.build.pluginManagement.plugins) {
             containsPlugin("org.apache.maven.plugins:maven-release-plugin:2.5.2")
             containsPlugin("org.eclipse.m2e:lifecycle-mapping:1.0.0")
+        }
+    }
+
+    @Test fun readProfiles() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/profiles/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        val profile = poModel.profiles.first()
+        assert(profile.id).isEqualTo("generate-code")
+        with(profile.activation) {
+            assert(isActiveByDefault).isTrue()
+            assert(jdk).isEqualTo("1.8")
+
+            assert(file.exists).isEqualTo("src")
+            assert(file.missing).isEqualTo("target")
+
+            assert(os.arch).isEqualTo("x64")
+            assert(os.name).isEqualTo("Ubuntu")
+            assert(os.family).isEqualTo("LTS")
+            assert(os.version).isEqualTo("16.04")
+        }
+        with(profile.build.plugins.first()) {
+            assert(groupId).isEqualTo("org.codehaus.modello")
+            assert(artifactId).isEqualTo("modello-maven-plugin")
+            assert(version).isEqualTo("1.9.1")
         }
     }
 }

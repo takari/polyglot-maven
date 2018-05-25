@@ -31,7 +31,6 @@ class KotlinJsr223ScriptEngine(
                 makeCompilerConfiguration(),
                 PrintingMessageCollector(System.out, MessageRenderer.WITHOUT_PATHS, false))
     }
-    // TODO: bindings passing works only once on the first eval, subsequent setContext/setBindings call have no effect. Consider making it dynamic, but take history into account
     private val localEvaluator by lazy { GenericReplCompilingEvaluator(replCompiler, templateClasspath, classloader, getScriptArgs(getContext(), scriptArgsTypes)) }
 
     override val replEvaluator: ReplFullEvaluator get() = localEvaluator

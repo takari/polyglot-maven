@@ -3,21 +3,21 @@
 
     lateinit var artifactId: String
     var groupId: String? = null //default = parent.groupId
-        get() = field ?: superParent.groupId
+        get() = field ?: superParent?.groupId
     var version: String? = null //default = parent.version
-        get() = field ?: superParent.version
+        get() = field ?: superParent?.version
 
-    protected lateinit var superParent: Parent
+    protected var superParent: Parent? = null
 
     fun parent(block: (@Scope Parent).(Parent) -> Unit) {
-        check(!this@Project::superParent.isInitialized, { "Parent is defined several times" })
+        check(superParent == null, { "Parent is defined several times" })
         superParent = Parent()
-        block(superParent, superParent)
+        block(superParent!!, superParent!!)
     }
 
     var parent: String? = null
         set(value) {
-            check(!this@Project::superParent.isInitialized, { "Parent is defined several times" })
+            check(superParent == null, { "Parent is defined several times" })
 
             val parentSegments = requireNotNull(value).split(":")
             check(parentSegments.size == 3, { "Wrong Project.parent format. Expected: groupId:artifactId:version" })
@@ -35,7 +35,7 @@
     private lateinit var relativePath: String
     infix fun String.relativePath(path: String): String {
         check(!this@Project::relativePath.isInitialized, { "relativePath was already is defined" })
-        check(!this@Project::superParent.isInitialized, { "Please define relativePath inside parent {\n}" })
+        check(superParent == null, { "Please define relativePath inside parent {\n}" })
 
         relativePath = path
         return this
@@ -102,12 +102,23 @@
         block(dependencyManagement!!)
     }
 
+    protected var thisProfiles: Profiles? = null
+        set(value) {
+            check(thisProfiles == null, { "Profiles is defined several times" })
+            field = value
+        }
+    fun profiles(block: (@Scope Profiles).() -> Unit) {
+        thisProfiles = Profiles()
+        block(thisProfiles!!)
+    }
+
     protected constructor(project: Project) : this() {
         props = project.props
         deps = project.deps
         superParent = project.superParent
         thisBuild = project.thisBuild
         dependencyManagement = project.dependencyManagement
+        thisProfiles = project.thisProfiles
     }
 }
 
