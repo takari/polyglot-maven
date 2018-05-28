@@ -380,4 +380,20 @@ class KotlinModelReaderTest {
             assert(version).isEqualTo("1.2.30")
         }
     }
+
+    @Test fun readProfileDependencyManagement() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/profiles/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        val profile = poModel.profiles.find { it.id == "spring4" }!!
+        with(profile.dependencyManagement.dependencies.first()) {
+            assert(groupId).isEqualTo("org.springframework")
+            assert(artifactId).isEqualTo("spring-core")
+            assert(version).isEqualTo("4.3.RELEASE")
+        }
+    }
 }

@@ -1,10 +1,8 @@
 
 import BuildConverter.buildOf
 import DependencyConverter.dependenciesOf
-import org.apache.maven.model.ActivationFile
-import org.apache.maven.model.ActivationOS
-import org.apache.maven.model.ActivationProperty
-import org.apache.maven.model.Profile
+import org.apache.maven.model.*
+import org.apache.maven.model.DependencyManagement
 
 object ProfileConverter {
     fun profilesOf(profiles: Profiles): List<Profile>? {
@@ -12,11 +10,16 @@ object ProfileConverter {
         return profilesList.map {
             Profile().apply {
                 id = it.id
-                val (profileBuild, profileActivation, profileDeps) = it
+                val (profileBuild, profileActivation, profileDeps, depsManagement) = it
                 if (profileBuild != null) build = buildOf(profileBuild)
 
                 if (profileActivation != null) activation = activationOf(profileActivation)
                 if (profileDeps != null) dependencies = dependenciesOf(profileDeps.component1().map { MetaDependency(it) })
+
+                if (depsManagement != null) dependencyManagement = DependencyManagement().apply {
+                    val (dependenciesList) = depsManagement.component1()
+                    dependencies = dependenciesOf(dependenciesList.map { MetaDependency(it) })
+                }
             }
         }
     }

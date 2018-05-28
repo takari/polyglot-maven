@@ -43,5 +43,12 @@ project {
                 }
             }
         }
+        profile("spring4") {
+            dependencyManagement {
+                dependencies {
+                    compile("org.springframework:spring-core:4.3.RELEASE")
+                }
+            }
+        }
     }
 }

@@ -44,5 +44,16 @@ class Profiles {
             thisDependencies = Dependencies()
             block(thisDependencies!!)
         }
+
+        protected var thisDependencyManagement: DependencyManagement? = null
+            set(value) {
+                check(thisDependencyManagement == null, { "Profile dependencyManagement is defined several times" })
+                field = value
+            }
+        operator fun component4() = thisDependencyManagement
+        fun dependencyManagement(block: (@Scope DependencyManagement).() -> Unit) {
+            thisDependencyManagement = DependencyManagement(Dependencies())
+            block(thisDependencyManagement!!)
+        }
     }
 }
