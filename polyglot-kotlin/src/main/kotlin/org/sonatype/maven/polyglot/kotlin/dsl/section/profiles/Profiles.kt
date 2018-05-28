@@ -33,5 +33,16 @@ class Profiles {
             thisActivation = Activation(default, jdk)
             block(thisActivation!!)
         }
+
+        protected var thisDependencies: Dependencies? = null
+            set(value) {
+                check(thisDependencies == null, { "Profile dependencies is defined several times" })
+                field = value
+            }
+        operator fun component3() = thisDependencies
+        fun dependencies(block: (@Scope Dependencies).() -> Unit) {
+            thisDependencies = Dependencies()
+            block(thisDependencies!!)
+        }
     }
 }

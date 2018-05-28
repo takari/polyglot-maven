@@ -324,6 +324,17 @@ class KotlinModelReaderTest {
         //THEN
         val profile = poModel.profiles.first()
         assert(profile.id).isEqualTo("generate-code")
+    }
+
+    @Test fun readProfileActivation() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/profiles/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        val profile = poModel.profiles.first()
         with(profile.activation) {
             assert(isActiveByDefault).isTrue()
             assert(jdk).isEqualTo("1.8")
@@ -336,10 +347,37 @@ class KotlinModelReaderTest {
             assert(os.family).isEqualTo("LTS")
             assert(os.version).isEqualTo("16.04")
         }
+    }
+
+    @Test fun readProfileBuild() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/profiles/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        val profile = poModel.profiles.first()
         with(profile.build.plugins.first()) {
             assert(groupId).isEqualTo("org.codehaus.modello")
             assert(artifactId).isEqualTo("modello-maven-plugin")
             assert(version).isEqualTo("1.9.1")
+        }
+    }
+
+    @Test fun readProfileDependencies() {
+        //GIVEN
+        val resource = this.javaClass.getResourceAsStream("/profiles/pom.kts")
+
+        //WHEN
+        val poModel = modelReader.read(resource, mutableMapOf<String, Any>())
+
+        //THEN
+        val profile = poModel.profiles.first()
+        with(profile.dependencies.first()) {
+            assert(groupId).isEqualTo("org.jetbrains.kotlin")
+            assert(artifactId).isEqualTo("kotlin-test-junit")
+            assert(version).isEqualTo("1.2.30")
         }
     }
 }

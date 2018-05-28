@@ -15,6 +15,9 @@ project {
 
                 property(name = "propertyName", value = "propertyValue")
             }
+            dependencies {
+                test("org.jetbrains.kotlin:kotlin-test-junit:1.2.30")
+            }
             build {
                 plugins {
                     plugin(groupId = "org.codehaus.modello", artifactId = "modello-maven-plugin", version = "1.9.1") {
