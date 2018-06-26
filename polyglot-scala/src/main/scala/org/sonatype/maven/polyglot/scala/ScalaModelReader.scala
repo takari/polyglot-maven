@@ -179,9 +179,10 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
   }
 
   private def locateEvalPomFile(options: util.Map[String, _]): File = {
+    val targetDir = Option(System.getProperty("polyglot.scala.outputdir")).getOrElse("target")
     val source = PolyglotModelUtil.getLocation(options)
     val binVersion = _root_.scala.util.Properties.versionNumberString.split("[.]").take(2).mkString(".")
-    val evalTarget = new File(new File(source).getParent, ".mvn.polyglot" + File.separator + "scalamodel_" + binVersion)
+    val evalTarget = new File(new File(source).getParent, targetDir + File.separator + "scalamodel_" + binVersion)
     evalTarget.mkdirs()
     new File(evalTarget, "pom.scala")
   }
