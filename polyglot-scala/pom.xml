@@ -18,6 +18,11 @@
   <artifactId>polyglot-scala</artifactId>
   <packaging>takari-jar</packaging>
   <name>Polyglot :: Scala</name>
+  
+  <properties>
+    <!-- We cannot use 2.12+, as Maven 3.x requires us to run on Java7 -->
+    <scala.version>2.11.12</scala.version>
+  </properties>
 
   <contributors>
     <contributor>
@@ -48,19 +53,19 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>2.11.11</version>
+      <version>${scala.version}</version>
     </dependency>
     
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-reflect</artifactId>
-      <version>2.11.11</version>
+      <version>${scala.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-compiler</artifactId>
-      <version>2.11.11</version>
+      <version>${scala.version}</version>
     </dependency>
     
     <dependency>
