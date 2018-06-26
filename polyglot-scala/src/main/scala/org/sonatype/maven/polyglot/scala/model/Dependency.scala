@@ -24,17 +24,17 @@ class Dependency(
   def copy(
     gav: Gav = gav,
     `type`: String = `type`,
-    classifier: String = this.classifier.orNull,
-    scope: String = this.scope.orNull,
-    systemPath: String = this.systemPath.orNull,
+    classifier: Option[String] = this.classifier,
+    scope: Option[String] = this.scope,
+    systemPath: Option[String] = this.systemPath,
     exclusions: immutable.Seq[GroupArtifactId] = exclusions,
     optional: Boolean = optional): Dependency =
-    new Dependency(gav, `type`, Option(classifier), Option(scope), Option(systemPath), exclusions, optional)
+    new Dependency(gav, `type`, classifier, scope, systemPath, exclusions, optional)
 
   /**
    * Returns a derived dependencies with the given classifier.
    */
-  def classifier(classifier: String): Dependency = copy(classifier = classifier)
+  def classifier(classifier: String): Dependency = copy(classifier = Option(classifier))
 
   /**
    * Returns a derived dependency without it's transitive dependencies.
@@ -45,7 +45,7 @@ class Dependency(
   /**
    * Returns a derived dependency with the given scope.
    */
-  def %(scope: String): Dependency = copy(scope = Option(scope).filter(s => !s.trim().isEmpty()).orNull)
+  def %(scope: String): Dependency = copy(scope = Option(scope).filter(s => !s.trim().isEmpty()))
 
 }
 
