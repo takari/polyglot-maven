@@ -99,6 +99,10 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
     "read, write and compare a typical pom" in {
       readWriteAndCompare("typical-pom.scala")
     }
+    "read, write and compare a pom with config that uses empty configs to create empty XML leaf nodes" in {
+      readWriteAndCompare("pom-with-empty-xml-leafs-in-config.scala")
+    }
+
     "prettify a task properly" in {
       import model._
       import ScalaPrettyPrinter._
