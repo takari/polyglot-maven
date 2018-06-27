@@ -25,8 +25,11 @@ at an easier glance.
   - contributed by Tobias Roeser https://github.com/lefou
 - Polyglot-scala: Updated used Scala Version (2.11.12)
   - contributed by Tobias Roeser https://github.com/lefou
-
-User community contributions welcome...
+- polyglot-scala: refined Dependency.copy method
+  - https://github.com/takari/polyglot-maven/pull/164
+  - contributed by Tobias Roeser https://github.com/lefou
+- Upgrade to latest takari-pom parent
+  - contributed by Manfred Moser http://www.simpligility.com
 
 ## Version 0.3.0 - 2018-03-07
 
