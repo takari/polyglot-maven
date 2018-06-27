@@ -4,7 +4,7 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.3.1 or higher - Upcoming
+## Version 0.3.1 - 2018-06-27
 
 - polyglot-scala: Convenience methods for `Dependency` (`classifier`, `intransitive`, `%` (scope))
   - see https://github.com/takari/polyglot-maven/pull/156
@@ -18,25 +18,14 @@ at an easier glance.
 - Polyglot-scala: Updated used Scala Version (2.11.12)
   - contributed by Tobias Roeser https://github.com/lefou
 - polyglot-scala: refined Dependency.copy method
-  - https://github.com/takari/polyglot-maven/pull/164
+  - see https://github.com/takari/polyglot-maven/pull/164
   - contributed by Tobias Roeser https://github.com/lefou
-- Upgrade to latest takari-pom parent
-  - contributed by Manfred Moser http://www.simpligility.com
 - polyglot-scala: Made output dir to pom.scala files compilation configurable via system property `polyglot.scala.outputdir`
   - see https://github.com/takari/polyglot-maven/pull/165
   - contributed by Tobias Roeser https://github.com/lefou
-- Polyglot-scala: Updated used Scala Version (2.11.12)
-  - contributed by Tobias Roeser https://github.com/lefou
-- polyglot-scala: refined Dependency.copy method
-  - https://github.com/takari/polyglot-maven/pull/164
-  - contributed by Tobias Roeser https://github.com/lefou
 - Upgrade to latest takari-pom parent
   - contributed by Manfred Moser http://www.simpligility.com
-- polyglot-scala: Made output dir to pom.scala files compilation configurable via system property `polyglot.scala.outputdir`
-  - see https://github.com/takari/polyglot-maven/pull/165
-  - contributed by Tobias Roeser https://github.com/lefou
 
-User community contributions welcome...
 
 ## Version 0.3.0 - 2018-03-07
 
