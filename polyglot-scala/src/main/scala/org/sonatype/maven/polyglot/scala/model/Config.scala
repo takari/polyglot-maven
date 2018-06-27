@@ -15,11 +15,34 @@ import scala.language.postfixOps
 
 /**
  * A Config object lets us conveniently express objects that can have any property with any type. This generally
- * serves as configuration to a plugin. The following sample illustrates configuration being created:
+ * serves as configuration to a plugin.
+ *
+ * The following sample illustrates configuration beeing created:
+ *
  * {{{
- *   scala> val c = Config(a = 1, b = "hi")
- *   c: immutable.Seq[(String, Any)] = List((a,1), (b,hi))
+ * configuration = Config(
+ *   debug = "true",
+ *   ignoreErrors = None,
+ *   extraOptions = Config(
+ *     extraOption = "-v",
+ *     extraOption = "-x"
+ *   )
+ * )
  * }}}
+ *
+ * The above sample semantically resembles the following Maven `pom.xml` snippet:
+ *
+ * {{{
+ * <configuration>
+ *   <debug>true</debug>
+ *   <ignoreErrors/>
+ *   <extraOptions>
+ *     <extraOption>-v</extraOption>
+ *     <extraOption>-x</extraOption>
+ *   </extraOptions>
+ * </configuration>
+ * }}}
+ *
  */
 class Config(val elements: immutable.Seq[(String, Option[Any])]) {
   /**
