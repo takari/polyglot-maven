@@ -20,6 +20,9 @@ at an easier glance.
   - contributed by Tobias Roeser https://github.com/lefou
 - Upgrade to latest takari-pom parent
   - contributed by Manfred Moser http://www.simpligility.com
+- polyglot-scala: Made output dir to pom.scala files compilation configurable via system property `polyglot.scala.outputdir`
+  - see https://github.com/takari/polyglot-maven/pull/165
+  - contributed by Tobias Roeser https://github.com/lefou
 
 ## Version 0.3.0 - 2018-03-07
 
