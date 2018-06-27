@@ -21,7 +21,12 @@ import scala.language.postfixOps
  *   c: immutable.Seq[(String, Any)] = List((a,1), (b,hi))
  * }}}
  */
-class Config(val elements: immutable.Seq[(String, Option[Any])])
+class Config(val elements: immutable.Seq[(String, Option[Any])]) {
+  /**
+   * Returns a new Config with contains the elements of this and the other config.
+   */
+  def ++(other: Config): Config = new Config(elements ++ other.elements)
+}
 
 object Config extends Dynamic {
 
@@ -38,7 +43,6 @@ object Config extends Dynamic {
       case (k, Optional(v)) => sanitizeElementName(k) -> v
     } toList)
     else throw new UnsupportedOperationException
-
 
   val elementStartCharMapping = Seq(
     "\\Q$colon\\E".r -> ":"
