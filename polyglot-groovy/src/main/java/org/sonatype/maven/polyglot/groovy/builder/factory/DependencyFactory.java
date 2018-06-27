@@ -8,8 +8,11 @@
 package org.sonatype.maven.polyglot.groovy.builder.factory;
 
 import groovy.util.FactoryBuilderSupport;
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,6 +23,9 @@ import java.util.Map;
  * @since 0.7
  */
 public class DependencyFactory extends NamedFactory {
+
+  private static final List<String> SCOPES = Arrays.asList("system", "compile", "provided", "runtime", "test");
+
   public DependencyFactory() {
     super("dependency");
   }
@@ -57,7 +63,13 @@ public class DependencyFactory extends NamedFactory {
       case 3:
         node.setGroupId(items[0]);
         node.setArtifactId(items[1]);
-        node.setVersion(items[2]);
+
+        if (SCOPES.contains(items[2])) {
+          node.setScope(items[2]);
+        } else {
+          node.setVersion(items[2]);
+        }
+
         return node;
 
       case 2:

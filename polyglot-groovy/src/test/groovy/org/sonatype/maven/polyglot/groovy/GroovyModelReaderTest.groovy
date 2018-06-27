@@ -61,4 +61,40 @@ public class GroovyModelReaderTest
 
         dump(model)
     }
+
+    @Test
+    void testVersionDependency() {
+        def input = getClass().getResource("test5.groovy")
+        assertNotNull(input)
+
+        def options = [:]
+        options.put(ModelProcessor.SOURCE, input)
+        def model = reader.read(input.openStream(), options)
+        assertNotNull(model)
+
+        def dependencies = model.dependencies
+        def dependency = dependencies[0]
+
+        assertEquals("a", dependency.groupId)
+        assertEquals("b", dependency.artifactId)
+        assertEquals("1.0.0", dependency.version)
+    }
+
+    @Test
+    void testScopeDependency() {
+        def input = getClass().getResource("test6.groovy")
+        assertNotNull(input)
+
+        def options = [:]
+        options.put(ModelProcessor.SOURCE, input)
+        def model = reader.read(input.openStream(), options)
+        assertNotNull(model)
+
+        def dependencies = model.dependencies
+        def dependency = dependencies[0]
+
+        assertEquals("a", dependency.groupId)
+        assertEquals("b", dependency.artifactId)
+        assertEquals("test", dependency.scope)
+    }
 }
