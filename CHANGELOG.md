@@ -4,6 +4,10 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
+## Version 0.3.2 or higher - Upcoming
+
+Your contributions are welcome.
+
 ## Version 0.3.1 - 2018-06-27
 
 - polyglot-scala: Convenience methods for `Dependency` (`classifier`, `intransitive`, `%` (scope))
