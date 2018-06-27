@@ -127,5 +127,32 @@ class ConfigSpec extends Specification {
       Config(`-Key-` = "value").elements.head._1 must_== "$minusKey-"
     }
 
+    def checkConfig(config: Config) = {
+      val c = new ConvertibleScalaConfig(config)
+      val xml = c.asJava
+
+      xml.getName must_== "configuration"
+      xml.getChildCount must_== 1
+      val child1 = xml.getChild(0)
+      child1.getName must_== "key1"
+      child1.getValue must beNull
+      child1.getChildCount must_== 0
+    }
+
+    "convert a configuration to XML with an empty config block (Config ctr with None)" in {
+      checkConfig(
+        new Config(immutable.Seq(
+          "key1" -> None
+        ))
+      )
+    }
+
+    "convert a configuration to XML with an empty config block (Config apply with Config.Emptry)" in {
+      checkConfig(
+        Config(
+          key1 = None
+        )
+      )
+    }
   }
 }
