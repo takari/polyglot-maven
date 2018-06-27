@@ -11,6 +11,8 @@ Ruby, Groovy and Scala dialects allow this.
 
 [![Gitter chat](https://badges.gitter.im/takari/gitter.png)](https://gitter.im/takari/AllThingsTakari)
 
+[Takari Slack](https://takari.slack.com)
+
 Here's an example POM written in the Ruby dialect:
 
 ```ruby
