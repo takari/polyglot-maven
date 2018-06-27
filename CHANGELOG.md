@@ -23,8 +23,25 @@ at an easier glance.
 - polyglot-scala: Made output dir to pom.scala files compilation configurable via system property `polyglot.scala.outputdir`
   - see https://github.com/takari/polyglot-maven/pull/165
   - contributed by Tobias Roeser https://github.com/lefou
+- polyglot-scala: Improved support and docs for configuration elements of plugins
+  - see https://github.com/takari/polyglot-maven/pull/167
+  - see https://github.com/takari/polyglot-maven/pull/168
+  - see https://github.com/takari/polyglot-maven/pull/169
+  - fixes https://github.com/takari/polyglot-maven/issues/146
+  - contributed by Tobias Roeser https://github.com/lefou
 - Upgrade to latest takari-pom parent
   - contributed by Manfred Moser http://www.simpligility.com
+- polyglot-yaml: Support for xml attributes
+  - see https://github.com/takari/polyglot-maven/pull/162
+  - fixes https://github.com/takari/polyglot-maven/issues/118
+  - contributed by https://github.com/dimiii
+- polyglot-yaml: exclude pomFile property from serialization
+  - see https://github.com/takari/polyglot-maven/pull/163
+  - fixes https://github.com/takari/polyglot-maven/issues/99
+  - contributed by https://github.com/dimiii
+- polyglot-java: Linux support and test fixes
+- polyglot-java: Moved examples into polyglot-maven-examples
+- Release performed by Manfred Moser - http://www.simpligility.com
 
 
 ## Version 0.3.0 - 2018-03-07
