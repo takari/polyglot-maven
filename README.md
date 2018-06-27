@@ -57,7 +57,6 @@ project 'Polyglot :: Aggregator' do
 end
 ```
 
-
 # Requirements
 
 * [Maven](http://maven.apache.org) 3.3.1+
@@ -68,6 +67,11 @@ end
 To use Polyglot for Maven you need to edit
 `${maven.multiModuleProjectDirectory}/.mvn/extensions.xml` and add the
 appropriate language extension.
+
+The scala dialect supports a separate configuration parameter
+`polyglot.scala.outputdir` to specify a different output directory. This avoids the
+deletion during a Maven clean phase run, when set to a different folder such as
+`.polyglot-cache` instead of the default `target`. Inspect `polyglot-maven-examples/scala/.mvn/maven.config` for an example setup.
 
 ## Available Languages
 
