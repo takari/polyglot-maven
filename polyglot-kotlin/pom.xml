@@ -6,7 +6,7 @@
     <parent>
         <artifactId>polyglot</artifactId>
         <groupId>io.takari.polyglot</groupId>
-        <version>0.2.2-SNAPSHOT</version>
+        <version>0.3.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>polyglot-kotlin</artifactId>
