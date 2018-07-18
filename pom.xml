@@ -31,6 +31,7 @@
     <mavenVersion>3.5.0</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
+    <kotlin.version>1.2.21</kotlin.version>
   </properties>
 
   <scm>
@@ -50,8 +51,9 @@
     <module>polyglot-clojure</module>
     <module>polyglot-xml</module>
     <module>polyglot-java</module>
-    <module>polyglot-maven-plugin</module>    
-    <module>polyglot-translate-plugin</module>    
+    <module>polyglot-kotlin</module>
+    <module>polyglot-maven-plugin</module>
+    <module>polyglot-translate-plugin</module>
   </modules>
 
   <dependencyManagement>
@@ -94,6 +96,11 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-java</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-kotlin</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- We inline Maven's dependency management section to align dependency 
