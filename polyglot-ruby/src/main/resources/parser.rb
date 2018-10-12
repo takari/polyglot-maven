@@ -134,14 +134,17 @@ module Maven
           @prop.send( method, *args )
         end
       end
-    
+
       def properties(props = {})
+        unless @current.properties.is_a?(org.sonatype.maven.polyglot.ruby.SortedProperties)
+          @current.properties = org.sonatype.maven.polyglot.ruby.SortedProperties.new(@current.properties)
+        end
         props.each do |k,v|
           @current.properties[k.to_s] = v.to_s
         end
         PropertiesWrapper.new @current.properties
       end
-    
+
       def xml( xml )
         Xpp3DomBuilder.build( java.io.StringReader.new( xml ) )
       end

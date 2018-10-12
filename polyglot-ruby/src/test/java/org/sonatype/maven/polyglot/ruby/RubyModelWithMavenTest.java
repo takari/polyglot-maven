@@ -9,6 +9,7 @@ package org.sonatype.maven.polyglot.ruby;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -25,6 +26,7 @@ import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.IOUtil;
@@ -43,11 +45,46 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         assertRubyModel( IOUtil.toString( new FileInputStream( pom ) ) );
     }
 
+
+    public void testRubyModelReaderXmlOutput() throws Exception {
+        File pom = new File(poms, "pom.rb");
+
+        //
+        // Read in the Ruby POM
+        //
+        RubyModelReader rubyModelReader = new RubyModelReader();
+        rubyModelReader.executeManager = new ExecuteManagerImpl() {
+            {
+              log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
+            }
+          };
+        rubyModelReader.setupManager = new SetupClassRealm();
+
+        FileReader r = new FileReader( pom );
+        Model rubyModel = rubyModelReader.read(r, new HashMap<String, Object>());
+
+
+        //
+        // Write out the xml POM
+        //
+
+        MavenXpp3Writer writer = new MavenXpp3Writer();
+        StringWriter w = new StringWriter();
+        writer.write(w, rubyModel);
+
+        // Let's take a look at see what's there
+        // System.out.println(w.toString());
+
+
+        File pomXml = new File(poms, "pom.xml");
+        assertEquals( w.toString(), IOUtil.toString( new FileInputStream( pomXml ) ) );
+    }
+
     public void testRubyModelWriter() throws Exception {
         File pom = new File(poms, "maven-parent-pom.xml");
         MavenXpp3Reader xmlModelReader = new MavenXpp3Reader();
         Model xmlModel = xmlModelReader.read(new FileInputStream(pom));
-        
+
         //
         // Write out the Ruby POM
         //
@@ -57,21 +94,21 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
 
         // Let's take a look at see what's there
         //System.out.println(w.toString());
-        
+
         assertRubyModel( w.toString() );
     }
-    
+
     private void assertRubyModel( String rubyPom ) throws IOException {
 
-    	//
-    	// Read in the Ruby POM
-    	//
-    	RubyModelReader rubyModelReader = new RubyModelReader();
-    	rubyModelReader.executeManager = new ExecuteManagerImpl() {
-    		{
-    			log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
-    		}
-    	};
+        //
+        // Read in the Ruby POM
+        //
+        RubyModelReader rubyModelReader = new RubyModelReader();
+        rubyModelReader.executeManager = new ExecuteManagerImpl() {
+          {
+            log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
+          }
+        };
         rubyModelReader.setupManager = new SetupClassRealm();
 
         StringReader r = new StringReader( rubyPom );
@@ -105,7 +142,7 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         //
         assertTrue(model.getDescription().length() > 200);
 
-        //    
+        //
         // repos
         //
         assertEquals(0, model.getRepositories().size());
@@ -259,26 +296,26 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         assertNull(config.getValue());
         assertEquals("org.codehaus.mojo.signature", config.getChild("groupId").getValue());
         assertEquals("java15", config.getChild("artifactId").getValue());
-        assertEquals("1.0", config.getChild("version").getValue());  
+        assertEquals("1.0", config.getChild("version").getValue());
         assertEquals(3, config.getChildCount());
         assertEquals(1, p.getExecutions().size());
         PluginExecution e = p.getExecutions().get(0);
-        assertEquals("check-java-1.5-compat", e.getId());    
+        assertEquals("check-java-1.5-compat", e.getId());
         assertEquals("process-classes", e.getPhase());
         List<String> goals = e.getGoals();
-        assertEquals(1, goals.size());    
-        assertEquals("check", goals.get(0));    
-        
+        assertEquals(1, goals.size());
+        assertEquals("check", goals.get(0));
+
         p = model.getBuild().getPlugins().get(1);
         assertEquals("org.sonatype.plugins:sisu-maven-plugin:null", gav(p));
         assertNull(p.getConfiguration());
         assertEquals(1, p.getExecutions().size());
         e = p.getExecutions().get(0);
-        assertEquals("default", e.getId());    
+        assertEquals("default", e.getId());
         goals = e.getGoals();
-        assertEquals(2, goals.size());    
-        assertEquals("main-index", goals.get(0));    
-        assertEquals("test-index", goals.get(1));    
+        assertEquals(2, goals.size());
+        assertEquals("main-index", goals.get(0));
+        assertEquals("test-index", goals.get(1));
 
         p = model.getBuild().getPlugins().get(2);
         assertEquals(
@@ -293,7 +330,7 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
                 "useDefaultExcludes").getValue());
         assertEquals("${project.basedir}/header.txt", ((Xpp3Dom) p
                 .getConfiguration()).getChild("header").getValue());
-        
+
         config = ((Xpp3Dom) p.getConfiguration()).getChild("excludes");
         assertNull(config.getValue());
         assertEquals(1, config.getChildCount());
@@ -310,7 +347,7 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         assertEquals("include", child.getName());
         assertEquals("**/*.css", child.getValue());
         assertEquals(12, config.getChildCount());
-        
+
         config = ((Xpp3Dom) p.getConfiguration()).getChild("mapping");
         assertNull(config.getValue());
         assertEquals(3, config.getChildCount());
