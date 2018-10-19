@@ -138,7 +138,7 @@ public class ModelToJavaWriter {
 	private void writeDependencies() throws IOException {
 		
 		if (model.getDependencyManagement() != null && model.getDependencyManagement().getDependencies() != null && !model.getDependencyManagement().getDependencies().isEmpty()) {
-			writeDependencies(model.getDependencies(), "dependencyManagement");			
+			writeDependencies(model.getDependencyManagement().getDependencies(), "dependencyManagement");			
 		}		
 		writeDependencies(model.getDependencies(), "dependencies");
 		writeBuild();
