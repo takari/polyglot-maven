@@ -15,7 +15,7 @@
 
   <groupId>io.takari.polyglot</groupId>
   <artifactId>polyglot</artifactId>
-  <version>0.3.2</version>
+  <version>0.3.3-SNAPSHOT</version>
   <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
 
@@ -38,7 +38,7 @@
     <connection>scm:git:git@github.com:takari/polyglot-maven.git</connection>
     <developerConnection>scm:git:git@github.com:takari/polyglot-maven.git</developerConnection>
     <url>https://github.com/takari/polyglot-maven</url>
-    <tag>polyglot-0.3.2</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <modules>
