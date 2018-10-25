@@ -15,11 +15,10 @@ Your contributions are welcome.
   - see https://github.com/takari/polyglot-maven/commit/60290957cfc693fa8ad44711702b91c95f60f692
   - fixes https://github.com/takari/polyglot-maven/issues/177
   - contributed by Christian Meier https://github.com/mkristian
-- added polyglo-kotlin
+- added polyglot-kotlin
   - see https://github.com/takari/polyglot-maven/pull/170
   - contributed by Viacheslav Tradunskyi https://github.com/Tradunsky
-
-
+- Release performed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.3.1 - 2018-06-27
 
@@ -59,7 +58,6 @@ Your contributions are welcome.
 - polyglot-java: Linux support and test fixes
 - polyglot-java: Moved examples into polyglot-maven-examples
 - Release performed by Manfred Moser - http://www.simpligility.com
-
 
 ## Version 0.3.0 - 2018-03-07
 

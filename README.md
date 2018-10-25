@@ -84,6 +84,7 @@ The available languages, in alphabetical order, with their artifact id are:
 | Atom     | `polyglot-atom`    |
 | Groovy   | `polyglot-groovy`  |
 | Clojure  | `polyglot-clojure` |
+| Kotlin   | `polyglot-kotlin`    |
 | Ruby     | `polyglot-ruby`    |
 | Scala    | `polyglot-scala`   |
 | YAML     | `polyglot-yaml`    |
