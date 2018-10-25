@@ -4,9 +4,22 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.3.2 or higher - Upcoming
+## Version 0.3.3 or higher - Upcoming
 
 Your contributions are welcome.
+
+## Version 0.3.2 - 2018-10-19
+
+- polyglot-java: fixed depMgt conversion
+- polyglot-ruby: java9+ support improvement
+  - see https://github.com/takari/polyglot-maven/commit/60290957cfc693fa8ad44711702b91c95f60f692
+  - fixes https://github.com/takari/polyglot-maven/issues/177
+  - contributed by Christian Meier https://github.com/mkristian
+- added polyglo-kotlin
+  - see https://github.com/takari/polyglot-maven/pull/170
+  - contributed by Viacheslav Tradunskyi https://github.com/Tradunsky
+
+
 
 ## Version 0.3.1 - 2018-06-27
 
