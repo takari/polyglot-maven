@@ -30,6 +30,9 @@ project {
     }
 }
 ```
+## Motivation
+Eye friendly kotlin script in [70 LOC](https://github.com/takari/polyglot-maven/blob/master/polyglot-kotlin/src/test/resources/multi-module/pom.kts) comparing to [215 lines](https://github.com/takari/polyglot-maven/blob/master/pom.xml) of XML
+
 
 ## IDE support
 Targeting IntelliJ IDEA only.
