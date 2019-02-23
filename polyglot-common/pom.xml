@@ -17,13 +17,6 @@
   <packaging>takari-jar</packaging>
   <name>Polyglot :: Common</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
   <build>
     <resources>
       <resource>

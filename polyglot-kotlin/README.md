@@ -1,20 +1,18 @@
 # Polyglot Kotlin  
 Here is the code:
 ```kotlin
-project {
-    name = "Polyglot :: Kotlin"
+project("Polyglot :: Kotlin") {
     parent {
         groupId = "io.takari.polyglot"
         artifactId = "polyglot"
         version = "0.2.2-SNAPSHOT"
     }
-    artifactId = "regular-project"
-    packaging = jar
+    id = "com.example:my-project:1.0:jar"
 
     val junitVersion = 4.12
     
     properties {
-        "kotlin.version" assign "1.1.61"
+        "kotlin.version" assign "1.3.21"
     }
 
     dependencies {

@@ -191,6 +191,7 @@ public class ExecuteManagerImpl implements ExecuteManager {
       plugin.setGroupId(Constants.getGroupId());
       plugin.setArtifactId(Constants.getArtifactId("maven-plugin"));
       plugin.setVersion(Constants.getVersion());
+      plugin.setInherited(false); // Inheritence of scripted executions is not currently supportable
 
       // Do not assume that the existing list is mutable.
       BuildBase build = getBuild(model, profileId);

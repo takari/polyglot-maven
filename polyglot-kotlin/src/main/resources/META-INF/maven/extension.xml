@@ -4,7 +4,6 @@
     <exportedPackage>org.sonatype.maven.polyglot</exportedPackage>
     <exportedPackage>org.sonatype.maven.polyglot.execute</exportedPackage>
   </exportedPackages>
- 
   <exportedArtifacts>
     <exportedArtifact>io.takari.polyglot:polyglot-common</exportedArtifact>
   </exportedArtifacts>

@@ -1,0 +1,3 @@
+project {
+    id(":sample-lib")
+}

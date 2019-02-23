@@ -1,24 +1,35 @@
+package org.sonatype.maven.polyglot.kotlin
+
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.ModelReader
-import org.codehaus.plexus.PlexusContainer
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
-import org.codehaus.plexus.logging.Logger
+import org.sonatype.maven.polyglot.execute.ExecuteManager
 import org.sonatype.maven.polyglot.io.ModelReaderSupport
+import org.sonatype.maven.polyglot.kotlin.dsl.Project
+import org.sonatype.maven.polyglot.kotlin.engine.singletonEngineFactory
 import java.io.Reader
+import javax.script.ScriptException
 
 @Component(role = ModelReader::class, hint = "kotlin")
 class KotlinModelReader : ModelReaderSupport() {
-    @Requirement
-    private val container: PlexusContainer? = null
 
     @Requirement
-    protected var log: Logger? = null
+    private var executeManager: ExecuteManager? = null
 
-    private val scriptEngine = KomScriptEngineFactory().getScriptEngine()
-
-    override fun read(komReader: Reader, options: MutableMap<String, *>): Model {
-        val project = scriptEngine.eval(komReader)
-        return KomConverter.toModel(project as Project)
+    override fun read(pomReader: Reader, options: Map<String, *>): Model {
+        val model = try {
+            (singletonEngineFactory.scriptEngine.eval(pomReader) as Model?) ?: Model()
+        } catch (ex: ScriptException) {
+            ex.printStackTrace()
+            throw ex.cause ?: ex
+        }
+        if (model is Project) {
+            val tasks = ArrayList(model.tasks)
+            executeManager?.register(model, tasks)
+            executeManager?.install(model, options)
+            model.tasks.clear()
+        }
+        return model
     }
 }

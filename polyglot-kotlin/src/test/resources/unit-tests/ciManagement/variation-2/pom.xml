@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>http://jenkins.example.com</url>
+    <notifiers>
+      <notifier>
+        <type>email</type>
+        <sendOnError>false</sendOnError>
+        <sendOnFailure>false</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <address>build-manager@example.com</address>
+        <configuration>
+          <projectId>1234</projectId>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+</project>

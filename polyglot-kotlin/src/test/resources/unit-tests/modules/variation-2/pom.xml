@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <profiles>
+    <profile>
+      <id>other</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>demo-kotlin-library</module>
+        <module>demo-kotlin-plugin</module>
+        <module>demo-kotlin-app</module>
+        <module>demo-kotlin-parent</module>
+      </modules>
+    </profile>
+  </profiles>
+</project>

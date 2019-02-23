@@ -3,7 +3,8 @@
   This program and the accompanying materials are made available under the 
   terms of the Eclipse Public License v1.0 which accompanies this distribution, 
   and is available at http://www.eclipse.org/legal/epl-v10.html -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
@@ -28,10 +29,10 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.5.0</mavenVersion>
+    <mavenVersion>3.3.9</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
-    <kotlin.version>1.2.21</kotlin.version>
+    <kotlin.version>1.3.21</kotlin.version>
   </properties>
 
   <scm>
@@ -45,7 +46,7 @@
     <module>polyglot-common</module>
     <module>polyglot-atom</module>
     <module>polyglot-ruby</module>
-    <module>polyglot-scala</module>    
+    <module>polyglot-scala</module>
     <module>polyglot-groovy</module>
     <module>polyglot-yaml</module>
     <module>polyglot-clojure</module>
@@ -130,11 +131,11 @@
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
       <scope>provided</scope>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
-      <scope>provided</scope>      
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -155,7 +156,7 @@
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <scope>provided</scope>
-    </dependency>  
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-component-annotations</artifactId>
@@ -181,6 +182,31 @@
               <goal>generate-metadata</goal>
               <goal>generate-test-metadata</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4.1</version>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <failFast>true</failFast>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.3.9,)</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[1.8,9)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -213,7 +239,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore />
+                    <ignore/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>

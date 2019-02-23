@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <profiles>
+    <profile>
+      <id>other</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <date.value>2019-02-01</date.value>
+        <datetime.value>2019-02-01T11:42:19.416Z</datetime.value>
+        <double.max>1.7976931348623157E308</double.max>
+        <double.min>4.9E-324</double.min>
+        <empty></empty>
+        <false>false</false>
+        <four>4.0.0</four>
+        <int.max>2147483647</int.max>
+        <int.min>-2147483647</int.min>
+        <javaVersion>${java.version}</javaVersion>
+        <kotlinVersion>${kotlin.version}</kotlinVersion>
+        <long.max>9223372036854775807</long.max>
+        <long.min>-9223372036854775807</long.min>
+        <one>1</one>
+        <three>3.0</three>
+        <true>true</true>
+        <two>002</two>
+      </properties>
+    </profile>
+  </profiles>
+</project>

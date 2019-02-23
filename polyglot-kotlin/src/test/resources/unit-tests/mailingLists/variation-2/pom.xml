@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <mailingLists>
+    <mailingList>
+      <name>polyglot-kotlin</name>
+      <subscribe>mailto:polyglot-kotlin@example.com?subject=subscribe</subscribe>
+      <unsubscribe>mailto:polyglot-kotlin@example.com?subject=unsubscribe</unsubscribe>
+      <post>mailto:polyglot-kotlin@example.com</post>
+      <archive>http://www.example.com/mail/polyglot-kotlin/</archive>
+      <otherArchives>
+        <otherArchive>http://mail.example.com/polyglot-kotlin/</otherArchive>
+        <otherArchive>http://mail.example.com/polyglot-maven/</otherArchive>
+      </otherArchives>
+    </mailingList>
+  </mailingLists>
+</project>

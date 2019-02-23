@@ -62,7 +62,7 @@ public class PolyglotModelManager implements ModelLocator {
       }
     }
 
-    throw new RuntimeException("Unable determine model input format; options=" + options);
+    throw new RuntimeException("Unable to determine model input format; options=" + options);
   }
 
   public ModelWriter getWriterFor(final Map<String, ?> options) {
@@ -72,7 +72,7 @@ public class PolyglotModelManager implements ModelLocator {
       }
     }
 
-    throw new RuntimeException("Unable determine model output format; options=" + options);
+    throw new RuntimeException("Unable to determine model output format; options=" + options);
   }
 
   @Override
@@ -92,7 +92,7 @@ public class PolyglotModelManager implements ModelLocator {
     return pomFile;
   }
 
-  public String determinFlavourFromPom(final File dir) {
+  public String determineFlavourFromPom(final File dir) {
     assert dir != null;
 
     String flavour = null;
