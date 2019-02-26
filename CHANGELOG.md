@@ -6,7 +6,23 @@ at an easier glance.
 
 ## Version 0.3.3 or higher - Upcoming
 
-Your contributions are welcome.
+- polyglot-common:
+  - Execute tasks are now installed with inheritable set to false
+  - The `ExecuteContext` interface now has default implementations
+  - The `ExecuteContext` now includes `getMavenSession()`
+  - the `ExecuteContext` now includes `getLog()` to comport with Java bean conventions. The `log()` operation has been
+    deprecated.
+  - the `ExecuteContext` now includes `getBasedir()` to comport with Java bean conventions. The `basedir()` operation
+    has been deprecated.
+- polyglot-kotlin:
+  - Updates Kotlin to 1.3.21
+  - Includes support for Maven's ClassRealm
+  - Includes full support for the entire Maven model
+  - Includes support for execute tasks via as inline lambdas or as external scripts.
+  - Adds integration tests
+  - Provides 100% test coverage for the entire Maven model
+  - Resolves ClassLoader issues that affected integration with IntelliJ IDEA
+  - The above enhancements were contributed by Robert Thornton https://github.com/thorntonrp
 
 ## Version 0.3.2 - 2018-10-19
 
