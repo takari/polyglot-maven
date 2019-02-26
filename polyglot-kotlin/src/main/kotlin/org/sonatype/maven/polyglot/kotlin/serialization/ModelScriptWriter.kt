@@ -873,10 +873,6 @@ internal class ModelScriptWriter(
             throw NotImplementedError("not implemented")
         }
 
-        override fun getBasedir(): File {
-            throw NotImplementedError("not implemented")
-        }
-
         override fun getLog(): Log {
             throw NotImplementedError("not implemented")
         }
