@@ -15,6 +15,8 @@ project {
                 "double.min" to 4.9E-324
                 "date.value" to java.time.LocalDate.parse("2019-02-01")
                 "datetime.value" to java.time.ZonedDateTime.parse("2019-02-01T11:42:19.416Z")
+                "java.version" to "1.8"
+                "kotlin.version" to "1.3.21"
                 group("numbers") {
                     "one" to 1
                     "two" to "002"
@@ -29,6 +31,11 @@ project {
                     "javaVersion" to "\${java.version}"
                     "kotlinVersion" to "\${kotlin.version}"
                 }
+            }
+            dependencies {
+                fun get(key: Any) = this@profile.properties?.get(key)?.toString() ?: ""
+                compile("org.jetbrains.kotlin:kotlin-sdtlib:${get("kotlin.version")}")
+                test(groupId = "org.jetbrains.kotlin", artifactId = "kotlin-sdtlib", version = get("kotlin.version"))
             }
         }
     }

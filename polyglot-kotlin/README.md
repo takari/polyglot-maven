@@ -20,36 +20,18 @@ project("Polyglot :: Kotlin") {
         compile(it.groupId + ":polyglot-common:" + it.version)
                 .exclusions("org.slf4j:jul-logger")
 
-        test(
-                "junit:junit:$junitVersion" exclusions "org.hamcrest:hamcrest-core",
-                "org.jetbrains.kotlin:kotlin-test-junit:${it["kotlin.version"]}"
-        )
+        test("junit:junit:$junitVersion").excluding("org.hamcrest:hamcrest-core")
         provided(groupId = "org.apache.maven.plugin-tools", artifactId = "maven-plugin-annotations", version = "3.4")
     }
 }
 ```
 ## Motivation
-Eye friendly kotlin script in [70 LOC](https://github.com/takari/polyglot-maven/blob/master/polyglot-kotlin/src/test/resources/multi-module/pom.kts) comparing to [215 lines](https://github.com/takari/polyglot-maven/blob/master/pom.xml) of XML
-
+- Support adhoc task execution via kotlin lambdas and external scripts.
+- Support the entire Maven model
+- Preserve well-known Maven idioms in a kotlin flavor.
+- Support Xpp3DOM (XML) configuration using idiomatic kotlin.
+- Provide idiomatic kotlin extensions that improve readability and minimize lines of code
 
 ## IDE support
-Targeting IntelliJ IDEA only.
-
-
-## Not supported yet  
-* reports
-* licenses
-* scm
-* distributionManagement
-* contributors
-* repositories
-* organization
-* developers
-* mailingLists
-* prerequisites
-* issueManagement
-* ciManagement
-* reporting
-* arbitrary kotlin code execution on maven phase. Not sure if maven users would like to have such feature.
- 
-
+Any IDE that supports Maven extensions should work, but IntelliJ IDEA is the only one that seems to support the
+polyglot-maven extension so far.
