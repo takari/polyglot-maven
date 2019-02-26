@@ -1,5 +1,6 @@
 package org.sonatype.maven.polyglot.kotlin.serialization
 
+import org.apache.maven.execution.MavenSession
 import org.apache.maven.model.*
 import org.apache.maven.plugin.logging.Log
 import org.apache.maven.project.MavenProject
@@ -868,11 +869,15 @@ internal class ModelScriptWriter(
             throw NotImplementedError("not implemented")
         }
 
-        override fun basedir(): File {
+        override fun getSession(): MavenSession {
             throw NotImplementedError("not implemented")
         }
 
-        override fun log(): Log {
+        override fun getBasedir(): File {
+            throw NotImplementedError("not implemented")
+        }
+
+        override fun getLog(): Log {
             throw NotImplementedError("not implemented")
         }
     }

@@ -19,6 +19,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
@@ -78,12 +79,16 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
                 public MavenProject getProject() {
                     return new MavenProject(rubyModel);
                 }
+
+                public MavenSession getSession() {
+                    return null;
+                }
                 
-                public File basedir() {
+                public File getBasedir() {
                     return getProject().getBasedir();
                 }
                 
-                public Log log() {
+                public Log getLog() {
                     return null;
                 }
             };

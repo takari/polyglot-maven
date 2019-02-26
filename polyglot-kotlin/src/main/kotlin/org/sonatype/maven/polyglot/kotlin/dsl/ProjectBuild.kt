@@ -1,9 +1,9 @@
 package org.sonatype.maven.polyglot.kotlin.dsl
 
+import org.sonatype.maven.polyglot.execute.ExecuteContext
 import org.sonatype.maven.polyglot.execute.ExecuteTask
 import org.sonatype.maven.polyglot.kotlin.engine.singletonEngineFactory
 import org.sonatype.maven.polyglot.kotlin.execute.KotlinExecuteTask
-import org.sonatype.maven.polyglot.kotlin.execute.ScriptExecutionContext
 import java.io.File
 
 @PomDsl
@@ -12,7 +12,7 @@ class ProjectBuild : Build() {
     val tasks: MutableList<ExecuteTask> = mutableListOf()
 
     @PomDsl
-    fun execute(id: String, phase: String, profile: String? = null, block: ScriptExecutionContext.(ScriptExecutionContext) -> Unit) {
+    fun execute(id: String, phase: String, profile: String? = null, block: ExecuteContext.(ExecuteContext) -> Unit) {
         tasks.add(KotlinExecuteTask(block).apply {
             this.id = id
             this.phase = phase

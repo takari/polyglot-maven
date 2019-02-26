@@ -3,6 +3,7 @@ package org.sonatype.maven.polyglot.java.test;
 import java.util.Arrays;
 
 import org.apache.maven.model.Contributor;
+import org.apache.maven.model.Resource;
 import org.sonatype.maven.polyglot.java.dsl.ModelFactory;
 
 public class ModelTest extends ModelFactory {
@@ -87,7 +88,7 @@ public class ModelTest extends ModelFactory {
 					filtering -> "true"
 				)
 			),
-			testResources(null)
+			testResources((Resource[]) null)
 	    );
 		
 		

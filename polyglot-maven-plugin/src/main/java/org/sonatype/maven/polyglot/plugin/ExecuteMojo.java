@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.FileModelSource;
 import org.apache.maven.model.building.ModelProcessor;
@@ -45,6 +46,9 @@ public class ExecuteMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
+
+  @Parameter(defaultValue = "${session}", required = true, readonly = true)
+  private MavenSession session;
 
   @Parameter(required = true, property="taskId")
   private String taskId;
@@ -80,13 +84,18 @@ public class ExecuteMojo extends AbstractMojo {
       }
 
       @Override
-      public File basedir() {
+      public MavenSession getSession() {
+        return session;
+      }
+
+      @Override
+      public File getBasedir() {
         return project.getBasedir();
       }
 
       @Override
-      public Log log() {
-        return getLog();
+      public Log getLog() {
+        return ExecuteMojo.this.getLog();
       }
     };
 
