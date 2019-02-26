@@ -84,7 +84,7 @@ import java.util.*
  *
  * ```
  * project("Sample Application") {
- *   id = "com.example:sample-app:1.0:jar"
+ *   id("com.example:sample-app:1.0:jar")
  *   properties {
  *     "kotlin.version" to "1.3.11"
  *   }
@@ -117,7 +117,7 @@ internal class ModelScriptWriter(
 ) : KotlinScriptWriter(writer) {
 
     private val fileComment: String = (options["file.comment"] as String?)
-        ?: "Generated from pom.xml on ${LocalDate.now()} at ${LocalTime.now()}"
+        ?: "Generated from pom.kts on ${LocalDate.now()} at ${LocalTime.now()}"
 
     // By default, Xpp3Dom values are scripted as a function that accepts a raw (triple-quoted) string.
     // When using the XML builder DSL, we script the Xpp3Dom as hierarchy of gets on tag names using an operator
@@ -587,7 +587,7 @@ internal class ModelScriptWriter(
                 set("groupId", groupId)
                 set("artifactId", artifactId)
                 set("version", version)
-                set("relativePath", relativePath) { relativePath != "../pom.xml" }
+                set("relativePath", relativePath) { relativePath != "../pom.kts" }
             }
         }
     }

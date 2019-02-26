@@ -3,6 +3,10 @@ package org.sonatype.maven.polyglot.kotlin.dsl
 @PomDsl
 class Parent : org.apache.maven.model.Parent(), Cloneable {
 
+    init {
+        relativePath = "../pom.kts"
+    }
+
     @PomDsl
     fun groupId(groupId: String): Parent {
         this.groupId = groupId

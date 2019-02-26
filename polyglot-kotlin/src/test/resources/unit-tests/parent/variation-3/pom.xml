@@ -6,5 +6,6 @@
     <groupId>com.example</groupId>
     <artifactId>sample-lib</artifactId>
     <version>1.0</version>
+    <relativePath>../pom.kts</relativePath>
   </parent>
 </project>

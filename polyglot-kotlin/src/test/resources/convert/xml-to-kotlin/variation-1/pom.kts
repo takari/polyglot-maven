@@ -8,7 +8,7 @@ project("Polyglot Kotlin Demo") {
         "org.springframework.boot",
         "spring-boot-starter-parent",
         "2.1.0.RELEASE",
-        "../../pom.xml"
+        "../../pom.kts"
     )
 
     id("com.example:polyglot-demo:\${revision}:jar")

@@ -8,7 +8,7 @@ project {
         groupId = "org.springframework.boot"
         artifactId = "spring-boot-starter-parent"
         version = "2.1.0.RELEASE"
-        relativePath = "../../pom.xml"
+        relativePath = "../../pom.kts"
     }
 
     groupId = "com.example"

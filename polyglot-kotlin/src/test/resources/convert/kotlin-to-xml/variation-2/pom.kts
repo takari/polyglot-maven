@@ -13,7 +13,7 @@ project("Polyglot :: Kotlin :: Demo") {
         "org.springframework.boot",
         "spring-boot-starter-parent",
         "2.1.0.RELEASE"
-    ) relativePath "../../pom.xml"
+    ) relativePath "../../pom.kts"
 
     properties {
         "java.version" to "11"
