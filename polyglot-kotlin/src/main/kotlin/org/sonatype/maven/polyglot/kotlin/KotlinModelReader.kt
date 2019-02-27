@@ -2,11 +2,15 @@ package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.ModelReader
+import org.codehaus.plexus.classworlds.realm.ClassRealm
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
 import org.sonatype.maven.polyglot.io.ModelReaderSupport
 import org.sonatype.maven.polyglot.kotlin.dsl.Project
+import org.sonatype.maven.polyglot.kotlin.engine.print
+import org.sonatype.maven.polyglot.kotlin.engine.projectClassLoader
+import org.sonatype.maven.polyglot.kotlin.engine.scriptClassLoader
 import org.sonatype.maven.polyglot.kotlin.engine.singletonEngineFactory
 import java.io.Reader
 import javax.script.ScriptException
@@ -21,6 +25,9 @@ class KotlinModelReader : ModelReaderSupport() {
         val model = try {
             (singletonEngineFactory.scriptEngine.eval(pomReader) as Model?) ?: Model()
         } catch (ex: ScriptException) {
+            if (projectClassLoader is ClassRealm) {
+                print(scriptClassLoader)
+            }
             ex.printStackTrace()
             throw ex.cause ?: ex
         }

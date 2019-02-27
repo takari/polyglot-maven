@@ -54,11 +54,11 @@ internal val singletonEngineFactory: ScriptEngineFactory by lazy {
     KotlinScriptEngineFactory()
 }
 
-private val modelClassLoader: ClassLoader = Model::class.java.classLoader
-private val projectClassLoader: ClassLoader = Project::class.java.classLoader
-private val xpp3DomClassLoader: ClassLoader = Xpp3Dom::class.java.classLoader
+internal val modelClassLoader: ClassLoader = Model::class.java.classLoader
+internal val projectClassLoader: ClassLoader = Project::class.java.classLoader
+internal val xpp3DomClassLoader: ClassLoader = Xpp3Dom::class.java.classLoader
 
-private val templateClasspath: List<File> by lazy {
+internal val templateClasspath: List<File> by lazy {
     debug { System.err.println("${id(projectClassLoader)} CREATING NEW TEMPLATE CLASS PATH") }
     val classpath = LinkedHashSet(classpathFromClassLoader(projectClassLoader))
     classpath.addAll(classpathFromClassLoader(modelClassLoader))
@@ -66,17 +66,17 @@ private val templateClasspath: List<File> by lazy {
     classpath.toList()
 }
 
-private val scriptClassLoader: ClassLoader by lazy {
+internal val scriptClassLoader: ClassLoader by lazy {
     debug { System.err.println("${id(projectClassLoader)} CREATING NEW SCRIPT ENGINE CLASS LOADER") }
     debug { print(templateClasspath) }
     URLClassLoader(templateClasspath.map { file -> file.toURI().toURL() }.toTypedArray(), projectClassLoader)
 }
 
-private fun print(classLoader: ClassLoader) {
+internal fun print(classLoader: ClassLoader) {
     print(classpathFromClassLoader(classLoader))
 }
 
-private fun print(classpath: Collection<File>) {
+internal fun print(classpath: Collection<File>) {
     System.err.println("--------------------------------------------------------------------------------")
     classpath.forEachIndexed { index, url ->
         System.err.println("url[${index}] = $url")
@@ -84,6 +84,6 @@ private fun print(classpath: Collection<File>) {
     System.err.println("--------------------------------------------------------------------------------")
 }
 
-private fun id(obj: Any): String {
+internal fun id(obj: Any): String {
     return "${obj.javaClass.name}@${Integer.toHexString(System.identityHashCode(obj))}"
 }
