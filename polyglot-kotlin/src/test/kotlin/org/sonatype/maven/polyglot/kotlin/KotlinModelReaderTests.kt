@@ -7,35 +7,18 @@ import java.io.StringWriter
 
 class KotlinModelReaderTests : AbstractModelTestCase() {
 
-    @Test
-    fun `convert#kotlin-to-xml#variation-0`() {
-        test()
-    }
+    //@formatter:off
 
-    @Test
-    fun `convert#kotlin-to-xml#variation-1`() {
-        test()
-    }
+    @Test fun `example`() = test()
 
-    @Test
-    fun `convert#kotlin-to-xml#variation-2`() {
-        test()
-    }
+    @Test fun `convert#kotlin-to-xml#variation-0`() = test()
+    @Test fun `convert#kotlin-to-xml#variation-1`() = test()
+    @Test fun `convert#kotlin-to-xml#variation-2`() = test()
+    @Test fun `convert#kotlin-to-xml#variation-3`() = test()
+    @Test fun `convert#kotlin-to-xml#variation-4`() = test()
+    @Test fun `convert#kotlin-to-xml#variation-5`() = test()
 
-    @Test
-    fun `convert#kotlin-to-xml#variation-3`() {
-        test()
-    }
-
-    @Test
-    fun `convert#kotlin-to-xml#variation-4`() {
-        test()
-    }
-
-    @Test
-    fun `convert#kotlin-to-xml#variation-5`() {
-        test()
-    }
+    // @formatter:on
 
     private fun test() {
         with(modelFromPomKts) {

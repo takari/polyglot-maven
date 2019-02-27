@@ -1,37 +1,106 @@
 # Polyglot Kotlin  
-Here is the code:
+
+## Overview
+
+- Supports adhoc task execution via Kotlin lambdas and external scripts.
+- Supports the complete Maven model.
+- Preserves well-known Maven idioms with a Kotlin flavor, allowing easy adoption.
+- Supports Xpp3DOM (XML) configuration using idiomatic Kotlin.
+- Provides idiomatic Kotlin extensions that improve readability and reduce lines of code.
+
+## Kotlin POM Example
+
 ```kotlin
 project("Polyglot :: Kotlin") {
-    parent {
-        groupId = "io.takari.polyglot"
-        artifactId = "polyglot"
-        version = "0.2.2-SNAPSHOT"
-    }
-    id = "com.example:my-project:1.0:jar"
+
+    parent("io.takari.polyglot:polyglot:0.2.2-SNAPSHOT").relativePath("../pom.kts")
+
+    id("com.example:my-project:1.0:jar")
 
     val junitVersion = 4.12
-    
+
     properties {
-        "kotlin.version" assign "1.3.21"
+        "maven.compiler.source" to 1.8
+        "maven.compiler.target" to 1.8
+        "kotlin.version" to "1.3.21"
     }
 
     dependencies {
-        compile("org.jetbrains.kotlin:kotlin-stdlib:" + it["kotlin.version"])
-        compile(it.groupId + ":polyglot-common:" + it.version)
-                .exclusions("org.slf4j:jul-logger")
+        fun get(key: Any) = this@project.properties?.get(key)?.toString() ?: ""
+
+        compile("org.jetbrains.kotlin:kotlin-stdlib:" + get("kotlin.version"))
+        compile("org.jetbrains.kotlin:kotlin-runtime:" + get("kotlin.version"))
+
+        runtime(groupId = "io.takari", artifactId = "polyglot-common", version = this@project.version)
+                .excluding("org.slf4j:jul-logger")
 
         test("junit:junit:$junitVersion").excluding("org.hamcrest:hamcrest-core")
-        provided(groupId = "org.apache.maven.plugin-tools", artifactId = "maven-plugin-annotations", version = "3.4")
+
+        provided {
+            groupId = "org.apache.maven.plugin-tools"
+            artifactId = "maven-plugin-annotations"
+            version = "3.4"
+        }
+    }
+
+    build {
+        finalName("\${project.artifactId}")
+
+        sourceDirectory("src/main/kotlin")
+        testSourceDirectory("src/test/kotlin")
+
+        plugins {
+            plugin(":maven-jar-plugin") {
+                configuration {
+                    "archive" {
+                        "index" to true
+                        "manifest" {
+                            "addClasspath" to true
+                            "mainClass" to "org.test.Main"
+                        }
+                        "manifestEntries" {
+                            "mode" to "development"
+                            "url"  to "\${project.url}"
+                            "key"  to "value"
+                        }
+                    }
+                }
+            }
+        }
+
+        // Embedded execute task
+        execute(id = "hello", phase = "initialize") {
+            log.info("Hello from ${project.name}")
+        }
+
+        // External execute task script
+        execute(id = "hello-script", phase = "process-resources", script = "src/build/kotlin/hello.kts")
     }
 }
 ```
-## Motivation
-- Support adhoc task execution via kotlin lambdas and external scripts.
-- Support the entire Maven model
-- Preserve well-known Maven idioms in a kotlin flavor.
-- Support Xpp3DOM (XML) configuration using idiomatic kotlin.
-- Provide idiomatic kotlin extensions that improve readability and minimize lines of code
 
 ## IDE support
-Any IDE that supports Maven extensions should work, but IntelliJ IDEA is the only one that seems to support the
-polyglot-maven extension so far.
+
+Any IDE that supports loading Maven extensions should be able to resolve the Maven model. Currently,
+only IntelliJ IDEA seems to do this.
+
+## Known Issues
+
+- Each Kotlin `ScriptEngine` requires a classpath that includes information from Maven's own classpath as well as the
+  extension's `ClassRealm` (which is a special type of `ClassLoader`). This classpath is used to create an additional
+  `ClassLoader` for use by the `ScriptEngine` which requires the Maven process to consume more metaspace memory than it
+  would if the Kotlin `ScriptEngine` were able to obtain the class information it needs from the existing classloader.
+  This is a limitation of the Kotlin script engine. (See [KT-27956](https://youtrack.jetbrains.com/issue/KT-27956))
+
+  While this issue does not appear to have a significant impact on Maven's command-line performance, it does affect the
+  performance of IntelliJ IDEA's remote Maven server process (as of Build #IU_183.5912.21). The IDE's remote Maven
+  server appears to create a new `ClassRealm` every time it reimports the Maven model. This in turn causes a new
+  `ScriptEngine` with its additional `ClassLoader` to be re-created even though these are created as singletons. This
+  results in the IDE's Maven server process consuming much more metaspace over time than it would otherwise, especially
+  for multi-module projects.
+
+  If you care about this issue, please vote for [KT-27956](https://youtrack.jetbrains.com/issue/KT-27956) under the
+  Kotlin project so that the Kotlin script engine can get the information it needs from the existing classloader.
+
+- IntelliJ IDEA does not appear to auto-matically detect changes to `pom.kts`. The workaround is to manually reimport
+  the Maven project.
