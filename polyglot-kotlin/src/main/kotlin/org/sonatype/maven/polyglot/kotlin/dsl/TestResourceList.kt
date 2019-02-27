@@ -1,7 +1,5 @@
 package org.sonatype.maven.polyglot.kotlin.dsl
 
-import java.io.Serializable
-
 @PomDsl
 class TestResourceList : ArrayList<org.apache.maven.model.Resource>(), Cloneable {
 

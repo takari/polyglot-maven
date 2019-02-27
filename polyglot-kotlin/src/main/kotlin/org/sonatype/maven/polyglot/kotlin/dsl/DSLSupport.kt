@@ -1,6 +1,5 @@
 @file:kotlin.jvm.JvmMultifileClass
 @file:kotlin.jvm.JvmName("DSLSupport")
-@file:Suppress("ReplaceSizeCheckWithIsNotEmpty")
 
 package org.sonatype.maven.polyglot.kotlin.dsl
 

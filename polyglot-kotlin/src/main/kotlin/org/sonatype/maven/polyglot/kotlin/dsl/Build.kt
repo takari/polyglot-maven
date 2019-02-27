@@ -1,5 +1,3 @@
-@file:Suppress("ReplaceSizeCheckWithIsNotEmpty")
-
 package org.sonatype.maven.polyglot.kotlin.dsl
 
 @PomDsl

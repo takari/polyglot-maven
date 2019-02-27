@@ -1,6 +1,5 @@
 package org.sonatype.maven.polyglot.kotlin.serialization
 
-import org.codehaus.plexus.util.xml.Xpp3Dom
 import org.sonatype.maven.polyglot.kotlin.dsl.escape
 import org.sonatype.maven.polyglot.kotlin.dsl.escapeRaw
 import java.io.Writer
@@ -51,7 +50,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
         return this
     }
 
-    protected fun writeString(value: String): KotlinScriptWriter {
+    private fun writeString(value: String): KotlinScriptWriter {
         val escapedValue = escape(value)
         when {
             expressionText.find(value) != null -> {
@@ -168,7 +167,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
         }
     }
 
-    protected fun tripleQuotedString(text: String?) {
+    private fun tripleQuotedString(text: String?) {
         if (text == null) {
             write("null")
         } else {
@@ -182,12 +181,12 @@ internal open class KotlinScriptWriter(writer: Writer) {
         }
     }
 
-    protected fun incrementIndent(): KotlinScriptWriter {
+    private fun incrementIndent(): KotlinScriptWriter {
         indentLevel++
         return this
     }
 
-    protected fun decrementIndent(): KotlinScriptWriter {
+    private fun decrementIndent(): KotlinScriptWriter {
         indentLevel--
         return this
     }
@@ -242,10 +241,6 @@ internal open class KotlinScriptWriter(writer: Writer) {
         write("\"\"\"")
         state.pop()
         decrementIndent()
-    }
-
-    protected fun arguments(vararg values: String?) {
-        return arguments(values.asList())
     }
 
     protected fun arguments(values: List<String?>) {

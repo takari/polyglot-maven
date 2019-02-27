@@ -1,6 +1,5 @@
 @file:kotlin.jvm.JvmMultifileClass
 @file:kotlin.jvm.JvmName("DSL")
-@file:Suppress("unused", "EnumEntryName", "ReplaceSizeCheckWithIsNotEmpty", "FunctionName")
 
 // MUST BE IN THE GLOBAL (ROOT) PACKAGE
 
@@ -20,6 +19,7 @@ fun project(nameOrId: String? = null, block: Project.(Project) -> Unit): Project
 /**
  * Invokes the script at the supplied location
  */
+@Suppress("unused")
 fun eval(scriptLocation: String, bindings: Map<String, Any?>): Any? {
     val scriptEngine = bindings["kotlin.script.engine"] as javax.script.ScriptEngine?
     if (scriptEngine != null) {

@@ -12,7 +12,6 @@ import org.sonatype.maven.polyglot.kotlin.dsl.addFirstNonNull
 import org.sonatype.maven.polyglot.kotlin.dsl.cast
 import org.sonatype.maven.polyglot.kotlin.support.anyOf
 import org.sonatype.maven.polyglot.kotlin.support.isNotNull
-import java.io.File
 import java.io.Writer
 import java.time.LocalDate
 import java.time.LocalTime

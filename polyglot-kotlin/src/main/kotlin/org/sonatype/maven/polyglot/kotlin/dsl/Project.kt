@@ -1,5 +1,3 @@
-@file:Suppress("ReplaceSizeCheckWithIsNotEmpty")
-
 package org.sonatype.maven.polyglot.kotlin.dsl
 
 import org.codehaus.plexus.util.xml.Xpp3Dom
