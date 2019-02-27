@@ -27,6 +27,7 @@ class ProjectBuild : Build() {
             val file = File("$basedir/$script")
             val bindings = scriptEngine.createBindings()
             bindings["project"] = project
+            bindings["session"] = session
             bindings["log"] = log
             bindings["basedir"] = basedir
             bindings["script"] = file

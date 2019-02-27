@@ -65,6 +65,7 @@ project("Maven Polyglot :: Kotlin Demo") {
             val script = "${basedir}/src/build/scripts/hello.kts"
             eval(script, bindings + mapOf(
                 "project" to project,
+                "session" to session,
                 "log" to log,
                 "basedir" to basedir,
                 "script" to java.io.File(script)
