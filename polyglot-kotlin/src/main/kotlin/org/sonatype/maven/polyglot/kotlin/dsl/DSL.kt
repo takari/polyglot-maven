@@ -29,3 +29,7 @@ fun eval(scriptLocation: String, bindings: Map<String, Any?>): Any? {
     }
     return null
 }
+
+@Suppress("unused")
+open class BuildContext(bindings: Map<String, Any?>)
+    : org.sonatype.maven.polyglot.kotlin.execute.KotlinExecuteTaskContext(bindings)
