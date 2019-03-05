@@ -67,7 +67,7 @@ class Dependency : org.apache.maven.model.Dependency(), Cloneable {
      * exclude matching artifacts.
      */
     @PomDsl
-    fun excluding(vararg ga: String): Dependency {
+    fun exclusions(vararg ga: String): Dependency {
         this.exclusions = ga.map { splitCoordinates(it) }.map { (groupId, artifactId) ->
             Exclusion().apply {
                 this.groupId = groupId

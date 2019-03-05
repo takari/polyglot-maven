@@ -63,10 +63,10 @@ project {
         compile("de.codecentric:spring-boot-admin-starter-client:\${spring-boot-admin.version}")
         compile("de.codecentric:spring-boot-admin-starter-server:\${spring-boot-admin.version}")
 
-        test("org.springframework.boot:spring-boot-starter-test").excluding("junit:junit")
+        test("org.springframework.boot:spring-boot-starter-test").exclusions("junit:junit")
         test("org.springframework.security:spring-security-test")
         test("org.junit.jupiter:junit-jupiter-engine")
-        test("org.jetbrains.kotlin:kotlin-test-junit").excluding("junit:junit")
+        test("org.jetbrains.kotlin:kotlin-test-junit").exclusions("junit:junit")
     }
 
     build {

@@ -471,7 +471,7 @@ internal class ModelScriptWriter(
 
     private fun writeExclusions(exclusions: List<Exclusion>?) {
         if (mixedFlavor) {
-            block("excluding", exclusions, { args ->
+            block("exclusions", exclusions, { args ->
                 args.addAll(map {
                     "${it.groupId ?: ""}:${it.artifactId ?: ""}"
                 })

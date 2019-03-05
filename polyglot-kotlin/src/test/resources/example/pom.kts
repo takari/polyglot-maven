@@ -19,9 +19,9 @@ project("Polyglot :: Kotlin") {
         compile("org.jetbrains.kotlin:kotlin-runtime:" + get("kotlin.version"))
 
         runtime(groupId = "io.takari", artifactId = "polyglot-common", version = this@project.version)
-                .excluding("org.slf4j:jul-logger")
+                .exclusions("org.slf4j:jul-logger")
 
-        test("junit:junit:$junitVersion").excluding("org.hamcrest:hamcrest-core")
+        test("junit:junit:$junitVersion").exclusions("org.hamcrest:hamcrest-core")
 
         provided {
             groupId = "org.apache.maven.plugin-tools"

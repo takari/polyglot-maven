@@ -29,6 +29,6 @@ project {
         dependency(
             groupId = "org.springframework.boot",
             artifactId = "spring-boot-starter-test",
-            scope = "test").excluding("junit:junit", "org.hamcrest:hamcrest")
+            scope = "test").exclusions("junit:junit", "org.hamcrest:hamcrest")
     }
 }

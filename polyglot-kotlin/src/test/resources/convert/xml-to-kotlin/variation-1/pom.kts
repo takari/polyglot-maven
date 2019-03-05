@@ -182,7 +182,7 @@ project("Polyglot Kotlin Demo") {
         compile("de.codecentric:spring-boot-admin-starter-client:\${spring-boot-admin.version}")
         compile("de.codecentric:spring-boot-admin-starter-server:\${spring-boot-admin.version}")
         test("org.springframework.boot:spring-boot-starter-test") {
-            excluding("junit:junit")
+            exclusions("junit:junit")
         }
         test("org.springframework.security:spring-security-test")
         test("org.junit.jupiter:junit-jupiter-engine")
@@ -443,7 +443,7 @@ project("Polyglot Kotlin Demo") {
                 compile("de.codecentric:spring-boot-admin-starter-client:\${spring-boot-admin.version}")
                 compile("de.codecentric:spring-boot-admin-starter-server:\${spring-boot-admin.version}")
                 test("org.springframework.boot:spring-boot-starter-test") {
-                    excluding("junit:junit")
+                    exclusions("junit:junit")
                 }
                 test("org.springframework.security:spring-security-test")
                 test("org.junit.jupiter:junit-jupiter-engine")
