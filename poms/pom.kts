@@ -40,7 +40,7 @@ project("Polyglot Tesla :: Aggregator") {
 
     build {
         //
-        // Arbitrary Groovy code can be executed in any phase in the form of a dynamic plugin
+        // Arbitrary code can be executed in any phase in the form of a dynamic plugin
         //
         execute(id: "hello", phase: "validate") {
             println """
