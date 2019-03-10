@@ -4,7 +4,7 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.3.3 or higher - Upcoming
+## Version 0.4.0 - 2019-03-09
 
 - polyglot-common:
   - Execute tasks are now installed with inheritable set to false
@@ -23,6 +23,7 @@ at an easier glance.
   - Provides 100% test coverage for the entire Maven model
   - Resolves ClassLoader issues that affected integration with IntelliJ IDEA
   - The above enhancements were contributed by Robert Thornton https://github.com/thorntonrp
+- Release performed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.3.2 - 2018-10-19
 
