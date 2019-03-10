@@ -1,8 +1,6 @@
 tools:
-  jdk:
-    - 8
-  maven:
-    - 3.5.0
+  jdk: 8
+  maven: 3.6.0
 
 flows:
   default:
