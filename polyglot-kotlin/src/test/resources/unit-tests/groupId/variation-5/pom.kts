@@ -1,0 +1,3 @@
+project("com.example") {
+
+}

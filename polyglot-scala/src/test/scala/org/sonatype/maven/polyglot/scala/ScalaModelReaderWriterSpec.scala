@@ -22,6 +22,7 @@ import java.util
 import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, Model => ScalaRawModel, Task => ScalaModelTask}
 import scala.collection.{immutable, mutable}
 import org.apache.maven.project.MavenProject
+import org.apache.maven.execution.MavenSession
 
 @RunWith(classOf[JUnitRunner])
 class ScalaModelReaderWriterSpec extends Specification with AfterEach {
@@ -174,9 +175,11 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
       val ec = new ExecuteContext {
         def getProject: MavenProject = project
 
-        def basedir: java.io.File = project.getBasedir
+        def getSession: MavenSession = null
 
-        def log: org.apache.maven.plugin.logging.Log = null
+        def getBasedir: java.io.File = project.getBasedir
+
+        def getLog: org.apache.maven.plugin.logging.Log = null
       }
       tasks.head.execute(ec)
       project.getArtifactId must_== "We executed!"

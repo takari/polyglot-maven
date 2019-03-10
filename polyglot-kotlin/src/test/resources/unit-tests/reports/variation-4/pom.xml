@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <profiles>
+    <profile>
+      <id>other</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <reports>
+        <note>The "reports" section consists of arbitrary XML</note>
+        <coverage>62%</coverage>
+        <scanSucceeded>true</scanSucceeded>
+        <properties>
+          <int.max>2147483647</int.max>
+          <int.min>-2147483647</int.min>
+          <long.max>9223372036854775807</long.max>
+          <long.min>-9223372036854775807</long.min>
+          <double.max>1.7976931348623157E308</double.max>
+          <double.min>4.9E-324</double.min>
+          <date.value>2019-02-01</date.value>
+          <datetime.value>2019-02-01T11:42:19.416Z</datetime.value>
+          <one>1</one>
+          <two>002</two>
+          <three>3.0</three>
+          <four>4.0.0</four>
+          <true>true</true>
+          <false>false</false>
+          <javaVersion>${java.version}</javaVersion>
+          <kotlinVersion>${kotlin.version}</kotlinVersion>
+        </properties>
+      </reports>
+    </profile>
+  </profiles>
+</project>

@@ -1,0 +1,3 @@
+project {
+    id(packaging = "pom")
+}

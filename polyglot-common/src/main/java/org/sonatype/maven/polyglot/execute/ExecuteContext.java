@@ -9,6 +9,7 @@ package org.sonatype.maven.polyglot.execute;
 
 import java.io.File;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
@@ -20,9 +21,46 @@ import org.apache.maven.project.MavenProject;
  * @since 0.7
  */
 public interface ExecuteContext {
+
+  /**
+   * Returns the maven project.
+   */
   MavenProject getProject();
 
-  File basedir();
+  /**
+   * Returns the maven session.
+   */
+  MavenSession getSession();
 
-  Log log();
+  /**
+   * Returns the project base directory.
+   *
+   * @deprecated Use {@link #getBasedir()} instead
+   */
+  @Deprecated
+  default File basedir() {
+    return getBasedir();
+  }
+
+  /**
+   * Returns the project base directory.
+   */
+  default File getBasedir() {
+    return getProject().getBasedir();
+  }
+
+  /**
+   * Returns the logger.
+   *
+   * @deprecated Use {@link #getLog()} instead
+   */
+  @Deprecated
+  default Log log() {
+    return getLog();
+  }
+
+  /**
+   * Returns the log.
+   */
+  Log getLog();
 }

@@ -1,100 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<!--
 
-    <parent>
-        <artifactId>polyglot</artifactId>
-        <groupId>io.takari.polyglot</groupId>
-        <version>0.3.3-SNAPSHOT</version>
-    </parent>
+    Copyright (c) 2012 to original author or authors
+    All rights reserved. This program and the accompanying materials
+    are made available under the terms of the Eclipse Public License v1.0
+    which accompanies this distribution, and is available at
+    http://www.eclipse.org/legal/epl-v10.html
 
-    <artifactId>polyglot-kotlin</artifactId>
-    <packaging>takari-jar</packaging>
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <name>Polyglot :: Kotlin</name>
+  <modelVersion>4.0.0</modelVersion>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.2.21</kotlin.version>
-    </properties>
+  <parent>
+    <groupId>io.takari.polyglot</groupId>
+    <artifactId>polyglot</artifactId>
+    <version>0.3.3-SNAPSHOT</version>
+  </parent>
 
-    <dependencies>
-        <dependency>
-            <groupId>io.takari.polyglot</groupId>
-            <artifactId>polyglot-common</artifactId>
-        </dependency>
+  <artifactId>polyglot-kotlin</artifactId>
+  <packaging>takari-jar</packaging>
+  <name>Polyglot :: Kotlin</name>
 
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-script-runtime</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-script-util</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-compiler</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-compiler-client-embeddable</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-            <version>${kotlin.version}</version>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jdk8</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-script-util</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-compiler</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
 
+    <!-- Test -->
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test-junit</artifactId>
+      <version>${kotlin.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.11.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-test-junit</artifactId>
-            <version>${kotlin.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.willowtreeapps.assertk</groupId>
-            <artifactId>assertk</artifactId>
-            <version>0.9</version>
-        </dependency>
-    </dependencies>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kotlin.version>1.3.21</kotlin.version>
+    <commons-lang3.version>3.8.1</commons-lang3.version>
+    <skipTests>false</skipTests>
+    <invoker.skip>${skipTests}</invoker.skip>
+  </properties>
 
-    <build>
-        <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+  <build>
+    <sourceDirectory>src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>install</goal>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
+              <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+              <showErrors>true</showErrors>
+              <debug>false</debug>
+              <streamLogs>true</streamLogs>
+              <goals><goal>verify</goal></goals>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-maven-plugin</artifactId>
+        <version>${kotlin.version}</version>
+        <executions>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>test-compile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>test-compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
-        <plugins>
-            <plugin>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-                <executions>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>test-compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

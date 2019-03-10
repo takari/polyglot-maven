@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012 to original author or authors
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -43,7 +43,7 @@ public class ExecuteManagerImpl implements ExecuteManager {
   @Requirement
   protected PolyglotModelManager manager;
 
-  private final Map<String, List<ExecuteTask>> modelTasks = new HashMap<String, List<ExecuteTask>>();
+  private final Map<String, List<ExecuteTask>> modelTasks = new HashMap<>();
 
   @Override
   public void register(final Model model, final List<ExecuteTask> tasks) {
@@ -51,7 +51,7 @@ public class ExecuteManagerImpl implements ExecuteManager {
     assert tasks != null;
 
     // Need to copy the contents to avoid the elements
-    List<ExecuteTask> copy = new ArrayList<ExecuteTask>(tasks.size());
+    List<ExecuteTask> copy = new ArrayList<>(tasks.size());
     copy.addAll(tasks);
     modelTasks.put(model.getId(), Collections.unmodifiableList(copy));
   }
@@ -93,13 +93,6 @@ public class ExecuteManagerImpl implements ExecuteManager {
     return tasks;
   }
 
-  //@Override
-  //@Deprecated
-  //public void install(final Model model) {
-  //  install(model, new HashMap<String, String>());
- // }
-
-  //@Override
   @Override
   public void install(final Model model, final Map<String, ?> options) {
     assert model != null;
@@ -115,7 +108,7 @@ public class ExecuteManagerImpl implements ExecuteManager {
 
     List<String> goals = Collections.singletonList("execute");
 
-    Map<String, Plugin> plugins = new HashMap<String, Plugin>();
+    Map<String, Plugin> plugins = new HashMap<>();
 
     for (ExecuteTask task : tasks) {
       if (log.isDebugEnabled()) {
@@ -187,17 +180,32 @@ public class ExecuteManagerImpl implements ExecuteManager {
   private Plugin getPlugin(final Model model, String profileId, Map<String, Plugin> plugins) {
     Plugin plugin = plugins.get(profileId);
     if (plugin == null) {
-      plugin = new Plugin();
-      plugin.setGroupId(Constants.getGroupId());
-      plugin.setArtifactId(Constants.getArtifactId("maven-plugin"));
-      plugin.setVersion(Constants.getVersion());
-
-      // Do not assume that the existing list is mutable.
       BuildBase build = getBuild(model, profileId);
       List<Plugin> existingPlugins = build.getPlugins();
-      List<Plugin> mutablePlugins = new ArrayList<Plugin>(existingPlugins);
-      build.setPlugins(mutablePlugins);
-      build.addPlugin(plugin);
+
+      // Look up existing plugin entry if it exists
+      Plugin existing = existingPlugins.stream()
+              .filter(pl -> pl.getGroupId().equals(Constants.getGroupId()))
+              .filter(pl -> pl.getArtifactId().equals(Constants.getArtifactId("maven-plugin")))
+              .findFirst()
+              .orElse(null);
+
+      if (existing == null) {
+        plugin = new Plugin();
+        plugin.setGroupId(Constants.getGroupId());
+        plugin.setArtifactId(Constants.getArtifactId("maven-plugin"));
+      } else {
+        plugin = existing;
+      }
+      plugin.setVersion(Constants.getVersion()); // Force to use current version
+      plugin.setInherited(false); // Force inherited to false (inheritence of execute tasks is currently unsupported)
+
+      if (existing == null) {
+        // Do not assume that the existing list is mutable.
+        List<Plugin> mutablePlugins = new ArrayList<>(existingPlugins);
+        build.setPlugins(mutablePlugins);
+        build.addPlugin(plugin);
+      }
 
       plugins.put(profileId, plugin);
     }

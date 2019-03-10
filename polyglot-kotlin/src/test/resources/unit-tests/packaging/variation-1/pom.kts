@@ -1,0 +1,3 @@
+project {
+    packaging = "pom"
+}
