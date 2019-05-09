@@ -17,8 +17,8 @@ internal fun classpathFromClassLoader(classLoader: ClassLoader): List<File> {
 
 private fun classpathFromURLClassLoader(classLoader: URLClassLoader): List<File> {
     return classLoader.urLs
-            .map { url -> url.path }
-            .map { path -> File(path) }
+            .map { url -> url.toURI() }
+            .map { uri -> File(uri) }
 }
 
 private fun classpathFromClassRealm(classRealm: ClassRealm): List<File> {
@@ -30,8 +30,8 @@ private fun classpathFromClassRealm(classRealm: ClassRealm): List<File> {
             kotlin.text.Regex("""urls\[\d+]\s*=\s*(file:.*)""")
                     .findAll(bytes.toString())
                     .map { matchResult -> matchResult.groupValues[1] }
-                    .map { uri -> URI(uri).path }
-                    .map { path -> File(path) }
+                    .map { value -> URI(value) }
+                    .map { uri -> File(uri) }
     )
     return classpath
 }
