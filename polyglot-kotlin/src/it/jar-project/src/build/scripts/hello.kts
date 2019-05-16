@@ -1,14 +1,10 @@
-BuildContext(bindings).apply {
-    val keys = bindings.keys as Collection<String>
-    """
-        ------------------------------------------------------------------------
+println("""
+------------------------------------------------------------------------
 
-        HELLO ${project.name}!!!
+HELLO ${project.name}!!!
 
-        Folder:   ${basedir}
-        Script:   .${script.path.substringAfter(basedir.path)}
-        Bindings: ${keys}
+Folder:   ${project.projectDirectory}
+Script:   .${script.path.substringAfter(project.projectDirectory.path)}
 
-        ------------------------------------------------------------------------
-    """.trimIndent().lines().forEach { log.info(it) }
-}
+------------------------------------------------------------------------
+""")

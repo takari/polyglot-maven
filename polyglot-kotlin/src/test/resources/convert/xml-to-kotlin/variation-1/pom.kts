@@ -1,6 +1,6 @@
 /*
  * KotlinModelWriterTests
- * convert#xml-to-kotlin#variation-1
+ * convert/xml-to-kotlin/variation-1
  */
 project("Polyglot Kotlin Demo") {
 
@@ -330,12 +330,12 @@ project("Polyglot Kotlin Demo") {
         // see http://maven.apache.org/ref/3.6.0/maven-core/lifecycles.html
         execute(id = "sample-script", phase = "initialize") {
             with(project) {
-                log.info("[initialize] Project Name:  ${name}")
-                log.info("[initialize] Project ID:    ${groupId}:${artifactId}:${version}:${packaging}")
-                log.info("[initialize] Project Model: ${basedir}/pom.kts")
-                log.info("[initialize] Project Dependencies:")
+                println("[initialize] Project Name:  ${name}")
+                println("[initialize] Project ID:    ${groupId}:${artifactId}:${version}:${packaging}")
+                println("[initialize] Project Model: ${script}")
+                println("[initialize] Project Dependencies:")
                 dependencies.forEachIndexed { index, dep ->
-                    log.info("             [${index}] ${dep.groupId}:${dep.artifactId}:${dep.version}")
+                    println("             [${index}] ${dep.groupId}:${dep.artifactId}:${dep.version}")
                 }
             }
         }

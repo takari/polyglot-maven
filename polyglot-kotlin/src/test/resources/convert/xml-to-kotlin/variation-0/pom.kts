@@ -1,6 +1,6 @@
 /*
  * KotlinModelWriterTests
- * convert#xml-to-kotlin#variation-0
+ * convert/xml-to-kotlin/variation-0
  */
 project {
 

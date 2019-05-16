@@ -2,41 +2,42 @@ package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.ModelReader
-import org.codehaus.plexus.classworlds.realm.ClassRealm
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
-import org.sonatype.maven.polyglot.io.ModelReaderSupport
 import org.sonatype.maven.polyglot.kotlin.dsl.Project
-import org.sonatype.maven.polyglot.kotlin.engine.print
-import org.sonatype.maven.polyglot.kotlin.engine.projectClassLoader
-import org.sonatype.maven.polyglot.kotlin.engine.scriptClassLoader
-import org.sonatype.maven.polyglot.kotlin.engine.singletonEngineFactory
+import org.sonatype.maven.polyglot.kotlin.engine.PomKtsScriptHost
+import java.io.File
+import java.io.InputStream
 import java.io.Reader
-import javax.script.ScriptException
 
 @Component(role = ModelReader::class, hint = "kotlin")
-class KotlinModelReader : ModelReaderSupport() {
+class KotlinModelReader : ModelReader {
 
     @Requirement
     private var executeManager: ExecuteManager? = null
 
-    override fun read(pomReader: Reader, options: Map<String, *>): Model {
-        val model = try {
-            (singletonEngineFactory.scriptEngine.eval(pomReader) as Model?) ?: Model()
-        } catch (ex: ScriptException) {
-            if (projectClassLoader is ClassRealm) {
-                print(scriptClassLoader)
-            }
-            ex.printStackTrace()
-            throw ex.cause ?: ex
-        }
-        if (model is Project) {
-            val tasks = ArrayList(model.tasks)
-            executeManager?.register(model, tasks)
-            executeManager?.install(model, options)
-            model.tasks.clear()
-        }
-        return model
+    override fun read(input: File, options: Map<String, *>): Model {
+        val project = Project(input)
+        PomKtsScriptHost.eval(input, project)
+        val tasks = ArrayList(project.tasks)
+        executeManager?.register(project, tasks)
+        executeManager?.install(project, options)
+        project.tasks.clear()
+        return project
+    }
+
+    override fun read(input: Reader, options: MutableMap<String, *>): Model {
+        val temp = File.createTempFile("pom", ".kts")
+        temp.deleteOnExit()
+        temp.writer().use { input.copyTo(it) }
+        return read(temp, options)
+    }
+
+    override fun read(input: InputStream, options: MutableMap<String, *>): Model {
+        val temp = File.createTempFile("pom", ".kts")
+        temp.deleteOnExit()
+        temp.outputStream().use { input.copyTo(it) }
+        return read(temp, options)
     }
 }

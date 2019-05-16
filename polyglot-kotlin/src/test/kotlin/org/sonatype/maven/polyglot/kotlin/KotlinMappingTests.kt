@@ -1,13 +1,16 @@
 package org.sonatype.maven.polyglot.kotlin
 
+import org.codehaus.plexus.PlexusTestCase
+import org.junit.Assert
 import org.junit.Test
+import org.sonatype.maven.polyglot.mapping.Mapping
 
-class KotlinMappingTests {
+class KotlinMappingTests : PlexusTestCase() {
 
     @Test
-    fun test() {
+    fun testMapping() {
+        val mapping = KotlinMapping()// lookup(Mapping::class.java, "kotlin")
         val options = mapOf("org.apache.maven.model.building.source" to "/polyglot-maven/polyglot-kotlin/pom.kts")
-        val mapping = KotlinMapping()
-        mapping.accept(options)
+        Assert.assertTrue(mapping.accept(options))
     }
 }

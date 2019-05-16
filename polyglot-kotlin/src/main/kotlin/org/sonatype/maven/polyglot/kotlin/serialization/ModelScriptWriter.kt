@@ -10,8 +10,6 @@ import org.sonatype.maven.polyglot.kotlin.dsl.addAll
 import org.sonatype.maven.polyglot.kotlin.dsl.addAllNonNull
 import org.sonatype.maven.polyglot.kotlin.dsl.addFirstNonNull
 import org.sonatype.maven.polyglot.kotlin.dsl.cast
-import org.sonatype.maven.polyglot.kotlin.support.anyOf
-import org.sonatype.maven.polyglot.kotlin.support.isNotNull
 import java.io.Writer
 import java.time.LocalDate
 import java.time.LocalTime
@@ -171,11 +169,11 @@ internal class ModelScriptWriter(
             }
 
             if (mixedFlavor && name != null) {
-                if (anyOf(description, url, inceptionYear) { isNotNull(it) }) {
+                if (listOfNotNull(description, url, inceptionYear).isNotEmpty()) {
                     endLine()
                 }
             } else {
-                if (anyOf(name, description, url, inceptionYear) { isNotNull(it) }) {
+                if (listOfNotNull(name, description, url, inceptionYear).isNotEmpty()) {
                     endLine()
                 }
             }
@@ -493,12 +491,12 @@ internal class ModelScriptWriter(
                     val margin = String(CharArray(phase.length + 2) { ' ' })
                         """
                         with(project) {
-                            log.info("[${phase}] Project Name:  ${'$'}{name}")
-                            log.info("[${phase}] Project ID:    ${'$'}{groupId}:${'$'}{artifactId}:${'$'}{version}:${'$'}{packaging}")
-                            log.info("[${phase}] Project Model: ${'$'}{basedir}/pom.kts")
-                            log.info("[${phase}] Project Dependencies:")
+                            println("[${phase}] Project Name:  ${'$'}{name}")
+                            println("[${phase}] Project ID:    ${'$'}{groupId}:${'$'}{artifactId}:${'$'}{version}:${'$'}{packaging}")
+                            println("[${phase}] Project Model: ${'$'}{script}")
+                            println("[${phase}] Project Dependencies:")
                             dependencies.forEachIndexed { index, dep ->
-                                log.info("${margin} [${'$'}{index}] ${'$'}{dep.groupId}:${'$'}{dep.artifactId}:${'$'}{dep.version}")
+                                println("${margin} [${'$'}{index}] ${'$'}{dep.groupId}:${'$'}{dep.artifactId}:${'$'}{dep.version}")
                             }
                         }
                         """.trimIndent().lines().forEach {

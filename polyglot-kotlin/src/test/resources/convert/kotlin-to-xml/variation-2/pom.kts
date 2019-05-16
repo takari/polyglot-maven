@@ -106,39 +106,39 @@ project("Polyglot :: Kotlin :: Demo") {
         }
 
         execute(id = "hello", phase = "validate") {
-            println("[validate] Hello, from ${basedir}/pom.kts")
+            println("[validate] Hello, from $script")
         }
 
         execute(id = "hello", phase = "compile") {
-            println("[compile] Hello, from ${basedir}/pom.kts")
+            println("[compile] Hello, from $script")
         }
 
         execute(id = "hello", phase = "test-compile") {
-            println("[test-compile] Hello, from ${basedir}/pom.kts")
+            println("[test-compile] Hello, from $script")
         }
 
         execute(id = "hello", phase = "test") {
-            println("[test] Hello, from ${basedir}/pom.kts")
+            println("[test] Hello, from $script")
         }
 
         execute(id = "hello", phase = "package") {
-            println("[package] Hello, from ${basedir}/pom.kts")
+            println("[package] Hello, from $script")
         }
 
         execute(id = "hello", phase = "integration-test") {
-            println("[integration-test] Hello, from ${basedir}/pom.kts")
+            println("[integration-test] Hello, from $script")
         }
 
         execute(id = "hello", phase = "verify") {
-            println("[verify] Hello, from ${basedir}/pom.kts")
+            println("[verify] Hello, from $script")
         }
 
         execute(id = "hello", phase = "install") {
-            println("[install] Hello, from ${basedir}/pom.kts")
+            println("[install] Hello, from $script")
         }
 
         execute(id = "hello", phase = "deploy") {
-            println("[deploy] Hello, from ${basedir}/pom.kts")
+            println("[deploy] Hello, from $script")
         }
     }
 

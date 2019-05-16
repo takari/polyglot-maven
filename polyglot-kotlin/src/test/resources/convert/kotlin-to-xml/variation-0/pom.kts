@@ -1,7 +1,7 @@
 import org.apache.maven.model.*
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder
 
-Model().apply {
+project {
 
     modelVersion = "4.0.0"
     modelEncoding = "UTF-8"
