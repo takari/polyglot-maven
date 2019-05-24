@@ -13,7 +13,7 @@ import java.io.InputStream
 import java.io.Reader
 
 @Component(role = ModelReader::class, hint = "kotlin")
-class KotlinModelReader : ModelReaderSupport() {
+class KotlinModelReader : ModelReader {
 
     @Requirement
     private var executeManager: ExecuteManager? = null
