@@ -29,7 +29,7 @@
     <integer.property.max>2147483647</integer.property.max>
     <integer.property.min>-2147483648</integer.property.min>
     <java.version>11</java.version>
-    <kotlin.version>1.3.21</kotlin.version>
+    <kotlin.version>1.3.31</kotlin.version>
     <long.property.max>9223372036854775807</long.property.max>
     <long.property.min>9223372036854775807</long.property.min>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

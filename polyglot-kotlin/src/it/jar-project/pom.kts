@@ -37,10 +37,11 @@ project("Maven Polyglot :: Kotlin Demo") {
 
         execute("fourth", "verify") {
             println("[FOURTH] Verifying... (message = ${message()}")
-            println("[FOURTH] basedir = ${basedir}")
-            println("[FOURTH] project.build.directory = ${project.build.directory}")
-            println("[FOURTH] context = ${this}")
-            println("[FOURTH] project = ${project}")
+            log.info("[FOURTH] basedir = ${basedir}")
+            log.info("[FOURTH] project.build.directory = ${project.build.directory}")
+            log.info("[FOURTH] context = ${this}")
+            log.info("[FOURTH] project = ${project}")
+            log.info("[FOURTH] log = ${log}")
         }
 
         // The following sample execution demonstrates how you can bind one or more custom script
@@ -48,12 +49,13 @@ project("Maven Polyglot :: Kotlin Demo") {
         // see http://maven.apache.org/ref/3.6.0/maven-core/lifecycles.html
         execute(id = "sample-script", phase = "initialize") {
             with(project) {
-                println("[initialize] Project name: ${name}")
-                println("[initialize] Project id: ${groupId}:${artifactId}:${version}:${packaging}")
-                println("[initialize] Project model: ${basedir}/pom.kts")
-                println("[initialize] We have the following dependencies:")
+                log.info("[initialize] Current Project name: ${session.currentProject.name}")
+                log.info("[initialize] Project name: ${name}")
+                log.info("[initialize] Project id: ${groupId}:${artifactId}:${version}:${packaging}")
+                log.info("[initialize] Project model: ${basedir}/pom.kts")
+                log.info("[initialize] We have the following dependencies:")
                 dependencies.forEachIndexed { i, dep ->
-                    println("             [${i}] ${dep.groupId}:${dep.artifactId}:${dep.version}")
+                    log.info("             [${i}] ${dep.groupId}:${dep.artifactId}:${dep.version}")
                 }
             }
         }
@@ -61,7 +63,7 @@ project("Maven Polyglot :: Kotlin Demo") {
         execute(id = "external-script#1", phase = "verify", script = "src/build/scripts/hello.kts")
 
         execute(id = "external-script#2", phase = "verify") {
-            val script = "${basedir}/src/build/scripts/hello.kts"
+            val script = basedir.resolve("src/build/scripts/hello.kts")
             eval(script)
         }
     }

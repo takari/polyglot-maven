@@ -93,7 +93,7 @@
   <properties>
     <empty.property></empty.property>
     <java.version>11</java.version>
-    <kotlin.version>1.3.21</kotlin.version>
+    <kotlin.version>1.3.31</kotlin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <release.version>1.0.0-SNAPSHOT</release.version>
@@ -315,7 +315,7 @@
       <properties>
         <empty.property></empty.property>
         <java.version>11</java.version>
-        <kotlin.version>1.3.21</kotlin.version>
+        <kotlin.version>1.3.31</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <release.version>1.0.0-SNAPSHOT</release.version>
