@@ -63,8 +63,8 @@ project("Maven Polyglot :: Kotlin Demo") {
         execute(id = "external-script#1", phase = "verify", script = "src/build/scripts/hello.kts")
 
         execute(id = "external-script#2", phase = "verify") {
-            val script = java.io.File("${basedir}/src/build/scripts/hello.kts")
-            eval(script, project, session, log, basedir, script)
+            val script = basedir.resolve("src/build/scripts/hello.kts")
+            eval(script)
         }
     }
 }

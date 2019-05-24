@@ -5,6 +5,6 @@ import kotlin.script.experimental.annotations.KotlinScript
 @KotlinScript(
     displayName = "External kotlin task script",
     fileExtension = "task.kts",
-    compilationConfiguration = ExternalKtsScriptDefinition::class
+    compilationConfiguration = TaskKtsScriptDefinition::class
 )
-abstract class ExternalKtsScript
+abstract class TaskKtsScript

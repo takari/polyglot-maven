@@ -1,11 +1,7 @@
 package org.sonatype.maven.polyglot.kotlin.dsl;
 
-import org.apache.maven.execution.MavenSession
-import org.apache.maven.plugin.logging.Log
-import org.apache.maven.project.MavenProject
+import org.sonatype.maven.polyglot.execute.ExecuteContext
 import org.sonatype.maven.polyglot.kotlin.engine.ScriptHost
-import org.sonatype.maven.polyglot.kotlin.engine.ScriptType
-import org.sonatype.maven.polyglot.kotlin.execute.BuildContext
 import java.io.File
 
 class DSL(val script: File, val project: Project) {
@@ -26,8 +22,7 @@ class DSL(val script: File, val project: Project) {
      * Invokes the script at the supplied location
      */
     @Suppress("unused")
-    fun eval(taskScript: File, project: MavenProject, session: MavenSession, log: Log, basedir: File, script: File
-    ) {
-        ScriptHost.eval(taskScript, ScriptType.TASK, BuildContext(project, session, log, basedir, script))
+    fun ExecuteContext.eval(taskScript: File) {
+        ScriptHost.eval(taskScript, this)
     }
 }
