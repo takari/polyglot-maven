@@ -5,24 +5,6 @@ package org.sonatype.maven.polyglot.kotlin.dsl
 
 import org.apache.commons.lang3.StringEscapeUtils.escapeJava
 
-/**
- * Configures a Maven project model.
- */
-@PomDsl
-fun project(nameOrId: String? = null, block: Project.(Project) -> Unit): Project {
-    val (groupId, artifactId, version, packaging) = splitCoordinates(nameOrId, 4)
-    return Project().apply {
-        this.modelVersion = "4.0.0"
-        this.modelEncoding = "UTF-8"
-        this.name = nameOrId
-        this.groupId = groupId
-        this.artifactId = artifactId
-        this.version = version
-        if (packaging != null) this.packaging = packaging
-        block(this, this)
-    }
-}
-
 internal var propertiesFactory: () -> java.util.Properties = { java.util.Properties() }
 
 private val coordinatesDelimiter = Regex(":")

@@ -31,7 +31,7 @@
     <mavenVersion>3.5.4</mavenVersion>
     <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
-    <kotlin.version>1.3.21</kotlin.version>
+    <kotlin.version>1.3.31</kotlin.version>
   </properties>
 
   <scm>

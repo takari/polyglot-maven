@@ -1,35 +1,33 @@
-@file:kotlin.jvm.JvmMultifileClass
-@file:kotlin.jvm.JvmName("DSL")
+package org.sonatype.maven.polyglot.kotlin.dsl;
 
-// MUST BE IN THE GLOBAL (ROOT) PACKAGE
-
-import org.sonatype.maven.polyglot.kotlin.dsl.PomDsl
-import org.sonatype.maven.polyglot.kotlin.dsl.Project
+import org.apache.maven.execution.MavenSession
+import org.apache.maven.plugin.logging.Log
+import org.apache.maven.project.MavenProject
+import org.sonatype.maven.polyglot.kotlin.engine.ScriptHost
+import org.sonatype.maven.polyglot.kotlin.engine.ScriptType
+import org.sonatype.maven.polyglot.kotlin.execute.BuildContext
 import java.io.File
-import javax.script.Bindings
 
-/**
- * Configures a Maven project model.
- */
-@PomDsl
-fun project(nameOrId: String? = null, block: Project.(Project) -> Unit): Project {
-    return org.sonatype.maven.polyglot.kotlin.dsl.project(nameOrId, block)
-}
+class DSL(val script: File, val project: Project) {
 
-/**
- * Invokes the script at the supplied location
- */
-@Suppress("unused")
-fun eval(scriptLocation: String, bindings: Map<String, Any?>): Any? {
-    val scriptEngine = bindings["kotlin.script.engine"] as javax.script.ScriptEngine?
-    if (scriptEngine != null) {
-        val newBindings: Bindings = scriptEngine.createBindings()
-        newBindings.putAll(bindings)
-        return scriptEngine.eval(File(scriptLocation).reader(), newBindings)
+    /**
+     * Configures a Maven project model.
+     */
+    @PomDsl
+    fun project(nameOrId: String? = null, block: Project.() -> Unit): Project {
+        if (nameOrId != null) {
+            project.name = nameOrId
+            project.id = nameOrId
+        }
+        return project.apply(block)
     }
-    return null
-}
 
-@Suppress("unused")
-open class BuildContext(bindings: Map<String, Any?>)
-    : org.sonatype.maven.polyglot.kotlin.execute.KotlinExecuteTaskContext(bindings)
+    /**
+     * Invokes the script at the supplied location
+     */
+    @Suppress("unused")
+    fun eval(taskScript: File, project: MavenProject, session: MavenSession, log: Log, basedir: File, script: File
+    ) {
+        ScriptHost.eval(taskScript, ScriptType.TASK, BuildContext(project, session, log, basedir, script))
+    }
+}
