@@ -18,11 +18,11 @@ object ScriptHost {
         ScriptType.POM to createJvmCompilationConfigurationFromTemplate<PomKtsScript>(),
         ScriptType.TASK to createJvmCompilationConfigurationFromTemplate<ExternalKtsScript>())
 
-    fun eval(script: File, type: ScriptType, reciever: Any) {
+    fun eval(script: File, type: ScriptType, receiver: Any) {
         val evaluationConfig = ScriptEvaluationConfiguration {
-            implicitReceivers(reciever)
+            implicitReceivers(receiver)
             jvm {
-                baseClassLoader(reciever.javaClass.classLoader)
+                baseClassLoader(receiver.javaClass.classLoader)
             }
         }
         val sourceCode = script.readText().toScriptSource()
