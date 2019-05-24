@@ -1,4 +1,4 @@
-package org.sonatype.maven.polyglot.kotlin.dsl;
+package org.sonatype.maven.polyglot.kotlin.dsl
 
 import org.sonatype.maven.polyglot.execute.ExecuteContext
 import org.sonatype.maven.polyglot.kotlin.engine.ScriptHost
