@@ -187,7 +187,7 @@ project {
         "integer.property.max" to 2147483647
         "integer.property.min" to -2147483648
         "java.version" to 11
-        "kotlin.version" to "1.3.21"
+        "kotlin.version" to "1.3.31"
         "long.property.max" to 9223372036854775807
         "long.property.min" to 9223372036854775807
         "project.build.sourceEncoding" to "UTF-8"
@@ -570,7 +570,7 @@ project {
             properties {
                 "empty.property" to ""
                 "java.version" to 11
-                "kotlin.version" to "1.3.21"
+                "kotlin.version" to "1.3.31"
                 "project.build.sourceEncoding" to "UTF-8"
                 "project.reporting.outputEncoding" to "UTF-8"
                 "release.version" to "1.0.0-SNAPSHOT"

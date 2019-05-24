@@ -5,25 +5,28 @@ import org.apache.maven.model.io.ModelReader
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
+import org.sonatype.maven.polyglot.io.ModelReaderSupport
+import org.sonatype.maven.polyglot.kotlin.dsl.DSL
 import org.sonatype.maven.polyglot.kotlin.dsl.Project
-import org.sonatype.maven.polyglot.kotlin.engine.PomKtsScriptHost
+import org.sonatype.maven.polyglot.kotlin.engine.ScriptHost
+import org.sonatype.maven.polyglot.kotlin.engine.ScriptType
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 
 @Component(role = ModelReader::class, hint = "kotlin")
-class KotlinModelReader : ModelReader {
+class KotlinModelReader : ModelReaderSupport() {
 
     @Requirement
     private var executeManager: ExecuteManager? = null
 
     override fun read(input: File, options: Map<String, *>): Model {
         val project = Project(input)
-        PomKtsScriptHost.eval(input, project)
+        ScriptHost.eval(input, ScriptType.POM, DSL(input, project))
         val tasks = ArrayList(project.tasks)
         executeManager?.register(project, tasks)
         executeManager?.install(project, options)
-        project.tasks.clear()
+        project.tasks.clear() // Must be cleared or Maven goes into an infinitely repeatable introspection
         return project
     }
 
