@@ -1,6 +1,5 @@
 package org.sonatype.maven.polyglot.kotlin.engine
 
-import org.apache.maven.execution.MavenSession
 import org.apache.maven.model.Model
 import org.apache.maven.plugin.logging.Log
 import org.apache.maven.project.MavenProject
@@ -13,7 +12,7 @@ import kotlin.script.experimental.api.*
 import kotlin.script.experimental.jvm.dependenciesFromClassContext
 import kotlin.script.experimental.jvm.jvm
 
-open class ScriptDefinition(receiverType: KClass<*>) : ScriptCompilationConfiguration(
+abstract class ScriptDefinition(receiverType: KClass<*>) : ScriptCompilationConfiguration(
     {
         implicitReceivers(receiverType)
         jvm {
