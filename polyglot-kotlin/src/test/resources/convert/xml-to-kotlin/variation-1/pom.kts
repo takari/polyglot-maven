@@ -330,12 +330,12 @@ project("Polyglot Kotlin Demo") {
         // see http://maven.apache.org/ref/3.6.0/maven-core/lifecycles.html
         execute(id = "sample-script", phase = "initialize") {
             with(project) {
-                println("[initialize] Project Name:  ${name}")
-                println("[initialize] Project ID:    ${groupId}:${artifactId}:${version}:${packaging}")
-                println("[initialize] Project Model: ${script}")
-                println("[initialize] Project Dependencies:")
+                log.info("[initialize] Project Name:  ${name}")
+                log.info("[initialize] Project ID:    ${groupId}:${artifactId}:${version}:${packaging}")
+                log.info("[initialize] Project Model: ${basedir}/pom.kts")
+                log.info("[initialize] Project Dependencies:")
                 dependencies.forEachIndexed { index, dep ->
-                    println("             [${index}] ${dep.groupId}:${dep.artifactId}:${dep.version}")
+                    log.info("             [${index}] ${dep.groupId}:${dep.artifactId}:${dep.version}")
                 }
             }
         }

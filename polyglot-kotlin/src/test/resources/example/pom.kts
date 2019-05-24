@@ -57,7 +57,7 @@ project("Polyglot :: Kotlin") {
 
         // Embedded execute task
         execute(id = "hello", phase = "initialize") {
-            println("Hello from ${project.name}")
+            log.info("Hello from ${project.name}")
         }
 
         // External execute task script

@@ -491,12 +491,12 @@ internal class ModelScriptWriter(
                     val margin = String(CharArray(phase.length + 2) { ' ' })
                         """
                         with(project) {
-                            println("[${phase}] Project Name:  ${'$'}{name}")
-                            println("[${phase}] Project ID:    ${'$'}{groupId}:${'$'}{artifactId}:${'$'}{version}:${'$'}{packaging}")
-                            println("[${phase}] Project Model: ${'$'}{script}")
-                            println("[${phase}] Project Dependencies:")
+                            log.info("[${phase}] Project Name:  ${'$'}{name}")
+                            log.info("[${phase}] Project ID:    ${'$'}{groupId}:${'$'}{artifactId}:${'$'}{version}:${'$'}{packaging}")
+                            log.info("[${phase}] Project Model: ${'$'}{basedir}/pom.kts")
+                            log.info("[${phase}] Project Dependencies:")
                             dependencies.forEachIndexed { index, dep ->
-                                println("${margin} [${'$'}{index}] ${'$'}{dep.groupId}:${'$'}{dep.artifactId}:${'$'}{dep.version}")
+                                log.info("${margin} [${'$'}{index}] ${'$'}{dep.groupId}:${'$'}{dep.artifactId}:${'$'}{dep.version}")
                             }
                         }
                         """.trimIndent().lines().forEach {
