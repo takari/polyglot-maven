@@ -5,7 +5,6 @@ import org.apache.maven.model.io.ModelReader
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
-import org.sonatype.maven.polyglot.io.ModelReaderSupport
 import org.sonatype.maven.polyglot.kotlin.dsl.Project
 import org.sonatype.maven.polyglot.kotlin.engine.ScriptHost
 import java.io.File
