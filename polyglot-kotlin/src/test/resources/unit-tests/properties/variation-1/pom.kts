@@ -10,7 +10,7 @@ project {
         "date.value" to java.time.LocalDate.parse("2019-02-01")
         "datetime.value" to java.time.ZonedDateTime.parse("2019-02-01T11:42:19.416Z")
         "java.version" to "1.8"
-        "kotlin.version" to "1.3.21"
+        "kotlin.version" to "1.3.31"
         group("numbers") {
             "one" to 1
             "two" to "002"

@@ -47,6 +47,11 @@
       <artifactId>kotlin-compiler</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-scripting-jvm-host</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
 
     <!-- Test -->
     <dependency>
@@ -71,7 +76,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.3.21</kotlin.version>
+    <kotlin.version>1.3.31</kotlin.version>
     <commons-lang3.version>3.8.1</commons-lang3.version>
     <skipTests>false</skipTests>
     <invoker.skip>${skipTests}</invoker.skip>

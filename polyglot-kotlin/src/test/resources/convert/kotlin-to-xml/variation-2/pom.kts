@@ -19,7 +19,7 @@ project("Polyglot :: Kotlin :: Demo") {
         "java.version" to "11"
         "revision" to "\${release.version}"
         "release.version" to "1.0.0-SNAPSHOT"
-        "kotlin.version" to "1.3.21"
+        "kotlin.version" to "1.3.31"
         "spring-boot-admin.version" to "2.1.1"
         "project.build.sourceEncoding" to "UTF-8"
         "project.reporting.outputEncoding" to "UTF-8"

@@ -22,7 +22,7 @@ project("Polyglot :: Kotlin") {
     properties {
         "maven.compiler.source" to 1.8
         "maven.compiler.target" to 1.8
-        "kotlin.version" to "1.3.21"
+        "kotlin.version" to "1.3.31"
     }
 
     dependencies {
