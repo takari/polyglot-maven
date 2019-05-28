@@ -10,8 +10,6 @@ import org.sonatype.maven.polyglot.kotlin.dsl.addAll
 import org.sonatype.maven.polyglot.kotlin.dsl.addAllNonNull
 import org.sonatype.maven.polyglot.kotlin.dsl.addFirstNonNull
 import org.sonatype.maven.polyglot.kotlin.dsl.cast
-import org.sonatype.maven.polyglot.kotlin.support.anyOf
-import org.sonatype.maven.polyglot.kotlin.support.isNotNull
 import java.io.Writer
 import java.time.LocalDate
 import java.time.LocalTime
@@ -171,11 +169,11 @@ internal class ModelScriptWriter(
             }
 
             if (mixedFlavor && name != null) {
-                if (anyOf(description, url, inceptionYear) { isNotNull(it) }) {
+                if (listOfNotNull(description, url, inceptionYear).isNotEmpty()) {
                     endLine()
                 }
             } else {
-                if (anyOf(name, description, url, inceptionYear) { isNotNull(it) }) {
+                if (listOfNotNull(name, description, url, inceptionYear).isNotEmpty()) {
                     endLine()
                 }
             }

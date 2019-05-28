@@ -2,9 +2,17 @@
 <extension>
   <exportedPackages>
     <exportedPackage>org.sonatype.maven.polyglot</exportedPackage>
-    <exportedPackage>org.sonatype.maven.polyglot.execute</exportedPackage>
+    <exportedPackage>kotlin</exportedPackage>
+    <exportedPackage>kotlinx</exportedPackage>
   </exportedPackages>
   <exportedArtifacts>
     <exportedArtifact>io.takari.polyglot:polyglot-common</exportedArtifact>
+    <exportedArtifact>io.takari.polyglot:polyglot-kotlin</exportedArtifact>
+    <exportedArtifact>org.jetbrains.kotlin:kotlin-stdlib</exportedArtifact>
+    <exportedArtifact>org.jetbrains.kotlin:kotlin-stdlib-common</exportedArtifact>
+    <exportedArtifact>org.jetbrains.kotlin:kotlin-stdlib-jdk7</exportedArtifact>
+    <exportedArtifact>org.jetbrains.kotlin:kotlin-stdlib-jdk8</exportedArtifact>
+    <exportedArtifact>org.jetbrains.kotlin:kotlin-script-runtime</exportedArtifact>
+    <exportedArtifact>org.jetbrains.kotlin:kotlin-reflect</exportedArtifact>
   </exportedArtifacts>
 </extension>

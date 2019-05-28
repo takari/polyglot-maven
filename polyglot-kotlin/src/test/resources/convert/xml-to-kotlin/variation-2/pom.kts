@@ -1,6 +1,6 @@
 /*
  * KotlinModelWriterTests
- * convert#xml-to-kotlin#variation-2
+ * convert/xml-to-kotlin/variation-2
  */
 project {
 
@@ -97,7 +97,7 @@ project {
     properties {
         "empty.property" to ""
         "java.version" to 11
-        "kotlin.version" to "1.3.21"
+        "kotlin.version" to "1.3.31"
         "project.build.sourceEncoding" to "UTF-8"
         "project.reporting.outputEncoding" to "UTF-8"
         "release.version" to "1.0.0-SNAPSHOT"
@@ -303,7 +303,7 @@ project {
             properties {
                 "empty.property" to ""
                 "java.version" to 11
-                "kotlin.version" to "1.3.21"
+                "kotlin.version" to "1.3.31"
                 "project.build.sourceEncoding" to "UTF-8"
                 "project.reporting.outputEncoding" to "UTF-8"
                 "release.version" to "1.0.0-SNAPSHOT"

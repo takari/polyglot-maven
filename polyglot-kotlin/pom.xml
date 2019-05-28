@@ -28,33 +28,17 @@
       <artifactId>polyglot-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>${commons-lang3.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
       <artifactId>kotlin-stdlib-jdk8</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-script-util</artifactId>
-      <version>${kotlin.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-compiler</artifactId>
+      <artifactId>kotlin-scripting-jvm-host</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
 
     <!-- Test -->
-    <dependency>
-      <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-test-junit</artifactId>
-      <version>${kotlin.version}</version>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
@@ -62,16 +46,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.takari.polyglot</groupId>
-      <artifactId>polyglot-maven-plugin</artifactId>
-      <version>${project.version}</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.3.21</kotlin.version>
+    <kotlin.version>1.3.31</kotlin.version>
     <commons-lang3.version>3.8.1</commons-lang3.version>
     <skipTests>false</skipTests>
     <invoker.skip>${skipTests}</invoker.skip>
@@ -85,6 +68,7 @@
         <artifactId>maven-invoker-plugin</artifactId>
         <version>3.1.0</version>
         <configuration>
+          <failIfNoProjects>true</failIfNoProjects>
           <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
         </configuration>
         <executions>
@@ -112,14 +96,14 @@
         <executions>
           <execution>
             <id>compile</id>
-            <phase>compile</phase>
+            <phase>process-sources</phase>
             <goals>
               <goal>compile</goal>
             </goals>
           </execution>
           <execution>
             <id>test-compile</id>
-            <phase>test-compile</phase>
+            <phase>process-test-sources</phase>
             <goals>
               <goal>test-compile</goal>
             </goals>

@@ -3,9 +3,16 @@ package org.sonatype.maven.polyglot.kotlin.dsl
 import org.codehaus.plexus.util.xml.Xpp3Dom
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder
 import org.sonatype.maven.polyglot.execute.ExecuteTask
+import java.io.File
 
 @PomDsl
-class Project : org.apache.maven.model.Model(), Cloneable {
+class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
+
+    init {
+        this.pomFile = pom
+        this.modelVersion = "4.0.0"
+        this.modelEncoding = "UTF-8"
+    }
 
     val tasks: MutableList<ExecuteTask>
         get() {
@@ -31,10 +38,7 @@ class Project : org.apache.maven.model.Model(), Cloneable {
     @PomDsl
     fun id(gavp: String) {
         val (groupId, artifactId, version, packaging) = splitCoordinates(gavp, 4)
-        this.groupId = groupId
-        this.artifactId = artifactId
-        this.version = version
-        if (packaging != null) this.packaging = packaging
+        this.id(groupId, artifactId, version, packaging)
     }
 
     @PomDsl

@@ -1,9 +1,13 @@
 package org.sonatype.maven.polyglot.kotlin.util;
 
-import java.util.*;
-import java.util.function.BiConsumer;
-
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Properties extends java.util.Properties {
 
@@ -11,18 +15,14 @@ public class Properties extends java.util.Properties {
     @NotNull
     public Set<Object> keySet() {
         return super.keySet().stream().sorted(Comparator.comparing(Object::toString))
-            .collect(LinkedHashSet::new, Set::add, (objects, objects2) -> {
-                objects.addAll(objects2);
-            });
+                .collect(LinkedHashSet::new, Set::add, Set::addAll);
     }
 
     @Override
     @NotNull
     public Set<Map.Entry<Object, Object>> entrySet() {
         return super.entrySet().stream().sorted(Comparator.comparing(e -> e.getKey().toString()))
-            .collect(LinkedHashSet::new, Set::add, (BiConsumer<Set<Map.Entry<Object, Object>>, Set<Map.Entry<Object, Object>>>) (entries, entries2) -> {
-                entries.addAll(entries2);
-            });
+                .collect(LinkedHashSet::new, Set::add, Set::addAll);
     }
 
     @Override

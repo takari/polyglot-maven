@@ -49,6 +49,7 @@ project("Maven Polyglot :: Kotlin Demo") {
         // see http://maven.apache.org/ref/3.6.0/maven-core/lifecycles.html
         execute(id = "sample-script", phase = "initialize") {
             with(project) {
+                log.info("[initialize] Current Project name: ${session.currentProject.name}")
                 log.info("[initialize] Project name: ${name}")
                 log.info("[initialize] Project id: ${groupId}:${artifactId}:${version}:${packaging}")
                 log.info("[initialize] Project model: ${basedir}/pom.kts")
@@ -62,14 +63,8 @@ project("Maven Polyglot :: Kotlin Demo") {
         execute(id = "external-script#1", phase = "verify", script = "src/build/scripts/hello.kts")
 
         execute(id = "external-script#2", phase = "verify") {
-            val script = "${basedir}/src/build/scripts/hello.kts"
-            eval(script, bindings + mapOf(
-                "project" to project,
-                "session" to session,
-                "log" to log,
-                "basedir" to basedir,
-                "script" to java.io.File(script)
-            ))
+            val script = basedir.resolve("src/build/scripts/hello.kts")
+            eval(script)
         }
     }
 }

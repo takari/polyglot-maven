@@ -1,6 +1,6 @@
 /*
  * KotlinModelWriterTests
- * convert#xml-to-kotlin#variation-3
+ * convert/xml-to-kotlin/variation-3
  */
 project("Polyglot Kotlin Demo") {
 
