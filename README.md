@@ -148,7 +148,7 @@ Maven plugins or Maven plugin goals that rely on the XML format are not
 supported, since they are either attempting to parse the XML directly or modify
 it in automated fashion do not work with Polyglot Maven. Examples are:
 
-- Maven Relase Plugin
+- Maven Release Plugin
 - Maven Versions Plugin (goals that don't edit the `pom.xml` (like e.g. `display-dependency-updates`) work as expected though)
 
 Fixes would have to be implemented in these plugins. Workarounds or replacement
