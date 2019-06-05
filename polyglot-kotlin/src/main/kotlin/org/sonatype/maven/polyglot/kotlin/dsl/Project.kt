@@ -73,7 +73,7 @@ class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
             this.groupId = groupId
             this.artifactId = artifactId
             this.version = version
-            this.relativePath = relativePath
+            if (relativePath !== null) this.relativePath = relativePath
             this@Project.parent = this
         }
     }

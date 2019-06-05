@@ -61,6 +61,6 @@ project("Polyglot :: Kotlin") {
         }
 
         // External execute task script
-        execute(id = "hello-script", phase = "process-resources", script = "src/build/kotlin/hello.kts")
+        execute(id = "hello-script", phase = "process-resources", script = "src/build/kotlin/hello.task.kts")
     }
 }

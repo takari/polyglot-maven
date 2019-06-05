@@ -2,15 +2,13 @@ package org.sonatype.maven.polyglot.kotlin.engine
 
 import org.apache.maven.MavenExecutionException
 import org.sonatype.maven.polyglot.execute.ExecuteContext
-import org.sonatype.maven.polyglot.kotlin.dsl.DSL
 import org.sonatype.maven.polyglot.kotlin.dsl.Project
-import org.sonatype.maven.polyglot.kotlin.execute.TaskContext
 import java.io.File
 import kotlin.script.experimental.api.ResultWithDiagnostics
 import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.ScriptDiagnostic
 import kotlin.script.experimental.api.ScriptEvaluationConfiguration
-import kotlin.script.experimental.api.implicitReceivers
+import kotlin.script.experimental.api.constructorArgs
 import kotlin.script.experimental.host.toScriptSource
 import kotlin.script.experimental.jvmhost.BasicJvmScriptingHost
 import kotlin.script.experimental.jvmhost.baseClassLoader
@@ -24,18 +22,18 @@ object ScriptHost {
 
     fun eval(script: File, project: Project) {
         eval(script, pomCompilationConfig) {
-            implicitReceivers(DSL(script, project))
+            constructorArgs(script, project)
             jvm {
-                baseClassLoader(DSL::class.java.classLoader)
+                baseClassLoader(PomKtsScript::class.java.classLoader)
             }
         }
     }
 
     fun eval(script: File, executeContext: ExecuteContext) {
         eval(script, taskCompilationConfig) {
-            implicitReceivers(TaskContext(script, executeContext))
+            constructorArgs(script, executeContext)
             jvm {
-                baseClassLoader(DSL::class.java.classLoader)
+                baseClassLoader(TaskKtsScript::class.java.classLoader)
             }
         }
     }

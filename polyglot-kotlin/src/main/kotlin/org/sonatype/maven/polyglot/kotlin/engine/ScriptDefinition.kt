@@ -6,17 +6,14 @@ import org.apache.maven.project.MavenProject
 import org.apache.maven.settings.Settings
 import org.codehaus.plexus.util.xml.Xpp3DomBuilder
 import org.sonatype.maven.polyglot.execute.ExecuteContext
-import org.sonatype.maven.polyglot.kotlin.dsl.DSL
-import kotlin.reflect.KClass
 import kotlin.script.experimental.api.*
 import kotlin.script.experimental.jvm.dependenciesFromClassContext
 import kotlin.script.experimental.jvm.jvm
 
-abstract class ScriptDefinition(receiverType: KClass<*>) : ScriptCompilationConfiguration(
+object ScriptDefinition : ScriptCompilationConfiguration(
     {
-        implicitReceivers(receiverType)
         jvm {
-            dependenciesFromClassContext(DSL::class, "polyglot-kotlin") // needed for DSL
+            dependenciesFromClassContext(ScriptDefinition::class, "polyglot-kotlin") // needed for DSL
             dependenciesFromClassContext(ExecuteContext::class, "polyglot-common") // needed for executing tasks
             dependenciesFromClassContext(Model::class, "maven-model") // needed for maven model
             dependenciesFromClassContext(MavenProject::class, "maven-core") // needed for maven project/session

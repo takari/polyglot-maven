@@ -60,10 +60,10 @@ project("Maven Polyglot :: Kotlin Demo") {
             }
         }
 
-        execute(id = "external-script#1", phase = "verify", script = "src/build/scripts/hello.kts")
+        execute(id = "external-script#1", phase = "verify", script = "src/build/scripts/hello.task.kts")
 
         execute(id = "external-script#2", phase = "verify") {
-            val script = basedir.resolve("src/build/scripts/hello.kts")
+            val script = basedir.resolve("src/build/scripts/hello.task.kts")
             eval(script)
         }
     }
