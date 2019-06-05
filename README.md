@@ -9,8 +9,6 @@ Ruby, Groovy and Scala dialects allow this.
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.takari.polyglot/polyglot.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22io.takari.polyglot%22%20AND%20a%3A%22polyglot%22)
 
-[![Gitter chat](https://badges.gitter.im/takari/gitter.png)](https://gitter.im/takari/AllThingsTakari)
-
 [Takari Slack](https://takari.slack.com)
 
 Here's an example POM written in the Ruby dialect:
@@ -104,7 +102,7 @@ the artifactId for your chosen language.
   <extension>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>ARTIFACTID</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
   </extension>
 </extensions>
 ```
@@ -160,6 +158,10 @@ Despite the warning above, Polyglot Maven is pretty stable right now. Have a
 look at the integration tests for each dialect in this repository for some
 examples as well as our dedicated
 [polyglot-maven-examples project](https://github.com/takari/polyglot-maven-examples).
+
+Some dialect folder contain specific README files with futher instructions as
+as test code with example projects and more. Ensure to check the ones for your
+specific dialect out as well.
 
 The following projects are real world usage examples that use Polyglot Maven in
 their regular development and release work:

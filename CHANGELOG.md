@@ -4,13 +4,13 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.4.1
+## Version 0.4.1 - 2019-06-04
 
 - polyglot-kotlin
   - kotlin update
   - numerous improvements to more idiomatic kotlin
   - see https://github.com/takari/polyglot-maven/pull/184
-
+- Release performed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.4.0 - 2019-03-09
 
