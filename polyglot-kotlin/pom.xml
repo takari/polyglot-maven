@@ -34,7 +34,12 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-scripting-jvm-host</artifactId>
+      <artifactId>kotlin-script-util</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-scripting-jvm-host-embeddable</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
 
