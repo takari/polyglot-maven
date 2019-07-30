@@ -16,6 +16,7 @@ object ScriptDefinition : ScriptCompilationConfiguration(
     {
         jvm {
             // workaround for https://github.com/JetBrains/kotlin/commit/67ad3773de2b12f7e1d29e00151b997a4f6373ba#r34443917
+            // will be fixed in Kotlin 1.3.50+
             updateClasspath(listOf(File(PomKtsScript::class.java.protectionDomain.codeSource.location.toURI())))
             dependenciesFromClassContext(PomKtsScript::class, "polyglot-kotlin") // needed for DSL
             dependenciesFromClassContext(ExecuteContext::class, "polyglot-common") // needed for executing tasks

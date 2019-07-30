@@ -13,7 +13,7 @@ import kotlin.script.templates.ScriptTemplateDefinition
         compilationConfiguration = ScriptDefinition::class
 )
 @ScriptTemplateDefinition(scriptFilePattern = "pom\\.kts")
-abstract class PomKtsScript(val script: File, val project: Project) {
+abstract class PomKtsScript(val script: File, val basedir: File, val model: Project) {
 
     /**
      * Configures a Maven project model.
@@ -21,10 +21,18 @@ abstract class PomKtsScript(val script: File, val project: Project) {
     @PomDsl
     fun project(nameOrId: String? = null, block: Project.() -> Unit): Project {
         if (nameOrId != null) {
-            project.name = nameOrId
-            project.id = nameOrId
+            model.name = nameOrId
+            model.id = nameOrId
         }
-        return project.apply(block)
+        return model.apply(block)
+    }
+
+    /**
+     * Invokes the script at the supplied location
+     */
+    @Suppress("unused")
+    fun eval(script: File) {
+        ScriptHost.eval(script, basedir, model)
     }
 
     /**
@@ -32,6 +40,6 @@ abstract class PomKtsScript(val script: File, val project: Project) {
      */
     @Suppress("unused")
     fun ExecuteContext.eval(taskScript: File) {
-        ScriptHost.eval(taskScript, this)
+        ScriptHost.eval(taskScript, basedir, this)
     }
 }

@@ -30,6 +30,13 @@ class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
         this.modelVersion = modelVersion
     }
 
+    //-- Project Directory -------------------------------------------------------------------------------------------//
+
+    @PomDsl
+    override fun getProjectDirectory(): File {
+        return super.getProjectDirectory()
+    }
+
     //-- Project ID --------------------------------------------------------------------------------------------------//
 
     /**

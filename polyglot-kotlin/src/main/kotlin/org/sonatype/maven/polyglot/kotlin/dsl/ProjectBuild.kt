@@ -24,7 +24,7 @@ class ProjectBuild : Build() {
     fun execute(id: String, phase: String, profile: String? = null, script: String) {
         tasks.add(KotlinExecuteTask {
             val file = File("$basedir/$script")
-            ScriptHost.eval(file, this)
+            ScriptHost.eval(file, basedir, this)
         }.apply {
             this.id = id
             this.phase = phase

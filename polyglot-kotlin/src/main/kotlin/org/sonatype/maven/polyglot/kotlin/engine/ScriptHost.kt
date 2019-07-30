@@ -20,18 +20,18 @@ object ScriptHost {
     private val pomCompilationConfig = createJvmCompilationConfigurationFromTemplate<PomKtsScript>()
     private val taskCompilationConfig = createJvmCompilationConfigurationFromTemplate<TaskKtsScript>()
 
-    fun eval(script: File, project: Project) {
+    fun eval(script: File, basedir: File, model: Project) {
         eval(script, pomCompilationConfig) {
-            constructorArgs(script, project)
+            constructorArgs(script, basedir, model)
             jvm {
                 baseClassLoader(PomKtsScript::class.java.classLoader)
             }
         }
     }
 
-    fun eval(script: File, executeContext: ExecuteContext) {
+    fun eval(script: File, basedir: File, executeContext: ExecuteContext) {
         eval(script, taskCompilationConfig) {
-            constructorArgs(script, executeContext)
+            constructorArgs(script, basedir, executeContext)
             jvm {
                 baseClassLoader(TaskKtsScript::class.java.classLoader)
             }
