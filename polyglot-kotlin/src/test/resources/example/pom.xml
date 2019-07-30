@@ -83,6 +83,43 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-maven-plugin</artifactId>
+        <version>0.4.2-SNAPSHOT</version>
+        <executions>
+          <execution>
+            <id>hello</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <taskId>hello</taskId>
+              <nativePom>pom.kts</nativePom>
+            </configuration>
+          </execution>
+          <execution>
+            <id>hello-script</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <taskId>hello-script</taskId>
+              <nativePom>pom.kts</nativePom>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>io.takari.polyglot</groupId>
+            <artifactId>polyglot-kotlin</artifactId>
+            <version>0.4.2-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+        <inherited>false</inherited>
+      </plugin>
     </plugins>
   </build>
 </project>

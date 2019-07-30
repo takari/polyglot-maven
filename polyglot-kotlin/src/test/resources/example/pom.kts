@@ -37,7 +37,7 @@ project("Polyglot :: Kotlin") {
         testSourceDirectory("src/test/kotlin")
 
         plugins {
-            plugin(":maven-jar-plugin") {
+            plugin("org.apache.maven.plugins:maven-jar-plugin") {
                 configuration {
                     "archive" {
                         "index" to true

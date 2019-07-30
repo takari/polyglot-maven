@@ -135,8 +135,6 @@ internal class ModelScriptWriter(
 
     private val blockFlavor: Boolean = flavor == "block"
 
-    private val sampleExecutions: Boolean = option("sample.executions", false) { it == "true" }
-
     // For convenience in referencing methods inside certain lambdas
     private val out: ModelScriptWriter = this
 
@@ -251,8 +249,7 @@ internal class ModelScriptWriter(
     }
 
     private fun writeBuild(build: Build?) {
-        val buildObj = if (sampleExecutions && build == null) Build() else build
-        block("build", buildObj) {
+        block("build", build) {
             set("finalName", finalName)
             set("defaultGoal", defaultGoal)
             set("sourceDirectory", sourceDirectory)
@@ -267,8 +264,6 @@ internal class ModelScriptWriter(
             block("extensions", extensions) { forEach(out::writeExtension) }
             writePluginManagement(pluginManagement)
             block("plugins", plugins) { forEach(out::writePlugin) }
-
-            writeExecuteTasks()
         }
     }
 
@@ -476,35 +471,6 @@ internal class ModelScriptWriter(
             })
         } else {
             block("exclusions", exclusions) { forEach(out::writeExclusion) }
-        }
-    }
-
-    private fun writeExecuteTasks() {
-        if (sampleExecutions) {
-            lineComment("""
-                    The following sample execution demonstrates how you can bind one or more custom script
-                    executions to build lifecycle phases. For a comprehensive list of all lifecycle phases,
-                    see http://maven.apache.org/ref/3.6.0/maven-core/lifecycles.html
-                    """.trimIndent())
-            listOf(Pair("sample-script", "initialize")).forEach { (id, phase) ->
-                block("execute", executeContext, { it.addAll(Pair("id", id), Pair("phase", phase)) }) {
-                    val margin = String(CharArray(phase.length + 2) { ' ' })
-                        """
-                        with(project) {
-                            log.info("[${phase}] Project Name:  ${'$'}{name}")
-                            log.info("[${phase}] Project ID:    ${'$'}{groupId}:${'$'}{artifactId}:${'$'}{version}:${'$'}{packaging}")
-                            log.info("[${phase}] Project Model: ${'$'}{basedir}/pom.kts")
-                            log.info("[${phase}] Project Dependencies:")
-                            dependencies.forEachIndexed { index, dep ->
-                                log.info("${margin} [${'$'}{index}] ${'$'}{dep.groupId}:${'$'}{dep.artifactId}:${'$'}{dep.version}")
-                            }
-                        }
-                        """.trimIndent().lines().forEach {
-                        write(it)
-                        endLine()
-                    }
-                }
-            }
         }
     }
 
