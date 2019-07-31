@@ -40,6 +40,6 @@ abstract class PomKtsScript(val script: File, val basedir: File, val model: Proj
      */
     @Suppress("unused")
     fun ExecuteContext.eval(taskScript: File) {
-        ScriptHost.eval(taskScript, basedir, this)
+        ScriptHost.eval(taskScript, this)
     }
 }

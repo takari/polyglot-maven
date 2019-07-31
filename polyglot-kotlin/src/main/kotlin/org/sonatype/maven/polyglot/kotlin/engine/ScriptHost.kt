@@ -29,9 +29,9 @@ object ScriptHost {
         }
     }
 
-    fun eval(script: File, basedir: File, executeContext: ExecuteContext) {
+    fun eval(script: File, executeContext: ExecuteContext) {
         eval(script, taskCompilationConfig) {
-            constructorArgs(script, basedir, executeContext)
+            constructorArgs(script, executeContext)
             jvm {
                 baseClassLoader(TaskKtsScript::class.java.classLoader)
             }
