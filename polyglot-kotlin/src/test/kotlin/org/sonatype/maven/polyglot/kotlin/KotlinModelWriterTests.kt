@@ -10,8 +10,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
         doTest(
                 "file.comment" to "${this::class.simpleName}\n$testBasePath",
                 "xml.dsl.enabled" to false,
-                "flavor" to "block",
-                "sample.executions" to false
+                "flavor" to "block"
         )
     }
 
@@ -20,8 +19,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
         doTest(
                 "file.comment" to "${this::class.simpleName}\n$testBasePath",
                 "xml.dsl.enabled" to true,
-                "flavor" to "mixed",
-                "sample.executions" to true
+                "flavor" to "mixed"
         )
     }
 
@@ -30,8 +28,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
         doTest(
                 "file.comment" to "${this::class.simpleName}\n$testBasePath",
                 "xml.dsl.enabled" to false,
-                "flavor" to "block",
-                "sample.executions" to false
+                "flavor" to "block"
         )
     }
 
@@ -40,28 +37,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
         doTest(
                 "file.comment" to "${this::class.simpleName}\n$testBasePath",
                 "xml.dsl.enabled" to true,
-                "flavor" to "mixed",
-                "sample.executions" to true
-        )
-    }
-
-    @Test
-    fun `test#convert#xml-to-kotlin#variation-4`() {
-        doTest(
-                "file.comment" to "${this::class.simpleName}\n$testBasePath",
-                "xml.dsl.enabled" to true,
-                "flavor" to "mixed",
-                "sample.executions" to true
-        )
-    }
-
-    @Test
-    fun `test#convert#xml-to-kotlin#variation-5`() {
-        doTest(
-                "file.comment" to "${this::class.simpleName}\n$testBasePath",
-                "xml.dsl.enabled" to true,
-                "flavor" to "mixed",
-                "sample.executions" to true
+                "flavor" to "mixed"
         )
     }
 

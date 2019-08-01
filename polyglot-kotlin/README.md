@@ -74,15 +74,23 @@ project("Polyglot :: Kotlin") {
         }
 
         // External execute task script
-        execute(id = "hello-script", phase = "process-resources", script = "src/build/kotlin/hello.kts")
+        execute(id = "hello-script", phase = "process-resources", script = "hello.task.kts")
     }
 }
 ```
 
 ## IDE support
 
-Any IDE that supports loading Maven extensions should be able to resolve the Maven model. Currently,
-only IntelliJ IDEA seems to do this.
+Any IDE that supports loading Maven extensions should be able to resolve the Maven model.
+Currently, only IntelliJ IDEA seems to do this. 
+
+For auto-completion to work it is necessary that the polyglot-kotlin JAR and its dependencies are on the compile 
+classpath so IntelliJ IDEA will index them. The easiest way to archieve this without changing your project's
+dependencies is to add it as a global library. 
+
+To do this open `Project Structure` (Ctrl+Alt+Shift+S) -> `Global Libraries` -> click the `+` sign and choose `From maven...`.
+Fill in `io.takari.polyglot:polyglot-kotlin:0.4.2`, check the `Sources` checkbox and press `OK`.
+Add the global library to your (IntelliJ IDEA) module and auto-completion should work.
 
 ## Known Issues
 

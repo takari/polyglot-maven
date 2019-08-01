@@ -15,29 +15,24 @@ import java.io.Writer
 class KotlinModelWriter : ModelWriterSupport() {
 
     @Requirement
-    private var project: MavenProject? = null
+    private lateinit var log: Logger
 
-    @Requirement
-    private var _log: Logger? = null
+    @Requirement(optional = true)
+    private var project: MavenProject? = null
 
     override fun write(output: Writer, options: Map<String, Any>, model: Model) {
         output.write(with(StringWriter(1024)) {
             val config = HashMap<String, Any>(options)
             config.putIfAbsent("xml.dsl.enabled", project?.properties?.getProperty("polyglot-kotlin.xml-dsl-enabled", "true") ?: "true")
             config.putIfAbsent("flavor", project?.properties?.getProperty("polyglot-kotlin.flavor", "mixed") ?: "mixed")
-            config.putIfAbsent("sample.executions", project?.properties?.getProperty("polyglot-kotlin.sample-executions", "false") ?: "false")
             ModelScriptWriter(this, config).write(model)
             val kotlinScript = toString()
-            debug { "POM model converted from XML: \n$kotlinScript\n" }
+            if (log.isDebugEnabled) {
+                log.debug(({ "POM model converted from XML: \n$kotlinScript\n" })())
+            }
             kotlinScript
         })
         output.flush()
     }
 
-    private fun debug(message: () -> String) {
-        val log = _log
-        if (log != null && log.isDebugEnabled) {
-            log.debug(message())
-        }
-    }
 }

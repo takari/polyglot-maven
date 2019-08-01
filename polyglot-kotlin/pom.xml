@@ -34,7 +34,12 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-scripting-jvm-host</artifactId>
+      <artifactId>kotlin-script-util</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-scripting-jvm-host-embeddable</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
 
@@ -54,7 +59,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.3.31</kotlin.version>
+    <kotlin.version>1.3.41</kotlin.version>
     <commons-lang3.version>3.8.1</commons-lang3.version>
     <skipTests>false</skipTests>
     <invoker.skip>${skipTests}</invoker.skip>

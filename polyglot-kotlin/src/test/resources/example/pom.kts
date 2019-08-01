@@ -37,7 +37,7 @@ project("Polyglot :: Kotlin") {
         testSourceDirectory("src/test/kotlin")
 
         plugins {
-            plugin(":maven-jar-plugin") {
+            plugin("org.apache.maven.plugins:maven-jar-plugin") {
                 configuration {
                     "archive" {
                         "index" to true
@@ -61,6 +61,6 @@ project("Polyglot :: Kotlin") {
         }
 
         // External execute task script
-        execute(id = "hello-script", phase = "process-resources", script = "src/build/kotlin/hello.kts")
+        execute(id = "hello-script", phase = "process-resources", script = "src/build/kotlin/hello.task.kts")
     }
 }

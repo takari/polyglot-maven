@@ -25,7 +25,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
 
         private var position: Long = 0
 
-        override fun write(cbuf: CharArray?, off: Int, len: Int) {
+        override fun write(cbuf: CharArray, off: Int, len: Int) {
             out.write(cbuf, off, len)
             position += len
         }

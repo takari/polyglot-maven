@@ -1,21 +1,19 @@
 package org.sonatype.maven.polyglot.kotlin.testing
 
-import junit.framework.TestCase
 import org.apache.maven.model.Model
-import org.apache.maven.model.io.DefaultModelReader
-import org.apache.maven.model.io.DefaultModelWriter
+import org.apache.maven.model.building.ModelProcessor
 import org.apache.maven.model.io.ModelReader
 import org.apache.maven.model.io.ModelWriter
 import org.assertj.core.api.Assertions.assertThat
+import org.codehaus.plexus.PlexusTestCase
 import org.junit.Assert
-import org.sonatype.maven.polyglot.kotlin.KotlinModelReader
-import org.sonatype.maven.polyglot.kotlin.KotlinModelWriter
 import org.sonatype.maven.polyglot.kotlin.dsl.propertiesFactory
 import java.io.File
 
-abstract class AbstractModelTestCase(testName: String) : TestCase(testName) {
+abstract class AbstractModelTestCase(testName: String) : PlexusTestCase() {
 
     init {
+        name = testName
         propertiesFactory = { org.sonatype.maven.polyglot.kotlin.util.Properties() }
     }
 
@@ -23,21 +21,21 @@ abstract class AbstractModelTestCase(testName: String) : TestCase(testName) {
     private val testResources: File = File("src/test/resources")
     private val testOutput: File = File("target/test-output")
 
-    private val kotlinModelWriter: ModelWriter = KotlinModelWriter()
+    private val kotlinModelWriter: ModelWriter = lookup(ModelWriter::class.java, "kotlin")
 
-    private val kotlinModelReader: ModelReader = KotlinModelReader()
+    private val kotlinModelReader: ModelReader = lookup(ModelReader::class.java, "kotlin")
 
-    private val xmlModelReader: ModelReader = DefaultModelReader()
+    private val xmlModelReader: ModelReader = lookup(ModelReader::class.java, "default")
 
-    private val xmlModelWriter: ModelWriter = DefaultModelWriter()
+    private val xmlModelWriter: ModelWriter = lookup(ModelWriter::class.java, "default")
 
     protected val pomXml: File = testResources.resolve(testBasePath).resolve("pom.xml").also { assertThat(it).exists() }
 
     protected val pomKts: File = testResources.resolve(testBasePath).resolve("pom.kts").also { assertThat(it).exists() }
 
-    protected fun File.xml2model(vararg options: Pair<String, Any?>): Model = xmlModelReader.read(this, mapOf(*options))
+    protected fun File.xml2model(vararg options: Pair<String, Any?>): Model = xmlModelReader.read(this, mapOf(*options) + mapOf(ModelProcessor.SOURCE to this))
 
-    protected fun File.kts2model(vararg options: Pair<String, Any?>): Model = kotlinModelReader.read(this, mapOf(*options))
+    protected fun File.kts2model(vararg options: Pair<String, Any?>): Model = kotlinModelReader.read(this, mapOf(*options) + mapOf(ModelProcessor.SOURCE to this))
 
     protected fun Model.model2xml(vararg options: Pair<String, Any?>): File {
         val basedir = testOutput.resolve(testBasePath)

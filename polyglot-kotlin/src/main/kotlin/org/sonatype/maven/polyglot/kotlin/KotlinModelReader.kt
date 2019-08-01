@@ -2,6 +2,7 @@ package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
 import org.apache.maven.model.io.ModelReader
+import org.apache.maven.project.MavenProject
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
@@ -15,16 +16,19 @@ import java.io.Reader
 class KotlinModelReader : ModelReader {
 
     @Requirement
-    private var executeManager: ExecuteManager? = null
+    private lateinit var executeManager: ExecuteManager
+
+    @Requirement(optional = true)
+    private var project: MavenProject? = null
 
     override fun read(input: File, options: Map<String, *>): Model {
-        val project = Project(input)
-        ScriptHost.eval(input, project)
-        val tasks = ArrayList(project.tasks)
-        executeManager?.register(project, tasks)
-        executeManager?.install(project, options)
-        project.tasks.clear() // Must be cleared or Maven goes into an infinitely repeatable introspection
-        return project
+        val model = Project(input)
+        ScriptHost.eval(input, project?.basedir ?: input.parentFile, model)
+        val tasks = ArrayList(model.tasks)
+        executeManager.register(model, tasks)
+        executeManager.install(model, options)
+        model.tasks.clear() // Must be cleared or Maven goes into an infinitely repeatable introspection
+        return model
     }
 
     override fun read(input: Reader, options: MutableMap<String, *>): Model {
