@@ -33,7 +33,7 @@ class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
     //-- Project Directory -------------------------------------------------------------------------------------------//
 
     @PomDsl
-    override fun getProjectDirectory(): File {
+    override fun getProjectDirectory(): File? {
         return super.getProjectDirectory()
     }
 
