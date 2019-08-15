@@ -4,6 +4,22 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
+## Version 0.4.3 - 2019-08-14
+
+- polyglot-kotlin
+  - Avoid IllegalStateException
+  - see https://github.com/takari/polyglot-maven/pull/190
+  - contributed by Robert Thornton https://github.com/thorntonrp
+- Release performed by Manfred Moser - http://www.simpligility.com
+
+## Version 0.4.2 - 2019-08-01
+
+- polyglot-kotlin
+  - improved support for IntelliJ Idea usage
+  - see https://github.com/takari/polyglot-maven/pull/187
+  - blog post https://craftsmen.nl/polyglot-maven-kotlin-instead-of-xml/
+- Release performed by Manfred Moser - http://www.simpligility.com
+
 ## Version 0.4.1 - 2019-06-04
 
 - polyglot-kotlin

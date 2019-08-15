@@ -166,6 +166,10 @@ specific dialect out as well.
 The following projects are real world usage examples that use Polyglot Maven in
 their regular development and release work:
 
+## Kotlin
+
+Specific docs and more can be found in the [Kotlin dialect specific readme](./polyglot-kotlin/README.md).
+
 ## Ruby
 
 * https://github.com/jruby - Extensive usage of Polyglot Ruby and contributions

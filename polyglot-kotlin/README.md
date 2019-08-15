@@ -7,6 +7,7 @@
 - Preserves well-known Maven idioms with a Kotlin flavor, allowing easy adoption.
 - Supports Xpp3DOM (XML) configuration using idiomatic Kotlin.
 - Provides idiomatic Kotlin extensions that improve readability and reduce lines of code.
+- Support for syntax highlighting and more in IntellijIDEA
 
 ## Kotlin POM Example
 
@@ -112,3 +113,7 @@ Add the global library to your (IntelliJ IDEA) module and auto-completion should
 
 - IntelliJ IDEA does not appear to auto-matically detect changes to `pom.kts`. The workaround is to manually reimport
   the Maven project.
+
+## Resources
+
+- [Blog post about usage from @lion7](https://craftsmen.nl/polyglot-maven-kotlin-instead-of-xml/)
