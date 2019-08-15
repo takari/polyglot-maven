@@ -116,4 +116,4 @@ Add the global library to your (IntelliJ IDEA) module and auto-completion should
 
 ## Resources
 
-- [Blog post about usage from @lion7](https://craftsmen.nl/polyglot-maven-kotlin-instead-of-xml/)
+- [Blog post about usage](https://craftsmen.nl/polyglot-maven-kotlin-instead-of-xml/) from [Gerard de Leeuw](https://github.com/lion7)
