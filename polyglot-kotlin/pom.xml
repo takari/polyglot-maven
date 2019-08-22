@@ -55,6 +55,11 @@
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.code.maven-replacer-plugin</groupId>
+      <artifactId>replacer</artifactId>
+      <version>1.5.3</version>
+    </dependency>
   </dependencies>
 
   <properties>
@@ -71,7 +76,7 @@
     <plugins>
       <plugin>
         <artifactId>maven-invoker-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <configuration>
           <failIfNoProjects>true</failIfNoProjects>
           <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
@@ -115,7 +120,28 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <version>1.5.3</version>
+        <executions>
+          <execution>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <basedir>${project.build.testOutputDirectory}</basedir>
+          <includes>**/pom.xml</includes>
+          <delimiters>{{*}}</delimiters>
+          <regex>false</regex>
+          <token>takari-polyglot-version</token>
+          <value>${project.version}</value>
+        </configuration>
+      </plugin>
+</plugins>
   </build>
 
 </project>

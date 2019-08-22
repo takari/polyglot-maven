@@ -18,7 +18,7 @@ abstract class AbstractModelTestCase(testName: String) : PlexusTestCase() {
     }
 
     protected val testBasePath: String = testName.removePrefix("test#").replace('#', '/')
-    private val testResources: File = File("src/test/resources")
+    private val testResources: File = File("target/test-classes")
     private val testOutput: File = File("target/test-output")
 
     private val kotlinModelWriter: ModelWriter = lookup(ModelWriter::class.java, "kotlin")
