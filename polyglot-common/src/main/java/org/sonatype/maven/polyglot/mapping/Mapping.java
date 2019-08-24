@@ -23,14 +23,14 @@ import java.util.Properties;
  */
 public interface Mapping {
 	
-  public static final String NAME_PROPERTY = "name";
-  public static final String DESCRIPTION_PROPERTY = "description";
-  public static final String URL_PROPERTY = "url";
-  public static final String PACKAGING_PROPERTY = "packaging";
-  public static final String VERSION_PROPERTY = "version";
-  public static final String GROUP_ID_PROPERTY = "groupId";
-  public static final String ARTIFACT_ID_PROPERTY = "artifactId";
-  public static final String PROPERTY_PREFIX = "property.";
+  public static final String NAME_PROPERTY = "pom.model.name";
+  public static final String DESCRIPTION_PROPERTY = "pom.model.description";
+  public static final String URL_PROPERTY = "pom.model.url";
+  public static final String PACKAGING_PROPERTY = "pom.model.packaging";
+  public static final String VERSION_PROPERTY = "pom.model.version";
+  public static final String GROUP_ID_PROPERTY = "pom.model.groupId";
+  public static final String ARTIFACT_ID_PROPERTY = "pom.model.artifactId";
+  public static final String PROPERTY_PREFIX = "pom.model.property.";
 	
   /**
    * Locates the pom in the given directory	
