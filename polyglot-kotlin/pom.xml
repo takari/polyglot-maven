@@ -60,11 +60,6 @@
       <artifactId>logback-classic</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.google.code.maven-replacer-plugin</groupId>
-      <artifactId>replacer</artifactId>
-      <version>1.5.3</version>
-    </dependency>
   </dependencies>
 
   <properties>
