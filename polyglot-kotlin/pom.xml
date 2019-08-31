@@ -135,7 +135,7 @@
         <configuration>
           <basedir>${project.build.testOutputDirectory}</basedir>
           <includes>**/pom.xml</includes>
-          <delimiters>{{*}}</delimiters>
+          <delimiters>@{*}</delimiters>
           <regex>false</regex>
           <token>takari-polyglot-version</token>
           <value>${project.version}</value>

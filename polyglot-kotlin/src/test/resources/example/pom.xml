@@ -86,7 +86,7 @@
       <plugin>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-maven-plugin</artifactId>
-        <version>{{takari-polyglot-version}}</version>
+        <version>@{takari-polyglot-version}</version>
         <executions>
           <execution>
             <id>hello</id>
@@ -115,7 +115,7 @@
           <dependency>
             <groupId>io.takari.polyglot</groupId>
             <artifactId>polyglot-kotlin</artifactId>
-            <version>{{takari-polyglot-version}}</version>
+            <version>@{takari-polyglot-version}</version>
           </dependency>
         </dependencies>
         <inherited>false</inherited>
