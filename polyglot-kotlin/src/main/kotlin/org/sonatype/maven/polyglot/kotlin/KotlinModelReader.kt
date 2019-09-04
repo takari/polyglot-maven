@@ -1,8 +1,8 @@
 package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
+import org.apache.maven.model.building.ModelProcessor
 import org.apache.maven.model.io.ModelReader
-import org.apache.maven.project.MavenProject
 import org.codehaus.plexus.component.annotations.Component
 import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
@@ -18,12 +18,12 @@ class KotlinModelReader : ModelReader {
     @Requirement
     private lateinit var executeManager: ExecuteManager
 
-    @Requirement(optional = true)
-    private var project: MavenProject? = null
-
     override fun read(input: File, options: Map<String, *>): Model {
+        val source = options[ModelProcessor.SOURCE].toString()
+        val sourceFile = File(source)
+        val basedir = sourceFile.parentFile.canonicalFile
         val model = Project(input)
-        ScriptHost.eval(input, project?.basedir ?: input.parentFile, model)
+        ScriptHost.eval(input, basedir, model)
         val tasks = ArrayList(model.tasks)
         executeManager.register(model, tasks)
         executeManager.install(model, options)
@@ -35,13 +35,17 @@ class KotlinModelReader : ModelReader {
         val temp = File.createTempFile("pom", ".kts")
         temp.deleteOnExit()
         temp.writer().use { input.copyTo(it) }
-        return read(temp, options)
+        val model = read(temp, options)
+        temp.delete()
+        return model
     }
 
     override fun read(input: InputStream, options: MutableMap<String, *>): Model {
         val temp = File.createTempFile("pom", ".kts")
         temp.deleteOnExit()
         temp.outputStream().use { input.copyTo(it) }
-        return read(temp, options)
+        val model = read(temp, options)
+        temp.delete()
+        return model
     }
 }
