@@ -4,6 +4,10 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
+## Version 0.4.5 or higher - future upcoming release
+
+- your feature or fix could be here
+
 ## Version 0.4.4 - 2019-11-24
 
 - polyglot-kotlin
