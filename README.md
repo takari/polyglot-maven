@@ -102,7 +102,7 @@ the artifactId for your chosen language.
   <extension>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>ARTIFACTID</artifactId>
-    <version>0.4.1</version>
+    <version>0.4.4</version>
   </extension>
 </extensions>
 ```
