@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
@@ -64,6 +65,15 @@ public class PolyglotModelManager implements ModelLocator {
 
     throw new RuntimeException("Unable to determine model input format; options=" + options);
   }
+  
+  public Properties getEnhancementPropertiesFor(final Map<String, ?> options) {	 
+    for (Mapping mapping : getSortedMappings()) {
+      if (mapping.accept(options)) {
+        return mapping.getEnhancementProperties(options);
+      }
+    }
+    return null;
+  }  
 
   public ModelWriter getWriterFor(final Map<String, ?> options) {
     for (Mapping mapping : getSortedMappings()) {

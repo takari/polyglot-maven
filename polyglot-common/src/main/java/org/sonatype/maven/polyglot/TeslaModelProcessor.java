@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.FileModelSource;
@@ -112,7 +113,7 @@ public class TeslaModelProcessor implements ModelProcessor {
 
       ModelReader reader = manager.getReaderFor(options);
       Model model = reader.read(source.getInputStream(), options);
-
+      PolyglotPropertiesEnhancer.enhanceModel(manager.getEnhancementPropertiesFor(options), model);
       MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
       StringWriter xml = new StringWriter();
       xmlWriter.write(xml, model);
