@@ -6,6 +6,25 @@ at an easier glance.
 
 ## Version 0.4.4 or higher - upcoming
 
+- polyglot-kotlin
+  - Set source folders to kotlin
+    - see https://github.com/takari/polyglot-maven/pull/202
+    - fixes https://github.com/takari/polyglot-maven/issues/201
+    - contributed by Nils Olson https://github.com/nilols
+- General
+  - Provide a mechanism to override properties of a polyglot build
+    - see https://github.com/takari/polyglot-maven/pull/197
+    - fixes https://github.com/takari/polyglot-maven/issues/193
+    - contributed by Christoph Läubrich https://github.com/laeubi
+  - TeslaModelProcessor.locatePom(File) ignores files ending in.xml
+    - see https://github.com/takari/polyglot-maven/pull/196
+    - fixes https://github.com/takari/polyglot-maven/issues/192
+    - contributed by Christoph Läubrich https://github.com/laeubi
+  - Use platform encoding in ModelReaderSupport
+    - see https://github.com/takari/polyglot-maven/pull/195
+    - fixes https://github.com/takari/polyglot-maven/issues/192
+    - contributed by Christoph Läubrich https://github.com/laeubi
+- Release performed by Manfred Moser - http://www.simpligility.com  
 
 ## Version 0.4.3 - 2019-08-14
 
