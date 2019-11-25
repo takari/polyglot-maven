@@ -4,13 +4,15 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.4.4 or higher - upcoming
+## Version 0.4.4 - 2019-11-24
 
 - polyglot-kotlin
   - Set source folders to kotlin
     - see https://github.com/takari/polyglot-maven/pull/202
     - fixes https://github.com/takari/polyglot-maven/issues/201
     - contributed by Nils Olson https://github.com/nilols
+  - Upgrade to kotlin 1.3.60
+    - contributed by Manfred Moser - http://www.simpligility.com
 - General
   - Provide a mechanism to override properties of a polyglot build
     - see https://github.com/takari/polyglot-maven/pull/197
@@ -24,6 +26,14 @@ at an easier glance.
     - see https://github.com/takari/polyglot-maven/pull/195
     - fixes https://github.com/takari/polyglot-maven/issues/192
     - contributed by Christoph Läubrich https://github.com/laeubi
+  - Invoker plugin update
+    - contributed by Manfred Moser - http://www.simpligility.com
+  - takari parent update
+    - contributed by Manfred Moser - http://www.simpligility.com
+  - plexus-component-metadata update to 2.1.0
+    - contributed by Manfred Moser - http://www.simpligility.com
+  - maven-enforcer-plugin update to 3.0.0-M3
+    - contributed by Manfred Moser - http://www.simpligility.com
 - Release performed by Manfred Moser - http://www.simpligility.com  
 
 ## Version 0.4.3 - 2019-08-14
