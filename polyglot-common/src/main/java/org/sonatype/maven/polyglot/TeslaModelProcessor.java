@@ -61,20 +61,22 @@ public class TeslaModelProcessor implements ModelProcessor {
     assert manager != null;
 
     File pomFile = manager.locatePom(dir);
-    if (pomFile != null && !pomFile.getName().endsWith(".pom") && !pomFile.getName().endsWith(".xml")) {
-      pomFile = new File(pomFile.getParentFile(), ".polyglot." + pomFile.getName());
-      try {
-        pomFile.createNewFile();
-        pomFile.deleteOnExit();
-      } catch (IOException e) {
-        throw new RuntimeException("error creating empty file", e);
-      }
-    } else {
-      // behave like proper maven in case there is no pom from manager
-      pomFile = new File(dir, "pom.xml");
+    if (pomFile == null) {
+      throw new AssertionError("pom file must not be null from PolyglotModelManager as per API");
     }
-
-    return pomFile;
+    if (pomFile.getName().equals("pom.xml") && pomFile.getParentFile().equals(dir)) {
+      // behave like proper maven in case there is no pom from manager
+      return pomFile;
+    }
+    File polyglotPomFile = new File(pomFile.getParentFile(), ".polyglot." + pomFile.getName());
+    try {
+      if (polyglotPomFile.createNewFile()) {
+      polyglotPomFile.deleteOnExit();
+      }
+    } catch (IOException e) {
+      throw new RuntimeException("error creating empty file", e);
+    }
+    return polyglotPomFile;
   }
 
   @Override
