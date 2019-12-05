@@ -6,7 +6,8 @@ at an easier glance.
 
 ## Version 0.4.5 or higher - future upcoming release
 
-- your feature or fix could be here
+- Remove upper bound for JDK version to allow Java 11 and newer
+ - contributed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.4.4 - 2019-11-24
 
