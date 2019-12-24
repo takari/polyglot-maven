@@ -30,7 +30,7 @@
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
-      <version>9.2.8.0</version>
+      <version>9.2.9.0</version>
       <type>pom</type>
     </dependency>
     <!-- Test -->
@@ -43,7 +43,7 @@
   </dependencies>
 
   <properties>
-    <mavengem-wagon.version>0.2.1</mavengem-wagon.version>
+    <mavengem-wagon.version>1.0.3</mavengem-wagon.version>
   </properties>
 
   <build>
@@ -145,7 +145,7 @@
       </dependencies>
 
       <properties>
-        <jruby.plugins.version>1.1.5</jruby.plugins.version>
+        <jruby.plugins.version>1.1.8</jruby.plugins.version>
       </properties>
 
       <build>
