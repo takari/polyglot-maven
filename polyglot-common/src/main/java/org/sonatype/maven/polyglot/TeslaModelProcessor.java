@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.FileModelSource;
@@ -109,12 +108,12 @@ public class TeslaModelProcessor implements ModelProcessor {
       log.debug(source.getLocation());
 
       File pom = new File(source.getLocation());
-      source = new FileModelSource(new File(pom.getPath().replaceFirst("[.]polyglot[.]", "")));
+      File realPom = new File(pom.getPath().replaceFirst("[.]polyglot[.]", ""));
 
-      ((Map) options).put(ModelProcessor.SOURCE, source);
+      ((Map) options).put(ModelProcessor.SOURCE, new FileModelSource(realPom));
 
       ModelReader reader = manager.getReaderFor(options);
-      Model model = reader.read(source.getInputStream(), options);
+      Model model = reader.read(realPom, options);
       PolyglotPropertiesEnhancer.enhanceModel(manager.getEnhancementPropertiesFor(options), model);
       MavenXpp3Writer xmlWriter = new MavenXpp3Writer();
       StringWriter xml = new StringWriter();
