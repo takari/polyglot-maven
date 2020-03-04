@@ -4,7 +4,7 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.4.6 or higher - future upcoming release
+## Version 0.4.5 - 2020-03-03
 
 - Remove upper bound for JDK version to allow Java 11 and newer
  - contributed by Manfred Moser - http://www.simpligility.com
@@ -21,7 +21,8 @@ at an easier glance.
   - see https://github.com/takari/polyglot-maven/pull/211
   - fixes https://github.com/takari/polyglot-maven/issues/209
   - contributed by Christoph Läubrich https://github.com/laeubi
-
+- Upgrade scala-maven-plugin, clojure-maven-plugin and Clojure
+  - contributed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.4.4 - 2019-11-24
 
