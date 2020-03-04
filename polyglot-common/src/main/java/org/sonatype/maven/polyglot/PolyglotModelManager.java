@@ -46,12 +46,12 @@ public class PolyglotModelManager implements ModelLocator {
   public List<Mapping> getSortedMappings() {
     List<Mapping> sortedMappings = new ArrayList<Mapping>(mappings);
     
-    Collections.sort(sortedMappings, new Comparator<Mapping>() {
+    Collections.sort(sortedMappings, Collections.reverseOrder(new Comparator<Mapping>() {
 	  @Override
 	  public int compare(Mapping o1, Mapping o2) {
 		return Float.compare(o1.getPriority(), o2.getPriority());
 	  }
-	});
+	}));
 	
 	return sortedMappings;
   }
