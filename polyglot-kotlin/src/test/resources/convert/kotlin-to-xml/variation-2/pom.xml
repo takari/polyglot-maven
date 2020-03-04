@@ -158,8 +158,6 @@
     </pluginRepository>
   </pluginRepositories>
   <build>
-    <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <extensions>
       <extension>
         <groupId>com.example.extensions</groupId>

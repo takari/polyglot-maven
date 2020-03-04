@@ -3,11 +3,6 @@ package org.sonatype.maven.polyglot.kotlin.dsl
 @PomDsl
 open class Build : org.apache.maven.model.Build(), Cloneable {
 
-    init {
-        sourceDirectory = "src/main/kotlin"
-        testSourceDirectory = "src/test/kotlin"
-    }
-
     @PomDsl
     fun sourceDirectory(sourceDirectory: String): Build {
         this.sourceDirectory = sourceDirectory
