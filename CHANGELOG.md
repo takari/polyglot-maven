@@ -4,10 +4,24 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.4.5 or higher - future upcoming release
+## Version 0.4.6 or higher - future upcoming release
 
 - Remove upper bound for JDK version to allow Java 11 and newer
  - contributed by Manfred Moser - http://www.simpligility.com
+- polyglot-kotlin - revert automatic source folder setting to koltin
+  - fixes https://github.com/takari/polyglot-maven/issues/205
+  - contributed by Manfred Moser - http://www.simpligility.com
+- Update xstream version in test resources to avoid security alerts
+  - contributed by Manfred Moser - http://www.simpligility.com
+- Avoid assumption about replacement pom file being readable
+  - see https://github.com/takari/polyglot-maven/pull/212
+  - fixes https://github.com/takari/polyglot-maven/issues/210
+  - contributed by Christoph Läubrich https://github.com/laeubi
+- Fix sorting in model manager
+  - see https://github.com/takari/polyglot-maven/pull/211
+  - fixes https://github.com/takari/polyglot-maven/issues/209
+  - contributed by Christoph Läubrich https://github.com/laeubi
+
 
 ## Version 0.4.4 - 2019-11-24
 
