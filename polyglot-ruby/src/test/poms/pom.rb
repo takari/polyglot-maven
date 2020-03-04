@@ -112,7 +112,7 @@ project 'Apache Maven', 'http://maven.apache.org/' do
     jar 'org.sonatype.gossip:gossip-slf4j', '${gossipVersion}'
     jar 'org.sonatype.gossip:gossip-support', '${gossipVersion}'
     jar 'org.sonatype.grrrowl:grrrowl', '1.1.1'
-    jar 'com.thoughtworks.xstream:xstream', '1.3.1'
+    jar 'com.thoughtworks.xstream:xstream', '1.4.6'
     jar 'commons-codec:commons-codec', '1.4'
     jar 'org.eclipse.tesla.shell:tesla-shell-core', '${gshellVersion}'
     jar 'org.eclipse.tesla.shell:tesla-shell-core', '${gshellVersion}:tests'
