@@ -16,6 +16,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.FileModelSource;
@@ -45,11 +47,12 @@ public class TeslaModelProcessor implements ModelProcessor {
   private static final String WARNING = "?>" + NEW_LINE + "<!--" +
       NEW_LINE + "" +
       NEW_LINE + "" +
-      NEW_LINE + "DO NOT MODIFIY - GENERATED CODE" +
+      NEW_LINE + "DO NOT MODIFY - GENERATED CODE" +
       NEW_LINE + "" +
       NEW_LINE + "" +
       NEW_LINE + "-->";
-        
+  private static final String POM_FILE_PREFIX = ".polyglot.";
+
   @Requirement
   private PolyglotModelManager manager;
   @Requirement
@@ -67,7 +70,7 @@ public class TeslaModelProcessor implements ModelProcessor {
       // behave like proper maven in case there is no pom from manager
       return pomFile;
     }
-    File polyglotPomFile = new File(pomFile.getParentFile(), ".polyglot." + pomFile.getName());
+    File polyglotPomFile = new File(pomFile.getParentFile(), POM_FILE_PREFIX + pomFile.getName());
     try {
       if (polyglotPomFile.createNewFile()) {
       polyglotPomFile.deleteOnExit();
@@ -103,12 +106,11 @@ public class TeslaModelProcessor implements ModelProcessor {
   })
   public Model read(final Reader input, final Map<String, ?> options) throws IOException, ModelParseException {
     assert manager != null;
-    ModelSource source = (ModelSource) options.get(ModelProcessor.SOURCE);
-    if (("" + source).contains(".polyglot.")) {
-      log.debug(source.getLocation());
-
-      File pom = new File(source.getLocation());
-      File realPom = new File(pom.getPath().replaceFirst("[.]polyglot[.]", ""));
+    Optional<File> optionalPomXml = getPomXmlFile(options);
+    if (optionalPomXml.isPresent()) {
+      File pom = optionalPomXml.get();
+      log.debug(pom.toString());
+      File realPom = new File(pom.getPath().replaceFirst(Pattern.quote(POM_FILE_PREFIX), ""));
 
       ((Map) options).put(ModelProcessor.SOURCE, new FileModelSource(realPom));
 
@@ -144,5 +146,26 @@ public class TeslaModelProcessor implements ModelProcessor {
       ModelReader reader = manager.getReaderFor(options);
       return reader.read(input, options);
     }
+  }
+
+  private Optional<File> getPomXmlFile(Map<String, ?> options) {
+    ModelSource source = (ModelSource) options.get(ModelProcessor.SOURCE);
+    if (source != null) {
+      return getPomXmlFile(new File(source.getLocation()));
+    }
+    return Optional.empty();
+  }
+
+  Optional<File> getPomXmlFile(File sourceFile) {
+    String filename = sourceFile.getName();
+    if (filename.startsWith(POM_FILE_PREFIX)) {
+      return Optional.of(sourceFile);
+    } else if (!filename.equals("pom.xml") && !filename.endsWith(".pom")) {
+      File pom = locatePom(sourceFile.getParentFile());
+      if (pom.getName().startsWith(POM_FILE_PREFIX)) {
+        return Optional.of(pom);
+      }
+    }
+    return Optional.empty();
   }
 }

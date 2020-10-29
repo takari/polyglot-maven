@@ -64,7 +64,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.4.0</kotlin.version>
+    <kotlin.version>1.4.10</kotlin.version>
     <commons-lang3.version>3.8.1</commons-lang3.version>
     <skipTests>false</skipTests>
     <invoker.skip>${skipTests}</invoker.skip>
@@ -75,6 +75,7 @@
     <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-invoker-plugin</artifactId>
         <configuration>
           <failIfNoProjects>true</failIfNoProjects>
@@ -140,7 +141,7 @@
           <value>${project.version}</value>
         </configuration>
       </plugin>
-</plugins>
+    </plugins>
   </build>
 
 </project>
