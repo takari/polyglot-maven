@@ -72,8 +72,8 @@ public class TeslaModelProcessor implements ModelProcessor {
     }
     File polyglotPomFile = new File(pomFile.getParentFile(), POM_FILE_PREFIX + pomFile.getName());
     try {
-      if (polyglotPomFile.createNewFile()) {
-      polyglotPomFile.deleteOnExit();
+      if (!polyglotPomFile.exists() && polyglotPomFile.createNewFile()) {
+        polyglotPomFile.deleteOnExit();
       }
     } catch (IOException e) {
       throw new RuntimeException("error creating empty file", e);
