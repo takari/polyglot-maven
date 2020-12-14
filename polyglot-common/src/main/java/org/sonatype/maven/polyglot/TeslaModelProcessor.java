@@ -43,6 +43,7 @@ import org.codehaus.plexus.util.IOUtil;
 @Component(role = ModelProcessor.class)
 public class TeslaModelProcessor implements ModelProcessor {
 
+  private static final String DEFAULT_POM_FILE = "pom.xml";
   private static final String NEW_LINE = System.getProperty("line.separator");
   private static final String WARNING = "?>" + NEW_LINE + "<!--" +
       NEW_LINE + "" +
@@ -62,11 +63,11 @@ public class TeslaModelProcessor implements ModelProcessor {
   public File locatePom(final File dir) {
     assert manager != null;
 
-    File pomFile = manager.locatePom(dir);
+	File pomFile = manager.findPom(dir);
     if (pomFile == null) {
-      throw new AssertionError("pom file must not be null from PolyglotModelManager as per API");
+		return new File(dir, DEFAULT_POM_FILE);
     }
-    if (pomFile.getName().equals("pom.xml") && pomFile.getParentFile().equals(dir)) {
+	if (pomFile.getName().equals(DEFAULT_POM_FILE) && pomFile.getParentFile().equals(dir)) {
       // behave like proper maven in case there is no pom from manager
       return pomFile;
     }

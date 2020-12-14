@@ -17,7 +17,6 @@ import java.util.Properties;
 
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
-import org.apache.maven.model.locator.ModelLocator;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
@@ -31,7 +30,7 @@ import org.sonatype.maven.polyglot.mapping.Mapping;
  * @since 0.7
  */
 @Component(role = PolyglotModelManager.class)
-public class PolyglotModelManager implements ModelLocator {
+public class PolyglotModelManager {
   @Requirement
   protected Logger log;
 
@@ -85,17 +84,16 @@ public class PolyglotModelManager implements ModelLocator {
     throw new RuntimeException("Unable to determine model output format; options=" + options);
   }
 
-  @Override
-  public File locatePom(final File dir) {
+	public File findPom(final File dir) {
     assert dir != null;
 
-    File pomFile = null;
-    float mappingPriority = Float.MIN_VALUE;
+	File pomFile = null;
+    float currentPriority = Float.MIN_VALUE;
     for (Mapping mapping : mappings) {
       File file = mapping.locatePom(dir);
-      if (file != null && (pomFile == null || mappingPriority < mapping.getPriority())) {
+		if (file != null && (pomFile == null || mapping.getPriority() > currentPriority)) {
         pomFile = file;
-        mappingPriority = mapping.getPriority();
+        currentPriority = mapping.getPriority();
       }
     }
 
