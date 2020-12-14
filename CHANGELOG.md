@@ -18,8 +18,10 @@ at an easier glance.
   - see
     https://github.com/takari/polyglot-maven/commit/d204e38db3995cc7fdc2b2bd2724c6dba6932429
   - contributed by Robert Thornton https://github.com/thorntonrp
+- Upgrade to Groovy 2.5.14
+  - contributed by Manfred Moser - http://www.simpligility.com
 
-  
+
 ## Version 0.4.5 - 2020-03-03
 
 - Remove upper bound for JDK version to allow Java 11 and newer
