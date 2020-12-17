@@ -17,6 +17,7 @@ at an easier glance.
 - Upgrade to Kotlin 1.4.0
   - see
     https://github.com/takari/polyglot-maven/commit/d204e38db3995cc7fdc2b2bd2724c6dba6932429
+  - fixes https://github.com/takari/polyglot-maven/issues/214
   - contributed by Robert Thornton https://github.com/thorntonrp
 - Upgrade to Groovy 2.5.14
   - contributed by Manfred Moser - http://www.simpligility.com
