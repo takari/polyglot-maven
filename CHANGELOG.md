@@ -20,6 +20,7 @@ at an easier glance.
   - fixes https://github.com/takari/polyglot-maven/issues/214
   - contributed by Robert Thornton https://github.com/thorntonrp
 - Upgrade to Groovy 2.5.14
+- Upgrade commons-beanutils to 1.9.4
   - contributed by Manfred Moser - http://www.simpligility.com
 
 
