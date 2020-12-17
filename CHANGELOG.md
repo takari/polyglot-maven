@@ -4,7 +4,7 @@ The [git commit history](https://github.com/takari/polyglot-maven/commits/master
 is the detailed source of all changes. The following provides most information
 at an easier glance.
 
-## Version 0.4.6 - Upcoming
+## Version 0.4.6 - 2020-12-16
 
 - Avoid returning null when reading pom from file in some cases
   - see https://github.com/takari/polyglot-maven/pull/219
@@ -22,7 +22,7 @@ at an easier glance.
 - Upgrade to Groovy 2.5.14
 - Upgrade commons-beanutils to 1.9.4
   - contributed by Manfred Moser - http://www.simpligility.com
-
+- Release performed by Manfred Moser - http://www.simpligility.com  
 
 ## Version 0.4.5 - 2020-03-03
 
@@ -43,6 +43,7 @@ at an easier glance.
   - contributed by Christoph Läubrich https://github.com/laeubi
 - Upgrade scala-maven-plugin, clojure-maven-plugin and Clojure
   - contributed by Manfred Moser - http://www.simpligility.com
+- Release performed by Manfred Moser - http://www.simpligility.com
 
 ## Version 0.4.4 - 2019-11-24
 
