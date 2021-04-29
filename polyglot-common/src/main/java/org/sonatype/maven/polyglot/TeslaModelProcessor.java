@@ -162,7 +162,12 @@ public class TeslaModelProcessor implements ModelProcessor {
     if (filename.startsWith(POM_FILE_PREFIX)) {
       return Optional.of(sourceFile);
     } else if (!filename.equals("pom.xml") && !filename.endsWith(".pom")) {
-      File pom = locatePom(sourceFile.getParentFile());
+		File parent = sourceFile.getParentFile();
+		if (parent == null) {
+			// "virtual" model
+			return Optional.empty();
+		}
+		File pom = locatePom(parent);
       if (pom.getName().startsWith(POM_FILE_PREFIX)) {
         return Optional.of(pom);
       }
