@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (c) 2012 to original author or authors All rights reserved.
-  This program and the accompanying materials are made available under the
-  terms of the Eclipse Public License v1.0 which accompanies this distribution,
+<!-- Copyright (c) 2012 to original author or authors All rights reserved. 
+  This program and the accompanying materials are made available under the 
+  terms of the Eclipse Public License v1.0 which accompanies this distribution, 
   and is available at http://www.eclipse.org/legal/epl-v10.html -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
@@ -44,9 +44,7 @@
     <module>polyglot-common</module>
     <module>polyglot-atom</module>
     <module>polyglot-ruby</module>
-    <!-- on the scala branch
     <module>polyglot-scala</module>
-    -->
     <module>polyglot-groovy</module>
     <module>polyglot-yaml</module>
     <module>polyglot-clojure</module>
@@ -109,7 +107,7 @@
         <artifactId>polyglot-kotlin</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <!-- We inline Maven's dependency management section to align dependency
+      <!-- We inline Maven's dependency management section to align dependency 
         versions from Maven's core -->
       <dependency>
         <groupId>org.apache.maven</groupId>
@@ -118,7 +116,7 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <!-- I'd like to remove these two and place them in Maven's depMan
+      <!-- I'd like to remove these two and place them in Maven's depMan 
         section. We want to be a complete superset as much as possible -->
       <dependency>
         <groupId>junit</groupId>
@@ -229,7 +227,7 @@
             <mavenExecutorId>forked-path</mavenExecutorId>
           </configuration>
         </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
           only. It has no influence on the Maven build itself. -->
         <plugin>
           <groupId>org.eclipse.m2e</groupId>
