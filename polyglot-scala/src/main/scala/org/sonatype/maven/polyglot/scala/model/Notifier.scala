@@ -79,12 +79,11 @@ class ConvertibleScalaNotifier(n: Notifier) {
   def asJava: MavenNotifier = {
     val mn = new MavenNotifier
     mn.setAddress(n.address.orNull)
-    mn.setConfiguration(Some(n.configuration).map({
-      c =>
+    mn.setConfiguration(Option(n.configuration).map { c =>
         val p = new Properties
-        p.putAll(c.asJava)
+        c.foreach { case (k, v) => p.setProperty(k, v) }
         p
-    }).orNull[Properties])
+    }.orNull[Properties])
     mn.setSendOnError(n.sendOnError)
     mn.setSendOnFailure(n.sendOnFailure)
     mn.setSendOnSuccess(n.sendOnSuccess)

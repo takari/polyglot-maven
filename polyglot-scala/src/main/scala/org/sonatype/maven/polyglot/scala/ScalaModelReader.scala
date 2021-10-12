@@ -197,7 +197,7 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
   class MvnEval(target: Option[File], includeBaseDir: File) extends Eval(target) {
 
     /*
-   * This is a preprocesor that can include files by requesting them from the given resolvers.
+   * This is a preprocessor that can include files by requesting them from the given resolvers.
    * 
    * This preprocessor support lines starting with: `//#include`.
    * 
@@ -212,7 +212,7 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
         apply(code, maximumRecursionDepth)
 
       def apply(code: String, maxDepth: Int): String = {
-        val lines = code.lines map { line: String =>
+        val lines = code.linesIterator.map { line: String =>
           val tokens = line.trim.split(' ')
           if (tokens.length == 2 && tokens(0).equals("//#include")) {
             val path = tokens(1)
@@ -222,7 +222,7 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
               case Some(r: Resolver) => {
                 // recursively process includes
                 if (maxDepth == 0) {
-                  throw new IllegalStateException("Exceeded maximum recusion depth")
+                  throw new IllegalStateException("Exceeded maximum recursion depth")
                 } else {
                   apply(StreamIO.buffer(r.get(path)).toString, maxDepth - 1)
                 }
