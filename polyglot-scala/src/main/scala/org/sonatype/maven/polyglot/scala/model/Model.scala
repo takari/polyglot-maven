@@ -247,12 +247,11 @@ class ConvertibleScalaModel(m: Model) {
     mm.setPomFile(m.pomFile.orNull)
     mm.setPrerequisites(m.prerequisites.map(_.asJava).orNull)
     mm.setProfiles(m.profiles.map(_.asJava).asJava)
-    mm.setProperties(Some(m.properties).map({
-      m =>
+    mm.setProperties(Option(m.properties).map { m =>
         val p = new Properties
-        p.putAll(m.asJava)
+        m.foreach { case (k, v) => p.setProperty(k, v) }
         p
-    }).orNull)
+    }.orNull)
     mm.setReporting(m.reporting.map(_.asJava).orNull)
     mm.setRepositories(m.repositories.map(_.asJava).asJava)
     mm.setScm(m.scm.map(_.asJava).orNull)
