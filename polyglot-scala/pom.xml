@@ -22,6 +22,7 @@
   <properties>
     <!-- We cannot use 2.12+, as Maven 3.x requires us to run on Java7 -->
     <scala.version>2.11.12</scala.version>
+    <scala.bin.version>2.11</scala.bin.version>
   </properties>
 
   <contributors>
@@ -44,13 +45,13 @@
 
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-eval_2.11</artifactId>
+      <artifactId>util-eval_${scala.bin.version}</artifactId>
       <version>6.43.0</version>
     </dependency>
 
     <dependency>
       <groupId>com.googlecode.kiama</groupId>
-      <artifactId>kiama_2.11</artifactId>
+      <artifactId>kiama_${scala.bin.version}</artifactId>
       <version>1.8.0</version>
     </dependency>
 
@@ -74,7 +75,7 @@
     
     <dependency>
       <groupId>org.specs2</groupId>
-      <artifactId>specs2-junit_2.11</artifactId>
+      <artifactId>specs2-junit_${scala.bin.version}</artifactId>
       <version>3.9.5</version>
       <scope>test</scope>
     </dependency>

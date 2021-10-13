@@ -151,7 +151,7 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
 
   import org.sonatype.maven.polyglot.scala.ScalaConverters._
 
-  def read(reader: Reader, options: util.Map[String, _]): Model = {
+  override def read(reader: Reader, options: util.Map[String, _]): Model = {
     val evalPomFile = locateEvalPomFile(options)
     IOUtil.copy(reader, new FileOutputStream(evalPomFile))
     val sm = eval(evalPomFile, evalPomFile, options)
