@@ -126,6 +126,31 @@
           </includes>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <configuration>
+          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>install</goal>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
+              <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+              <showErrors>true</showErrors>
+              <debug>false</debug>
+              <streamLogs>true</streamLogs>
+              <goals><goal>verify</goal></goals>
+              <postBuildHookScript>validate.groovy</postBuildHookScript>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
 
     <pluginManagement>
