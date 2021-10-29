@@ -145,7 +145,7 @@
       </dependencies>
 
       <properties>
-        <jruby.plugins.version>1.1.8</jruby.plugins.version>
+        <jruby.plugins.version>2.0.1</jruby.plugins.version>
       </properties>
 
       <build>
