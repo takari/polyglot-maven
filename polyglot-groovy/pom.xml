@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>polyglot</artifactId>
-    <version>0.4.8-SNAPSHOT</version>
+    <version>0.4.8</version>
   </parent>
 
   <artifactId>polyglot-groovy</artifactId>
