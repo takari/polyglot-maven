@@ -36,9 +36,13 @@ public class ClojureModelReader extends ModelReaderSupport {
     public Model read(final Reader input, final Map<String, ?> options) throws IOException {
         assert input != null;
 
+        Thread currentThread = Thread.currentThread();
+        ClassLoader originalCL = currentThread.getContextClassLoader();
+        ClassLoader classloaderWithClojure = this.getClass().getClassLoader();
         try {
-            String location = PolyglotModelUtil.getLocation(options);
+            currentThread.setContextClassLoader(classloaderWithClojure);
 
+            String location = PolyglotModelUtil.getLocation(options);
             final Var USE = Var.intern(RT.CLOJURE_NS, Symbol.create("use"));
             final Symbol READER = Symbol.create("org.sonatype.maven.polyglot.clojure.dsl.reader");
             final Symbol LEININGEN = Symbol.create("org.sonatype.maven.polyglot.clojure.dsl.leiningen");
@@ -47,10 +51,11 @@ public class ClojureModelReader extends ModelReaderSupport {
             clojure.lang.Compiler.load(input, location, location);
             final Var MODEL = Var.intern(Namespace.findOrCreate(READER), Symbol.create("*MODEL*"));
             return  (Model) ((Atom) MODEL.get()).deref();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Don't use new IOException(e) because it doesn't exist in Java 5
             throw (IOException) new IOException(e.toString()).initCause(e);
+        } finally {
+                currentThread.setContextClassLoader(originalCL);
         }
     }
 }
