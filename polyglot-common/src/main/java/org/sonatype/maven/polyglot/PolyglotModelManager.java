@@ -9,7 +9,6 @@ package org.sonatype.maven.polyglot;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -42,17 +41,12 @@ public class PolyglotModelManager {
     mappings.add(mapping);
   }
   
+  private static final Comparator<Mapping> DESCENDING_PRIORITY = Comparator.comparingDouble(Mapping::getPriority).reversed(); 
+
   public List<Mapping> getSortedMappings() {
-    List<Mapping> sortedMappings = new ArrayList<Mapping>(mappings);
-    
-    Collections.sort(sortedMappings, Collections.reverseOrder(new Comparator<Mapping>() {
-	  @Override
-	  public int compare(Mapping o1, Mapping o2) {
-		return Float.compare(o1.getPriority(), o2.getPriority());
-	  }
-	}));
-	
-	return sortedMappings;
+    List<Mapping> sortedMappings = new ArrayList<>(mappings);
+    sortedMappings.sort(DESCENDING_PRIORITY);
+  return sortedMappings;
   }
 
   public ModelReader getReaderFor(final Map<String, ?> options) {	 
@@ -84,36 +78,27 @@ public class PolyglotModelManager {
     throw new RuntimeException("Unable to determine model output format; options=" + options);
   }
 
-	public File findPom(final File dir) {
+  public File findPom(final File dir) {
     assert dir != null;
 
-	File pomFile = null;
-    float currentPriority = Float.MIN_VALUE;
-    for (Mapping mapping : mappings) {
+    for (Mapping mapping : getSortedMappings()) {
       File file = mapping.locatePom(dir);
-		if (file != null && (pomFile == null || mapping.getPriority() > currentPriority)) {
-        pomFile = file;
-        currentPriority = mapping.getPriority();
+      if (file != null) {
+        return file;
       }
     }
-
-    return pomFile;
+    return null;
   }
 
   public String determineFlavourFromPom(final File dir) {
     assert dir != null;
-
-    String flavour = null;
-    float mappingPriority = Float.MIN_VALUE;
-    for (Mapping mapping : mappings) {
+    for (Mapping mapping : getSortedMappings()) {
       File file = mapping.locatePom(dir);
-      if (file != null && (flavour == null || mappingPriority < mapping.getPriority())) {
-        flavour = mapping.getFlavour();
-        mappingPriority = mapping.getPriority();
+      if (file != null) {
+        return mapping.getFlavour();
       }
     }
-
-    return flavour;
+    return null;
   }
 
   public String getFlavourFor(final Map<String, ?> options) {
