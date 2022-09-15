@@ -196,6 +196,9 @@ Specific docs and more can be found in the [Kotlin dialect specific readme](./po
 
 ## Scala
 
+Specific docs and more can be found in the [Scala dialect specific readme](./polyglot-scala/README.adoc).
+
+
 _Java Projects_
 
 * [LambdaTest](https://github.com/lefou/LambdaTest) - A simple Java project with
