@@ -28,6 +28,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.PlexusContainer;
 import org.sonatype.maven.polyglot.PolyglotModelManager;
 import org.sonatype.maven.polyglot.execute.ExecuteContext;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
@@ -58,6 +59,9 @@ public class ExecuteMojo extends AbstractMojo {
 
   @Component(role = PolyglotModelManager.class)
   private PolyglotModelManager modelManager;
+
+  @Component
+  private PlexusContainer container;
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -96,6 +100,10 @@ public class ExecuteMojo extends AbstractMojo {
       @Override
       public Log getLog() {
         return ExecuteMojo.this.getLog();
+      }
+      
+      public <T> T lookup(Class<T> clazz) {
+          return container.lookup(clazz);
       }
     };
 
