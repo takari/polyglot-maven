@@ -60,7 +60,7 @@ public class ExecuteMojo extends AbstractMojo {
   @Component(role = PolyglotModelManager.class)
   private PolyglotModelManager modelManager;
 
-  @Component
+  @javax.inject.Inject
   private PlexusContainer container;
 
   @Override
@@ -101,9 +101,12 @@ public class ExecuteMojo extends AbstractMojo {
       public Log getLog() {
         return ExecuteMojo.this.getLog();
       }
-      
+
       public <T> T lookup(Class<T> clazz) {
           return container.lookup(clazz);
+      }
+      public Object lookup(String className) {
+          return container.lookup(Thread.currentThread().getContextClassLoader().loadClass(className));
       }
     };
 
