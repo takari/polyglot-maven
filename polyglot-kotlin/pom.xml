@@ -26,6 +26,12 @@
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-common</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-utils</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
