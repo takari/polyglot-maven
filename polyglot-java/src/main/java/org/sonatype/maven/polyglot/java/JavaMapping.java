@@ -7,17 +7,19 @@
  */
 package org.sonatype.maven.polyglot.java;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.util.Map;
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.maven.polyglot.mapping.Mapping;
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
 
 /**
  * XML model mapping.
  *
  */
-@Component(role = Mapping.class, hint = "java")
+@Singleton
+@Named( "java" )
 public class JavaMapping extends MappingSupport {
 
 	public JavaMapping() {

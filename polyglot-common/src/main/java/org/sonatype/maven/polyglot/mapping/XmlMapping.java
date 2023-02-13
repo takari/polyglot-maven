@@ -7,11 +7,13 @@
  */
 package org.sonatype.maven.polyglot.mapping;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.util.Map;
 
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.StringModelSource;
-import org.codehaus.plexus.component.annotations.Component;
 
 /**
  * Xml model mapping.
@@ -20,7 +22,8 @@ import org.codehaus.plexus.component.annotations.Component;
  *
  * @since 0.7
  */
-@Component(role = Mapping.class, hint = "xml")
+@Singleton
+@Named( "xml" )
 public class XmlMapping extends MappingSupport {
   public XmlMapping() {
     super(null);

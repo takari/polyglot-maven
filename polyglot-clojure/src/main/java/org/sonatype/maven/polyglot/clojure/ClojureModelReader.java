@@ -7,14 +7,15 @@
  */
 package org.sonatype.maven.polyglot.clojure;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import clojure.lang.Atom;
 import clojure.lang.Namespace;
 import clojure.lang.RT;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.PolyglotModelUtil;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 
@@ -30,7 +31,8 @@ import java.util.Map;
 
  * @since 0.7
  */
-@Component(role = ModelReader.class, hint = "clojure")
+@Singleton
+@Named( "clojure" )
 public class ClojureModelReader extends ModelReaderSupport {
 
     public Model read(final Reader input, final Map<String, ?> options) throws IOException {

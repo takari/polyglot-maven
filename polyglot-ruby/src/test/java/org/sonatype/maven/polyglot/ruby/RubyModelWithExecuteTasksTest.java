@@ -23,8 +23,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.sisu.launch.InjectedTestCase;
 import org.sonatype.maven.polyglot.PolyglotModelManager;
 import org.sonatype.maven.polyglot.execute.ExecuteContext;
@@ -53,7 +51,6 @@ public class RubyModelWithExecuteTasksTest extends InjectedTestCase {
          modelManager.addMapping( new RubyMapping() );
          rubyModelReader.executeManager = new ExecuteManagerImpl() {
              {
-                 log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
                  manager = modelManager;
              }
         };

@@ -12,7 +12,7 @@
 		<version>0.4.10-SNAPSHOT</version>
 	</parent>
 	<artifactId>polyglot-xml</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
 	<name>Polyglot :: XML</name>
 
 	<dependencies>

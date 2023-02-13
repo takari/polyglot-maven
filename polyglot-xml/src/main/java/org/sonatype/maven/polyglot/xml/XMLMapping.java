@@ -7,11 +7,12 @@
  */
 package org.sonatype.maven.polyglot.xml;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.FileInputStream;
 import java.util.Map;
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.maven.polyglot.mapping.Mapping;
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
 import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Reader;
 
@@ -19,7 +20,8 @@ import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Reader;
  * XML model mapping.
  *
  */
-@Component(role = Mapping.class, hint = "xml41")
+@Singleton
+@Named( "xml41" )
 public class XMLMapping extends MappingSupport {
 	
 	public XMLMapping() {

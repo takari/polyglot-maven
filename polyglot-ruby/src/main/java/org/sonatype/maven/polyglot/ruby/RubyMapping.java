@@ -7,11 +7,12 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.File;
 import java.io.FilenameFilter;
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.maven.polyglot.mapping.Mapping;
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
 
 /**
@@ -19,7 +20,8 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  *
  * @author m.kristian
  */
-@Component( role = Mapping.class, hint = "ruby" )
+@Singleton
+@Named( "ruby" )
 public class RubyMapping extends MappingSupport
 {
   public RubyMapping()

@@ -7,13 +7,14 @@
  */
 package org.sonatype.maven.polyglot.xml;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Writer;
 
@@ -21,7 +22,8 @@ import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Writer;
  * XML model writer.
  *
  */
-@Component(role = ModelWriter.class, hint = "xml41")
+@Singleton
+@Named( "xml41" )
 public class XMLModelWriter extends ModelWriterSupport {
 	
 	PolyglotMavenXpp3Writer writer;

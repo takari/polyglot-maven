@@ -1,21 +1,23 @@
 package org.sonatype.maven.polyglot;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.building.ModelProblem;
-import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.project.*;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 
-@Component(role = ProjectBuilder.class)
+@Singleton
+@Named
 public class TeslaProjectBuilder extends DefaultProjectBuilder {
 
-    @Requirement(role = ModelProcessor.class)
+    @Inject
     private TeslaModelProcessor teslaModelProcessor; // Must be named differently than the one in the superclass
 
     @Override

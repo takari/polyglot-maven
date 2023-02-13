@@ -19,7 +19,7 @@
   </parent>
 
   <artifactId>polyglot-clojure</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Clojure</name>
 
   <dependencies>  

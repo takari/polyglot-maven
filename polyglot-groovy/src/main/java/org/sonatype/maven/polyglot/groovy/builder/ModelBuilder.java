@@ -7,9 +7,13 @@
  */
 package org.sonatype.maven.polyglot.groovy.builder;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import groovy.lang.Closure;
 import groovy.lang.GroovyObject;
 import groovy.lang.GroovyObjectSupport;
+import groovy.lang.Singleton;
 import groovy.util.Factory;
 import groovy.util.FactoryBuilderSupport;
 
@@ -41,8 +45,6 @@ import org.apache.maven.model.ReportSet;
 import org.apache.maven.model.Reporting;
 import org.apache.maven.model.Repository;
 import org.apache.maven.model.Resource;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.execute.ExecuteManager;
@@ -77,7 +79,8 @@ import org.sonatype.maven.polyglot.groovy.builder.factory.StringFactory;
  *
  * @since 0.7
  */
-@Component(role = ModelBuilder.class)
+@Singleton
+@Named
 public class ModelBuilder extends FactoryBuilderSupport {
   protected Logger log = LoggerFactory.getLogger(ModelBuilder.class);
 
@@ -87,7 +90,7 @@ public class ModelBuilder extends FactoryBuilderSupport {
 
   private final List<ExecuteTask> tasks = new ArrayList<ExecuteTask>();
 
-  @Requirement
+  @Inject
   private ExecuteManager executeManager;
 
   public ModelBuilder() {

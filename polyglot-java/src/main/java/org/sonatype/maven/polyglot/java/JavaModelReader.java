@@ -18,18 +18,19 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.ModelParseException;
-import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 import org.sonatype.maven.polyglot.java.dsl.ModelFactory;
 
@@ -39,14 +40,14 @@ import com.google.common.io.Files;
  * Java model reader.
  *
  */
-@Component(role = ModelReader.class, hint = "java")
+@Singleton
+@Named( "java" )
 public class JavaModelReader extends ModelReaderSupport {
 
-	@Requirement
+	@Inject
 	private PlexusContainer container;
 
-	@Requirement
-	protected Logger log;
+	protected Logger log = LoggerFactory.getLogger( JavaModelReader.class );
 
 	public JavaModelReader() {
 	}

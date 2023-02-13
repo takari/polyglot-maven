@@ -14,8 +14,16 @@
   </parent>
 
   <artifactId>polyglot-common</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Common</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>3.5.0</version>
+    </dependency>
+  </dependencies>
 
   <build>
     <resources>

@@ -7,8 +7,9 @@
  */
 package org.sonatype.maven.polyglot.clojure;
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.maven.polyglot.mapping.Mapping;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
 
 /**
@@ -19,7 +20,8 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  *
  * @since 0.7
  */
-@Component(role=Mapping.class, hint="clojure")
+@Singleton
+@Named( "clojure" )
 public class ClojureMapping
     extends MappingSupport
 {

@@ -16,7 +16,7 @@
     <version>0.4.10-SNAPSHOT</version>
   </parent>
   <artifactId>polyglot-scala</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Scala</name>
   
   <properties>
@@ -98,7 +98,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>4.3.1</version>
+        <version>4.8.0</version>
         <executions>
           <execution>
             <goals>
@@ -112,7 +112,6 @@
               </args>
               <checkMultipleScalaVersions>false</checkMultipleScalaVersions>
               <recompileMode>incremental</recompileMode>
-              <useZincServer>true</useZincServer>
             </configuration>
           </execution>
         </executions>

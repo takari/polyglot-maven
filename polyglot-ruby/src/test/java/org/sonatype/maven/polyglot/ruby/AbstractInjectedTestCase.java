@@ -27,8 +27,6 @@ import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.eclipse.sisu.launch.InjectedTestCase;
 import org.sonatype.maven.polyglot.Constants;
 import org.sonatype.maven.polyglot.PolyglotModelManager;
@@ -97,7 +95,6 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
         modelManager.addMapping( new RubyMapping() );
         rubyModelReader.executeManager = new ExecuteManagerImpl() {
             {
-                log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
                 manager = modelManager;
             }
         };
@@ -141,7 +138,6 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
         modelManager.addMapping( new RubyMapping() );
         rubyModelReader.executeManager = new ExecuteManagerImpl() {
             {
-                log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
                 manager = modelManager;
             }
         };

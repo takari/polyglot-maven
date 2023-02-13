@@ -7,9 +7,10 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.emitter.Emitter;
@@ -30,7 +31,8 @@ import java.util.Map;
  * @author bentmann
  * @since 0.7
  */
-@Component(role = ModelWriter.class, hint = "yaml")
+@Singleton
+@Named( "yaml" )
 public class YamlModelWriter extends ModelWriterSupport {
   public void write(Writer output, Map<String, Object> o, Model model) throws IOException {
     //TODO improve SnakeYAML API (A. Somov)

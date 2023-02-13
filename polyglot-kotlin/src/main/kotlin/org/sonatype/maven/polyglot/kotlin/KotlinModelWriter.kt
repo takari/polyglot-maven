@@ -1,30 +1,31 @@
 package org.sonatype.maven.polyglot.kotlin
 
 import org.apache.maven.model.Model
-import org.apache.maven.model.io.ModelWriter
 import org.apache.maven.project.MavenProject
-import org.codehaus.plexus.component.annotations.Component
-import org.codehaus.plexus.component.annotations.Requirement
-import org.codehaus.plexus.logging.Logger
+import org.slf4j.LoggerFactory
 import org.sonatype.maven.polyglot.io.ModelWriterSupport
 import org.sonatype.maven.polyglot.kotlin.serialization.ModelScriptWriter
 import java.io.StringWriter
 import java.io.Writer
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Provider
+import javax.inject.Singleton
 
-@Component(role = ModelWriter::class, hint = "kotlin")
+@Singleton
+@Named( "kotlin" )
 class KotlinModelWriter : ModelWriterSupport() {
 
-    @Requirement
-    private lateinit var log: Logger
+    private var log = LoggerFactory.getLogger( KotlinModelWriter::class.java )
 
-    @Requirement(optional = true)
-    private var project: MavenProject? = null
+    @Inject
+    private lateinit var projectProvider: Provider<MavenProject>
 
     override fun write(output: Writer, options: Map<String, Any>, model: Model) {
         output.write(with(StringWriter(1024)) {
             val config = HashMap<String, Any>(options)
-            config.putIfAbsent("xml.dsl.enabled", project?.properties?.getProperty("polyglot-kotlin.xml-dsl-enabled", "true") ?: "true")
-            config.putIfAbsent("flavor", project?.properties?.getProperty("polyglot-kotlin.flavor", "mixed") ?: "mixed")
+            config.putIfAbsent("xml.dsl.enabled", projectProvider.get()?.properties?.getProperty("polyglot-kotlin.xml-dsl-enabled", "true") ?: "true")
+            config.putIfAbsent("flavor", projectProvider.get()?.properties?.getProperty("polyglot-kotlin.flavor", "mixed") ?: "mixed")
             ModelScriptWriter(this, config).write(model)
             val kotlinScript = toString()
             if (log.isDebugEnabled) {

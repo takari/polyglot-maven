@@ -17,7 +17,7 @@
     <version>0.4.10-SNAPSHOT</version>
   </parent>
   <artifactId>polyglot-yaml</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: YAML</name>
 
   <dependencies>
@@ -28,7 +28,7 @@
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>1.17</version>
+      <version>1.33</version>
     </dependency>
   </dependencies>
 </project>

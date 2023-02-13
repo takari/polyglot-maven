@@ -7,6 +7,10 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.net.MalformedURLException;
@@ -21,16 +25,15 @@ import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.plugin.LegacySupport;
 import org.apache.maven.repository.RepositorySystem;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 
-@Component(role = SetupClassRealm.class)
+@Singleton
+@Named
 public class SetupClassRealm {
 
-    @Requirement
+    @Inject
     RepositorySystem system;
 
-    @Requirement
+    @Inject
     protected LegacySupport legacySupport;
     private static final String JRUBY_HOME = "polyglot.jruby.home";
 

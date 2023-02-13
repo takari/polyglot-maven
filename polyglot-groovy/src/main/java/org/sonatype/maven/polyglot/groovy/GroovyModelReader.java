@@ -7,6 +7,9 @@
  */
 package org.sonatype.maven.polyglot.groovy;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import groovy.lang.GroovyCodeSource;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
@@ -16,12 +19,10 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Map;
 
+import groovy.lang.Singleton;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.DefaultModelWriter;
-import org.apache.maven.model.io.ModelReader;
 import org.codehaus.groovy.runtime.StackTraceUtils;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,14 +38,15 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
  *
  * @since 0.7
  */
-@Component(role = ModelReader.class, hint = "groovy")
+@Singleton
+@Named( "groovy" )
 public class GroovyModelReader extends ModelReaderSupport {
   protected Logger log = LoggerFactory.getLogger(GroovyModelReader.class);
 
-  @Requirement
+  @Inject
   private ModelBuilder builder;
 
-  @Requirement
+  @Inject
   private ExecuteManager executeManager;
 
   @Override

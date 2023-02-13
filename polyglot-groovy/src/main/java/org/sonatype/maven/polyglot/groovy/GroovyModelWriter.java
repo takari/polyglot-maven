@@ -7,6 +7,7 @@
  */
 package org.sonatype.maven.polyglot.groovy;
 
+import groovy.lang.Singleton;
 import groovy.util.IndentPrinter;
 
 import java.io.IOException;
@@ -16,14 +17,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import javax.inject.Named;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.DefaultModelWriter;
-import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
@@ -41,7 +41,8 @@ import org.xml.sax.SAXException;
  *
  * @since 0.7
  */
-@Component(role = ModelWriter.class, hint = "groovy")
+@Singleton
+@Named( "groovy" )
 public class GroovyModelWriter extends ModelWriterSupport {
   protected Logger log = LoggerFactory.getLogger(GroovyModelWriter.class);
 

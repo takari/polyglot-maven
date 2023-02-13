@@ -7,14 +7,15 @@
  */
 package org.sonatype.maven.polyglot.xml;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.ModelParseException;
-import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Reader;
@@ -23,7 +24,8 @@ import org.sonatype.maven.polyglot.xml.xpp3.PolyglotMavenXpp3Reader;
  * XML model reader.
  *
  */
-@Component(role = ModelReader.class, hint = "xml41")
+@Singleton
+@Named( "xml41" )
 public class XMLModelReader extends ModelReaderSupport {
 	
 	PolyglotMavenXpp3Reader reader;

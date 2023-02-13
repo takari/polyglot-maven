@@ -7,6 +7,9 @@
  */
 package org.sonatype.maven.polyglot.atom;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Map;
@@ -14,8 +17,6 @@ import java.util.Map;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.ModelSource;
-import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.IOUtil;
 import org.sonatype.maven.polyglot.atom.parsing.AtomParser;
 import org.sonatype.maven.polyglot.atom.parsing.Project;
@@ -27,7 +28,8 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
  * 
  * @author dhanji@gmail.com (Dhanji R. Prasanna)
  */
-@Component(role = ModelReader.class,hint="atom")
+@Singleton
+@Named( "atom" )
 public class AtomModelReader extends ModelReaderSupport {
 
   public Model read(final Reader input, final Map<String, ?> options) throws IOException {

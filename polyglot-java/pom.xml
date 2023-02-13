@@ -14,7 +14,7 @@
   </parent>
 
   <artifactId>polyglot-java</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Java</name>
 
   <properties>

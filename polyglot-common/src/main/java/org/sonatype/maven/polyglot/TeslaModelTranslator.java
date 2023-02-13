@@ -7,14 +7,17 @@
  */
 package org.sonatype.maven.polyglot;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -35,12 +38,13 @@ import java.util.Map;
  *
  * @since 0.7
  */
-@Component(role = TeslaModelTranslator.class)
+@Singleton
+@Named
 public class TeslaModelTranslator {
-  @Requirement
-  protected Logger log;
 
-  @Requirement
+  protected Logger log = LoggerFactory.getLogger( TeslaModelTranslator.class );
+
+  @Inject
   private PolyglotModelManager manager;
 
   public void translate(final File input, final File output) throws IOException, ModelParseException {
