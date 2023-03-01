@@ -31,6 +31,7 @@ import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.codehaus.plexus.util.ReaderFactory;
 
 /**
  * Polyglot model processor.
@@ -86,19 +87,18 @@ public class TeslaModelProcessor implements ModelProcessor {
   public Model read(final File input, final Map<String, ?> options) throws IOException, ModelParseException {
     Model model;
 
-    Reader reader = new BufferedReader(new FileReader(input));
-    try {
+    try (Reader reader = ReaderFactory.newXmlReader(input)) {
       model = read(reader, options);
       model.setPomFile(input);
-    } finally {
-      IOUtil.close(reader);
     }
     return model;
   }
 
   @Override
   public Model read(final InputStream input, final Map<String, ?> options) throws IOException, ModelParseException {
-    return read(new InputStreamReader(input), options);
+    try (Reader reader = ReaderFactory.newXmlReader(input)) {
+      return read(reader, options);
+    }
   }
 
   @Override
