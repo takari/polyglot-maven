@@ -7,104 +7,63 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.takari</groupId>
-    <artifactId>takari</artifactId>
-    <version>28</version>
-  </parent>
-
-  <groupId>io.takari.polyglot</groupId>
-  <artifactId>polyglot</artifactId>
-  <version>0.4.11-SNAPSHOT</version>
-  <name>Polyglot :: Aggregator</name>
+  <groupId>com.github.andreaTP.yaml-maven</groupId>
+  <artifactId>yaml-maven</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>YAML Maven :: Aggregator</name>
   <packaging>pom</packaging>
 
   <licenses>
     <license>
-      <name>The Eclipse Public License, Version 1.0</name>
-      <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      <name>Apache License Version 2.0</name>
+      <url>https://repository.jboss.org/licenses/apache-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
 
   <properties>
-    <mavenVersion>3.6.1</mavenVersion>
-    <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
-    <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
+    <mavenVersion>3.9.2</mavenVersion>
+    <!-- <sisuInjectVersion>0.0.0.M5</sisuInjectVersion> -->
+    <sisuInjectVersion>0.9.0.M2</sisuInjectVersion>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <scm>
-    <connection>scm:git:git@github.com:takari/polyglot-maven.git</connection>
-    <developerConnection>scm:git:git@github.com:takari/polyglot-maven.git</developerConnection>
-    <url>https://github.com/takari/polyglot-maven</url>
+    <connection>scm:git:git@github.com:andreaTP/yaml-maven.git</connection>
+    <developerConnection>scm:git:git@github.com:andreaTP/yaml-maven.git</developerConnection>
+    <url>https://github.com/andreaTP/yaml-maven</url>
     <tag>HEAD</tag>
   </scm>
 
   <modules>
-    <module>polyglot-common</module>
-    <module>polyglot-atom</module>
-    <module>polyglot-ruby</module>
-    <module>polyglot-scala</module>
-    <module>polyglot-groovy</module>
-    <module>polyglot-yaml</module>
-    <module>polyglot-clojure</module>
-    <module>polyglot-xml</module>
-    <module>polyglot-java</module>
-    <module>polyglot-kotlin</module>
-    <module>polyglot-maven-plugin</module>
-    <module>polyglot-translate-plugin</module>
+    <module>common</module>
+    <module>yaml</module>
+    <module>xml</module>
+    <module>maven-plugin</module>
+    <module>translate-plugin</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-common</artifactId>
+        <groupId>com.github.andreaTP.yaml-maven</groupId>
+        <artifactId>common</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-maven-plugin</artifactId>
+        <groupId>com.github.andreaTP.yaml-maven</groupId>
+        <artifactId>maven-plugin</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-ruby</artifactId>
+        <groupId>com.github.andreaTP.yaml-maven</groupId>
+        <artifactId>yaml</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-groovy</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-atom</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-scala</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-yaml</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-xml</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-java</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.takari.polyglot</groupId>
-        <artifactId>polyglot-kotlin</artifactId>
+        <groupId>com.github.andreaTP.yaml-maven</groupId>
+        <artifactId>xml</artifactId>
         <version>${project.version}</version>
       </dependency>
       <!-- We inline Maven's dependency management section to align dependency 
@@ -225,32 +184,6 @@
           <configuration>
             <preparationGoals>clean install</preparationGoals>
             <mavenExecutorId>forked-path</mavenExecutorId>
-          </configuration>
-        </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings 
-          only. It has no influence on the Maven build itself. -->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>io.tesla.maven.plugins</groupId>
-                    <artifactId>tesla-license-plugin</artifactId>
-                    <versionRange>[0.0.1-SNAPSHOT,)</versionRange>
-                    <goals>
-                      <goal>check</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
           </configuration>
         </plugin>
       </plugins>

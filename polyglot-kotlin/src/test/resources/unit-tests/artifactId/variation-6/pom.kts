@@ -1,3 +1,0 @@
-project {
-    artifactId("sample-lib")
-}

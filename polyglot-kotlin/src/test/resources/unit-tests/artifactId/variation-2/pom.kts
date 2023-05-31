@@ -1,3 +1,0 @@
-project {
-    id = ":sample-lib"
-}

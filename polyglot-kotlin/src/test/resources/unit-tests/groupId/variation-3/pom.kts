@@ -1,3 +1,0 @@
-project {
-    id("com.example")
-}

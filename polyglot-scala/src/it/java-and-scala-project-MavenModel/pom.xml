@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <!-- This is not the pom used for the invoker-test, but this file `pom.xml` is required for invoker-plugin to find and start the test! -->
-  <groupId>io.takari.polyglot.it</groupId>
-  <artifactId>jar-project</artifactId>
-  <version>1</version>
-  <modelVersion>4.0.0</modelVersion>
-</project>
