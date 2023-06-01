@@ -23,6 +23,7 @@
 
   <properties>
     <mavenVersion>3.9.2</mavenVersion>
+    <maven-plugin-pluginVersion>3.9.0</maven-plugin-pluginVersion>
     <!-- <sisuInjectVersion>0.0.0.M5</sisuInjectVersion> -->
     <sisuInjectVersion>0.9.0.M2</sisuInjectVersion>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -37,8 +38,8 @@
   </scm>
 
   <modules>
-    <module>common</module>
-    <module>yaml</module>
+    <module>core</module>
+<!--    <module>yaml</module>-->
     <module>xml</module>
     <module>maven-plugin</module>
     <module>translate-plugin</module>
@@ -48,17 +49,12 @@
     <dependencies>
       <dependency>
         <groupId>com.github.andreaTP.yaml-maven</groupId>
-        <artifactId>common</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.andreaTP.yaml-maven</groupId>
         <artifactId>maven-plugin</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>com.github.andreaTP.yaml-maven</groupId>
-        <artifactId>yaml</artifactId>
+        <artifactId>core</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

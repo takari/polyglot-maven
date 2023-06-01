@@ -27,11 +27,7 @@
     </dependency>
     <dependency>
       <groupId>com.github.andreaTP.yaml-maven</groupId>
-      <artifactId>common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.github.andreaTP.yaml-maven</groupId>
-      <artifactId>yaml</artifactId>
+      <artifactId>core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.github.andreaTP.yaml-maven</groupId>
@@ -48,5 +44,16 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>${maven-plugin-pluginVersion}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
 </project>

@@ -17,7 +17,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.sonatype.maven.polyglot.TeslaModelTranslator;
+import org.sonatype.maven.yaml.PomModelTranslator;
 
 /**
  * Polgyglot model translator Mojo.
@@ -27,7 +27,7 @@ import org.sonatype.maven.polyglot.TeslaModelTranslator;
 public class TranslateProjectMojo extends AbstractMojo {
 
 	@Component
-	private TeslaModelTranslator translator;
+	private PomModelTranslator translator;
 
 	@Parameter(required = true, property = "input")
 	private String input;

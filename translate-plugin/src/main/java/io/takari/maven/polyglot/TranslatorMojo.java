@@ -9,7 +9,6 @@ package io.takari.maven.polyglot;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -19,7 +18,7 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.sonatype.maven.polyglot.TeslaModelTranslator;
+import org.sonatype.maven.yaml.PomModelTranslator;
 
 /**
  * Polgyglot model translator Mojo.
@@ -30,7 +29,7 @@ import org.sonatype.maven.polyglot.TeslaModelTranslator;
 public class TranslatorMojo extends AbstractMojo {
 
   @Component
-  private TeslaModelTranslator translator;
+  private PomModelTranslator translator;
 
   @Parameter(required = true, property = "input")
   private String input;

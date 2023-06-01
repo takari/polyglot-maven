@@ -20,7 +20,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.github.andreaTP.yaml-maven</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.cedarsoftware</groupId>
