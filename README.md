@@ -188,8 +188,8 @@ Specific docs and more can be found in the [Kotlin dialect specific readme](./po
 
 ## YAML
 
-* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to
-  the project from the team.
+* [SnakeYAML](https://bitbucket.org/snakeyaml/snakeyaml/src/master/) - Extensive usage
+  of Polyglot YAML and contributions to the project from the team.
 
 * https://urbanise.com - Using Polyglot YAML for building next generation strata
   management platform.
