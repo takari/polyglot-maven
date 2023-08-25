@@ -30,7 +30,7 @@
     <dependency>
       <groupId>org.jruby</groupId>
       <artifactId>jruby</artifactId>
-      <version>9.2.19.0</version>
+      <version>9.4.3.0</version>
       <type>pom</type>
     </dependency>
     <!-- Test -->
@@ -43,13 +43,26 @@
   </dependencies>
 
   <properties>
-    <mavengem-wagon.version>1.0.3</mavengem-wagon.version>
+    <mavengem-wagon.version>2.0.1</mavengem-wagon.version>
   </properties>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <extensions>
       <extension>
-        <groupId>org.torquebox.mojo</groupId>
+        <groupId>org.jruby.maven</groupId>
         <artifactId>mavengem-wagon</artifactId>
         <version>${mavengem-wagon.version}</version>
       </extension>
@@ -87,7 +100,7 @@
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
-                    <groupId>de.saumya.mojo</groupId>
+                    <groupId>org.jruby.maven</groupId>
                     <artifactId>
                       gem-maven-plugin
                     </artifactId>
@@ -138,21 +151,21 @@
         <dependency>
           <groupId>rubygems</groupId>
           <artifactId>maven-tools</artifactId>
-          <version>1.1.7</version>
+          <version>1.2.1</version>
           <type>gem</type>
           <scope>provided</scope>
         </dependency>
       </dependencies>
 
       <properties>
-        <jruby.plugins.version>2.0.1</jruby.plugins.version>
+        <jruby.plugins.version>3.0.1</jruby.plugins.version>
       </properties>
 
       <build>
 
         <plugins>
           <plugin>
-            <groupId>de.saumya.mojo</groupId>
+            <groupId>org.jruby.maven</groupId>
             <artifactId>gem-maven-plugin</artifactId>
             <version>${jruby.plugins.version}</version>
             <executions>
