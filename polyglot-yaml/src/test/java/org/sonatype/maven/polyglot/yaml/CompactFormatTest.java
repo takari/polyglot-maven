@@ -98,11 +98,13 @@ public class CompactFormatTest {
 
   @Test
   public void testColonInFlowContext() throws Exception {
+    // support for colon in the flow context is improved
+    // in SnakeYAML 2.0
     try {
       getModel("dependencies-colon-issue.yaml");
-      throw new UnsupportedOperationException("Colon in flow context should not be accepted.");
     } catch (Exception e) {
-      assertTrue(e.getMessage().contains("http://pyyaml.org/wiki/YAMLColonInFlowContext"));
+      String message = e.getMessage();
+      assertTrue(message, message.contains("Unable to find property 'groupId:log4j' on class: org.apache.maven.model.Exclusion"));
     }
   }
 

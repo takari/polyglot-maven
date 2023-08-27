@@ -14,6 +14,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
@@ -34,7 +35,8 @@ import static java.lang.String.format;
  * @since 0.7
  */
 class ModelRepresenter extends Representer {
-  public ModelRepresenter() {
+  public ModelRepresenter(DumperOptions options) {
+    super(options);
     this.representers.put(Xpp3Dom.class, new RepresentXpp3Dom());
     Represent stringRepresenter = this.representers.get(String.class);
     this.representers.put(Boolean.class, stringRepresenter);
@@ -96,7 +98,7 @@ class ModelRepresenter extends Representer {
     private static final String ATTRIBUTE_PREFIX = "attr/";
 
     public Node representData(Object data) {
-      return representMapping(Tag.MAP, toMap((Xpp3Dom) data), null);
+      return representMapping(Tag.MAP, toMap((Xpp3Dom) data), DumperOptions.FlowStyle.AUTO);
     }
 
     private Map<String, Object> toMap(Xpp3Dom node) {
@@ -215,20 +217,23 @@ class ModelRepresenter extends Representer {
    * Change the default order. Important data goes first.
    */
   @Override
-  protected Set<Property> getProperties(Class<? extends Object> type)
-          throws IntrospectionException {
-    if (type.isAssignableFrom(Model.class)) {
-      return sortTypeWithOrder(type, ORDER_MODEL);
-    } else if (type.isAssignableFrom(Developer.class)) {
-      return sortTypeWithOrder(type, ORDER_DEVELOPER);
-    } else if (type.isAssignableFrom(Contributor.class)) {
-      return sortTypeWithOrder(type, ORDER_CONTRIBUTOR);
-    }  else if (type.isAssignableFrom(Dependency.class)) {
-      return sortTypeWithOrder(type, ORDER_DEPENDENCY);
-    }  else if (type.isAssignableFrom(Plugin.class)) {
-      return sortTypeWithOrder(type, ORDER_PLUGIN);
-    } else {
-      return super.getProperties(type);
+  protected Set<Property> getProperties(Class<? extends Object> type) {
+    try {
+      if (type.isAssignableFrom(Model.class)) {
+        return sortTypeWithOrder(type, ORDER_MODEL);
+      } else if (type.isAssignableFrom(Developer.class)) {
+        return sortTypeWithOrder(type, ORDER_DEVELOPER);
+      } else if (type.isAssignableFrom(Contributor.class)) {
+        return sortTypeWithOrder(type, ORDER_CONTRIBUTOR);
+      } else if (type.isAssignableFrom(Dependency.class)) {
+        return sortTypeWithOrder(type, ORDER_DEPENDENCY);
+      } else if (type.isAssignableFrom(Plugin.class)) {
+        return sortTypeWithOrder(type, ORDER_PLUGIN);
+      } else {
+        return super.getProperties(type);
+      }
+    } catch (IntrospectionException e) {
+      throw new YAMLException(e);
     }
   }
 

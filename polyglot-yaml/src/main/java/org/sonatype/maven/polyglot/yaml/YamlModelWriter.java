@@ -33,12 +33,12 @@ import java.util.Map;
 @Component(role = ModelWriter.class, hint = "yaml")
 public class YamlModelWriter extends ModelWriterSupport {
   public void write(Writer output, Map<String, Object> o, Model model) throws IOException {
-    //TODO improve SnakeYAML API (A. Somov)
     DumperOptions dumperOptions = new DumperOptions();
     dumperOptions.setIndent(2);
     dumperOptions.setWidth(80);
+    dumperOptions.setDefaultScalarStyle(DumperOptions.ScalarStyle.PLAIN);
     Serializer serializer = new Serializer(new Emitter(output, dumperOptions), new ModelResolver(), dumperOptions, Tag.MAP);
-    Representer representer = new ModelRepresenter();
+    Representer representer = new ModelRepresenter(dumperOptions);
     try {
       serializer.open();
       Node node = representer.represent(model);
