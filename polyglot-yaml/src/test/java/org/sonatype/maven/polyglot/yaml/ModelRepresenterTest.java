@@ -22,7 +22,7 @@ public class ModelRepresenterTest {
 
 	@Before
 	public void setUp() throws Exception {
-		modelRepresenter = new ModelRepresenter();
+		modelRepresenter = new ModelRepresenter(new DumperOptions());
 	}
 
 	@Test

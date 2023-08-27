@@ -20,7 +20,7 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  * @since 0.7
  */
 @Singleton
-@Named( "yaml" )
+@Named("yaml")
 public class YamlMapping extends MappingSupport {
   public YamlMapping() {
     super("yaml");

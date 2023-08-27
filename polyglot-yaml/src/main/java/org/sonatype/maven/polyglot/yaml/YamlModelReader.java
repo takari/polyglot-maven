@@ -14,6 +14,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.ModelParseException;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -30,13 +31,14 @@ import java.util.Map;
  * @since 0.7
  */
 @Singleton
-@Named( "yaml" )
+@Named("yaml")
 public class YamlModelReader extends ModelReaderSupport {
   private final Yaml yaml;
 
   public YamlModelReader() {
-    ModelConstructor constructor = new ModelConstructor();
-    yaml = new Yaml(constructor, new Representer(), new DumperOptions(), new ModelResolver());
+    ModelConstructor constructor = new ModelConstructor(new LoaderOptions());
+    DumperOptions options =  new DumperOptions();
+    yaml = new Yaml(constructor, new Representer(options), options, new ModelResolver());
   }
 
   public Model read(Reader input, Map<String, ?> options) throws IOException, ModelParseException {

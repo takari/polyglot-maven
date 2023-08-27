@@ -13,8 +13,8 @@ import org.apache.maven.model.Developer;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.error.YAMLException;
+import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.introspector.Property;
 import org.yaml.snakeyaml.nodes.Node;
 import org.yaml.snakeyaml.nodes.NodeTuple;
@@ -22,6 +22,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Represent;
 import org.yaml.snakeyaml.representer.Representer;
 
+import java.beans.IntrospectionException;
 import java.util.*;
 
 import static java.lang.String.format;
@@ -34,8 +35,8 @@ import static java.lang.String.format;
  * @since 0.7
  */
 class ModelRepresenter extends Representer {
-  public ModelRepresenter() {
-    setDefaultScalarStyle( DumperOptions.ScalarStyle.PLAIN );
+  public ModelRepresenter(DumperOptions options) {
+    super(options);
     this.representers.put(Xpp3Dom.class, new RepresentXpp3Dom());
     Represent stringRepresenter = this.representers.get(String.class);
     this.representers.put(Boolean.class, stringRepresenter);
@@ -97,7 +98,7 @@ class ModelRepresenter extends Representer {
     private static final String ATTRIBUTE_PREFIX = "attr/";
 
     public Node representData(Object data) {
-      return representMapping(Tag.MAP, toMap((Xpp3Dom) data), DumperOptions.FlowStyle.BLOCK);
+      return representMapping(Tag.MAP, toMap((Xpp3Dom) data), DumperOptions.FlowStyle.AUTO);
     }
 
     private Map<String, Object> toMap(Xpp3Dom node) {
@@ -217,22 +218,27 @@ class ModelRepresenter extends Representer {
    */
   @Override
   protected Set<Property> getProperties(Class<? extends Object> type) {
-    if (type.isAssignableFrom(Model.class)) {
-      return sortTypeWithOrder(type, ORDER_MODEL);
-    } else if (type.isAssignableFrom(Developer.class)) {
-      return sortTypeWithOrder(type, ORDER_DEVELOPER);
-    } else if (type.isAssignableFrom(Contributor.class)) {
-      return sortTypeWithOrder(type, ORDER_CONTRIBUTOR);
-    }  else if (type.isAssignableFrom(Dependency.class)) {
-      return sortTypeWithOrder(type, ORDER_DEPENDENCY);
-    }  else if (type.isAssignableFrom(Plugin.class)) {
-      return sortTypeWithOrder(type, ORDER_PLUGIN);
-    } else {
-      return super.getProperties(type);
+    try {
+      if (type.isAssignableFrom(Model.class)) {
+        return sortTypeWithOrder(type, ORDER_MODEL);
+      } else if (type.isAssignableFrom(Developer.class)) {
+        return sortTypeWithOrder(type, ORDER_DEVELOPER);
+      } else if (type.isAssignableFrom(Contributor.class)) {
+        return sortTypeWithOrder(type, ORDER_CONTRIBUTOR);
+      } else if (type.isAssignableFrom(Dependency.class)) {
+        return sortTypeWithOrder(type, ORDER_DEPENDENCY);
+      } else if (type.isAssignableFrom(Plugin.class)) {
+        return sortTypeWithOrder(type, ORDER_PLUGIN);
+      } else {
+        return super.getProperties(type);
+      }
+    } catch (IntrospectionException e) {
+      throw new YAMLException(e);
     }
   }
 
-  private Set<Property> sortTypeWithOrder(Class<? extends Object> type, List<String> order) {
+  private Set<Property> sortTypeWithOrder(Class<? extends Object> type, List<String> order)
+          throws IntrospectionException {
       Set<Property> standard = super.getProperties(type);
       Set<Property> sorted = new TreeSet<Property>(new ModelPropertyComparator(order));
       sorted.addAll(standard);
