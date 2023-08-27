@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>50</version>
+    <version>51</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -31,6 +31,7 @@
     <mavenVersion>3.6.3</mavenVersion>
     <sisuInjectVersion>0.3.5</sisuInjectVersion>
     <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
+    <takari.javaSourceVersion>8</takari.javaSourceVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
   </properties>
 
