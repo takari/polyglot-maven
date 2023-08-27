@@ -22,7 +22,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.0.24</version>
+      <version>${plexusUtilsVersion}</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>

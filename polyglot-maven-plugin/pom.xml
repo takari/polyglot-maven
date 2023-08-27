@@ -21,7 +21,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>2.0.6</version>
+      <version>${plexusUtilsVersion}</version>
     </dependency>
     <dependency>
       <groupId>io.takari.polyglot</groupId>

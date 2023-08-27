@@ -21,7 +21,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
-      <version>3.5.0</version>
+      <version>${plexusUtilsVersion}</version>
     </dependency>
   </dependencies>
 
