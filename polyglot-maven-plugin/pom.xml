@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari.polyglot</groupId>
     <artifactId>polyglot</artifactId>
-    <version>0.4.10-SNAPSHOT</version>
+    <version>0.4.12-SNAPSHOT</version>
   </parent>
 
   <artifactId>polyglot-maven-plugin</artifactId>
@@ -18,6 +18,11 @@
   <packaging>takari-maven-plugin</packaging>
 
   <dependencies>
+    <dependency>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-utils</artifactId>
+      <version>2.0.6</version>
+    </dependency>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-common</artifactId>

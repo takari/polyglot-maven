@@ -195,7 +195,7 @@ public abstract class AbstractInjectedTestCase extends InjectedTestCase {
                 // the one from this plugin
                 .replaceAll("[0-9]+(-SNAPSHOT)?", VERSION_PATTERN)
 		// fix absolute path for test_pom_from_jarfile
-		.replaceAll("..basedir./myfirst.jar", "uri:classloader://myfirst.jar")
+		.replaceAll("..basedir./myfirst.jar", "uri:classloader:/myfirst.jar")
                 // some of the configuration tags are empty - unify them
                 .replaceAll("></(arg|chmod)>", "/>");
 	     if ( debug )
