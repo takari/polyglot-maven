@@ -1,6 +1,10 @@
 name: Verify
 
-on: [workflow_call]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   setup:
