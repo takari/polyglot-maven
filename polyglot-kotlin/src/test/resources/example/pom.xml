@@ -37,8 +37,8 @@
       <scope>runtime</scope>
       <exclusions>
         <exclusion>
-          <artifactId>jul-logger</artifactId>
           <groupId>org.slf4j</groupId>
+          <artifactId>jul-logger</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -49,8 +49,8 @@
       <scope>test</scope>
       <exclusions>
         <exclusion>
-          <artifactId>hamcrest-core</artifactId>
           <groupId>org.hamcrest</groupId>
+          <artifactId>hamcrest-core</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

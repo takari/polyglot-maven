@@ -133,8 +133,8 @@
         <version>${sisuInjectVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>cglib</artifactId>
             <groupId>org.sonatype.sisu.inject</groupId>
+            <artifactId>cglib</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -149,8 +149,8 @@
         <version>${plexusVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>junit</artifactId>
             <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -191,8 +191,8 @@
         <version>${wagonVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>commons-logging</artifactId>
             <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -202,8 +202,8 @@
         <version>${wagonVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>commons-logging</artifactId>
             <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -233,8 +233,8 @@
         <version>${aetherVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>plexus-container-default</artifactId>
             <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -244,8 +244,8 @@
         <version>${aetherVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>plexus-container-default</artifactId>
             <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -255,8 +255,8 @@
         <version>${aetherVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>plexus-container-default</artifactId>
             <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -271,12 +271,12 @@
         <version>${commonsCliVersion}</version>
         <exclusions>
           <exclusion>
-            <artifactId>commons-lang</artifactId>
             <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
           </exclusion>
           <exclusion>
-            <artifactId>commons-logging</artifactId>
             <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -438,12 +438,12 @@
         <version>1.1</version>
         <exclusions>
           <exclusion>
-            <artifactId>commons-logging</artifactId>
             <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
           <exclusion>
-            <artifactId>junit</artifactId>
             <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

@@ -28,8 +28,8 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.6.3</mavenVersion>
-    <sisuInjectVersion>0.3.5</sisuInjectVersion>
+    <mavenVersion>3.9.5</mavenVersion>
+    <sisuInjectVersion>0.9.0.M2</sisuInjectVersion>
     <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
     <takari.lifecycleVersion>2.0.8</takari.lifecycleVersion>
     <takari.javaSourceVersion>8</takari.javaSourceVersion>
