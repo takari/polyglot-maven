@@ -1,6 +1,6 @@
 = Scala Dialect for Polyglot Maven
-:polyglot-scala-version: 0.4.6
-:polyglot-translate-version: 0.4.6
+:polyglot-scala-version: 0.4.9
+:polyglot-translate-version: 0.4.9
 :toc:
 :toc-placement: preamble
 

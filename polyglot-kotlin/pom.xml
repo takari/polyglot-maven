@@ -40,12 +40,22 @@
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-script-util</artifactId>
+      <artifactId>kotlin-scripting-jvm-host</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jetbrains.kotlin</groupId>
-      <artifactId>kotlin-scripting-jvm-host</artifactId>
+      <artifactId>kotlin-scripting-jvm</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-scripting-common</artifactId>
+      <version>${kotlin.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-script-runtime</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
 
@@ -76,7 +86,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>1.8.10</kotlin.version>
+    <kotlin.version>1.9.10</kotlin.version>
     <commons-lang3.version>3.8.1</commons-lang3.version>
     <skipTests>false</skipTests>
     <invoker.skip>${skipTests}</invoker.skip>
