@@ -1,10 +1,11 @@
 package org.sonatype.maven.polyglot.kotlin
 
-import org.codehaus.plexus.component.annotations.Component
-import org.sonatype.maven.polyglot.mapping.Mapping
 import org.sonatype.maven.polyglot.mapping.MappingSupport
+import javax.inject.Named
+import javax.inject.Singleton
 
-@Component(role = Mapping::class, hint = "kotlin")
+@Singleton
+@Named( "kotlin" )
 class KotlinMapping : MappingSupport("kotlin") {
 
     init {

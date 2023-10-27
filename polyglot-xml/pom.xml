@@ -12,7 +12,7 @@
 		<version>0.4.12-SNAPSHOT</version>
 	</parent>
 	<artifactId>polyglot-xml</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
 	<name>Polyglot :: XML</name>
 
 	<dependencies>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.cedarsoftware</groupId>
 			<artifactId>java-util</artifactId>
-			<version>1.19.3</version>
+			<version>1.68.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

@@ -3,19 +3,21 @@ package org.sonatype.maven.polyglot.kotlin
 import org.apache.maven.model.Model
 import org.apache.maven.model.building.ModelProcessor
 import org.apache.maven.model.io.ModelReader
-import org.codehaus.plexus.component.annotations.Component
-import org.codehaus.plexus.component.annotations.Requirement
 import org.sonatype.maven.polyglot.execute.ExecuteManager
 import org.sonatype.maven.polyglot.kotlin.dsl.Project
 import org.sonatype.maven.polyglot.kotlin.engine.ScriptHost
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
+import javax.inject.Inject
+import javax.inject.Named
+import javax.inject.Singleton
 
-@Component(role = ModelReader::class, hint = "kotlin")
+@Singleton
+@Named( "kotlin" )
 class KotlinModelReader : ModelReader {
 
-    @Requirement
+    @Inject
     private lateinit var executeManager: ExecuteManager
 
     override fun read(input: File, options: Map<String, *>): Model {

@@ -7,6 +7,9 @@
  */
 package org.sonatype.maven.polyglot.atom;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -19,15 +22,14 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.Repository;
-import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.atom.parsing.Token;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 
-@Component(role = ModelWriter.class, hint = "atom")
+@Singleton
+@Named( "atom" )
 public class AtomModelWriter extends ModelWriterSupport {
   private static final Pattern ATOM_REGEX = Pattern.compile("\\d+|true|false");
 

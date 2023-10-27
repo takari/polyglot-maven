@@ -27,8 +27,6 @@ import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.io.ModelWriter;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.logging.console.ConsoleLogger;
 import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.eclipse.sisu.launch.InjectedTestCase;
@@ -53,11 +51,7 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         // Read in the Ruby POM
         //
         RubyModelReader rubyModelReader = new RubyModelReader();
-        rubyModelReader.executeManager = new ExecuteManagerImpl() {
-            {
-              log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
-            }
-          };
+        rubyModelReader.executeManager = new ExecuteManagerImpl();
         rubyModelReader.setupManager = new SetupClassRealm();
 
         FileReader r = new FileReader( pom );
@@ -104,11 +98,7 @@ public class RubyModelWithMavenTest extends InjectedTestCase {
         // Read in the Ruby POM
         //
         RubyModelReader rubyModelReader = new RubyModelReader();
-        rubyModelReader.executeManager = new ExecuteManagerImpl() {
-          {
-            log = new ConsoleLogger( Logger.LEVEL_INFO, "test" );
-          }
-        };
+        rubyModelReader.executeManager = new ExecuteManagerImpl();
         rubyModelReader.setupManager = new SetupClassRealm();
 
         StringReader r = new StringReader( rubyPom );

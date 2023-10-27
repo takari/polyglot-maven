@@ -7,6 +7,10 @@
  */
 package org.sonatype.maven.polyglot.execute;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,10 +24,9 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.model.PluginExecution;
 import org.apache.maven.model.Profile;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.Constants;
 import org.sonatype.maven.polyglot.PolyglotModelManager;
 
@@ -34,13 +37,13 @@ import org.sonatype.maven.polyglot.PolyglotModelManager;
  *
  * @since 0.7
  */
-@Component(role = ExecuteManager.class)
+@Singleton
+@Named
 public class ExecuteManagerImpl implements ExecuteManager {
 
-  @Requirement
-  protected Logger log;
+  protected Logger log = LoggerFactory.getLogger( ExecuteManagerImpl.class );
 
-  @Requirement
+  @Inject
   protected PolyglotModelManager manager;
 
   private final Map<String, List<ExecuteTask>> modelTasks = new HashMap<>();

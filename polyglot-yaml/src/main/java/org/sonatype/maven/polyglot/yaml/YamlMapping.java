@@ -7,8 +7,9 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.maven.polyglot.mapping.Mapping;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
 
 /**
@@ -18,7 +19,8 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  *
  * @since 0.7
  */
-@Component(role = Mapping.class, hint = "yaml")
+@Singleton
+@Named("yaml")
 public class YamlMapping extends MappingSupport {
   public YamlMapping() {
     super("yaml");

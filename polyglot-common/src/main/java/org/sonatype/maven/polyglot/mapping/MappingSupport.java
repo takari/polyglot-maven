@@ -7,12 +7,13 @@
  */
 package org.sonatype.maven.polyglot.mapping;
 
+import javax.inject.Inject;
+
 import org.apache.maven.model.building.ModelProcessor;
 import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
 import org.codehaus.plexus.PlexusContainer;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public abstract class MappingSupport implements Mapping {
 
   private float priority;
 
-  @Requirement
+  @Inject
   private PlexusContainer container;
 
   private ModelReader reader;

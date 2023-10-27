@@ -5,6 +5,8 @@ import org.apache.maven.model.building.ModelProcessor
 import org.apache.maven.model.io.ModelReader
 import org.apache.maven.model.io.ModelWriter
 import org.assertj.core.api.Assertions.assertThat
+import org.codehaus.plexus.ContainerConfiguration
+import org.codehaus.plexus.PlexusConstants
 import org.codehaus.plexus.PlexusTestCase
 import org.junit.Assert
 import org.sonatype.maven.polyglot.kotlin.dsl.propertiesFactory
@@ -15,6 +17,11 @@ abstract class AbstractModelTestCase(testName: String) : PlexusTestCase() {
     init {
         name = testName
         propertiesFactory = { org.sonatype.maven.polyglot.kotlin.util.Properties() }
+    }
+
+    override fun customizeContainerConfiguration(configuration: ContainerConfiguration?) {
+        configuration?.autoWiring = true;
+        configuration?.classPathScanning = PlexusConstants.SCANNING_CACHE
     }
 
     protected val testBasePath: String = testName.removePrefix("test#").replace('#', '/')

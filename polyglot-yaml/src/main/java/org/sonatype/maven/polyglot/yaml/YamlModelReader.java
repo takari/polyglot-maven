@@ -7,10 +7,11 @@
  */
 package org.sonatype.maven.polyglot.yaml;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.ModelParseException;
-import org.apache.maven.model.io.ModelReader;
-import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelReaderSupport;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.LoaderOptions;
@@ -29,7 +30,8 @@ import java.util.Map;
  *
  * @since 0.7
  */
-@Component(role = ModelReader.class, hint = "yaml")
+@Singleton
+@Named("yaml")
 public class YamlModelReader extends ModelReaderSupport {
   private final Yaml yaml;
 

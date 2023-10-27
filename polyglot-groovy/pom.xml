@@ -14,7 +14,7 @@
   </parent>
 
   <artifactId>polyglot-groovy</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Groovy</name>
 
   <properties>
@@ -68,7 +68,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version><!--$NO-MVN-MAN-VER$ -->
         <configuration>
           <compilerId>groovy-eclipse-compiler</compilerId>
         </configuration>

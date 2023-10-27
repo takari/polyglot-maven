@@ -7,6 +7,9 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -43,17 +46,15 @@ import org.apache.maven.model.RepositoryPolicy;
 import org.apache.maven.model.Resource;
 import org.apache.maven.model.Scm;
 import org.apache.maven.model.Site;
-import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 
-@Component(role = ModelWriter.class, hint = "ruby")
+@Singleton
+@Named( "ruby" )
 public class RubyModelWriter extends ModelWriterSupport {
 
-    @Requirement
-    protected Logger log;
+    protected Logger log = LoggerFactory.getLogger( RubyModelWriter.class );
 
     public void write( final Writer output, final Map<String, Object> options,
             final Model model ) throws IOException {

@@ -7,8 +7,9 @@
  */
 package org.sonatype.maven.polyglot.atom;
 
-import org.codehaus.plexus.component.annotations.Component;
-import org.sonatype.maven.polyglot.mapping.Mapping;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.sonatype.maven.polyglot.mapping.MappingSupport;
 
 /**
@@ -16,7 +17,8 @@ import org.sonatype.maven.polyglot.mapping.MappingSupport;
  *
  * @author dhanji@gmail.com (Dhanji R. Prasanna)
  */
-@Component(role = Mapping.class, hint = "atom")
+@Singleton
+@Named( "atom" )
 public class AtomMapping extends MappingSupport {
   public AtomMapping() {
     super("atom");

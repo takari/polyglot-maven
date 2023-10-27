@@ -19,7 +19,7 @@
   </parent>
 
   <artifactId>polyglot-ruby</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Ruby</name>
 
   <dependencies>

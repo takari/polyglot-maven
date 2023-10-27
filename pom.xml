@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>28</version>
+    <version>51</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -28,8 +28,11 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.6.1</mavenVersion>
-    <sisuInjectVersion>0.0.0.M5</sisuInjectVersion>
+    <mavenVersion>3.9.5</mavenVersion>
+    <sisuInjectVersion>0.9.0.M2</sisuInjectVersion>
+    <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
+    <takari.lifecycleVersion>2.0.8</takari.lifecycleVersion>
+    <takari.javaSourceVersion>8</takari.javaSourceVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
   </properties>
 
@@ -121,7 +124,7 @@
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>4.11</version>
+        <version>4.13.2</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
@@ -139,6 +142,13 @@
       <groupId>org.eclipse.sisu</groupId>
       <artifactId>org.eclipse.sisu.plexus</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <!-- Just to simplify migration -->
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-component-annotations</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -149,6 +159,13 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <!-- Just to simplify migration -->
+        <exclusion>
+          <groupId>org.codehaus.plexus</groupId>
+          <artifactId>plexus-component-annotations</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -161,8 +178,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-component-annotations</artifactId>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
       <scope>provided</scope>
     </dependency>
     <!-- Test -->
@@ -176,22 +193,8 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-component-metadata</artifactId>
-        <version>2.1.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>generate-metadata</goal>
-              <goal>generate-test-metadata</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
         <executions>
           <execution>
             <id>enforce-versions</id>
@@ -218,7 +221,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.2.1</version>
+          <version>3.4.0</version>
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>

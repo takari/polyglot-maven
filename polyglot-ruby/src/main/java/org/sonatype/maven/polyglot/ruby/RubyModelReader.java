@@ -7,16 +7,17 @@
  */
 package org.sonatype.maven.polyglot.ruby;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.util.Map;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.ModelReader;
 import org.codehaus.plexus.classworlds.realm.ClassRealm;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.IOUtil;
 import org.sonatype.maven.polyglot.Constants;
 import org.sonatype.maven.polyglot.PolyglotModelUtil;
@@ -28,13 +29,14 @@ import org.sonatype.maven.polyglot.io.ModelReaderSupport;
  *
  * @author m.kristian
  */
-@Component(role = ModelReader.class, hint="ruby")
+@Singleton
+@Named( "ruby" )
 public class RubyModelReader extends ModelReaderSupport {
 
-    @Requirement
+    @Inject
     ExecuteManager executeManager;
     
-    @Requirement
+    @Inject
     SetupClassRealm setupManager;
     
     public Model read( final Reader input, final Map<String, ?> options )

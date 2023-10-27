@@ -17,7 +17,7 @@
     <version>0.4.12-SNAPSHOT</version>
   </parent>
   <artifactId>polyglot-yaml</artifactId>
-  <packaging>takari-jar</packaging>
+  <packaging>takari-maven-component</packaging>
   <name>Polyglot :: YAML</name>
 
   <dependencies>

@@ -7,6 +7,10 @@
  */
 package org.sonatype.maven.polyglot;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,9 +20,8 @@ import java.util.Properties;
 
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.sonatype.maven.polyglot.mapping.Mapping;
 
 /**
@@ -28,12 +31,13 @@ import org.sonatype.maven.polyglot.mapping.Mapping;
  *
  * @since 0.7
  */
-@Component(role = PolyglotModelManager.class)
+@Singleton
+@Named
 public class PolyglotModelManager {
-  @Requirement
-  protected Logger log;
 
-  @Requirement(role = Mapping.class)
+  protected Logger log = LoggerFactory.getLogger( PolyglotModelManager.class );
+
+  @Inject
   protected List<Mapping> mappings;
 
   public void addMapping(final Mapping mapping) {

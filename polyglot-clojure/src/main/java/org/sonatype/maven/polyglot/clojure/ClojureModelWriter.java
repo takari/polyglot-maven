@@ -7,13 +7,14 @@
  */
 package org.sonatype.maven.polyglot.clojure;
 
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import clojure.lang.Namespace;
 import clojure.lang.RT;
 import clojure.lang.Symbol;
 import clojure.lang.Var;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.ModelWriter;
-import org.codehaus.plexus.component.annotations.Component;
 import org.sonatype.maven.polyglot.io.ModelWriterSupport;
 
 import java.io.IOException;
@@ -28,7 +29,8 @@ import java.util.Map;
  *
  * @since 0.7
  */
-@Component(role = ModelWriter.class, hint = "clojure")
+@Singleton
+@Named( "clojure" )
 public class ClojureModelWriter extends ModelWriterSupport {
 
     public void write(Writer writer, Map<String, Object> stringObjectMap, Model model) throws IOException {

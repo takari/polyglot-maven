@@ -7,6 +7,10 @@
  */
 package org.sonatype.maven.polyglot;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -26,11 +30,10 @@ import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.model.io.ModelParseException;
 import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.codehaus.plexus.util.ReaderFactory;
 
 /**
@@ -41,7 +44,8 @@ import org.codehaus.plexus.util.ReaderFactory;
  * @since 0.7
  */
 //@Component(role = ModelProcessor.class, hint = "tesla-polyglot")
-@Component(role = ModelProcessor.class)
+@Singleton
+@Named
 public class TeslaModelProcessor implements ModelProcessor {
 
   private static final String DEFAULT_POM_FILE = "pom.xml";
@@ -55,10 +59,10 @@ public class TeslaModelProcessor implements ModelProcessor {
       NEW_LINE + "-->";
   private static final String POM_FILE_PREFIX = ".polyglot.";
 
-  @Requirement
+  @Inject
   private PolyglotModelManager manager;
-  @Requirement
-  private Logger log;
+
+  private Logger log = LoggerFactory.getLogger( TeslaModelProcessor.class );
 
   @Override
   public File locatePom(final File dir) {

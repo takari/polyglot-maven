@@ -59,8 +59,8 @@ end
 
 # Requirements
 
-* [Maven](http://maven.apache.org) 3.3.1+
-* [Java](http://java.sun.com/) 7+
+* [Maven](http://maven.apache.org) 3.6.3+
+* [Java](http://java.sun.com/) 8+
 
 # Usage
 
