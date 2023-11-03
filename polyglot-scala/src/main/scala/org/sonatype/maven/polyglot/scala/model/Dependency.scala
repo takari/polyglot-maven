@@ -91,8 +91,8 @@ class PrettiedDependency(d: Dependency) {
       `object`("Dependency", args.toList)
     } else {
       val gav = d.gav.asDoc
-      val version = if (d.gav.version.isEmpty) space <> percent <+> dquote <> dquote else empty
-      gav <> version <> d.scope.map(empty <+> percent <+> dquotes(_)).getOrElse(empty)
+      val version = if (d.gav.version.isEmpty) space <> percent <+> dquote <> dquote else emptyDoc
+      gav <> version <> d.scope.map(emptyDoc <+> percent <+> dquotes(_)).getOrElse(emptyDoc)
     }
   }
 }

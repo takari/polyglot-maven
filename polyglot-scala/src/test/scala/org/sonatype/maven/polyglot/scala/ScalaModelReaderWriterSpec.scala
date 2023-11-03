@@ -131,7 +131,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
         )
       )
 
-      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc).layout
 
       pp must_== """Model(
                    |  "someGroupId" % "someArtifactId" % "someVersion",
@@ -161,7 +161,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
         )
       )
 
-      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc).layout
 
       pp must_== """Model(
                    |  "someGroupId" % "someArtifactId" % "someVersion",
@@ -221,7 +221,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
         )
       )
 
-      val pp = ScalaPrettyPrinter.pretty(m.asDoc)
+      val pp = ScalaPrettyPrinter.pretty(m.asDoc).layout
 
       pp must_== """Model(
                    |  "someGroupId" % "someArtifactId" % "someVersion",
