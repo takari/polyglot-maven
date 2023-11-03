@@ -121,7 +121,7 @@ class Eval(target: Option[File]) {
   /**
    * write the current checksum to a file
    */
-  def writeChecksum(checksum: String, file: File) {
+  def writeChecksum(checksum: String, file: File): Unit = {
     val writer = new FileWriter(file)
     writer.write("%s".format(checksum))
     writer.close()
@@ -164,7 +164,7 @@ class Eval(target: Option[File]) {
       val cleanBaseName = fileToClassName(files(0))
       val className = "Evaluator__%s_%s".format(
         cleanBaseName, sourceChecksum)
-      applyProcessed(className, processed, false)
+      applyProcessed(className, processed, resetState = false)
     } else {
       apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"), true)
     }
@@ -223,7 +223,7 @@ class Eval(target: Option[File]) {
    * Like `Eval()`, but doesn't reset the virtual classloader before evaluating. So if you've
    * loaded classes with `compile`, they can be referenced/imported in code run by `inPlace`.
    */
-  def inPlace[T](code: String) = {
+  def inPlace[T](code: String): T = {
     apply[T](code, false)
   }
 
@@ -243,7 +243,7 @@ class Eval(target: Option[File]) {
    * Check if files are Eval-able.
    * @throws CompilerException if not Eval-able.
    */
-  def check(files: File*) {
+  def check(files: File*): Unit = {
     val code = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
     check(code)
   }
@@ -252,7 +252,7 @@ class Eval(target: Option[File]) {
    * Check if stream is Eval-able.
    * @throws CompilerException if not Eval-able.
    */
-  def check(stream: InputStream) {
+  def check(stream: InputStream): Unit = {
     check(scala.io.Source.fromInputStream(stream).mkString)
   }
 
@@ -268,7 +268,7 @@ class Eval(target: Option[File]) {
     val digest = MessageDigest.getInstance("SHA-1").digest(code.getBytes())
     val sha = new BigInteger(1, digest).toString(16)
     idOpt match {
-      case Some(id) => sha + "_" + jvmId
+      case Some(_) => sha + "_" + jvmId
       case _ => sha
     }
   }
@@ -348,8 +348,8 @@ class Eval(target: Option[File]) {
     val currentClassPath = classPath.head
 
     // if there's just one thing in the classpath, and it's a jar, assume an executable jar.
-    currentClassPath ::: (if (currentClassPath.size == 1 && currentClassPath(0).endsWith(".jar")) {
-      val jarFile = currentClassPath(0)
+    currentClassPath ::: (if (currentClassPath.size == 1 && currentClassPath.head.endsWith(".jar")) {
+      val jarFile = currentClassPath.head
       val relativeRoot = new File(jarFile).getParentFile()
       val nestedClassPath = new JarFile(jarFile).getManifest.getMainAttributes.getValue("Class-Path")
       if (nestedClassPath eq null) {
@@ -440,7 +440,7 @@ class Eval(target: Option[File]) {
     }
   }
 
-  lazy val compilerOutputDir = target match {
+  lazy val compilerOutputDir: AbstractFile = target match {
     case Some(dir) => AbstractFile.getDirectory(dir)
     case None => new VirtualDirectory("(memory)", None)
   }
@@ -504,7 +504,7 @@ class Eval(target: Option[File]) {
           })
       }
 
-      override def reset {
+      override def reset: Unit = {
         super.reset
         messages.clear()
         counts.foreach(p => p._2.set(0))
@@ -519,7 +519,7 @@ class Eval(target: Option[File]) {
      */
     private var classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
 
-    def reset() {
+    def reset(): Unit = {
       targetDir match {
         case None => {
           target.asInstanceOf[VirtualDirectory].clear()
@@ -575,7 +575,7 @@ class Eval(target: Option[File]) {
     /**
      * Compile scala code. It can be found using the above class loader.
      */
-    def apply(code: String) {
+    def apply(code: String): Unit = {
       if (Debug.enabled)
         Debug.printWithLineNumbers(code)
 
