@@ -464,7 +464,7 @@ class Eval(target: Option[File]) {
     val target = compilerOutputDir
 
     trait MessageCollector {
-      val messages: Seq[List[String]]
+      val messages: mutable.Seq[List[String]]
       val counts: Map[_root_.scala.reflect.internal.Reporter.Severity, AtomicInteger]
     }
 

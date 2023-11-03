@@ -42,7 +42,7 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   }
 
   def mapStrings(m: Map[String, String]): Doc = {
-    "Map" <> lparen <> nest(lsep(m.map(me => dquotes(me._1) <+> "->" <+> dquotes(me._2)).to[immutable.Seq], comma)) <@> rparen
+    "Map" <> lparen <> nest(lsep(m.map(me => dquotes(me._1) <+> "->" <+> dquotes(me._2)).toSeq, comma)) <@> rparen
   }
 
   def seqString(s: immutable.Seq[String]): Doc = "Seq" <> lparen <> nest(lsep(s.map(dquotes(_)), comma)) <@> rparen

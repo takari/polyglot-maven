@@ -20,8 +20,8 @@
   <name>Polyglot :: Scala</name>
   
   <properties>
-    <scala.version>2.12.18</scala.version>
-    <scala.bin.version>2.12</scala.bin.version>
+    <scala.version>2.13.12</scala.version>
+    <scala.bin.version>2.13</scala.bin.version>
   </properties>
 
   <contributors>
@@ -51,7 +51,7 @@
     <dependency>
       <groupId>org.scala-lang.modules</groupId>
       <artifactId>scala-xml_${scala.bin.version}</artifactId>
-      <version>1.0.6</version>
+      <version>2.2.0</version>
     </dependency>
 
     <dependency>
