@@ -20,9 +20,8 @@
   <name>Polyglot :: Scala</name>
   
   <properties>
-    <!-- We cannot use 2.12+, as Maven 3.x requires us to run on Java7 -->
-    <scala.version>2.11.12</scala.version>
-    <scala.bin.version>2.11</scala.bin.version>
+    <scala.version>2.12.18</scala.version>
+    <scala.bin.version>2.12</scala.bin.version>
   </properties>
 
   <contributors>
