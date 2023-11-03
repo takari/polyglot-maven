@@ -56,7 +56,7 @@ class PrettiedNotifier(n: Notifier) {
 }
 
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{Notifier => MavenNotifier}
 
 class ConvertibleMavenNotifier(mn: MavenNotifier) {

@@ -16,7 +16,7 @@ object Organization {
   def apply(
              name: String = null,
              url: String = null
-             ) =
+             ): Organization =
     new Organization(
       Option(name),
       Option(url)

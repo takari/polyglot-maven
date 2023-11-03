@@ -24,7 +24,7 @@ object Execution {
              goals: immutable.Seq[String] = immutable.Seq.empty,
              inherited: Boolean = true,
              configuration: Config = null
-             ) = {
+             ): Execution = {
     new Execution(
       id,
       Option(phase),
@@ -51,7 +51,7 @@ class PrettiedExecution(e: Execution) {
 
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{PluginExecution => MavenExecution}
 
 class ConvertibleMavenExecution(me: MavenExecution) {

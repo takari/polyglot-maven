@@ -42,7 +42,7 @@ class PrettiedCiManagement(c: CiManagement) {
 
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{CiManagement => MavenCiManagement}
 
 class ConvertibleMavenCiManagement(mcm: MavenCiManagement) {

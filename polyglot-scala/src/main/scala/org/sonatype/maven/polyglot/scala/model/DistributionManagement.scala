@@ -24,7 +24,7 @@ object DistributionManagement {
              downloadUrl: String = null,
              relocation: Relocation = null,
              status: String = null
-             ) =
+             ): DistributionManagement =
     new DistributionManagement(
       Option(repository),
       Option(snapshotRepository),

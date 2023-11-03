@@ -20,7 +20,7 @@ object Relocation {
              artifactId: String = null,
              version: String = null,
              message: String = null
-             ) =
+             ): Relocation =
     new Relocation(
       Option(groupId),
       Option(artifactId),

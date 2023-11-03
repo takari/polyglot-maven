@@ -20,7 +20,7 @@ object License {
              url: String = null,
              distribution: String = null,
              comments: String = null
-             ) =
+             ): License =
     new License(
       Option(name),
       Option(url),

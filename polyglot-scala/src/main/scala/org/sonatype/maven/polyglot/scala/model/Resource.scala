@@ -24,7 +24,7 @@ object Resource {
              directory: String = null,
              includes: immutable.Seq[String] = Nil,
              excludes: immutable.Seq[String] = Nil
-             ) =
+             ): Resource =
     new Resource(
       Option(targetPath),
       filtering,
@@ -38,7 +38,7 @@ object Resource {
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
 class PrettiedResource(r: Resource) {
-  def asDoc = {
+  def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     r.targetPath.foreach(args += assignString("targetPath", _))
     Some(r.filtering).filter(_ == true).foreach(f => args += assign("filtering", f.toString))
@@ -50,7 +50,7 @@ class PrettiedResource(r: Resource) {
 }
 
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{Resource => MavenResource}
 
 class ConvertibleMavenResource(mr: MavenResource) {

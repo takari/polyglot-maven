@@ -27,7 +27,7 @@ class PrettiedPluginManagement(p: PluginManagement) {
 
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{PluginManagement => MavenPluginManagement}
 
 class ConvertibleMavenPluginManagement(mpm: MavenPluginManagement) {

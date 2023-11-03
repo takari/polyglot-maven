@@ -40,7 +40,7 @@ object Developer {
              roles: immutable.Seq[String] = Nil,
              timezone: String = null,
              url: String = null
-             ) =
+             ): Developer =
     new Developer(
       Option(id),
       Option(email),
@@ -66,7 +66,7 @@ class PrettiedDeveloper(d: Developer) {
 }
 
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{Developer => MavenDeveloper}
 
 class ConvertibleMavenDeveloper(mc: MavenDeveloper) {

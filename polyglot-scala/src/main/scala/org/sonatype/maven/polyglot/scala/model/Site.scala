@@ -18,7 +18,7 @@ object Site {
              id: String = null,
              name: String = null,
              url: String = null
-             ) =
+             ): Site =
     new Site(
       Option(id),
       Option(name),

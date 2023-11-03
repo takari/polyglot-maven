@@ -28,10 +28,11 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.jar.JarFile
 import scala.collection.mutable
 import scala.io.Source
-import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, Position}
+import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, CodeAction, Position}
 import scala.reflect.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.{FilteringReporter, Reporter}
 import scala.tools.nsc.{Global, Settings}
+import scala.util.Using
 import scala.util.matching.Regex
 
 object Eval {
@@ -40,6 +41,11 @@ object Eval {
 
   class CompilerException(val messages: List[List[String]]) extends Exception(
     "Compiler exception " + messages.map(_.mkString("\n")).mkString("\n"))
+
+  trait MessageCollector {
+    val messages: mutable.Seq[List[String]]
+    val counts: Map[_root_.scala.reflect.internal.Reporter.Severity, AtomicInteger]
+  }
 
 }
 
@@ -141,12 +147,12 @@ class Eval(target: Option[File]) {
   def apply[T](files: File*): T = {
     if (target.isDefined) {
       val targetDir = target.get
-      val unprocessedSource = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
+      val unprocessedSource = files.map { f => Using.resource(Source.fromFile(f))(_.mkString) }.mkString("\n")
       val processed = sourceForString(unprocessedSource)
       val sourceChecksum = uniqueId(processed, None)
       val checksumFile = new File(targetDir, "checksum")
       val lastChecksum = if (checksumFile.exists) {
-        Source.fromFile(checksumFile).getLines().take(1).toList.head
+        Using.resource(Source.fromFile(checksumFile))(_.getLines().take(1).toList.head)
       } else {
         -1
       }
@@ -166,7 +172,7 @@ class Eval(target: Option[File]) {
         cleanBaseName, sourceChecksum)
       applyProcessed(className, processed, resetState = false)
     } else {
-      apply(files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n"), true)
+      apply(files.map {f => Using.resource(Source.fromFile(f))(_.mkString) }.mkString("\n"), true)
     }
   }
 
@@ -202,7 +208,7 @@ class Eval(target: Option[File]) {
    * delegates to toSource(code: String)
    */
   def toSource(file: File): String = {
-    toSource(scala.io.Source.fromFile(file).mkString)
+    toSource(Using.resource(Source.fromFile(file))(_.mkString))
   }
 
   /**
@@ -215,7 +221,7 @@ class Eval(target: Option[File]) {
   /**
    * Compile an entire source file into the virtual classloader.
    */
-  def compile(code: String) {
+  def compile(code: String): Unit = {
     compiler(sourceForString(code))
   }
 
@@ -224,14 +230,14 @@ class Eval(target: Option[File]) {
    * loaded classes with `compile`, they can be referenced/imported in code run by `inPlace`.
    */
   def inPlace[T](code: String): T = {
-    apply[T](code, false)
+    apply[T](code, resetState = false)
   }
 
   /**
    * Check if code is Eval-able.
    * @throws CompilerException if not Eval-able.
    */
-  def check(code: String) {
+  def check(code: String): Unit = {
     val id = uniqueId(sourceForString(code))
     val className = "Evaluator__" + id
     val wrappedCode = wrapCodeInClass(className, code)
@@ -244,7 +250,7 @@ class Eval(target: Option[File]) {
    * @throws CompilerException if not Eval-able.
    */
   def check(files: File*): Unit = {
-    val code = files.map { scala.io.Source.fromFile(_).mkString }.mkString("\n")
+    val code = files.map { f => Using.resource(Source.fromFile(f))(_.mkString) }.mkString("\n")
     check(code)
   }
 
@@ -414,7 +420,7 @@ class Eval(target: Option[File]) {
       apply(code, maximumRecursionDepth)
 
     def apply(code: String, maxDepth: Int): String = {
-      val lines = code.lines map { line: String =>
+      val lines = code.linesIterator map { line: String =>
         val tokens = line.trim.split(' ')
         if (tokens.length == 2 && tokens(0).equals("#include")) {
           val path = tokens(1)
@@ -463,11 +469,6 @@ class Eval(target: Option[File]) {
     val cache = new mutable.HashMap[String, Class[_]]()
     val target = compilerOutputDir
 
-    trait MessageCollector {
-      val messages: mutable.Seq[List[String]]
-      val counts: Map[_root_.scala.reflect.internal.Reporter.Severity, AtomicInteger]
-    }
-
     val reporter = messageHandler getOrElse new FilteringReporter with MessageCollector {
       val settings = StringCompiler.this.settings
       val messages = new mutable.ListBuffer[List[String]]
@@ -480,7 +481,7 @@ class Eval(target: Option[File]) {
 
       override def hasErrors: Boolean = super.hasErrors || (counts(ERROR).get() > 0)
 
-      override def doReport(pos: Position, msg: String, severity: Severity): Unit = {
+      override def doReport(pos: Position, msg: String, severity: Severity, actions: List[CodeAction]): Unit = {
         counts(severity).intValue()
         val severityName = severity match {
           case ERROR   => "error: "
@@ -504,8 +505,8 @@ class Eval(target: Option[File]) {
           })
       }
 
-      override def reset: Unit = {
-        super.reset
+      override def reset(): Unit = {
+        super.reset()
         messages.clear()
         counts.foreach(p => p._2.set(0))
       }
@@ -544,14 +545,14 @@ class Eval(target: Option[File]) {
     }
 
     object Debug {
-      val enabled =
+      val enabled: Boolean =
         System.getProperty("eval.debug") != null
 
-      def printWithLineNumbers(code: String) {
+      def printWithLineNumbers(code: String): Unit = {
         printf("Code follows (%d bytes)\n", code.length)
 
         var numLines = 0
-        code.lines foreach { line: String =>
+        code.linesIterator foreach { line: String =>
           numLines += 1
           println(numLines.toString.padTo(5, ' ') + "| " + line)
         }
