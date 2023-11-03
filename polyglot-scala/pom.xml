@@ -56,12 +56,6 @@
 
     <dependency>
       <groupId>org.scala-lang.modules</groupId>
-      <artifactId>scala-parser-combinators_${scala.bin.version}</artifactId>
-      <version>1.0.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.scala-lang.modules</groupId>
       <artifactId>scala-xml_${scala.bin.version}</artifactId>
       <version>1.0.6</version>
     </dependency>

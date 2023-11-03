@@ -28,10 +28,9 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.jar.JarFile
 import scala.collection.mutable
 import scala.io.Source
-import scala.reflect.internal.util.{BatchSourceFile, Position}
-import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
+import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, Position}
+import scala.reflect.io.{AbstractFile, VirtualDirectory}
 import scala.tools.nsc.reporters.{FilteringReporter, Reporter}
-import scala.tools.nsc.util.AbstractFileClassLoader
 import scala.tools.nsc.{Global, Settings}
 import scala.util.matching.Regex
 
@@ -518,7 +517,7 @@ class Eval(target: Option[File]) {
      * Class loader for finding classes compiled by this StringCompiler.
      * After each reset, this class loader will not be able to find old compiled classes.
      */
-    var classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
+    private var classLoader = new AbstractFileClassLoader(target, this.getClass.getClassLoader)
 
     def reset() {
       targetDir match {
