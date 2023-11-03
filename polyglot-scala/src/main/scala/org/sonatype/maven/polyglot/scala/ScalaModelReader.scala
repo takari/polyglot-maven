@@ -11,7 +11,7 @@ import scala.collection.immutable
 import scala.language.implicitConversions
 
 import com.twitter.io.StreamIO
-import com.twitter.util.Eval
+import org.sonatype.maven.polyglot.scala.eval.Eval
 
 import java.io._
 import java.util

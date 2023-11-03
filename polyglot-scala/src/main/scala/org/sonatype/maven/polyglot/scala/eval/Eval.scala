@@ -14,8 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.twitter.util
+package org.sonatype.maven.polyglot.scala.eval
 
 import com.twitter.conversions.string._
 import com.twitter.io.StreamIO
@@ -262,11 +261,11 @@ class Eval(target: Option[File]) {
     compiler.findClass(className).getOrElse { throw new ClassNotFoundException("no such class: " + className) }
   }
 
-  private[util] def resetReporter(): Unit = {
+  private[scala] def resetReporter(): Unit = {
     compiler.resetReporter()
   }
 
-  private[util] def uniqueId(code: String, idOpt: Option[Int] = Some(jvmId)): String = {
+  private[scala] def uniqueId(code: String, idOpt: Option[Int] = Some(jvmId)): String = {
     val digest = MessageDigest.getInstance("SHA-1").digest(code.getBytes())
     val sha = new BigInteger(1, digest).toString(16)
     idOpt match {
@@ -275,7 +274,7 @@ class Eval(target: Option[File]) {
     }
   }
 
-  private[util] def fileToClassName(f: File): String = {
+  private[scala] def fileToClassName(f: File): String = {
     // HOPE YOU'RE HAPPY GUYS!!!!
     /*          __
      *    __/|_/ /_  __  ______ ________/|_
