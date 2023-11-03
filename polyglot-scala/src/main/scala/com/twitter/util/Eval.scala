@@ -1,5 +1,5 @@
 /*
- * Copied from https://github.com/twitter/util/blob/84d90c797ac0fb024f9fd6c3bf5fac8353d5cf13/util-eval/src/main/scala/com/twitter/util/Eval.scala
+ * Based on a copy from https://github.com/twitter/util/blob/84d90c797ac0fb024f9fd6c3bf5fac8353d5cf13/util-eval/src/main/scala/com/twitter/util/Eval.scala
  * which was copyrighted as 2010 Twitter, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,29 +19,30 @@ package com.twitter.util
 
 import com.twitter.conversions.string._
 import com.twitter.io.StreamIO
+
 import java.io._
 import java.math.BigInteger
 import java.net.URLClassLoader
 import java.security.MessageDigest
 import java.util.Random
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.jar.JarFile
 import scala.collection.mutable
 import scala.io.Source
 import scala.reflect.internal.util.{BatchSourceFile, Position}
-import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.{AbstractFile, VirtualDirectory}
-import scala.tools.nsc.reporters.{Reporter, AbstractReporter}
+import scala.tools.nsc.reporters.{FilteringReporter, Reporter}
+import scala.tools.nsc.util.AbstractFileClassLoader
 import scala.tools.nsc.{Global, Settings}
 import scala.util.matching.Regex
 
-
-/**
- * Evaluate a file or string and return the result.
- */
-@deprecated("use a throw-away instance of Eval instead", "1.8.1")
-object Eval extends Eval {
+object Eval {
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
   val classCleaner: Regex = "\\W".r
+
+  class CompilerException(val messages: List[List[String]]) extends Exception(
+    "Compiler exception " + messages.map(_.mkString("\n")).mkString("\n"))
+
 }
 
 /**
@@ -63,14 +64,7 @@ object Eval extends Eval {
  * - return the result of `apply()`
  */
 class Eval(target: Option[File]) {
-  /**
-   * empty constructor for backwards compatibility
-   */
-  def this() {
-    this(None)
-  }
-
-  import Eval.jvmId
+  import Eval._
 
   private lazy val compilerPath = try {
     classPathOfClass("scala.tools.nsc.Interpreter")
@@ -94,17 +88,17 @@ class Eval(target: Option[File]) {
    * }
    */
   protected lazy val preprocessors: Seq[Preprocessor] =
-    Seq(
+    Seq[Preprocessor](
       new IncludePreprocessor(
-        Seq(
+        Seq[Resolver](
           new ClassScopedResolver(getClass),
           new FilesystemResolver(new File(".")),
           new FilesystemResolver(new File("." + File.separator + "config"))
-        ) ++ (
-          Option(System.getProperty("com.twitter.util.Eval.includePath")) map { path =>
-            new FilesystemResolver(new File(path))
-          }
-          )
+        ) ++
+          Option(System.getProperty("com.twitter.util.Eval.includePath"))
+            .fold(Seq[Resolver]()){ path =>
+              Seq[Resolver](new FilesystemResolver(new File(path)))
+            }
       )
     )
 
@@ -473,14 +467,23 @@ class Eval(target: Option[File]) {
 
     trait MessageCollector {
       val messages: Seq[List[String]]
+      val counts: Map[_root_.scala.reflect.internal.Reporter.Severity, AtomicInteger]
     }
 
-    val reporter = messageHandler getOrElse new AbstractReporter with MessageCollector {
+    val reporter = messageHandler getOrElse new FilteringReporter with MessageCollector {
       val settings = StringCompiler.this.settings
       val messages = new mutable.ListBuffer[List[String]]
+      val counts = Map(
+        ERROR -> new AtomicInteger(0),
+        WARNING -> new AtomicInteger(0),
+        INFO -> new AtomicInteger(0)
 
-      def display(pos: Position, message: String, severity: Severity) {
-        severity.count += 1
+      )
+
+      override def hasErrors: Boolean = super.hasErrors || (counts(ERROR).get() > 0)
+
+      override def doReport(pos: Position, msg: String, severity: Severity): Unit = {
+        counts(severity).intValue()
         val severityName = severity match {
           case ERROR   => "error: "
           case WARNING => "warning: "
@@ -493,9 +496,9 @@ class Eval(target: Option[File]) {
           } catch {
             case _: Throwable => ""
           }
-        messages += (severityName + lineMessage + ": " + message) ::
+        messages += (severityName + lineMessage + ": " + msg) ::
           (if (pos.isDefined) {
-            pos.inUltimateSource(pos.source).lineContent.stripLineEnd ::
+            pos.finalPosition.lineContent.stripLineEnd ::
               (" " * (pos.column - 1) + "^") ::
               Nil
           } else {
@@ -503,13 +506,10 @@ class Eval(target: Option[File]) {
           })
       }
 
-      def displayPrompt {
-        // no.
-      }
-
       override def reset {
         super.reset
         messages.clear()
+        counts.foreach(p => p._2.set(0))
       }
     }
 
@@ -590,14 +590,14 @@ class Eval(target: Option[File]) {
       // ...and 1/2 this line:
       compiler.compileSources(sourceFiles)
 
-      if (reporter.hasErrors || reporter.WARNING.count > 0) {
+      if (reporter.hasErrors) {
         val msgs: List[List[String]] = reporter match {
           case collector: MessageCollector =>
             collector.messages.toList
           case _ =>
             List(List(reporter.toString))
         }
-        throw new CompilerException(msgs)
+        throw new Eval.CompilerException(msgs)
       }
     }
 
@@ -615,6 +615,4 @@ class Eval(target: Option[File]) {
     }
   }
 
-  class CompilerException(val messages: List[List[String]]) extends Exception(
-    "Compiler exception " + messages.map(_.mkString("\n")).mkString("\n"))
 }

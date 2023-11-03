@@ -260,7 +260,7 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
     try {
       eval.apply[ScalaModel](sourcePomFile)
     } catch {
-      case e: eval.CompilerException =>
+      case e: Eval.CompilerException =>
         // ModuleParseException is able to provide exact position (line nr., column nr.), so if later
         // versions of CompilerException make those information available, we should map them here (instead of zeros).
         // Currently, the information is only available as text in the exeception message.
