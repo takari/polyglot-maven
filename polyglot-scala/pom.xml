@@ -44,8 +44,26 @@
 
     <dependency>
       <groupId>com.twitter</groupId>
-      <artifactId>util-eval_${scala.bin.version}</artifactId>
+      <artifactId>util-core_${scala.bin.version}</artifactId>
       <version>6.43.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>util-function_${scala.bin.version}</artifactId>
+      <version>6.43.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang.modules</groupId>
+      <artifactId>scala-parser-combinators_${scala.bin.version}</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang.modules</groupId>
+      <artifactId>scala-xml_${scala.bin.version}</artifactId>
+      <version>1.0.6</version>
     </dependency>
 
     <dependency>
