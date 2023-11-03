@@ -10,19 +10,24 @@ package org.sonatype.maven.polyglot.scala
 import org.specs2.mutable._
 import org.specs2.runner.JUnitRunner
 import org.junit.runner.RunWith
-import java.io.{StringWriter, InputStream, File}
-import scala.collection.JavaConverters._
-import org.apache.maven.model.building.{ ModelSource2, ModelProcessor }
+
+import java.io.{File, InputStream, StringWriter}
+import scala.jdk.CollectionConverters._
+import org.apache.maven.model.building.{ModelProcessor, ModelSource2}
 import org.specs2.specification.AfterEach
 import org.apache.maven.model.Model
 import org.codehaus.plexus.util.IOUtil
+
 import java.util.Collections
-import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteTask, ExecuteManager}
+import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteManager, ExecuteTask}
+
 import java.util
 import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, Model => ScalaRawModel, Task => ScalaModelTask}
+
 import scala.collection.{immutable, mutable}
 import org.apache.maven.project.MavenProject
 import org.apache.maven.execution.MavenSession
+import org.specs2.execute.Result
 
 @RunWith(classOf[JUnitRunner])
 class ScalaModelReaderWriterSpec extends Specification with AfterEach {
@@ -52,12 +57,12 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
       if (attributedTasks._1) attributedTasks._2 else List[ExecuteTask]().asJava
     }
 
-    override def install(model: Model, options: java.util.Map[String, _]) {
+    override def install(model: Model, options: java.util.Map[String, _]): Unit = {
       val attributedTasks = modelTasks.get(model).get
       modelTasks.put(model, (true, attributedTasks._2))
     }
 
-    def install(model: Model) {
+    def install(model: Model): Unit = {
       val attributedTasks = modelTasks.get(model).get
       modelTasks.put(model, (true, attributedTasks._2))
     }
@@ -91,7 +96,7 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
    *  Yet, the plugin still works, so I just disabled these tests and intend to
    *  add some maven-invoker-plugin based tests, to ensure, the built plugin still works.
    */
-  def withJava8(f: => org.specs2.execute.Result) = {
+  def withJava8(f: => org.specs2.execute.Result): Result = {
     if(sys.props("java.version").startsWith("1.")) {
       f
     } else {
