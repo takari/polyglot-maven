@@ -16,7 +16,7 @@
  */
 package org.sonatype.maven.polyglot.scala.eval
 
-import com.twitter.conversions.string._
+import com.twitter.conversions.StringOps._
 import com.twitter.io.StreamIO
 
 import java.io._
@@ -36,7 +36,7 @@ import scala.util.matching.Regex
 
 object Eval {
   private val jvmId = java.lang.Math.abs(new Random().nextInt())
-  val classCleaner: Regex = "\\W".r
+  private val classCleaner: Regex = "\\W".r
 
   class CompilerException(val messages: List[List[String]]) extends Exception(
     "Compiler exception " + messages.map(_.mkString("\n")).mkString("\n"))
