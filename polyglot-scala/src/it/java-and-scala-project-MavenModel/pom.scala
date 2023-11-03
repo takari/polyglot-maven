@@ -6,22 +6,22 @@ Model(
   name = "Test for Java + Scala compilation",
   description = "Test for Java + Scala compilation",
   dependencies = Seq(
-    "org.scala-lang" % "scala-library" % "2.12.15"
+    "org.scala-lang" % "scala-library" % "2.12.18"
   ),
   build = Build(
     pluginManagement = PluginManagement(
       plugins = Seq(
         Plugin(
-          "net.alchim31.maven" % "scala-maven-plugin" % "4.3.1"
+          "net.alchim31.maven" % "scala-maven-plugin" % "4.8.1"
         ),
         Plugin(
-          "org.apache.maven.plugins" % "maven-compiler-plugin" % "2.0.2"
+          "org.apache.maven.plugins" % "maven-compiler-plugin" % "3.11.0"
         )
       )
     ),
     plugins = Seq(
       Plugin(
-        "net.alchim31.maven" % "scala-maven-plugin" % "4.3.1",
+        "net.alchim31.maven" % "scala-maven-plugin" % "4.8.1",
         executions = Seq(
           Execution(
             id = "scala-compile-first",
