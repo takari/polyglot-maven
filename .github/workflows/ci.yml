@@ -25,7 +25,7 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
       - name: Build & Test
-        run: ./mvnw -fn -B verify
+        run: ./mvnw -B verify
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v3
         with:

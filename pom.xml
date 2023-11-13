@@ -224,6 +224,9 @@
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
           <version>3.6.0</version>
+          <configuration>
+            <scope>test</scope>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
