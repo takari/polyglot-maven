@@ -227,6 +227,7 @@
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
+            <streamLogsOnFailures>true</streamLogsOnFailures>
           </configuration>
         </plugin>
         <plugin>
