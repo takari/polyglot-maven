@@ -29,7 +29,7 @@ class ScalaModelSpec extends Specification {
     sw.toString must_== IOUtil.toString(getClass.getClassLoader.getResourceAsStream(f))
   }
 
-  implicit val scalaVersion = ScalaVersion("2.10.2")
+  implicit val scalaVersion: ScalaVersion = ScalaVersion("2.10.2")
 
   "The ScalaModel" should {
     "configure a project with the minimal requirements" in {
@@ -58,18 +58,18 @@ class ScalaModelSpec extends Specification {
       )
 
       m.dependencies.size must_== 3
-      m.dependencies.head.gav.version must_== Some("0")
-      m.build.get.sourceDirectory must_== Some("src/main/scala2")
-      m.build.get.testSourceDirectory must_== Some("src/test/scala2")
+      m.dependencies.head.gav.version must beSome("0")
+      m.build.get.sourceDirectory must beSome("src/main/scala2")
+      m.build.get.testSourceDirectory must beSome("src/test/scala2")
       m.build.get.pluginManagement.get.plugins.size must_== 1
-      m.build.get.pluginManagement.get.plugins.head.gav.version must_== Some("0")
+      m.build.get.pluginManagement.get.plugins.head.gav.version must beSome("0")
       m.build.get.plugins.size must_== 3
       m.build.get.plugins.head.gav.artifactId must_== "maven-compiler-plugin"
-      m.build.get.plugins.head.gav.version must_== Some("0")
+      m.build.get.plugins.head.gav.version must beSome("0")
       m.build.get.plugins(1).gav.artifactId must_== "scala-maven-plugin"
-      m.build.get.plugins(1).gav.version must_== Some("0")
+      m.build.get.plugins(1).gav.version must beSome("0")
       m.build.get.plugins(2).gav.artifactId must_== "maven-surefire-plugin"
-      m.build.get.plugins(2).gav.version must_== Some("0")
+      m.build.get.plugins(2).gav.version must beSome("0")
     }
   }
 }

@@ -86,7 +86,7 @@ object Config extends Dynamic {
   def sanitizeElementName(k: String): String = {
     val r = elementStartCharMapping.foldLeft(k)((k, m) => m._1.replaceAllIn(k, found => m._2))
     if (r.length() > 1) {
-      r(0) + elementCharMapping.foldLeft(r.substring(1))((k, m) => m._1.replaceAllIn(k, found => m._2))
+      r.substring(0, 1) + elementCharMapping.foldLeft(r.substring(1))((k, m) => m._1.replaceAllIn(k, found => m._2))
     } else r
   }
 }

@@ -22,7 +22,7 @@ class GavSpec extends Specification {
       ga.groupId must_== Some("somegroup")
       ga.artifactId must_== "someartifact"
     }
-    "be expressed using the scala version convetion in the artifact" in {
+    "be expressed using the scala version convention in the artifact" in {
       implicit val scalaVersion = ScalaVersion("2.10.2")
       val ga = "somegroup" %% "someartifact"
       ga.getClass.getSimpleName must_== "GroupArtifactId"

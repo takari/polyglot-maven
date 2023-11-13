@@ -16,7 +16,7 @@ object IssueManagement {
   def apply(
              system: String = null,
              url: String = null
-             ) =
+             ): IssueManagement =
     new IssueManagement(
       Option(system),
       Option(url)

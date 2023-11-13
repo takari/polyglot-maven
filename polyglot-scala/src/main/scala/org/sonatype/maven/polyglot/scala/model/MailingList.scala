@@ -26,7 +26,7 @@ object MailingList {
              post: String = null,
              archive: String = null,
              otherArchives: immutable.Seq[String] = Nil
-             ) =
+             ): MailingList =
     new MailingList(
       Option(name),
       Option(subscribe),
@@ -54,7 +54,7 @@ class PrettiedMailingList(ml: MailingList) {
 
 
 import org.apache.maven.model.{MailingList => MavenMailingList}
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class ConvertibleMavenMailingList(mml: MavenMailingList) {
   def asScala: MailingList = {

@@ -26,7 +26,7 @@ object Plugin {
              dependencies: immutable.Seq[Dependency] = immutable.Seq.empty,
              inherited: Boolean = true,
              configuration: Config = null
-             ) =
+             ): Plugin =
     new Plugin(
       gav,
       extensions,
@@ -53,7 +53,7 @@ class PrettiedPlugin(p: Plugin) {
 
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import org.apache.maven.model.{Plugin => MavenPlugin}
 

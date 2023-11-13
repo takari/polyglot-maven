@@ -16,7 +16,7 @@ object Parent {
   def apply(
              gav: Gav = null,
              relativePath: String = "../pom.xml"
-             ) =
+             ): Parent =
     new Parent(
       Option(gav),
       relativePath

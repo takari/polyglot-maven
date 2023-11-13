@@ -275,7 +275,7 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
   }
 
   private def registerExecutors(m: Model, options: util.Map[String, _], tasks: immutable.Seq[Task]): Unit = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     executeManager.register(m, tasks.map(new ScalaTask(_).asInstanceOf[ExecuteTask]).asJava)
     executeManager.install(m, options)
   }

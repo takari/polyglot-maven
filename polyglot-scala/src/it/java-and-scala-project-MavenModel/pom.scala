@@ -6,7 +6,7 @@ Model(
   name = "Test for Java + Scala compilation",
   description = "Test for Java + Scala compilation",
   dependencies = Seq(
-    "org.scala-lang" % "scala-library" % "2.12.18"
+    "org.scala-lang" % "scala-library" % "2.13.12"
   ),
   build = Build(
     pluginManagement = PluginManagement(

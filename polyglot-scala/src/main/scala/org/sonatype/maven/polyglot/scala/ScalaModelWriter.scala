@@ -10,7 +10,7 @@ package org.sonatype.maven.polyglot.scala
 import java.io.Writer
 import java.util
 import org.sonatype.maven.polyglot.io.ModelWriterSupport
-import org.kiama.output.PrettyPrinter
+import org.bitbucket.inkytonik.kiama.output.PrettyPrinter
 import org.apache.maven.model.{ Activation => MavenActivation, ActivationFile => MavenActivationFile, ActivationOS => MavenActivationOS, ActivationProperty => MavenActivationProperty, Build => MavenBuild, BuildBase => MavenBuildBase, CiManagement => MavenCiManagement, Contributor => MavenContributor, DependencyManagement => MavenDependencyManagement, Dependency => MavenDependency, DeploymentRepository => MavenDeploymentRepository, Developer => MavenDeveloper, DistributionManagement => MavenDistributionManagement, PluginExecution => MavenExecution, Extension => MavenExtension, IssueManagement => MavenIssueManagement, License => MavenLicense, MailingList => MavenMailingList, Model => MavenModel, Notifier => MavenNotifier, Organization => MavenOrganization, Parent => MavenParent, Plugin => MavenPlugin, PluginManagement => MavenPluginManagement, Prerequisites => MavenPrerequisites, Profile => MavenProfile, Relocation => MavenRelocation, RepositoryPolicy => MavenRepositoryPolicy, Repository => MavenRepository, Resource => MavenResource, Scm => MavenScm, Site => MavenSite, Reporting => MavenReporting, ReportPlugin => MavenReportPlugin, ReportSet => MavenReportSet }
 import org.sonatype.maven.polyglot.scala.model._
 import scala.collection.immutable
@@ -42,7 +42,7 @@ object ScalaPrettyPrinter extends PrettyPrinter {
   }
 
   def mapStrings(m: Map[String, String]): Doc = {
-    "Map" <> lparen <> nest(lsep(m.map(me => dquotes(me._1) <+> "->" <+> dquotes(me._2)).to[immutable.Seq], comma)) <@> rparen
+    "Map" <> lparen <> nest(lsep(m.map(me => dquotes(me._1) <+> "->" <+> dquotes(me._2)).toSeq, comma)) <@> rparen
   }
 
   def seqString(s: immutable.Seq[String]): Doc = "Seq" <> lparen <> nest(lsep(s.map(dquotes(_)), comma)) <@> rparen
@@ -324,11 +324,11 @@ class ScalaModelWriter extends ModelWriterSupport {
 
     val d = "import" <+> "org.sonatype.maven.polyglot.scala.model._" <@>
       "import" <+> "scala.collection.immutable.Seq" <@>
-      empty <@>
+      emptyDoc <@>
       mm.asScala.asDoc <@>
-      empty
+      emptyDoc
     val pp = ScalaPrettyPrinter.pretty(d)
-    writer.append(pp)
+    writer.append(pp.layout)
     writer.flush()
   }
 

@@ -20,7 +20,7 @@ object Scm {
              developerConnection: String = null,
              tag: String = "HEAD",
              url: String = null
-             ) =
+             ): Scm =
     new Scm(
       Option(connection),
       Option(developerConnection),

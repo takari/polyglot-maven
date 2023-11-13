@@ -41,7 +41,7 @@ object Profile {
              modules: immutable.Seq[String] = Nil,
              pluginRepositories: immutable.Seq[Repository] = Nil,
              repositories: immutable.Seq[Repository] = Nil
-             ) =
+             ): Profile =
     new Profile(
       id,
       Option(activation),
@@ -71,7 +71,7 @@ class PrettiedProfile(p: Profile) {
 
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import org.apache.maven.model.{Profile => MavenProfile}
 
 class ConvertibleMavenProfile(mp: MavenProfile) {

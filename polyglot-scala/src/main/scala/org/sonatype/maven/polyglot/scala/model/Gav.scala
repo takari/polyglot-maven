@@ -67,7 +67,7 @@ class PrettiedGroupArtifactId(ga: GroupArtifactId) {
 
 class PrettiedGav(gav: Gav) {
   def asDoc: Doc = {
-    dquotes(gav.groupId.getOrElse[String]("")) <+> percent <+> dquotes(gav.artifactId) <> gav.version.map(space <> percent <+> dquotes(_)).getOrElse(empty)
+    dquotes(gav.groupId.getOrElse[String]("")) <+> percent <+> dquotes(gav.artifactId) <> gav.version.map(space <> percent <+> dquotes(_)).getOrElse(emptyDoc)
   }
 }
 
