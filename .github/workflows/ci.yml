@@ -25,10 +25,5 @@ jobs:
           java-version: ${{ matrix.java }}
           distribution: 'temurin'
       - name: Build & Test
-        run: ./mvnw -B verify
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v3
-        with:
-          name: polyglot-ruby-it-use_jruby_installation-build.log
-          path: polyglot-ruby/target/it/use_jruby_installation/build.log
-          retention-days: 1
+        run: ./mvnw -B clean verify
+
