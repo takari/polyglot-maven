@@ -226,6 +226,8 @@
           <version>3.6.0</version>
           <configuration>
             <scope>test</scope>
+            <postBuildHookScript>verify</postBuildHookScript>
+            <streamLogsOnFailures>true</streamLogsOnFailures>
           </configuration>
         </plugin>
         <plugin>

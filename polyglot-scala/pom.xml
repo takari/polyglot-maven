@@ -140,8 +140,7 @@
             <id>integration-test</id>
             <goals>
               <goal>install</goal>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
+              <goal>run</goal>
             </goals>
             <configuration>
               <settingsFile>${basedir}/src/it/settings.xml</settingsFile>
@@ -150,7 +149,6 @@
               <debug>false</debug>
               <streamLogs>true</streamLogs>
               <goals><goal>verify</goal></goals>
-              <postBuildHookScript>validate.groovy</postBuildHookScript>
             </configuration>
           </execution>
         </executions>
