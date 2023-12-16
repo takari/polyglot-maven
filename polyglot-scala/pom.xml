@@ -191,7 +191,7 @@
   <repositories>
     <repository>
       <id>sonatype-public-grid</id>
-      <url>http://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
+      <url>https://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
