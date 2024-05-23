@@ -45,7 +45,7 @@
     <dependency>
       <groupId>com.twitter</groupId>
       <artifactId>util-core_${scala.bin.version}</artifactId>
-      <version>22.3.0</version>
+      <version>24.2.0</version>
     </dependency>
 
     <dependency>
