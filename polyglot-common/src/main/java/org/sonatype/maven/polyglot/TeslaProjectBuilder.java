@@ -1,13 +1,11 @@
 package org.sonatype.maven.polyglot;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.building.ModelProblem;
 import org.apache.maven.model.building.ModelSource;
@@ -26,22 +24,26 @@ public class TeslaProjectBuilder extends DefaultProjectBuilder {
     }
 
     @Override
-    public ProjectBuildingResult build(ModelSource modelSource, ProjectBuildingRequest request) throws ProjectBuildingException {
+    public ProjectBuildingResult build(ModelSource modelSource, ProjectBuildingRequest request)
+            throws ProjectBuildingException {
         return convert(super.build(modelSource, request));
     }
 
     @Override
-    public ProjectBuildingResult build(Artifact artifact, ProjectBuildingRequest request) throws ProjectBuildingException {
+    public ProjectBuildingResult build(Artifact artifact, ProjectBuildingRequest request)
+            throws ProjectBuildingException {
         return convert(super.build(artifact, request));
     }
 
     @Override
-    public ProjectBuildingResult build(Artifact artifact, boolean allowStubModel, ProjectBuildingRequest request) throws ProjectBuildingException {
+    public ProjectBuildingResult build(Artifact artifact, boolean allowStubModel, ProjectBuildingRequest request)
+            throws ProjectBuildingException {
         return convert(super.build(artifact, allowStubModel, request));
     }
 
     @Override
-    public List<ProjectBuildingResult> build(List<File> pomFiles, boolean recursive, ProjectBuildingRequest request) throws ProjectBuildingException {
+    public List<ProjectBuildingResult> build(List<File> pomFiles, boolean recursive, ProjectBuildingRequest request)
+            throws ProjectBuildingException {
         List<ProjectBuildingResult> results = super.build(pomFiles, recursive, request);
         return results.stream().map(this::convert).collect(Collectors.toList());
     }
@@ -70,11 +72,12 @@ public class TeslaProjectBuilder extends DefaultProjectBuilder {
         private final List<ModelProblem> problems;
         private final DependencyResolutionResult dependencyResolutionResult;
 
-        public TeslaProjectBuildingResult(String projectId,
-                                          File pomFile,
-                                          MavenProject project,
-                                          List<ModelProblem> problems,
-                                          DependencyResolutionResult dependencyResolutionResult) {
+        public TeslaProjectBuildingResult(
+                String projectId,
+                File pomFile,
+                MavenProject project,
+                List<ModelProblem> problems,
+                DependencyResolutionResult dependencyResolutionResult) {
             this.projectId = projectId;
             this.pomFile = pomFile;
             this.project = project;
