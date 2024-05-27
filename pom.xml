@@ -28,7 +28,7 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.9.5</mavenVersion>
+    <mavenVersion>3.9.7</mavenVersion>
     <sisuInjectVersion>0.9.0.M2</sisuInjectVersion>
     <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
     <!-- last that works with Java 8: FIXED to this version as long we insist on Java 8 building this project -->
