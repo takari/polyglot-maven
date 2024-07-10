@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 @Priority(10)
 public class TeslaProjectBuilder implements ProjectBuilder {
 
-    private final TeslaModelProcessor teslaModelProcessor; // Must be named differently than the one in the superclass
+    private final TeslaModelProcessor teslaModelProcessor;
 
     private final DefaultProjectBuilder defaultProjectBuilder;
 
