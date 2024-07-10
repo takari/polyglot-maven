@@ -66,6 +66,10 @@
       <artifactId>kotlin-script-runtime</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
 
     <!-- Test -->
     <dependency>
