@@ -12,9 +12,11 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.building.ModelProblem;
 import org.apache.maven.model.building.ModelSource;
 import org.apache.maven.project.*;
+import org.eclipse.sisu.Priority;
 
 @Singleton
 @Named
+@Priority(10)
 public class TeslaProjectBuilder extends DefaultProjectBuilder {
 
     @Inject
