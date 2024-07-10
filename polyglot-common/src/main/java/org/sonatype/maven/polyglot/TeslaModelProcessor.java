@@ -32,6 +32,7 @@ import org.apache.maven.model.io.ModelReader;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.eclipse.sisu.Priority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.codehaus.plexus.util.ReaderFactory;
@@ -46,6 +47,7 @@ import org.codehaus.plexus.util.ReaderFactory;
 //@Component(role = ModelProcessor.class, hint = "tesla-polyglot")
 @Singleton
 @Named
+@Priority(10)
 public class TeslaModelProcessor implements ModelProcessor {
 
   private static final String DEFAULT_POM_FILE = "pom.xml";
