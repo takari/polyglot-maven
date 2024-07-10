@@ -10,13 +10,12 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>54</version>
+    <version>55</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
   <artifactId>polyglot</artifactId>
   <version>0.7.2-SNAPSHOT</version>
-  <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
   <name>Polyglot :: Aggregator</name>
 
