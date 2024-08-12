@@ -1,6 +1,6 @@
 package org.sonatype.maven.polyglot.kotlin.dsl
 
-import org.apache.commons.lang3.StringEscapeUtils.escapeJava
+import org.apache.commons.text.StringEscapeUtils.escapeJava
 
 internal var propertiesFactory: () -> java.util.Properties = { java.util.Properties() }
 
