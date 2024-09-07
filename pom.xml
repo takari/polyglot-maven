@@ -28,7 +28,7 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.9.8</mavenVersion>
+    <mavenVersion>3.9.9</mavenVersion>
     <sisuInjectVersion>0.9.0.M3</sisuInjectVersion>
     <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
     <!-- last that works with Java 8: FIXED to this version as long we insist on Java 8 building this project -->
@@ -223,7 +223,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.8.0</version>
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
