@@ -158,7 +158,7 @@
       </dependencies>
 
       <properties>
-        <jruby.plugins.version>3.0.2</jruby.plugins.version>
+        <jruby.plugins.version>3.0.3</jruby.plugins.version>
       </properties>
 
       <build>

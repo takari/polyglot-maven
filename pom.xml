@@ -28,8 +28,8 @@
   </licenses>
 
   <properties>
-    <mavenVersion>3.9.5</mavenVersion>
-    <sisuInjectVersion>0.9.0.M2</sisuInjectVersion>
+    <mavenVersion>3.9.9</mavenVersion>
+    <sisuInjectVersion>0.9.0.M3</sisuInjectVersion>
     <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
     <!-- last that works with Java 8: FIXED to this version as long we insist on Java 8 building this project -->
     <!-- BUT: signArtifacts goal with this version is busted, so we need to use other means to sign -->
@@ -223,7 +223,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.8.0</version>
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
@@ -276,7 +276,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.4</version>
+            <version>3.2.5</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

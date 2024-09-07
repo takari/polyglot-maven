@@ -58,6 +58,12 @@
       <artifactId>kotlin-script-runtime</artifactId>
       <version>${kotlin.version}</version>
     </dependency>
+    <!-- Maven Core dropped commons-lang3 dependency; also, "best practice" is to declare what you code against -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.12.0</version>
+    </dependency>
 
     <!-- Test -->
     <dependency>
@@ -86,7 +92,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>2.0.0</kotlin.version>
+    <kotlin.version>2.0.20</kotlin.version>
     <commons-lang3.version>3.8.1</commons-lang3.version>
     <skipTests>false</skipTests>
     <invoker.skip>${skipTests}</invoker.skip>
