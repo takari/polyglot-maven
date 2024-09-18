@@ -188,7 +188,7 @@ Specific docs and more can be found in the [Kotlin dialect specific readme](./po
 
 ## YAML
 
-* http://snakeyaml.org - Extensive usage of Polyglot YAML and contributions to
+* https://bitbucket.org/snakeyaml/snakeyaml/src/master/ - Extensive usage of Polyglot YAML and contributions to
   the project from the team.
 
 * https://urbanise.com - Using Polyglot YAML for building next generation strata
@@ -205,18 +205,18 @@ _Java Projects_
   a standalone
   [pom.scala](https://github.com/lefou/LambdaTest/blob/master/pom.scala)
 
-* [CmdOption](https://github.com/ToToTec/CmdOption) - A Java project with a
+* [CmdOption (until version `0.6.0` )](https://github.com/ToToTec/CmdOption/tree/0.6.0) - A Java project with a
   top-level reactor project and an additional shared scala file included into
-  both `pom.scala`s
+  both `pom.scala`s (Switched over to Mill after version `0.6.0`)
 
 _Scala Projects_
 
-* [Domino](https://github.com/domino-osgi/domino) - A simple project using
-  Polyglot Scala.
+* [Domino (until version `1.1.3`)](https://github.com/domino-osgi/domino/tree/1.1.3) - A simple project using
+  Polyglot Scala. (Switched over to Mill after version `1.1.3`)
 
-* [Blended](https://github.com/woq-blended/blended) - A complex multi-project
-  using Polyglot Scala. It's also an example where the `#include` feature is
+* [Blended (until version `2.4.0.2`)](https://github.com/woq-blended/blended/tree/2.4.0.2) - A complex multi-project
+  using Polyglot Scala. Now archived. It's also an example where the `#include` feature is
   heavily used to share common configuration but avoid Maven parent poms, which
-  are often problematic.
+  are often problematic. (Switched later to sbt and then Mill)
 
 Please let us know of your usage by filing an issue so we can add it here.
