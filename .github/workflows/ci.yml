@@ -52,4 +52,4 @@ jobs:
           path: ~/.m2/repository
           key: maven-${{ hashFiles('**/pom.xml') }}
       - run: ./mvnw -Dmaven=${{ matrix.maven }} -Dtype=only-script wrapper:wrapper
-      - run: ./mvnw install -e -B -V -P run-its
+      - run: ./mvnw install -e -B -V -P run-its -rf :its
