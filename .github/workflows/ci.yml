@@ -14,7 +14,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    if: inputs.maven-single-run
     steps:
       - uses: actions/checkout@v4
         with:
