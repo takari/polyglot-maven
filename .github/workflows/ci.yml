@@ -35,7 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ "ubuntu-latest", "windows-latest", "macOS-latest" ]
+        os: [ "ubuntu-latest", "windows-latest", "macos-latest" ]
         jdk: [ "8", "11", "17", "21" ]
         distribution: [ "zulu" ]
         maven: [ "3.6.3", "3.8.8", "3.9.9" ]
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           java-version: ${{ matrix.jdk }}
-          distribution: 'temurin'
+          distribution: ${{ matrix.distribution }}
       - uses: actions/cache@v4
         with:
           path: ~/.m2/repository
