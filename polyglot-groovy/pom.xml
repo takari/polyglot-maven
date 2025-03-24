@@ -20,7 +20,6 @@
   <properties>
     <groovy.version>4.0.26</groovy.version>
     <groovy.compiler.version>3.9.0</groovy.compiler.version>
-    <groovy.batch.version>4.0.26-01</groovy.batch.version>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
 
@@ -76,7 +75,6 @@
 
   <build>
     <plugins>
-
       <plugin>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-eclipse-compiler</artifactId>
@@ -98,7 +96,7 @@
           <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-eclipse-batch</artifactId>
-            <version>${groovy.batch.version}</version>
+            <version>${groovy.version}-01</version>
           </dependency>
         </dependencies>
       </plugin>
