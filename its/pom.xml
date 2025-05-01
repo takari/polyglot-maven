@@ -40,6 +40,7 @@
   <properties>
     <maven.install.skip>true</maven.install.skip>
     <maven.deploy.skip>true</maven.deploy.skip>
+    <enforcer.skip>true</enforcer.skip>
 
     <invoker.skip>true</invoker.skip>
   </properties>
