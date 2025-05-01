@@ -214,10 +214,10 @@
               <failFast>true</failFast>
               <rules>
                 <requireMavenVersion>
-                  <version>[3.3.9,)</version>
+                  <version>[3.9,)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>1.8.0</version>
+                  <version>[17,)</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
