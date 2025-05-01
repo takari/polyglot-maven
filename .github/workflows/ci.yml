@@ -36,7 +36,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ "ubuntu-latest", "windows-latest", "macos-latest" ]
-        jdk: [ "8", "11", "17", "21" ]
+        jdk: [ "8", "11", "17", "21", "24" ]
         distribution: [ "zulu" ]
         maven: [ "3.6.3", "3.8.8", "3.9.9" ]
     steps:
@@ -51,5 +51,5 @@ jobs:
         with:
           path: ~/.m2/repository
           key: maven-${{ hashFiles('**/pom.xml') }}
-      - run: ./mvnw -Dmaven=${{ matrix.maven }} -Dtype=only-script wrapper:wrapper
-      - run: ./mvnw install -e -B -V -P run-its -rf :its
+      - run: ./mvnw -Dmaven=${{ matrix.maven }} wrapper:wrapper
+      - run: ./mvnw verify -e -B -V -P run-its -rf :its
