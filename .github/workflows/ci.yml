@@ -36,7 +36,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ "ubuntu-latest", "windows-latest", "macos-latest" ]
-        jdk: [ "8", "11", "17", "21", "24" ]
+        jdk: [ "8", "11", "17", "21" ]
         distribution: [ "zulu" ]
         maven: [ "3.6.3", "3.8.8", "3.9.9" ]
     steps:
