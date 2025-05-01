@@ -51,5 +51,13 @@ jobs:
         with:
           path: ~/.m2/repository
           key: maven-${{ hashFiles('**/pom.xml') }}
+      - name: Hack ON
+        shell: bash
+        run: |
+          mv pom.xml pom-off.xml
       - run: ./mvnw -Dmaven=${{ matrix.maven }} wrapper:wrapper
-      - run: ./mvnw verify -e -B -V -P run-its -rf :its
+      - name: Hack OFF
+        shell: bash
+        run: |
+          mv pom-off.xml pom.xml
+      - run: ./mvnw verify -e -B -V -P run-its -f its
