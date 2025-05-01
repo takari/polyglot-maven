@@ -11,7 +11,9 @@
 		<artifactId>its</artifactId>
 		<version>0.7.3-SNAPSHOT</version>
 	</parent>
+
 	<artifactId>polyglot-xml</artifactId>
+	<name>Polyglot :: XML ITs</name>
 
 	<dependencies>
 		<dependency>

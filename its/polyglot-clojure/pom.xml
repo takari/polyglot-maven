@@ -19,6 +19,7 @@
   </parent>
 
   <artifactId>polyglot-clojure</artifactId>
+  <name>Polyglot :: Clojure ITs</name>
 
   <dependencies>  
     <dependency>

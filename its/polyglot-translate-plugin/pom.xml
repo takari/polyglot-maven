@@ -14,5 +14,6 @@
   </parent>
 
   <artifactId>polyglot-translate-plugin</artifactId>
+  <name>Polyglot :: Translate Plugin ITs</name>
 
 </project>

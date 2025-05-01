@@ -59,8 +59,13 @@ end
 
 # Requirements
 
+Runtime (when used in some project):
 * [Maven](http://maven.apache.org) 3.6.3+
 * [Java](http://java.sun.com/) 8+
+
+Build time (of this project):
+* Maven 3.9+
+* Java 17+
 
 # Usage
 

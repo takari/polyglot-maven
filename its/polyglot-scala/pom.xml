@@ -15,7 +15,9 @@
     <artifactId>its</artifactId>
     <version>0.7.3-SNAPSHOT</version>
   </parent>
+
   <artifactId>polyglot-scala</artifactId>
+  <name>Polyglot :: Scala ITs</name>
 
   <dependencies>
     <dependency>

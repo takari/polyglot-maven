@@ -19,6 +19,7 @@
   </parent>
 
   <artifactId>polyglot-ruby</artifactId>
+  <name>Polyglot :: Ruby ITs</name>
 
   <dependencies>
     <dependency>

@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>51</version>
+    <version>64</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -229,7 +229,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.9.0</version>
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
@@ -302,7 +302,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.5</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

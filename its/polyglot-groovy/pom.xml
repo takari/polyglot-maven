@@ -14,6 +14,7 @@
   </parent>
 
   <artifactId>polyglot-groovy</artifactId>
+  <name>Polyglot :: Groovy ITs</name>
 
   <properties>
     <groovy.compiler.version>2.9.2-01</groovy.compiler.version>

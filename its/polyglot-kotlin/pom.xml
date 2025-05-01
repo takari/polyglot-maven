@@ -19,6 +19,8 @@
   </parent>
 
   <artifactId>polyglot-kotlin</artifactId>
+  <name>Polyglot :: Kotlin ITs</name>
+
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>

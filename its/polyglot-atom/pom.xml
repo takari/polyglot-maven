@@ -19,6 +19,7 @@
   </parent>
 
   <artifactId>polyglot-atom</artifactId>
+  <name>Polyglot :: Atom ITs</name>
 
   <dependencies>
     <dependency>
