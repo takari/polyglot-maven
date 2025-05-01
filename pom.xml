@@ -35,7 +35,7 @@
     <mavenVersion>3.9.9</mavenVersion>
     <sisuInjectVersion>0.9.0.M3</sisuInjectVersion>
     <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
-
+    <invokerGroovyVersion>4.0.26</invokerGroovyVersion>
   </properties>
 
   <scm>
@@ -235,6 +235,26 @@
             <postBuildHookScript>verify</postBuildHookScript>
             <streamLogsOnFailures>true</streamLogsOnFailures>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.groovy</groupId>
+              <artifactId>groovy</artifactId>
+              <version>${invokerGroovyVersion}</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.groovy</groupId>
+              <artifactId>groovy-json</artifactId>
+              <version>${invokerGroovyVersion}</version>
+              <scope>runtime</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.groovy</groupId>
+              <artifactId>groovy-xml</artifactId>
+              <version>${invokerGroovyVersion}</version>
+              <scope>runtime</scope>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
