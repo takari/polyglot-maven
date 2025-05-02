@@ -16,4 +16,14 @@
   <artifactId>polyglot-translate-plugin</artifactId>
   <name>Polyglot :: Translate Plugin ITs</name>
 
+  <dependencies>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-translate-plugin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
+    </dependency>
+  </dependencies>
 </project>

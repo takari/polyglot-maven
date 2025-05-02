@@ -26,5 +26,9 @@
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-groovy</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
+    </dependency>
   </dependencies>
 </project>

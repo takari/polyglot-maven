@@ -26,6 +26,10 @@
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-kotlin</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

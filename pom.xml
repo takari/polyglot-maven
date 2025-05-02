@@ -80,6 +80,11 @@
       </dependency>
       <dependency>
         <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-translate-plugin</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-ruby</artifactId>
         <version>${project.version}</version>
       </dependency>
