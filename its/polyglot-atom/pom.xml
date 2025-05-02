@@ -15,7 +15,7 @@
   <parent>
     <groupId>io.takari.polyglot.its</groupId>
     <artifactId>its</artifactId>
-    <version>0.7.3-SNAPSHOT</version>
+    <version>0.8.0</version>
   </parent>
 
   <artifactId>polyglot-atom</artifactId>
