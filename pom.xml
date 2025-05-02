@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>51</version>
+    <version>64</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -76,6 +76,11 @@
       <dependency>
         <groupId>io.takari.polyglot</groupId>
         <artifactId>polyglot-maven-plugin</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.takari.polyglot</groupId>
+        <artifactId>polyglot-translate-plugin</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -224,12 +229,30 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <scala>
+            <scalafmt />
+          </scala>
+          <groovy>
+            <importOrder />
+            <removeSemicolons />
+            <!-- Not using greclipse; pulls in whole Eclipse -->
+            <!--greclipse /-->
+          </groovy>
+          <kotlin>
+            <ktfmt />
+          </kotlin>
+        </configuration>
+      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.9.0</version>
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
@@ -302,7 +325,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.5</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>

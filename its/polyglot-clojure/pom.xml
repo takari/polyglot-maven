@@ -19,11 +19,16 @@
   </parent>
 
   <artifactId>polyglot-clojure</artifactId>
+  <name>Polyglot :: Clojure ITs</name>
 
   <dependencies>  
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-clojure</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
     </dependency>
   </dependencies>
 </project>

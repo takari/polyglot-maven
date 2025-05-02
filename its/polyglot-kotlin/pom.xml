@@ -19,10 +19,16 @@
   </parent>
 
   <artifactId>polyglot-kotlin</artifactId>
+  <name>Polyglot :: Kotlin ITs</name>
+
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-kotlin</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
     </dependency>
   </dependencies>
 

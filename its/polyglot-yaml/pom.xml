@@ -16,12 +16,18 @@
     <artifactId>its</artifactId>
     <version>0.7.3-SNAPSHOT</version>
   </parent>
+
   <artifactId>polyglot-yaml</artifactId>
+  <name>Polyglot :: Yaml ITs</name>
 
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-yaml</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
     </dependency>
   </dependencies>
 </project>

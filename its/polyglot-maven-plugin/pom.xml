@@ -14,5 +14,13 @@
   </parent>
 
   <artifactId>polyglot-maven-plugin</artifactId>
+  <name>Polyglot :: Maven Plugin ITs</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
+    </dependency>
+  </dependencies>
 
 </project>

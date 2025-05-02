@@ -19,11 +19,16 @@
   </parent>
 
   <artifactId>polyglot-ruby</artifactId>
+  <name>Polyglot :: Ruby ITs</name>
 
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-ruby</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
     </dependency>
   </dependencies>
 

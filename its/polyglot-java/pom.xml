@@ -14,11 +14,16 @@
   </parent>
 
   <artifactId>polyglot-java</artifactId>
+  <name>Polyglot :: Java ITs</name>
 
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-java</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
     </dependency>
   </dependencies>
 

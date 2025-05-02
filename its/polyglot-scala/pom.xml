@@ -15,12 +15,18 @@
     <artifactId>its</artifactId>
     <version>0.7.3-SNAPSHOT</version>
   </parent>
+
   <artifactId>polyglot-scala</artifactId>
+  <name>Polyglot :: Scala ITs</name>
 
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-scala</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.takari.polyglot</groupId>
+      <artifactId>polyglot-maven-plugin</artifactId>
     </dependency>
   </dependencies>
 
