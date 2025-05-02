@@ -1,28 +1,27 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 import scala.collection.immutable
 
-/**
- * A ScalaModel provides a convenient construction of a regular Model that is configured to support
- * Scala projects. Configuration includes setting up the source and test source directories (src/main/scala,
- * src/test/scala respectively), configuration of m2e's lifecycle, the maven compiler for Java is disabled, the
- * Scala compiler is enabled and surefire is configured to look for *Spec.* files. The scala-library is also
- * added as a dependency and requires that a ScalaVersion declaration is made implicitly. Thus the minumum
- * Scala project declaration becomes something like:
- * {{{
- *   import org.sonatype.maven.polyglot.scala.model._
- *
- *   implicit val scalaVersion = ScalaVersion("2.11.6")
- *   ScalaModel("somegroup" % "someartifact" % "somever")
- * }}}
- */
+/** A ScalaModel provides a convenient construction of a regular Model that is
+  * configured to support Scala projects. Configuration includes setting up the
+  * source and test source directories (src/main/scala, src/test/scala
+  * respectively), configuration of m2e's lifecycle, the maven compiler for Java
+  * is disabled, the Scala compiler is enabled and surefire is configured to
+  * look for *Spec.* files. The scala-library is also added as a dependency and
+  * requires that a ScalaVersion declaration is made implicitly. Thus the
+  * minumum Scala project declaration becomes something like:
+  * {{{
+  *   import org.sonatype.maven.polyglot.scala.model._
+  *
+  *   implicit val scalaVersion = ScalaVersion("2.11.6")
+  *   ScalaModel("somegroup" % "someartifact" % "somever")
+  * }}}
+  */
 object ScalaModel {
 
   val sourceDirectory = "src/main/scala"
@@ -92,45 +91,47 @@ object ScalaModel {
   )
 
   def apply(
-             gav: Gav,
-             build: Build = null,
-             ciManagement: CiManagement = null,
-             contributors: immutable.Seq[Contributor] = Nil,
-             dependencyManagement: DependencyManagement = null,
-             dependencies: immutable.Seq[Dependency] = Nil,
-             description: String = null,
-             developers: immutable.Seq[Developer] = Nil,
-             distributionManagement: DistributionManagement = null,
-             inceptionYear: String = null,
-             issueManagement: IssueManagement = null,
-             licenses: immutable.Seq[License] = Nil,
-             mailingLists: immutable.Seq[MailingList] = Nil,
-             modelEncoding: String = "UTF-8",
-             modelVersion: String = "4.0.0",
-             modules: immutable.Seq[String] = Nil,
-             name: String = null,
-             organization: Organization = null,
-             packaging: String = "jar",
-             parent: Parent = null,
-             pluginRepositories: immutable.Seq[Repository] = Nil,
-             pomFile: File = null,
-             prerequisites: Prerequisites = null,
-             profiles: immutable.Seq[Profile] = Nil,
-             properties: Map[String, String] = Map.empty,
-             reporting: Reporting = null,
-             repositories: immutable.Seq[Repository] = Nil,
-             scm: Scm = null,
-             url: String = null
-             )(implicit scalaVersion: ScalaVersion) = {
+      gav: Gav,
+      build: Build = null,
+      ciManagement: CiManagement = null,
+      contributors: immutable.Seq[Contributor] = Nil,
+      dependencyManagement: DependencyManagement = null,
+      dependencies: immutable.Seq[Dependency] = Nil,
+      description: String = null,
+      developers: immutable.Seq[Developer] = Nil,
+      distributionManagement: DistributionManagement = null,
+      inceptionYear: String = null,
+      issueManagement: IssueManagement = null,
+      licenses: immutable.Seq[License] = Nil,
+      mailingLists: immutable.Seq[MailingList] = Nil,
+      modelEncoding: String = "UTF-8",
+      modelVersion: String = "4.0.0",
+      modules: immutable.Seq[String] = Nil,
+      name: String = null,
+      organization: Organization = null,
+      packaging: String = "jar",
+      parent: Parent = null,
+      pluginRepositories: immutable.Seq[Repository] = Nil,
+      pomFile: File = null,
+      prerequisites: Prerequisites = null,
+      profiles: immutable.Seq[Profile] = Nil,
+      properties: Map[String, String] = Map.empty,
+      reporting: Reporting = null,
+      repositories: immutable.Seq[Repository] = Nil,
+      scm: Scm = null,
+      url: String = null
+  )(implicit scalaVersion: ScalaVersion) = {
 
     val scalaLang = "org.scala-lang" % "scala-library" % scalaVersion.version
-    val scalaLangIncluded = dependencies.exists {
-      d => d.gav.groupId == scalaLang.groupId && d.gav.artifactId == scalaLang.artifactId
+    val scalaLangIncluded = dependencies.exists { d =>
+      d.gav.groupId == scalaLang.groupId && d.gav.artifactId == scalaLang.artifactId
     }
-    val targetDependencies = if (scalaLangIncluded) dependencies else dependencies :+ Dependency(scalaLang)
+    val targetDependencies =
+      if (scalaLangIncluded) dependencies
+      else dependencies :+ Dependency(scalaLang)
 
-    val targetBuild = Option(build).map({
-      b =>
+    val targetBuild = Option(build)
+      .map({ b =>
         val targetSourceDirectory =
           if (b.sourceDirectory.isEmpty) Some(sourceDirectory)
           else b.sourceDirectory
@@ -140,33 +141,36 @@ object ScalaModel {
           else b.testSourceDirectory
 
         val pluginManagement = b.pluginManagement.getOrElse(PluginManagement())
-        val lifeCycleMappingIncluded = pluginManagement.plugins.exists {
-          p => p.gav.groupId == lifeCycleMapping.gav.groupId && p.gav.artifactId == lifeCycleMapping.gav.artifactId
+        val lifeCycleMappingIncluded = pluginManagement.plugins.exists { p =>
+          p.gav.groupId == lifeCycleMapping.gav.groupId && p.gav.artifactId == lifeCycleMapping.gav.artifactId
         }
         val targetPluginManagementPlugins =
           if (lifeCycleMappingIncluded) pluginManagement.plugins
           else pluginManagement.plugins :+ lifeCycleMapping
-        val targetPluginManagement = Some(new PluginManagement(targetPluginManagementPlugins))
+        val targetPluginManagement =
+          Some(new PluginManagement(targetPluginManagementPlugins))
 
-        val mavenCompilerIncluded = b.plugins.exists {
-          p => p.gav.groupId == mavenCompiler.gav.groupId && p.gav.artifactId == mavenCompiler.gav.artifactId
+        val mavenCompilerIncluded = b.plugins.exists { p =>
+          p.gav.groupId == mavenCompiler.gav.groupId && p.gav.artifactId == mavenCompiler.gav.artifactId
         }
         val targetMavenCompiler =
           if (mavenCompilerIncluded) None
           else Some(mavenCompiler)
-        val scalaCompilerIncluded = b.plugins.exists {
-          p => p.gav.groupId == scalaCompiler.gav.groupId && p.gav.artifactId == scalaCompiler.gav.artifactId
+        val scalaCompilerIncluded = b.plugins.exists { p =>
+          p.gav.groupId == scalaCompiler.gav.groupId && p.gav.artifactId == scalaCompiler.gav.artifactId
         }
         val targetScalaCompiler =
           if (scalaCompilerIncluded) None
           else Some(scalaCompiler)
-        val surefireIncluded = b.plugins.exists {
-          p => p.gav.groupId == surefire.gav.groupId && p.gav.artifactId == surefire.gav.artifactId
+        val surefireIncluded = b.plugins.exists { p =>
+          p.gav.groupId == surefire.gav.groupId && p.gav.artifactId == surefire.gav.artifactId
         }
         val targetSurefire =
           if (surefireIncluded) None
           else Some(surefire)
-        val targetPlugins = b.plugins ++: immutable.Seq(targetMavenCompiler, targetScalaCompiler, targetSurefire).flatten
+        val targetPlugins = b.plugins ++: immutable
+          .Seq(targetMavenCompiler, targetScalaCompiler, targetSurefire)
+          .flatten
 
         new Build(
           targetSourceDirectory,
@@ -185,14 +189,15 @@ object ScalaModel {
           targetPlugins,
           b.tasks
         )
-    }).getOrElse(
-      Build(
-        sourceDirectory = sourceDirectory,
-        testSourceDirectory = testSourceDirectory,
-        pluginManagement = PluginManagement(immutable.Seq(lifeCycleMapping)),
-        plugins = immutable.Seq(mavenCompiler, scalaCompiler, surefire)
+      })
+      .getOrElse(
+        Build(
+          sourceDirectory = sourceDirectory,
+          testSourceDirectory = testSourceDirectory,
+          pluginManagement = PluginManagement(immutable.Seq(lifeCycleMapping)),
+          plugins = immutable.Seq(mavenCompiler, scalaCompiler, surefire)
+        )
       )
-    )
 
     new Model(
       gav,

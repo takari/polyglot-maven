@@ -1,26 +1,24 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 class ActivationOS(
-                    val name: Option[String],
-                    val family: Option[String],
-                    val arch: Option[String],
-                    val version: Option[String]
-                    )
+    val name: Option[String],
+    val family: Option[String],
+    val arch: Option[String],
+    val version: Option[String]
+)
 
 object ActivationOS {
   def apply(
-             name: String = null,
-             family: String = null,
-             arch: String = null,
-             version: String = null
-             ) =
+      name: String = null,
+      family: String = null,
+      arch: String = null,
+      version: String = null
+  ) =
     new ActivationOS(
       Option(name),
       Option(family),
@@ -28,7 +26,6 @@ object ActivationOS {
       Option(version)
     )
 }
-
 
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
@@ -42,7 +39,6 @@ class PrettiedActivationOS(aos: ActivationOS) {
     `object`("ActivationOS", args.toList)
   }
 }
-
 
 import org.apache.maven.model.{ActivationOS => MavenActivationOS}
 

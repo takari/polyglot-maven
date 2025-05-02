@@ -22,6 +22,14 @@
   <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Kotlin</name>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kotlin.version>2.1.20</kotlin.version>
+    <commons-lang3.version>3.8.1</commons-lang3.version>
+    <skipTests>false</skipTests>
+    <invoker.skip>${skipTests}</invoker.skip>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
@@ -90,17 +98,7 @@
     </dependency>
   </dependencies>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <kotlin.version>2.1.20</kotlin.version>
-    <commons-lang3.version>3.8.1</commons-lang3.version>
-    <skipTests>false</skipTests>
-    <invoker.skip>${skipTests}</invoker.skip>
-  </properties>
-
   <build>
-    <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>org.jetbrains.kotlin</groupId>
@@ -109,17 +107,17 @@
         <executions>
           <execution>
             <id>compile</id>
-            <phase>process-sources</phase>
             <goals>
               <goal>compile</goal>
             </goals>
+            <phase>process-sources</phase>
           </execution>
           <execution>
             <id>test-compile</id>
-            <phase>process-test-sources</phase>
             <goals>
               <goal>test-compile</goal>
             </goals>
+            <phase>process-test-sources</phase>
           </execution>
         </executions>
       </plugin>
@@ -127,14 +125,6 @@
         <groupId>com.google.code.maven-replacer-plugin</groupId>
         <artifactId>replacer</artifactId>
         <version>1.5.3</version>
-        <executions>
-          <execution>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>replace</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <basedir>${project.build.testOutputDirectory}</basedir>
           <includes>**/pom.xml</includes>
@@ -143,8 +133,18 @@
           <token>takari-polyglot-version</token>
           <value>${project.version}</value>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+            <phase>test-compile</phase>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
+    <sourceDirectory>src/main/kotlin</sourceDirectory>
+    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
   </build>
 
 </project>

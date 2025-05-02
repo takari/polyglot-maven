@@ -1,26 +1,24 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 class License(
-               val name: Option[String],
-               val url: Option[String],
-               val distribution: Option[String],
-               val comments: Option[String]
-               )
+    val name: Option[String],
+    val url: Option[String],
+    val distribution: Option[String],
+    val comments: Option[String]
+)
 
 object License {
   def apply(
-             name: String = null,
-             url: String = null,
-             distribution: String = null,
-             comments: String = null
-             ): License =
+      name: String = null,
+      url: String = null,
+      distribution: String = null,
+      comments: String = null
+  ): License =
     new License(
       Option(name),
       Option(url),
@@ -41,7 +39,6 @@ class PrettiedLicense(im: License) {
     `object`("License", args.toList)
   }
 }
-
 
 import org.apache.maven.model.{License => MavenLicense}
 

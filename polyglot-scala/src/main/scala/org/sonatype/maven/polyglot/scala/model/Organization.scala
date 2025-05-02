@@ -1,22 +1,20 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 class Organization(
-                    val name: Option[String],
-                    val url: Option[String]
-                    )
+    val name: Option[String],
+    val url: Option[String]
+)
 
 object Organization {
   def apply(
-             name: String = null,
-             url: String = null
-             ): Organization =
+      name: String = null,
+      url: String = null
+  ): Organization =
     new Organization(
       Option(name),
       Option(url)
@@ -33,7 +31,6 @@ class PrettiedOrganization(im: Organization) {
     `object`("Organization", args.toList)
   }
 }
-
 
 import org.apache.maven.model.{Organization => MavenOrganization}
 

@@ -20,8 +20,8 @@
 
   <groupId>io.takari.polyglot.its</groupId>
   <artifactId>its</artifactId>
-  <name>Polyglot ITs</name>
   <packaging>pom</packaging>
+  <name>Polyglot ITs</name>
 
   <modules>
     <module>polyglot-atom</module>

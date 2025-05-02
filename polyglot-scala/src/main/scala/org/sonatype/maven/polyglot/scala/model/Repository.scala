@@ -1,30 +1,28 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 class Repository(
-                  val releases: Option[RepositoryPolicy],
-                  val snapshots: Option[RepositoryPolicy],
-                  val id: Option[String],
-                  val name: Option[String],
-                  val url: Option[String],
-                  val layout: String
-                  )
+    val releases: Option[RepositoryPolicy],
+    val snapshots: Option[RepositoryPolicy],
+    val id: Option[String],
+    val name: Option[String],
+    val url: Option[String],
+    val layout: String
+)
 
 object Repository {
   def apply(
-             releases: RepositoryPolicy = null,
-             snapshots: RepositoryPolicy = null,
-             id: String = null,
-             name: String = null,
-             url: String = null,
-             layout: String = "default"
-             ) =
+      releases: RepositoryPolicy = null,
+      snapshots: RepositoryPolicy = null,
+      id: String = null,
+      name: String = null,
+      url: String = null,
+      layout: String = "default"
+  ) =
     new Repository(
       Option(releases),
       Option(snapshots),
@@ -49,11 +47,12 @@ class PrettiedRepository(r: Repository) {
     r.id.foreach(args += assignString("id", _))
     r.name.foreach(args += assignString("name", _))
     r.url.foreach(args += assignString("url", _))
-    Option(r.layout).filterNot(_ == "default").foreach(args += assignString("layout", _))
+    Option(r.layout)
+      .filterNot(_ == "default")
+      .foreach(args += assignString("layout", _))
     args.toList
   }
 }
-
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
 import org.apache.maven.model.{Repository => MavenRepository}

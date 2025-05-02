@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala
 
 import org.specs2.mutable._
@@ -26,7 +24,9 @@ class ScalaModelSpec extends Specification {
   def writeAndCompare(m: Model, f: String): Boolean = {
     val sw = new StringWriter
     writer.write(sw, Collections.emptyMap[String, AnyRef](), m.asJava)
-    sw.toString must_== IOUtil.toString(getClass.getClassLoader.getResourceAsStream(f))
+    sw.toString must_== IOUtil.toString(
+      getClass.getClassLoader.getResourceAsStream(f)
+    )
   }
 
   implicit val scalaVersion: ScalaVersion = ScalaVersion("2.10.2")
@@ -48,7 +48,9 @@ class ScalaModelSpec extends Specification {
         build = Build(
           sourceDirectory = "src/main/scala2",
           testSourceDirectory = "src/test/scala2",
-          pluginManagement = PluginManagement(immutable.Seq(Plugin("org.eclipse.m2e" % "lifecycle-mapping" % "0"))),
+          pluginManagement = PluginManagement(
+            immutable.Seq(Plugin("org.eclipse.m2e" % "lifecycle-mapping" % "0"))
+          ),
           plugins = immutable.Seq(
             Plugin("org.apache.maven.plugins" % "maven-compiler-plugin" % "0"),
             Plugin("net.alchim31.maven" % "scala-maven-plugin" % "0"),

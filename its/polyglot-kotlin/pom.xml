@@ -54,7 +54,9 @@
               <showErrors>true</showErrors>
               <debug>false</debug>
               <streamLogs>true</streamLogs>
-              <goals><goal>verify</goal></goals>
+              <goals>
+                <goal>verify</goal>
+              </goals>
             </configuration>
           </execution>
         </executions>

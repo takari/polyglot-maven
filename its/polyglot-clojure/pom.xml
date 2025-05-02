@@ -21,7 +21,7 @@
   <artifactId>polyglot-clojure</artifactId>
   <name>Polyglot :: Clojure ITs</name>
 
-  <dependencies>  
+  <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
       <artifactId>polyglot-clojure</artifactId>

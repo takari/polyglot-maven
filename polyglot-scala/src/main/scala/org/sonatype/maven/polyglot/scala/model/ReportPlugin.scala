@@ -1,27 +1,26 @@
-/**
- * Copyright (c) 2018 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2018 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 import scala.collection.immutable
 
 class ReportPlugin(
-  val gav: Gav,
-  val reportSets: immutable.Seq[ReportSet],
-  override val inherited: Boolean,
-  override val configuration: Option[Config])
-    extends ConfigurationContainer(inherited, configuration)
+    val gav: Gav,
+    val reportSets: immutable.Seq[ReportSet],
+    override val inherited: Boolean,
+    override val configuration: Option[Config]
+) extends ConfigurationContainer(inherited, configuration)
 
 object ReportPlugin {
   def apply(
-    gav: Gav,
-    reportSets: immutable.Seq[ReportSet] = immutable.Seq.empty,
-    inherited: Boolean = true,
-    configuration: Config = null) =
+      gav: Gav,
+      reportSets: immutable.Seq[ReportSet] = immutable.Seq.empty,
+      inherited: Boolean = true,
+      configuration: Config = null
+  ) =
     new ReportPlugin(
       gav = gav,
       reportSets = reportSets,
@@ -35,7 +34,9 @@ import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 class PrettiedReportPlugin(p: ReportPlugin) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer(p.gav.asDoc)
-    Some(p.reportSets).filterNot(_.isEmpty).foreach(rs => args += assign("reportSets", seq(rs.map(_.asDoc))))
+    Some(p.reportSets)
+      .filterNot(_.isEmpty)
+      .foreach(rs => args += assign("reportSets", seq(rs.map(_.asDoc))))
     args ++= p.asDocArgs
     `object`("ReportPlugin", args.toList)
 
@@ -45,7 +46,7 @@ class PrettiedReportPlugin(p: ReportPlugin) {
 import org.sonatype.maven.polyglot.scala.MavenConverters._
 import scala.jdk.CollectionConverters._
 
-import org.apache.maven.model.{ ReportPlugin => MavenReportPlugin }
+import org.apache.maven.model.{ReportPlugin => MavenReportPlugin}
 
 class ConvertibleMavenReportPlugin(mp: MavenReportPlugin) {
   def asScala: ReportPlugin = {

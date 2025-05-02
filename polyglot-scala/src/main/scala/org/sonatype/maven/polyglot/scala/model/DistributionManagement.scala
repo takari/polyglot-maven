@@ -1,30 +1,28 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 class DistributionManagement(
-                              val repository: Option[DeploymentRepository],
-                              val snapshotRepository: Option[DeploymentRepository],
-                              val site: Option[Site],
-                              val downloadUrl: Option[String],
-                              val relocation: Option[Relocation],
-                              val status: Option[String]
-                              )
+    val repository: Option[DeploymentRepository],
+    val snapshotRepository: Option[DeploymentRepository],
+    val site: Option[Site],
+    val downloadUrl: Option[String],
+    val relocation: Option[Relocation],
+    val status: Option[String]
+)
 
 object DistributionManagement {
   def apply(
-             repository: DeploymentRepository = null,
-             snapshotRepository: DeploymentRepository = null,
-             site: Site = null,
-             downloadUrl: String = null,
-             relocation: Relocation = null,
-             status: String = null
-             ): DistributionManagement =
+      repository: DeploymentRepository = null,
+      snapshotRepository: DeploymentRepository = null,
+      site: Site = null,
+      downloadUrl: String = null,
+      relocation: Relocation = null,
+      status: String = null
+  ): DistributionManagement =
     new DistributionManagement(
       Option(repository),
       Option(snapshotRepository),
@@ -35,14 +33,15 @@ object DistributionManagement {
     )
 }
 
-
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
 class PrettiedDistributionManagement(dm: DistributionManagement) {
   def asDoc: Doc = {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     dm.repository.foreach(r => args += assign("repository", r.asDoc))
-    dm.snapshotRepository.foreach(sr => args += assign("snapshotRepository", sr.asDoc))
+    dm.snapshotRepository.foreach(sr =>
+      args += assign("snapshotRepository", sr.asDoc)
+    )
     dm.site.foreach(s => args += assign("site", s.asDoc))
     dm.downloadUrl.foreach(args += assignString("downloadUrl", _))
     dm.relocation.foreach(r => args += assign("relocation", r.asDoc))
@@ -51,9 +50,10 @@ class PrettiedDistributionManagement(dm: DistributionManagement) {
   }
 }
 
-
 import org.sonatype.maven.polyglot.scala.MavenConverters._
-import org.apache.maven.model.{DistributionManagement => MavenDistributionManagement}
+import org.apache.maven.model.{
+  DistributionManagement => MavenDistributionManagement
+}
 
 class ConvertibleMavenDistributionManagement(mdm: MavenDistributionManagement) {
   def asScala: DistributionManagement = {

@@ -16,8 +16,8 @@
   <groupId>io.takari.polyglot</groupId>
   <artifactId>polyglot</artifactId>
   <version>0.7.3-SNAPSHOT</version>
-  <name>Polyglot :: Aggregator</name>
   <packaging>pom</packaging>
+  <name>Polyglot :: Aggregator</name>
 
   <licenses>
     <license>
@@ -26,24 +26,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
-  <properties>
-    <takari.javaSourceVersion>8</takari.javaSourceVersion>
-    <takari.lifecycleVersion>2.3.0</takari.lifecycleVersion>
-    <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
-
-    <mavenVersion>3.9.9</mavenVersion>
-    <sisuInjectVersion>0.9.0.M3</sisuInjectVersion>
-    <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
-    <invokerGroovyVersion>4.0.26</invokerGroovyVersion>
-  </properties>
-
-  <scm>
-    <connection>scm:git:git@github.com:takari/polyglot-maven.git</connection>
-    <developerConnection>scm:git:git@github.com:takari/polyglot-maven.git</developerConnection>
-    <url>https://github.com/takari/polyglot-maven</url>
-    <tag>HEAD</tag>
-  </scm>
 
   <modules>
     <module>polyglot-common</module>
@@ -60,6 +42,24 @@
     <module>polyglot-translate-plugin</module>
     <module>its</module>
   </modules>
+
+  <scm>
+    <connection>scm:git:git@github.com:takari/polyglot-maven.git</connection>
+    <developerConnection>scm:git:git@github.com:takari/polyglot-maven.git</developerConnection>
+    <tag>HEAD</tag>
+    <url>https://github.com/takari/polyglot-maven</url>
+  </scm>
+
+  <properties>
+    <takari.javaSourceVersion>8</takari.javaSourceVersion>
+    <takari.lifecycleVersion>2.3.0</takari.lifecycleVersion>
+    <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
+
+    <mavenVersion>3.9.9</mavenVersion>
+    <sisuInjectVersion>0.9.0.M3</sisuInjectVersion>
+    <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
+    <invokerGroovyVersion>4.0.26</invokerGroovyVersion>
+  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -204,50 +204,6 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>enforce-versions</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <phase>validate</phase>
-            <configuration>
-              <failFast>true</failFast>
-              <rules>
-                <requireMavenVersion>
-                  <version>[3.9,)</version>
-                </requireMavenVersion>
-                <requireJavaVersion>
-                  <version>[17,)</version>
-                </requireJavaVersion>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.diffplug.spotless</groupId>
-        <artifactId>spotless-maven-plugin</artifactId>
-        <configuration>
-          <scala>
-            <scalafmt />
-          </scala>
-          <groovy>
-            <importOrder />
-            <removeSemicolons />
-            <!-- Not using greclipse; pulls in whole Eclipse -->
-            <!--greclipse /-->
-          </groovy>
-          <kotlin>
-            <ktfmt />
-          </kotlin>
-        </configuration>
-      </plugin>
-    </plugins>
     <pluginManagement>
       <plugins>
         <plugin>
@@ -314,6 +270,50 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-versions</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <phase>validate</phase>
+            <configuration>
+              <failFast>true</failFast>
+              <rules>
+                <requireMavenVersion>
+                  <version>[3.9,)</version>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>[17,)</version>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <configuration>
+          <scala>
+            <scalafmt />
+          </scala>
+          <groovy>
+            <importOrder />
+            <removeSemicolons />
+            <!-- Not using greclipse; pulls in whole Eclipse -->
+            <!--greclipse /-->
+          </groovy>
+          <kotlin>
+            <ktfmt />
+          </kotlin>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>
@@ -328,10 +328,10 @@
             <executions>
               <execution>
                 <id>sign-artifacts</id>
-                <phase>verify</phase>
                 <goals>
                   <goal>sign</goal>
                 </goals>
+                <phase>verify</phase>
               </execution>
             </executions>
           </plugin>

@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala
 
 import scala.collection.immutable
@@ -16,7 +14,7 @@ import org.sonatype.maven.polyglot.scala.eval.Eval
 import java.io._
 import java.util
 
-import javax.inject.{ Named, Inject }
+import javax.inject.{Named, Inject}
 
 import org.apache.maven.model.io.ModelParseException
 import org.apache.maven.model.io.ModelReader
@@ -24,69 +22,138 @@ import org.apache.maven.model.Model
 import org.codehaus.plexus.util.FileUtils
 import org.codehaus.plexus.util.IOUtil
 import org.codehaus.plexus.util.io.RawInputStreamFacade
-import org.sonatype.maven.polyglot.execute.{ ExecuteContext, ExecuteTask, ExecuteManager }
+import org.sonatype.maven.polyglot.execute.{
+  ExecuteContext,
+  ExecuteTask,
+  ExecuteManager
+}
 import org.sonatype.maven.polyglot.PolyglotModelUtil
-import org.sonatype.maven.polyglot.scala.model.{ Activation => ScalaActivation, ActivationFile => ScalaActivationFile, ActivationOS => ScalaActivationOS, ActivationProperty => ScalaActivationProperty, Build => ScalaBuild, BuildBase => ScalaBuildBase, CiManagement => ScalaCiManagement, Config => ScalaConfig, Contributor => ScalaContributor, DependencyManagement => ScalaDependencyManagement, Dependency => ScalaDependency, DeploymentRepository => ScalaDeploymentRepository, Developer => ScalaDeveloper, DistributionManagement => ScalaDistributionManagement, Execution => ScalaExecution, Extension => ScalaExtension, IssueManagement => ScalaIssueManagement, License => ScalaLicense, MailingList => ScalaMailingList, Model => ScalaModel, Notifier => ScalaNotifier, Organization => ScalaOrganization, Parent => ScalaParent, Plugin => ScalaPlugin, PluginManagement => ScalaPluginManagement, Relocation => ScalaRelocation, RepositoryPolicy => ScalaRepositoryPolicy, Repository => ScalaRepository, Resource => ScalaResource, Scm => ScalaScm, Site => ScalaSite, _ }
+import org.sonatype.maven.polyglot.scala.model.{
+  Activation => ScalaActivation,
+  ActivationFile => ScalaActivationFile,
+  ActivationOS => ScalaActivationOS,
+  ActivationProperty => ScalaActivationProperty,
+  Build => ScalaBuild,
+  BuildBase => ScalaBuildBase,
+  CiManagement => ScalaCiManagement,
+  Config => ScalaConfig,
+  Contributor => ScalaContributor,
+  DependencyManagement => ScalaDependencyManagement,
+  Dependency => ScalaDependency,
+  DeploymentRepository => ScalaDeploymentRepository,
+  Developer => ScalaDeveloper,
+  DistributionManagement => ScalaDistributionManagement,
+  Execution => ScalaExecution,
+  Extension => ScalaExtension,
+  IssueManagement => ScalaIssueManagement,
+  License => ScalaLicense,
+  MailingList => ScalaMailingList,
+  Model => ScalaModel,
+  Notifier => ScalaNotifier,
+  Organization => ScalaOrganization,
+  Parent => ScalaParent,
+  Plugin => ScalaPlugin,
+  PluginManagement => ScalaPluginManagement,
+  Relocation => ScalaRelocation,
+  RepositoryPolicy => ScalaRepositoryPolicy,
+  Repository => ScalaRepository,
+  Resource => ScalaResource,
+  Scm => ScalaScm,
+  Site => ScalaSite,
+  _
+}
 
-/**
- * implicit conversions around the "pimp my library" approach for converting Scala models to their Maven types.
- */
+/** implicit conversions around the "pimp my library" approach for converting
+  * Scala models to their Maven types.
+  */
 object ScalaConverters {
-  implicit def enrichScalaActivation(v: ScalaActivation): ConvertibleScalaActivation =
+  implicit def enrichScalaActivation(
+      v: ScalaActivation
+  ): ConvertibleScalaActivation =
     new ConvertibleScalaActivation(v)
 
-  implicit def enrichScalaActivationFile(v: ScalaActivationFile): ConvertibleScalaActivationFile =
+  implicit def enrichScalaActivationFile(
+      v: ScalaActivationFile
+  ): ConvertibleScalaActivationFile =
     new ConvertibleScalaActivationFile(v)
 
-  implicit def enrichScalaActivationOS(v: ScalaActivationOS): ConvertibleScalaActivationOS =
+  implicit def enrichScalaActivationOS(
+      v: ScalaActivationOS
+  ): ConvertibleScalaActivationOS =
     new ConvertibleScalaActivationOS(v)
 
-  implicit def enrichScalaActivationProperty(v: ScalaActivationProperty): ConvertibleScalaActivationProperty =
+  implicit def enrichScalaActivationProperty(
+      v: ScalaActivationProperty
+  ): ConvertibleScalaActivationProperty =
     new ConvertibleScalaActivationProperty(v)
 
   implicit def enrichScalaBuild(v: ScalaBuild): ConvertibleScalaBuild =
     new ConvertibleScalaBuild(v)
 
-  implicit def enrichScalaBuildBase(v: ScalaBuildBase): ConvertibleScalaBuildBase =
+  implicit def enrichScalaBuildBase(
+      v: ScalaBuildBase
+  ): ConvertibleScalaBuildBase =
     new ConvertibleScalaBuildBase(v)
 
-  implicit def enrichScalaCiManagement(v: ScalaCiManagement): ConvertibleScalaCiManagement =
+  implicit def enrichScalaCiManagement(
+      v: ScalaCiManagement
+  ): ConvertibleScalaCiManagement =
     new ConvertibleScalaCiManagement(v)
 
   implicit def enrichScalaConfig(v: ScalaConfig): ConvertibleScalaConfig =
     new ConvertibleScalaConfig(v)
 
-  implicit def enrichScalaContributor(v: ScalaContributor): ConvertibleScalaContributor =
+  implicit def enrichScalaContributor(
+      v: ScalaContributor
+  ): ConvertibleScalaContributor =
     new ConvertibleScalaContributor(v)
 
-  implicit def enrichScalaDependency(v: ScalaDependency): ConvertibleScalaDependency =
+  implicit def enrichScalaDependency(
+      v: ScalaDependency
+  ): ConvertibleScalaDependency =
     new ConvertibleScalaDependency(v)
 
-  implicit def enrichScalaDependencyManagement(v: ScalaDependencyManagement): ConvertibleScalaDependencyManagement =
+  implicit def enrichScalaDependencyManagement(
+      v: ScalaDependencyManagement
+  ): ConvertibleScalaDependencyManagement =
     new ConvertibleScalaDependencyManagement(v)
 
-  implicit def enrichScalaDeploymentRepository(v: ScalaDeploymentRepository): ConvertibleScalaDeploymentRepository =
+  implicit def enrichScalaDeploymentRepository(
+      v: ScalaDeploymentRepository
+  ): ConvertibleScalaDeploymentRepository =
     new ConvertibleScalaDeploymentRepository(v)
 
-  implicit def enrichScalaDeveloper(v: ScalaDeveloper): ConvertibleScalaDeveloper =
+  implicit def enrichScalaDeveloper(
+      v: ScalaDeveloper
+  ): ConvertibleScalaDeveloper =
     new ConvertibleScalaDeveloper(v)
 
-  implicit def enrichScalaDistributionManagement(v: ScalaDistributionManagement): ConvertibleScalaDistributionManagement =
+  implicit def enrichScalaDistributionManagement(
+      v: ScalaDistributionManagement
+  ): ConvertibleScalaDistributionManagement =
     new ConvertibleScalaDistributionManagement(v)
 
-  implicit def enrichScalaExecution(v: ScalaExecution): ConvertibleScalaExecution =
+  implicit def enrichScalaExecution(
+      v: ScalaExecution
+  ): ConvertibleScalaExecution =
     new ConvertibleScalaExecution(v)
 
-  implicit def enrichScalaExtension(v: ScalaExtension): ConvertibleScalaExtension =
+  implicit def enrichScalaExtension(
+      v: ScalaExtension
+  ): ConvertibleScalaExtension =
     new ConvertibleScalaExtension(v)
 
-  implicit def enrichScalaIssueManagement(v: ScalaIssueManagement): ConvertibleScalaIssueManagement =
+  implicit def enrichScalaIssueManagement(
+      v: ScalaIssueManagement
+  ): ConvertibleScalaIssueManagement =
     new ConvertibleScalaIssueManagement(v)
 
   implicit def enrichScalaLicense(v: ScalaLicense): ConvertibleScalaLicense =
     new ConvertibleScalaLicense(v)
 
-  implicit def enrichScalaMailingList(v: ScalaMailingList): ConvertibleScalaMailingList =
+  implicit def enrichScalaMailingList(
+      v: ScalaMailingList
+  ): ConvertibleScalaMailingList =
     new ConvertibleScalaMailingList(v)
 
   implicit def enrichScalaModel(v: ScalaModel): ConvertibleScalaModel =
@@ -95,7 +162,9 @@ object ScalaConverters {
   implicit def enrichScalaNotifier(v: ScalaNotifier): ConvertibleScalaNotifier =
     new ConvertibleScalaNotifier(v)
 
-  implicit def enrichScalaOrganization(v: ScalaOrganization): ConvertibleScalaOrganization =
+  implicit def enrichScalaOrganization(
+      v: ScalaOrganization
+  ): ConvertibleScalaOrganization =
     new ConvertibleScalaOrganization(v)
 
   implicit def enrichScalaParent(v: ScalaParent): ConvertibleScalaParent =
@@ -104,22 +173,32 @@ object ScalaConverters {
   implicit def enrichScalaPlugin(v: ScalaPlugin): ConvertibleScalaPlugin =
     new ConvertibleScalaPlugin(v)
 
-  implicit def enrichScalaPluginManagement(v: ScalaPluginManagement): ConvertibleScalaPluginManagement =
+  implicit def enrichScalaPluginManagement(
+      v: ScalaPluginManagement
+  ): ConvertibleScalaPluginManagement =
     new ConvertibleScalaPluginManagement(v)
 
-  implicit def enrichScalaPrerequisites(v: Prerequisites): ConvertibleScalaPrerequisites =
+  implicit def enrichScalaPrerequisites(
+      v: Prerequisites
+  ): ConvertibleScalaPrerequisites =
     new ConvertibleScalaPrerequisites(v)
 
   implicit def enrichScalaProfile(v: Profile): ConvertibleScalaProfile =
     new ConvertibleScalaProfile(v)
 
-  implicit def enrichScalaReleasePolicy(v: ScalaRepositoryPolicy): ConvertibleScalaRepositoryPolicy =
+  implicit def enrichScalaReleasePolicy(
+      v: ScalaRepositoryPolicy
+  ): ConvertibleScalaRepositoryPolicy =
     new ConvertibleScalaRepositoryPolicy(v)
 
-  implicit def enrichScalaRelocation(v: ScalaRelocation): ConvertibleScalaRelocation =
+  implicit def enrichScalaRelocation(
+      v: ScalaRelocation
+  ): ConvertibleScalaRelocation =
     new ConvertibleScalaRelocation(v)
 
-  implicit def enrichScalaRepository(v: ScalaRepository): ConvertibleScalaRepository =
+  implicit def enrichScalaRepository(
+      v: ScalaRepository
+  ): ConvertibleScalaRepository =
     new ConvertibleScalaRepository(v)
 
   implicit def enrichScalaResource(v: ScalaResource): ConvertibleScalaResource =
@@ -134,7 +213,9 @@ object ScalaConverters {
   implicit def enrichScalaReporting(v: Reporting): ConvertibleScalaReporting =
     new ConvertibleScalaReporting(v)
 
-  implicit def enrichScalaReportPlugin(v: ReportPlugin): ConvertibleScalaReportPlugin =
+  implicit def enrichScalaReportPlugin(
+      v: ReportPlugin
+  ): ConvertibleScalaReportPlugin =
     new ConvertibleScalaReportPlugin(v)
 
   implicit def enrichScalaReportSet(v: ReportSet): ConvertibleScalaReportSet =
@@ -142,12 +223,13 @@ object ScalaConverters {
 
 }
 
-/**
- * Reads a Scala model from a script and produces a Maven Model object.
- * All Scala evaluation is done with files so that checks can be made to determine whether compilation occurs.
- */
+/** Reads a Scala model from a script and produces a Maven Model object. All
+  * Scala evaluation is done with files so that checks can be made to determine
+  * whether compilation occurs.
+  */
 @Named("scala")
-class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelReader {
+class ScalaModelReader @Inject() (executeManager: ExecuteManager)
+    extends ModelReader {
 
   import org.sonatype.maven.polyglot.scala.ScalaConverters._
 
@@ -179,33 +261,41 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
   }
 
   private def locateEvalPomFile(options: util.Map[String, _]): File = {
-    val targetDir = Option(System.getProperty("polyglot.scala.outputdir")).getOrElse("target")
+    val targetDir =
+      Option(System.getProperty("polyglot.scala.outputdir")).getOrElse("target")
     val source = PolyglotModelUtil.getLocation(options)
-    val binVersion = _root_.scala.util.Properties.versionNumberString.split("[.]").take(2).mkString(".")
-    val evalTarget = new File(new File(source).getParent, targetDir + File.separator + "scalamodel_" + binVersion)
+    val binVersion = _root_.scala.util.Properties.versionNumberString
+      .split("[.]")
+      .take(2)
+      .mkString(".")
+    val evalTarget = new File(
+      new File(source).getParent,
+      targetDir + File.separator + "scalamodel_" + binVersion
+    )
     evalTarget.mkdirs()
     new File(evalTarget, "pom.scala")
   }
 
-  /**
-   * We subclass the [[Eval]] class to customize the otherwise immutable prepocessors property.
-   *
-   * We provide an [[MvnIncludePreprocessor]] that resolves files and classes from an (externally) defined directory
-   * and the the current classloader.
-   *
-   */
-  class MvnEval(target: Option[File], includeBaseDir: File) extends Eval(target) {
+  /** We subclass the [[Eval]] class to customize the otherwise immutable
+    * prepocessors property.
+    *
+    * We provide an [[MvnIncludePreprocessor]] that resolves files and classes
+    * from an (externally) defined directory and the the current classloader.
+    */
+  class MvnEval(target: Option[File], includeBaseDir: File)
+      extends Eval(target) {
 
     /*
-   * This is a preprocessor that can include files by requesting them from the given resolvers.
-   * 
-   * This preprocessor support lines starting with: `//#include`.
-   * 
-   * @example //#include file-name.scala
-   *
-   * Note that it is *not* recursive. Included files cannot have includes
-   */
-    class MvnIncludePreprocessor(resolvers: Seq[Resolver]) extends Preprocessor {
+     * This is a preprocessor that can include files by requesting them from the given resolvers.
+     *
+     * This preprocessor support lines starting with: `//#include`.
+     *
+     * @example //#include file-name.scala
+     *
+     * Note that it is *not* recursive. Included files cannot have includes
+     */
+    class MvnIncludePreprocessor(resolvers: Seq[Resolver])
+        extends Preprocessor {
       def maximumRecursionDepth = 100
 
       def apply(code: String): String =
@@ -222,13 +312,17 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
               case Some(r: Resolver) => {
                 // recursively process includes
                 if (maxDepth == 0) {
-                  throw new IllegalStateException("Exceeded maximum recursion depth")
+                  throw new IllegalStateException(
+                    "Exceeded maximum recursion depth"
+                  )
                 } else {
                   apply(StreamIO.buffer(r.get(path)).toString, maxDepth - 1)
                 }
               }
               case _ =>
-                throw new IllegalStateException("No resolver could find '%s'".format(path))
+                throw new IllegalStateException(
+                  "No resolver could find '%s'".format(path)
+                )
             }
           } else {
             line
@@ -238,9 +332,9 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
       }
     }
 
-    /**
-     * Preprocessors to run the code through before it is passed to the Scala compiler.
-     */
+    /** Preprocessors to run the code through before it is passed to the Scala
+      * compiler.
+      */
     override protected lazy val preprocessors: Seq[Preprocessor] =
       Seq(
         new MvnIncludePreprocessor(
@@ -252,7 +346,11 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
       )
   }
 
-  private def eval(evalPomFile: File, sourcePomFile: File, options: util.Map[String, _]): ScalaModel = {
+  private def eval(
+      evalPomFile: File,
+      sourcePomFile: File,
+      options: util.Map[String, _]
+  ): ScalaModel = {
     val sourceFile = new File(PolyglotModelUtil.getLocation(options))
     // ensure, we always use the project base directory to resolve includes
     val includeBaseDir = sourceFile.getParentFile()
@@ -268,15 +366,30 @@ class ScalaModelReader @Inject() (executeManager: ExecuteManager) extends ModelR
         throw new ModelParseException(
           "Cannot compile pom file: " + sourceFile +
             "\nYou can run 'mvn -Deval.debug' to see the resolved scala file.",
-          0, 0, e)
+          0,
+          0,
+          e
+        )
       case e: Throwable =>
-        throw new ModelParseException("Could not process pom file: " + sourceFile, 0, 0, e)
+        throw new ModelParseException(
+          "Could not process pom file: " + sourceFile,
+          0,
+          0,
+          e
+        )
     }
   }
 
-  private def registerExecutors(m: Model, options: util.Map[String, _], tasks: immutable.Seq[Task]): Unit = {
+  private def registerExecutors(
+      m: Model,
+      options: util.Map[String, _],
+      tasks: immutable.Seq[Task]
+  ): Unit = {
     import scala.jdk.CollectionConverters._
-    executeManager.register(m, tasks.map(new ScalaTask(_).asInstanceOf[ExecuteTask]).asJava)
+    executeManager.register(
+      m,
+      tasks.map(new ScalaTask(_).asInstanceOf[ExecuteTask]).asJava
+    )
     executeManager.install(m, options)
   }
 

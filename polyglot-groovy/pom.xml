@@ -23,13 +23,6 @@
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>groovy-plugins-release</id>
-      <url>https://groovy.jfrog.io/artifactory/plugins-release</url>
-    </pluginRepository>
-  </pluginRepositories>
-
   <dependencies>
     <dependency>
       <groupId>io.takari.polyglot</groupId>
@@ -72,6 +65,12 @@
     </dependency>
   </dependencies>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>groovy-plugins-release</id>
+      <url>https://groovy.jfrog.io/artifactory/plugins-release</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <build>
     <plugins>

@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala
 
 import org.specs2.mutable._
@@ -52,17 +50,21 @@ class ConfigSpec extends Specification {
     "should convert from a config to an xml doc" in {
       val config = new Config(
         immutable.Seq(
-          "key1" -> Some(new Config(
-            immutable.Seq(
-              "key2" -> Some("value2"),
-              "key3" -> None,
-              "key4" -> Some(new Config(
-                immutable.Seq(
-                  "@attr4" -> Some("attrValue4")
+          "key1" -> Some(
+            new Config(
+              immutable.Seq(
+                "key2" -> Some("value2"),
+                "key3" -> None,
+                "key4" -> Some(
+                  new Config(
+                    immutable.Seq(
+                      "@attr4" -> Some("attrValue4")
+                    )
+                  )
                 )
-              ))
+              )
             )
-          ))
+          )
         )
       )
 
@@ -88,7 +90,9 @@ class ConfigSpec extends Specification {
       child4.getChildCount must_== 0
     }
     "should permit elements to be assigned via dynamic apply" in {
-      val config = Config(key1 = Config(key2 = "value2", key3 = None, `@key4` = "attrValue4"))
+      val config = Config(key1 =
+        Config(key2 = "value2", key3 = None, `@key4` = "attrValue4")
+      )
 
       val es = config.elements
 
@@ -103,7 +107,6 @@ class ConfigSpec extends Specification {
       e(2)._1 must_== "@key4"
       e(2)._2.get.asInstanceOf[String] must_== "attrValue4"
     }
-
 
     // the attribute marker
     s"should permit `@` char in element name via dynamic apply" in {
@@ -141,9 +144,11 @@ class ConfigSpec extends Specification {
 
     "convert a configuration to XML with an empty config block (Config ctr with None)" in {
       checkConfig(
-        new Config(immutable.Seq(
-          "key1" -> None
-        ))
+        new Config(
+          immutable.Seq(
+            "key1" -> None
+          )
+        )
       )
     }
 

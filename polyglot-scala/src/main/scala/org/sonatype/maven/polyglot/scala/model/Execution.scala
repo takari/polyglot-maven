@@ -1,30 +1,28 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala.model
 
 import scala.collection.immutable
 
 class Execution(
-                 val id: String,
-                 val phase: Option[String],
-                 val goals: immutable.Seq[String],
-                 override val inherited: Boolean,
-                 override val configuration: Option[Config]
-                 ) extends ConfigurationContainer(inherited, configuration)
+    val id: String,
+    val phase: Option[String],
+    val goals: immutable.Seq[String],
+    override val inherited: Boolean,
+    override val configuration: Option[Config]
+) extends ConfigurationContainer(inherited, configuration)
 
 object Execution {
   def apply(
-             id: String = "default",
-             phase: String = null,
-             goals: immutable.Seq[String] = immutable.Seq.empty,
-             inherited: Boolean = true,
-             configuration: Config = null
-             ): Execution = {
+      id: String = "default",
+      phase: String = null,
+      goals: immutable.Seq[String] = immutable.Seq.empty,
+      inherited: Boolean = true,
+      configuration: Config = null
+  ): Execution = {
     new Execution(
       id,
       Option(phase),
@@ -35,7 +33,6 @@ object Execution {
   }
 }
 
-
 import org.sonatype.maven.polyglot.scala.ScalaPrettyPrinter._
 
 class PrettiedExecution(e: Execution) {
@@ -43,12 +40,13 @@ class PrettiedExecution(e: Execution) {
     val args = scala.collection.mutable.ListBuffer[Doc]()
     Some(e.id).filterNot(_ == "default").foreach(args += assignString("id", _))
     e.phase.foreach(args += assignString("phase", _))
-    Some(e.goals).filterNot(_.isEmpty).foreach(g => args += assign("goals", seqString(g)))
+    Some(e.goals)
+      .filterNot(_.isEmpty)
+      .foreach(g => args += assign("goals", seqString(g)))
     args ++= e.asDocArgs
     `object`("Execution", args.toList)
   }
 }
-
 
 import org.sonatype.maven.polyglot.scala.MavenConverters._
 import scala.jdk.CollectionConverters._

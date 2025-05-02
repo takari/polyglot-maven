@@ -1,10 +1,8 @@
-/**
- * Copyright (c) 2012 to original author or authors
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- */
+/** Copyright (c) 2012 to original author or authors All rights reserved. This
+  * program and the accompanying materials are made available under the terms of
+  * the Eclipse Public License v1.0 which accompanies this distribution, and is
+  * available at http://www.eclipse.org/legal/epl-v10.html
+  */
 package org.sonatype.maven.polyglot.scala
 
 import org.specs2.mutable._
@@ -19,10 +17,18 @@ import org.apache.maven.model.Model
 import org.codehaus.plexus.util.IOUtil
 
 import java.util.Collections
-import org.sonatype.maven.polyglot.execute.{ExecuteContext, ExecuteManager, ExecuteTask}
+import org.sonatype.maven.polyglot.execute.{
+  ExecuteContext,
+  ExecuteManager,
+  ExecuteTask
+}
 
 import java.util
-import org.sonatype.maven.polyglot.scala.model.{Build => ScalaBuild, Model => ScalaRawModel, Task => ScalaModelTask}
+import org.sonatype.maven.polyglot.scala.model.{
+  Build => ScalaBuild,
+  Model => ScalaRawModel,
+  Task => ScalaModelTask
+}
 
 import scala.collection.{immutable, mutable}
 import org.apache.maven.project.MavenProject
@@ -41,23 +47,29 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
     def getLocation: String = evalFile.getCanonicalPath
 
     def getLocationURI(): java.net.URI = evalFile.getCanonicalFile().toURI()
-    
-    def getRelatedSource(relPath: String): ModelSource2 = ??? // ok for this test case
+
+    def getRelatedSource(relPath: String): ModelSource2 =
+      ??? // ok for this test case
   }
 
   val options = Map(ModelProcessor.SOURCE -> modelSource).asJava
 
   object TestExecuteManager extends ExecuteManager {
-    private val modelTasks = mutable.Map[Model, (Boolean, util.List[ExecuteTask])]()
+    private val modelTasks =
+      mutable.Map[Model, (Boolean, util.List[ExecuteTask])]()
 
-    override def register(model: Model, tasks: util.List[ExecuteTask]): Unit = modelTasks.put(model, (false, tasks))
+    override def register(model: Model, tasks: util.List[ExecuteTask]): Unit =
+      modelTasks.put(model, (false, tasks))
 
     override def getTasks(model: Model): util.List[ExecuteTask] = {
       val attributedTasks = modelTasks.get(model).get
       if (attributedTasks._1) attributedTasks._2 else List[ExecuteTask]().asJava
     }
 
-    override def install(model: Model, options: java.util.Map[String, _]): Unit = {
+    override def install(
+        model: Model,
+        options: java.util.Map[String, _]
+    ): Unit = {
       val attributedTasks = modelTasks.get(model).get
       modelTasks.put(model, (true, attributedTasks._2))
     }
@@ -82,7 +94,9 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
     val m = readScalaModel(f)
     val sw = new StringWriter
     writer.write(sw, Collections.emptyMap[String, AnyRef](), m)
-    sw.toString must_== IOUtil.toString(getClass.getClassLoader.getResourceAsStream(f))
+    sw.toString must_== IOUtil.toString(
+      getClass.getClassLoader.getResourceAsStream(f)
+    )
   }
 
   def after: Unit = {
@@ -92,12 +106,13 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
 
   sequential
 
-  /** all tests which use [[readScalaModel]] method fail currently under Java 11.
-   *  Yet, the plugin still works, so I just disabled these tests and intend to
-   *  add some maven-invoker-plugin based tests, to ensure, the built plugin still works.
-   */
+  /** all tests which use [[readScalaModel]] method fail currently under Java
+    * 11. Yet, the plugin still works, so I just disabled these tests and intend
+    * to add some maven-invoker-plugin based tests, to ensure, the built plugin
+    * still works.
+    */
   def withJava8(f: => org.specs2.execute.Result): Result = {
-    if(sys.props("java.version").startsWith("1.")) {
+    if (sys.props("java.version").startsWith("1.")) {
       f
     } else {
       skipped("Test not working with this Java version")
@@ -129,8 +144,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
         "someGroupId" % "someArtifactId" % "someVersion",
         ScalaBuild(
           tasks = immutable.Seq(
-            ScalaModelTask("someId", "somePhase") {
-              ec => println("here I am")
+            ScalaModelTask("someId", "somePhase") { ec =>
+              println("here I am")
             }
           )
         )
@@ -159,8 +174,8 @@ class ScalaModelReaderWriterSpec extends Specification with AfterEach {
         "someGroupId" % "someArtifactId" % "someVersion",
         ScalaBuild(
           tasks = immutable.Seq(
-            ScalaModelTask("someId", "somePhase", "someProfileId") {
-              ec => println("here I am")
+            ScalaModelTask("someId", "somePhase", "someProfileId") { ec =>
+              println("here I am")
             }
           )
         )
