@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>64</version>
+    <version>70</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -52,12 +52,12 @@
 
   <properties>
     <takari.javaSourceVersion>8</takari.javaSourceVersion>
-    <takari.lifecycleVersion>2.3.0</takari.lifecycleVersion>
+    <takari.lifecycleVersion>2.3.1</takari.lifecycleVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
 
     <mavenVersion>3.9.9</mavenVersion>
-    <sisuInjectVersion>0.9.0.M3</sisuInjectVersion>
-    <plexusUtilsVersion>3.5.1</plexusUtilsVersion>
+    <sisuInjectVersion>0.9.0.M4</sisuInjectVersion>
+    <plexusUtilsVersion>3.6.0</plexusUtilsVersion>
     <invokerGroovyVersion>4.0.27</invokerGroovyVersion>
   </properties>
 
@@ -132,6 +132,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.maven.plugin-tools</groupId>
+        <artifactId>maven-plugin-annotations</artifactId>
+        <version>3.15.1</version>
+      </dependency>
+
       <!-- I'd like to remove these two and place them in Maven's depMan 
         section. We want to be a complete superset as much as possible -->
       <dependency>
@@ -149,6 +155,7 @@
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
+      <version>${plexusUtilsVersion}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -272,30 +279,6 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>enforce-versions</id>
-            <goals>
-              <goal>enforce</goal>
-            </goals>
-            <phase>validate</phase>
-            <configuration>
-              <failFast>true</failFast>
-              <rules>
-                <requireMavenVersion>
-                  <version>[3.9,)</version>
-                </requireMavenVersion>
-                <requireJavaVersion>
-                  <version>[17,)</version>
-                </requireJavaVersion>
-              </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>com.diffplug.spotless</groupId>
         <artifactId>spotless-maven-plugin</artifactId>
         <configuration>
@@ -315,37 +298,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <profiles>
-    <!-- START SNIPPET: release-profile -->
-    <profile>
-      <id>takari-release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-                <phase>verify</phase>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <!-- END SNIPPET: release-profile -->
-  </profiles>
-
 </project>
