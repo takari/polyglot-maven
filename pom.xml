@@ -55,7 +55,7 @@
     <takari.lifecycleVersion>2.3.1</takari.lifecycleVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
 
-    <mavenVersion>3.9.9</mavenVersion>
+    <mavenVersion>3.9.10</mavenVersion>
     <sisuInjectVersion>0.9.0.M4</sisuInjectVersion>
     <plexusUtilsVersion>3.6.0</plexusUtilsVersion>
     <invokerGroovyVersion>4.0.27</invokerGroovyVersion>
