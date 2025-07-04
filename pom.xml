@@ -215,7 +215,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.9.0</version>
+          <version>3.9.1</version>
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
