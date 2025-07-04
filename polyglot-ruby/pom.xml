@@ -116,7 +116,7 @@
       </activation>
 
       <properties>
-        <jruby.plugins.version>3.0.5</jruby.plugins.version>
+        <jruby.plugins.version>3.0.6</jruby.plugins.version>
       </properties>
 
       <dependencies>
