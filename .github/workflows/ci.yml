@@ -15,7 +15,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/setup-java@v5
@@ -40,7 +40,7 @@ jobs:
         distribution: [ "zulu" ]
         maven: [ "3.6.3", "3.8.9", "3.9.16" ]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/setup-java@v5
