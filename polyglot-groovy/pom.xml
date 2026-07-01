@@ -18,7 +18,7 @@
   <name>Polyglot :: Groovy</name>
 
   <properties>
-    <groovy.version>4.0.27</groovy.version>
+    <groovy.version>4.0.32</groovy.version>
     <groovy.compiler.version>3.9.0</groovy.compiler.version>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.27.3</version>
+      <version>3.27.7</version>
       <scope>test</scope>
     </dependency>
     <dependency>

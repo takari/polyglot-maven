@@ -13,7 +13,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
   @PomDsl
   fun dependency(
       gavtc: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     val (groupId, artifactId, version, type, classifier) = splitCoordinates(gavtc)
     return Dependency().apply {
@@ -61,7 +61,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
   @PomDsl
   fun provided(
       gavtc: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(gavtc, block).apply { this.scope = "provided" }
   }
@@ -90,7 +90,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
   fun system(
       gavtc: String? = null,
       systemPath: String,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(gavtc, block).apply {
       this.scope = "system"
@@ -108,7 +108,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
   @PomDsl
   fun optional(
       gavtc: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(gavtc, block).apply { this.isOptional = true }
   }
@@ -136,7 +136,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       optional: Boolean? = null,
       scope: String? = null,
       systemPath: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return Dependency().apply {
       this.groupId = groupId
@@ -171,7 +171,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       type: String = "jar",
       classifier: String? = null,
       optional: Boolean? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
             groupId = groupId,
@@ -181,7 +181,8 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
             classifier = classifier,
             optional = optional,
             scope = "compile",
-            block = block)
+            block = block,
+        )
         .apply { scope = "compile" }
   }
 
@@ -204,7 +205,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       type: String = "jar",
       classifier: String? = null,
       optional: Boolean? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
             groupId = groupId,
@@ -214,7 +215,8 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
             classifier = classifier,
             optional = optional,
             scope = "test",
-            block = block)
+            block = block,
+        )
         .apply { scope = "test" }
   }
 
@@ -237,7 +239,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       type: String = "jar",
       classifier: String? = null,
       optional: Boolean? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
             groupId = groupId,
@@ -247,7 +249,8 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
             classifier = classifier,
             optional = optional,
             scope = "provided",
-            block = block)
+            block = block,
+        )
         .apply { this.scope = "provided" }
   }
 
@@ -270,7 +273,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       type: String = "jar",
       classifier: String? = null,
       optional: Boolean? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
             groupId = groupId,
@@ -280,7 +283,8 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
             classifier = classifier,
             optional = optional,
             scope = "runtime",
-            block = block)
+            block = block,
+        )
         .apply { this.scope = "runtime" }
   }
 
@@ -305,7 +309,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       classifier: String? = null,
       optional: Boolean? = null,
       systemPath: String,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
             groupId = groupId,
@@ -316,7 +320,8 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
             optional = optional,
             scope = "system",
             systemPath = systemPath,
-            block = block)
+            block = block,
+        )
         .apply {
           this.scope = "system"
           this.systemPath = systemPath
@@ -341,7 +346,7 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
       type: String = "jar",
       classifier: String? = null,
       scope: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
         groupId = groupId,
@@ -351,7 +356,8 @@ open class DependencyList : ArrayList<org.apache.maven.model.Dependency>(), Clon
         type = type,
         classifier = classifier,
         optional = true,
-        block = block)
+        block = block,
+    )
   }
 
   override fun clone(): Any {

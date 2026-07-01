@@ -19,18 +19,30 @@ object ScriptDefinition :
       jvm {
         dependenciesFromClassContext(PomKtsScript::class, "polyglot-kotlin") // needed for DSL
         dependenciesFromClassContext(
-            ExecuteContext::class, "polyglot-common") // needed for executing tasks
+            ExecuteContext::class,
+            "polyglot-common",
+        ) // needed for executing tasks
         dependenciesFromClassContext(Model::class, "maven-model") // needed for maven model
         dependenciesFromClassContext(
-            MavenProject::class, "maven-core") // needed for maven project/session
+            MavenProject::class,
+            "maven-core",
+        ) // needed for maven project/session
         dependenciesFromClassContext(
-            Artifact::class, "maven-artifact") // needed for maven artifacts
+            Artifact::class,
+            "maven-artifact",
+        ) // needed for maven artifacts
         dependenciesFromClassContext(
-            Settings::class, "maven-settings") // needed for accessing settings
+            Settings::class,
+            "maven-settings",
+        ) // needed for accessing settings
         dependenciesFromClassContext(
-            Xpp3DomBuilder::class, "plexus-utils") // needed for Xpp3DomBuilder
+            Xpp3DomBuilder::class,
+            "plexus-utils",
+        ) // needed for Xpp3DomBuilder
         dependenciesFromClassContext(
-            Log::class, "maven-plugin-api") // Needed for writing to the Maven build log
+            Log::class,
+            "maven-plugin-api",
+        ) // Needed for writing to the Maven build log
       }
       ide { acceptedLocations(ScriptAcceptedLocation.Everywhere) }
     })
