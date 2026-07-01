@@ -7,7 +7,7 @@ class ReportPluginList : ArrayList<org.apache.maven.model.ReportPlugin>(), Clone
   @PomDsl
   fun plugin(
       gav: String? = null,
-      block: (ReportPlugin.(ReportPlugin) -> Unit)? = null
+      block: (ReportPlugin.(ReportPlugin) -> Unit)? = null,
   ): ReportPlugin {
     val (groupId, artifactId, version) = splitCoordinates(gav, 3)
     return ReportPlugin().apply {

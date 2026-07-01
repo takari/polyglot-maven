@@ -29,18 +29,21 @@ class KotlinModelWriter : ModelWriterSupport() {
               projectProvider
                   .get()
                   ?.properties
-                  ?.getProperty("polyglot-kotlin.xml-dsl-enabled", "true") ?: "true")
+                  ?.getProperty("polyglot-kotlin.xml-dsl-enabled", "true") ?: "true",
+          )
           config.putIfAbsent(
               "flavor",
               projectProvider.get()?.properties?.getProperty("polyglot-kotlin.flavor", "mixed")
-                  ?: "mixed")
+                  ?: "mixed",
+          )
           ModelScriptWriter(this, config).write(model)
           val kotlinScript = toString()
           if (log.isDebugEnabled) {
             log.debug(({ "POM model converted from XML: \n$kotlinScript\n" })())
           }
           kotlinScript
-        })
+        }
+    )
     output.flush()
   }
 }

@@ -14,7 +14,7 @@ class PluginExecutionList : ArrayList<org.apache.maven.model.PluginExecution>(),
       priority: Int = 0,
       inherited: Boolean? = null,
       configuration: Xpp3Dom? = null,
-      block: (PluginExecution.(PluginExecution) -> Unit)? = null
+      block: (PluginExecution.(PluginExecution) -> Unit)? = null,
   ): PluginExecution {
     return PluginExecution().apply {
       this.id = id

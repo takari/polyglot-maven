@@ -405,7 +405,7 @@ internal class ModelScriptWriter(writer: Writer, private val options: Map<String
 
   private fun writeDeploymentRepository(
       deploymentRepository: DeploymentRepository?,
-      blockName: String
+      blockName: String,
   ) {
     block(blockName, deploymentRepository, { if (mixedFlavor) it.addFirstNonNull(name, id) }) {
       set("id", id) { blockFlavor || (name != null && name != id) }
@@ -425,13 +425,15 @@ internal class ModelScriptWriter(writer: Writer, private val options: Map<String
             developer.email
           }
       val id = if (developer.id != developer.email.split('@')[0]) developer.id else null
-      if (id != null ||
-          developer.url != null ||
-          developer.organization != null ||
-          developer.organizationUrl != null ||
-          !developer.roles.isNullOrEmpty() ||
-          developer.timezone != null ||
-          !developer.properties.isNullOrEmpty()) {
+      if (
+          id != null ||
+              developer.url != null ||
+              developer.organization != null ||
+              developer.organizationUrl != null ||
+              !developer.roles.isNullOrEmpty() ||
+              developer.timezone != null ||
+              !developer.properties.isNullOrEmpty()
+      ) {
         block("developer", developer, { it.add(address) }) {
           set("id", id) { id != developer.email.split('@')[0] }
           set("url", url)
@@ -482,7 +484,8 @@ internal class ModelScriptWriter(writer: Writer, private val options: Map<String
       block(
           "exclusions",
           exclusions,
-          { args -> args.addAll(map { "${it.groupId ?: ""}:${it.artifactId ?: ""}" }) })
+          { args -> args.addAll(map { "${it.groupId ?: ""}:${it.artifactId ?: ""}" }) },
+      )
     } else {
       block("exclusions", exclusions) { forEach(out::writeExclusion) }
     }
@@ -582,12 +585,14 @@ internal class ModelScriptWriter(writer: Writer, private val options: Map<String
           }
         }
     with(plugin) {
-      if (mixedFlavor &&
-          extensions.isNullOrEmpty() &&
-          executions.isNullOrEmpty() &&
-          dependencies.isNullOrEmpty() &&
-          isInherited &&
-          configuration == null) {
+      if (
+          mixedFlavor &&
+              extensions.isNullOrEmpty() &&
+              executions.isNullOrEmpty() &&
+              dependencies.isNullOrEmpty() &&
+              isInherited &&
+              configuration == null
+      ) {
         block("plugin", plugin, { it.add(gav) })
       } else {
         block("plugin", plugin, { if (mixedFlavor) it.add(gav) }) {
@@ -778,7 +783,7 @@ internal class ModelScriptWriter(writer: Writer, private val options: Map<String
       fieldName: String,
       functionName: String,
       value: Boolean,
-      test: (() -> Boolean) = { true }
+      test: (() -> Boolean) = { true },
   ) {
     if (test()) {
       val content: () -> Unit = { write(value.toString()) }

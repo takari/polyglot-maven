@@ -54,7 +54,7 @@ class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
       groupId: String? = null,
       artifactId: String? = null,
       version: String? = null,
-      packaging: String? = null
+      packaging: String? = null,
   ) {
     this.groupId = groupId
     this.artifactId = artifactId
@@ -93,7 +93,7 @@ class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
       groupId: String,
       artifactId: String,
       version: String,
-      relativePath: String? = null
+      relativePath: String? = null,
   ): Parent {
     return Parent().apply {
       this.groupId = groupId
@@ -207,7 +207,7 @@ class Project(pom: File) : org.apache.maven.model.Model(), Cloneable {
       name: String,
       url: String,
       distribution: String = "repo",
-      comments: String? = null
+      comments: String? = null,
   ): License {
     return License().apply {
       this.name = name

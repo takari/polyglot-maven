@@ -59,7 +59,7 @@
             <artifactId>spotless-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>spotless-apply</id>
+                <id>spotless-check</id>
                 <goals>
                   <goal>check</goal>
                 </goals>
