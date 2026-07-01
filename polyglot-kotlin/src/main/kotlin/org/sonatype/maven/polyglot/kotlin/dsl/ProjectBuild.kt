@@ -16,14 +16,15 @@ class ProjectBuild : Build() {
       id: String,
       phase: String,
       profile: String? = null,
-      block: ExecuteContext.() -> Unit
+      block: ExecuteContext.() -> Unit,
   ) {
     tasks.add(
         KotlinExecuteTask(block).apply {
           this.id = id
           this.phase = phase
           this.profileId = profile
-        })
+        }
+    )
   }
 
   @PomDsl
@@ -37,6 +38,7 @@ class ProjectBuild : Build() {
               this.id = id
               this.phase = phase
               this.profileId = profile
-            })
+            }
+    )
   }
 }

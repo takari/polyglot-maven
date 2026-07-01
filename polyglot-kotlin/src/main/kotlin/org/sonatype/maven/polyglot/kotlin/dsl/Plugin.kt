@@ -73,7 +73,7 @@ class Plugin : org.apache.maven.model.Plugin(), Cloneable {
   @PomDsl
   fun dependency(
       gavtc: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return _dependencies.dependency(gavtc, block)
   }
@@ -88,10 +88,19 @@ class Plugin : org.apache.maven.model.Plugin(), Cloneable {
       optional: Boolean? = null,
       scope: String? = null,
       systemPath: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return _dependencies.dependency(
-        groupId, artifactId, version, type, classifier, optional, scope, systemPath, block)
+        groupId,
+        artifactId,
+        version,
+        type,
+        classifier,
+        optional,
+        scope,
+        systemPath,
+        block,
+    )
   }
 
   // -- Plugin Execution Helpers
@@ -105,7 +114,7 @@ class Plugin : org.apache.maven.model.Plugin(), Cloneable {
       priority: Int = 0,
       inherited: Boolean? = null,
       configuration: Xpp3Dom? = null,
-      block: (PluginExecution.(PluginExecution) -> Unit)? = null
+      block: (PluginExecution.(PluginExecution) -> Unit)? = null,
   ): PluginExecution {
     return _executions.execution(id, phase, goals, priority, inherited, configuration, block)
   }

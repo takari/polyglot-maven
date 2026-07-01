@@ -8,7 +8,8 @@ import org.sonatype.maven.polyglot.execute.ExecuteContext
 @KotlinScript(
     displayName = "External kotlin task script",
     fileExtension = "task.kts",
-    compilationConfiguration = ScriptDefinition::class)
+    compilationConfiguration = ScriptDefinition::class,
+)
 @ScriptTemplateDefinition(scriptFilePattern = ".*\\.task\\.kts")
 abstract class TaskKtsScript(val script: File, private val delegate: ExecuteContext) :
     ExecuteContext by delegate

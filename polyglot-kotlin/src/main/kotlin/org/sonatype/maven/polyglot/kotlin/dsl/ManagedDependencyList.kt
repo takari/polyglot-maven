@@ -17,14 +17,15 @@ class ManagedDependencyList : DependencyList(), Cloneable {
       artifactId: String,
       version: String? = null,
       classifier: String? = null,
-      block: (Dependency.(Dependency) -> Unit)? = null
+      block: (Dependency.(Dependency) -> Unit)? = null,
   ): Dependency {
     return dependency(
             groupId = groupId,
             artifactId = artifactId,
             version = version,
             classifier = classifier,
-            block = block)
+            block = block,
+        )
         .apply {
           this.scope = "import"
           this.type = "pom"

@@ -10,7 +10,7 @@
   <parent>
     <groupId>io.takari</groupId>
     <artifactId>takari</artifactId>
-    <version>70</version>
+    <version>73</version>
   </parent>
 
   <groupId>io.takari.polyglot</groupId>
@@ -52,13 +52,13 @@
 
   <properties>
     <takari.javaSourceVersion>8</takari.javaSourceVersion>
-    <takari.lifecycleVersion>2.3.1</takari.lifecycleVersion>
+    <takari.lifecycleVersion>2.3.4</takari.lifecycleVersion>
     <takari.transitiveDependencyReference>ignore</takari.transitiveDependencyReference>
 
-    <mavenVersion>3.9.9</mavenVersion>
-    <sisuInjectVersion>0.9.0.M4</sisuInjectVersion>
+    <mavenVersion>3.9.16</mavenVersion>
+    <sisuInjectVersion>1.0.1</sisuInjectVersion>
     <plexusUtilsVersion>3.6.1</plexusUtilsVersion>
-    <invokerGroovyVersion>4.0.27</invokerGroovyVersion>
+    <invokerGroovyVersion>4.0.32</invokerGroovyVersion>
   </properties>
 
   <dependencyManagement>
@@ -215,7 +215,7 @@
       <plugins>
         <plugin>
           <artifactId>maven-invoker-plugin</artifactId>
-          <version>3.9.1</version>
+          <version>3.10.1</version>
           <configuration>
             <scope>test</scope>
             <postBuildHookScript>verify</postBuildHookScript>
