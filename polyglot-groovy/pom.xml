@@ -19,7 +19,7 @@
 
   <properties>
     <groovy.version>4.0.32</groovy.version>
-    <groovy.compiler.version>3.9.0</groovy.compiler.version>
+    <groovy.compiler.version>3.9.1</groovy.compiler.version>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
   </properties>
 
