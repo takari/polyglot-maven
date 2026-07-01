@@ -16,7 +16,7 @@ class DistributionManagement : org.apache.maven.model.DistributionManagement(), 
   @PomDsl
   fun repository(
       nameOrId: String? = null,
-      block: DeploymentRepository.(DeploymentRepository) -> Unit,
+      block: DeploymentRepository.(DeploymentRepository) -> Unit
   ) {
     val repository =
         DeploymentRepository().apply {
@@ -30,7 +30,7 @@ class DistributionManagement : org.apache.maven.model.DistributionManagement(), 
   @PomDsl
   fun snapshotRepository(
       nameOrId: String? = null,
-      block: DeploymentRepository.(DeploymentRepository) -> Unit,
+      block: DeploymentRepository.(DeploymentRepository) -> Unit
   ) {
     val snapshotRepository =
         DeploymentRepository().apply {

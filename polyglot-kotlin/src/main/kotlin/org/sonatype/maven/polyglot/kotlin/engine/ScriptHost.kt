@@ -37,7 +37,7 @@ object ScriptHost {
   private fun eval(
       script: File,
       compilationConfig: ScriptCompilationConfiguration,
-      evaluationConfigBuilder: ScriptEvaluationConfiguration.Builder.() -> Unit,
+      evaluationConfigBuilder: ScriptEvaluationConfiguration.Builder.() -> Unit
   ) {
     val sourceCode = script.readText().toScriptSource()
     val evaluationConfig = ScriptEvaluationConfiguration(evaluationConfigBuilder)
@@ -54,8 +54,7 @@ object ScriptHost {
               result.reports
                   .filterNot { it.severity == ScriptDiagnostic.Severity.DEBUG }
                   .joinToString("\n"),
-          script,
-      )
+          script)
     }
   }
 }

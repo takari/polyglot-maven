@@ -12,7 +12,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
     BLOCK,
     FUNCTION,
     FIELD,
-    RAW_STRING,
+    RAW_STRING
   }
 
   private val state: Deque<SerializerState> = LinkedList<SerializerState>()
@@ -104,7 +104,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
       name: String,
       modelObject: T?,
       args: (T.(MutableList<Any>) -> Unit)? = null,
-      contents: (T.() -> Unit)? = null,
+      contents: (T.() -> Unit)? = null
   ) {
     block(name, modelObject, "it", args, contents)
   }
@@ -114,7 +114,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
       modelObject: T?,
       paramName: String,
       args: (T.(MutableList<Any>) -> Unit)? = null,
-      contents: (T.() -> Unit)? = null,
+      contents: (T.() -> Unit)? = null
   ) {
     if (modelObject == null) {
       return
@@ -142,8 +142,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
               is String -> arguments(params as List<String>)
               else ->
                   throw IllegalArgumentException(
-                      "The argument type \"${params[0]::class}\" is unsupported. Must be Pair or String"
-                  )
+                      "The argument type \"${params[0]::class}\" is unsupported. Must be Pair or String")
             }
           } else {
             @Suppress("UNCHECKED_CAST")
@@ -152,8 +151,7 @@ internal open class KotlinScriptWriter(writer: Writer) {
               is String -> multiLineArguments(params as List<String>)
               else ->
                   throw IllegalArgumentException(
-                      "The argument type \"${params[0]::class}\" is unsupported. Must be Pair or String"
-                  )
+                      "The argument type \"${params[0]::class}\" is unsupported. Must be Pair or String")
             }
           }
         }

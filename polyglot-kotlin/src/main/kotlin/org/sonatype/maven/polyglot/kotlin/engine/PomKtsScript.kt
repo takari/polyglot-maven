@@ -10,8 +10,7 @@ import org.sonatype.maven.polyglot.kotlin.dsl.Project
 @KotlinScript(
     displayName = "Maven kotlin POM script",
     fileExtension = "pom.kts",
-    compilationConfiguration = ScriptDefinition::class,
-)
+    compilationConfiguration = ScriptDefinition::class)
 @ScriptTemplateDefinition(scriptFilePattern = "pom\\.kts")
 abstract class PomKtsScript(val script: File, val basedir: File, val model: Project) {
 

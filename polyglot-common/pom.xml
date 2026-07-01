@@ -17,15 +17,6 @@
   <packaging>takari-maven-component</packaging>
   <name>Polyglot :: Common</name>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-utils</artifactId>
-      <version>${plexusUtilsVersion}</version>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
-
   <build>
     <resources>
       <resource>
