@@ -31,18 +31,14 @@
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.22.0</version>
     </dependency>
     <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
-      <version>1.11.0</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.cedarsoftware</groupId>
       <artifactId>java-util</artifactId>
-      <version>3.3.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
