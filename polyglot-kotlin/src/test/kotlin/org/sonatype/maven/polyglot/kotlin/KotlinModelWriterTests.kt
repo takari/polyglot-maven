@@ -13,8 +13,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
     doTest(
         "file.comment" to "${this::class.simpleName}\n$testBasePath",
         "xml.dsl.enabled" to false,
-        "flavor" to "block",
-    )
+        "flavor" to "block")
   }
 
   @Test
@@ -22,8 +21,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
     doTest(
         "file.comment" to "${this::class.simpleName}\n$testBasePath",
         "xml.dsl.enabled" to true,
-        "flavor" to "mixed",
-    )
+        "flavor" to "mixed")
   }
 
   @Test
@@ -31,8 +29,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
     doTest(
         "file.comment" to "${this::class.simpleName}\n$testBasePath",
         "xml.dsl.enabled" to false,
-        "flavor" to "block",
-    )
+        "flavor" to "block")
   }
 
   @Test
@@ -40,8 +37,7 @@ class KotlinModelWriterTests(testName: String) : AbstractModelTestCase(testName)
     doTest(
         "file.comment" to "${this::class.simpleName}\n$testBasePath",
         "xml.dsl.enabled" to true,
-        "flavor" to "mixed",
-    )
+        "flavor" to "mixed")
   }
 
   private fun doTest(vararg options: Pair<String, Any?>) {
