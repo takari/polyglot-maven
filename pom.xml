@@ -58,7 +58,7 @@
     <mavenVersion>3.9.16</mavenVersion>
     <sisuInjectVersion>1.0.1</sisuInjectVersion>
     <plexusUtilsVersion>3.6.1</plexusUtilsVersion>
-    <invokerGroovyVersion>4.0.32</invokerGroovyVersion>
+    <invokerGroovyVersion>5.0.6</invokerGroovyVersion>
   </properties>
 
   <dependencyManagement>
